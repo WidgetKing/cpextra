@@ -1,3 +1,4 @@
+/*global require*/
 /**
  * Created with IntelliJ IDEA.
  * User: Tristan
@@ -5,11 +6,16 @@
  * Time: 11:54 AM
  * To change this template use File | Settings | File Templates.
  */
-var gulp = require("gulp"),
+(function () {
+
+    "use strict";
+
+    var gulp = require("gulp"),
         gutil = require("gulp-util");
 
-gulp.task("log",function() {
+    gulp.task("log", function () {
+        gutil.log("Our workflow is up and running!");
+    });
 
-    gutil.log("Our workflow is up and running!");
+}());
 
-});
