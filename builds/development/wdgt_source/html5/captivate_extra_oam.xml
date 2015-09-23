@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!-- 
+  
+        OpenAjax Alliance Widget Specification 
+--> 
+<widget name="Captivate Extra" id="com.infosemantics.captivateextra"
+        spec="0.1b" jsClass='CaptivateExtraWidgetInit' sandbox='true' width='10' height='10'
+        xmlns="http://openajax.org/metadata"> 
+  
+    <javascript src="scripts/captivate_extra.js"/> 
+  
+    <content type='fragment'> 
+    <![CDATA[ 
+        <div ID="__WID___container"/> 
+    ]]> 
+    </content> 
+</widget>
