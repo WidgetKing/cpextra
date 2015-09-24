@@ -139,7 +139,7 @@ var _extra = {};
      * The number of this build of Captivate Extra.
      * @type {string}
      */
-    _extra.X.buildNumber = "39";
+    _extra.X.buildNumber = "56";
 
     /**
      * The current Captivate version
@@ -256,6 +256,40 @@ var _extra = {};
     });*/
 
 } () );
+/* global _extra*/
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 24/09/15
+ * Time: 1:53 PM
+ * To change this template use File | Settings | File Templates.
+ */
+_extra.initComponent(function () {
+    "use strict";
+    _extra.registerClass("Callback", function () {
+        this.data = {};
+        this.addCallback = function (index, callback) {
+            if (!this.data[index]) {
+                this.data[index] = [];
+            }
+            this.data[index].push(callback);
+        };
+        /*this.hasCallbackFor = function (index) {
+            return this.data[index] !== undefined;
+        };*/
+        this.sendToCallback = function (index,parameter) {
+            if (this.data[index]) {
+                var a = this.data[index];
+                for (var i = 0; i < a.length; i += 1) {
+                    a[i](parameter);
+                }
+            }
+        };
+        this.clear = function () {
+            this.data = {};
+        };
+    });
+});
 /*global _extra*/
 /**
  * Created with IntelliJ IDEA.
@@ -444,3 +478,92 @@ _extra.initComponent(function () {
         setUpStorageVariable(variableName, _extra.w.sessionStorage);
     });
 });
+/*global _extra*/
+_extra.initComponent(function () {
+
+    "use strict";
+
+    _extra.m = _extra.X.cp.model;
+    _extra.X.projectData = _extra.m;
+
+    _extra.dataManager = {};
+    _extra.dataManager.projectSlideObjectData = _extra.m.data;
+
+
+    return function () {
+
+    };
+});
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 24/09/15
+ * Time: 1:28 PM
+ * To change this template use File | Settings | File Templates.
+ */
+
+/* global _extra*/
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 24/09/15
+ * Time: 1:28 PM
+ * To change this template use File | Settings | File Templates.
+ */
+_extra.initComponent(function () {
+   "use strict";
+
+    _extra.slideObjectManager = {
+        "types": {
+            "CLOSE_PATH":4,
+            "CLICK_BOX":13,
+            "HIGHLIGHT_BOX":14,
+            "CAPTION":19,
+            "TEXT_ENTRY_BOX":24,
+            "TEXT_ENTRY_BOX_SUBMIT_BUTTON":75,
+            "BUTTON":177
+        },
+        "projectTypeCallback":new _extra.classes.Callback()
+    };
+
+    return function () {
+        var pd = _extra.dataManager.projectSlideObjectData,
+            c = _extra.slideObjectManager.projectTypeCallback,
+            slideObjectName,
+            slideObjectData;
+
+        for (slideObjectName in pd) {
+
+            if (pd.hasOwnProperty(slideObjectName)) {
+
+                //_extra.log(pd);
+                slideObjectData = pd[slideObjectName];
+
+                c.sendToCallback(slideObjectData.type, slideObjectData);
+
+            }
+        }
+    };
+});
+/*global _extra*/
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 24/09/15
+ * Time: 1:28 PM
+ * To change this template use File | Settings | File Templates.
+ */
+_extra.initComponent(function () {
+    "use strict";
+
+    _extra.slideObjectManager.projectTypeCallback.addCallback(_extra.slideObjectManager.types.TEXT_ENTRY_BOX, function () {
+        _extra.log("HERE");
+    });
+});
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 24/09/15
+ * Time: 1:30 PM
+ * To change this template use File | Settings | File Templates.
+ */
