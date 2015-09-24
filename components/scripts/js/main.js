@@ -20,6 +20,22 @@ var _extra = {};
     // Object used to track which components want a function to be called when the movie is loaded.
     var onFullyLoadedCallbacks = [];
 
+    /**
+     * Sends a message to the debug console of the browser, assuming the console is available.
+     * @param message
+     */
+    _extra.log = function (message) {
+        if (console) {
+            console.log(message);
+        }
+    };
+
+    _extra.error = function (message) {
+        if (console) {
+            console.error(message);
+        }
+    };
+
     ////////////////////////////////
     //////// INIT
     ////////////////////////////////
@@ -67,6 +83,9 @@ var _extra = {};
     if (_extra.w.X) {
         // The Captivate Extra library has already been defined. We will not duplicate it.
         _extra.hasBeenDefined = true;
+        _extra.error("Captivate Extra has already been defined and set up (Or the global 'X' variable has been used by another " +
+                "script) This could be caused by having multiple Captivate Extra widgets in your project." +
+                "This is not best practice. Please only use a single Captivate Extra widget.");
         return;
     } else {
         _extra.hasBeenDefined = false;
@@ -127,16 +146,6 @@ var _extra = {};
      * @type {*}
      */
     _extra.X.captivateVersion = _extra.w.CaptivateVersion;
-
-    /**
-     * Sends a message to the debug console of the browser, assuming the console is available.
-     * @param message
-     */
-    _extra.X.log = function (message) {
-        if (console) {
-            console.log(message);
-        }
-    };
 
     /**
      * The raw Captivate Data object.
@@ -204,6 +213,8 @@ var _extra = {};
      * @type {*}
      */
     _extra.X.cpVariables = _extra.w;
+
+
 
 
 

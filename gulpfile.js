@@ -20,58 +20,64 @@
         jsonPackage = require("./package.json");
 
     var jr = "components/scripts/js/",
-        jsSources = [jr + "main.js", jr + "variableManager/variableManager.js"],
+        jsSources = [jr + "main.js",
+                     jr + "managers/variables/generalVariableManager.js",
+                     jr + "managers/variables/localStorageVariableManager.js"],
         sr = "components/swf/",
         swfSources = [sr + "bin/captivateextra.swf"],
         tr = "tests/output/",
-        testSources = [tr + "01_CE_Local_Storage_Variables/wr/w_5235/scripts"],
+        testSources = [tr + "01_CE_Local_Storage_Variables/wr/w_5235/scripts",
+                       tr + "02_CE_Local_Storage_Variables_2/wr/w_5235/scripts",
+                       tr + "02_CE_Local_Storage_Variables_2/wr/w_5495/scripts"],
         captivateExtraDevLocation = "builds/development/wdgt_source/html5/scripts",
         captivateExtraDevFileName = "captivate_extra.js";
 
+    var buildNumber = jsonPackage.buildNumber;
+
     function iterateBuildNumber () {
-        var bn = jsonPackage.buildNumber + 1;
+        buildNumber += 1;
 
         gulp.src("./package.json")
                 .pipe(gjsoneditor({
-                    "buildNumber":bn
+                    "buildNumber":buildNumber
                 }))
                 .pipe(gulp.dest("./"));
 
-        return bn;
+        return buildNumber;
     }
 
 
     gulp.task("compileJS" , function () {
 
         var bn = iterateBuildNumber();
+        gutil.log("Build Number: " + bn);
 
-        gulp.src(jsSources)
+        return gulp.src(jsSources)
                 .pipe(gconcat(captivateExtraDevFileName))
                 .pipe(greplace("$$VERSION_NUMBER$$",jsonPackage.version))
                 .pipe(greplace("$$BUILD_NUMBER$$",bn))
                 .pipe(gulp.dest(captivateExtraDevLocation));
 
-        gutil.log("Build Number: " + bn);
     });
 
     gulp.task("moveSWFOutput", function () {
-        gulp.src(swfSources)
+        return gulp.src(swfSources)
                 .pipe(gulp.dest("builds/development/wdgt_source/swf"));
     });
 
     gulp.task("compileWidgetDescription", function () {
-        gulp.src("components/scripts/xml/description.xml")
+        return gulp.src("components/scripts/xml/description.xml")
                 .pipe(greplace("$$VERSION_NUMBER$$",jsonPackage.version))
                 .pipe(gulp.dest("builds/development/wdgt_source"));
     });
 
     gulp.task("compileWidget", ["compileWidgetDescription"], function () {
-        gulp.src("builds/development/wdgt_source/**")
+        return gulp.src("builds/development/wdgt_source/**")
                 .pipe(gzip("CaptivateExtra.wdgt"))
                 .pipe(gulp.dest("builds/development"));
     });
 
-    gulp.task("updateTests", function () {
+    gulp.task("updateTests", ["compileJS"], function () {
 
         var piper = gulp.src(captivateExtraDevLocation + "/" + captivateExtraDevFileName);
 
@@ -83,7 +89,7 @@
         }
 
         // Refresh browser
-        piper.pipe(gconnect.reload());
+        return piper.pipe(gconnect.reload());
 
     });
 
@@ -95,14 +101,14 @@
     ///// WATCHES
     // TO CANCEL A TASK RUNNING ON THE COMMAND LINE, HIT: Ctrl + c
     gulp.task("watch", function () {
-        gulp.watch(jsSources, ["compileJS","updateTests"]);
+        return gulp.watch(jsSources, ["updateTests"]);
     });
 
 
 
     ////// SERVER
     gulp.task("connect", function () {
-        gconnect.server({
+        return gconnect.server({
             root: "tests/output",
             livereload: true
         });
@@ -110,7 +116,7 @@
 
 
     ////////// DEFAULT
-    gulp.task("default",["compileJS","moveSWFOutput","compileWidget","connect","watch","updateTests"]);
+    gulp.task("default",["updateTests","moveSWFOutput","compileWidget","connect","watch"]);
 
 }());
 
