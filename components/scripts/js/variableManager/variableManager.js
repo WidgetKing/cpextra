@@ -31,14 +31,14 @@ _extra.initComponent(function () {
     // Function which is called when the movies has been loaded
     return function () {
 
-        var captivateVariables = _extra.cp.variablesManager.varInfos;
+        /*var captivateVariables = _extra.cp.variablesManager.varInfos;
 
         for (var variableName in captivateVariables) {
             if (captivateVariables.hasOwnProperty(variableName)) {
                 _extra.X.log(variableName);
             }
-        }
+        }*/
 
-        _extra.X.log("HERE3");
+        _extra.X.log("Blah blah blah");
     };
 });

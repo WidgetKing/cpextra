@@ -14,7 +14,10 @@
         gutil = require("gulp-util"),
         gconcat = require("gulp-concat"),
         gzip = require("gulp-zip"),
-        gconnect = require("gulp-connect");
+        gconnect = require("gulp-connect"),
+        greplace = require("gulp-replace"),
+        gjsoneditor = require("gulp-json-editor"),
+        jsonPackage = require("./package.json");
 
     var jr = "components/scripts/js/",
         jsSources = [jr + "main.js", jr + "variableManager/variableManager.js"],
@@ -25,10 +28,30 @@
         captivateExtraDevLocation = "builds/development/wdgt_source/html5/scripts",
         captivateExtraDevFileName = "captivate_extra.js";
 
-    gulp.task("concat", function () {
+    function iterateBuildNumber () {
+        var bn = jsonPackage.buildNumber + 1;
+
+        gulp.src("./package.json")
+                .pipe(gjsoneditor({
+                    "buildNumber":bn
+                }))
+                .pipe(gulp.dest("./"));
+
+        return bn;
+    }
+
+
+    gulp.task("compileJS" , function () {
+
+        var bn = iterateBuildNumber();
+
         gulp.src(jsSources)
                 .pipe(gconcat(captivateExtraDevFileName))
+                .pipe(greplace("$$VERSION_NUMBER$$",jsonPackage.version))
+                .pipe(greplace("$$BUILD_NUMBER$$",bn))
                 .pipe(gulp.dest(captivateExtraDevLocation));
+
+        gutil.log("Build Number: " + bn);
     });
 
     gulp.task("moveSWFOutput", function () {
@@ -36,7 +59,13 @@
                 .pipe(gulp.dest("builds/development/wdgt_source/swf"));
     });
 
-    gulp.task("compileWidget", function () {
+    gulp.task("compileWidgetDescription", function () {
+        gulp.src("components/scripts/xml/description.xml")
+                .pipe(greplace("$$VERSION_NUMBER$$",jsonPackage.version))
+                .pipe(gulp.dest("builds/development/wdgt_source"));
+    });
+
+    gulp.task("compileWidget", ["compileWidgetDescription"], function () {
         gulp.src("builds/development/wdgt_source/**")
                 .pipe(gzip("CaptivateExtra.wdgt"))
                 .pipe(gulp.dest("builds/development"));
@@ -60,10 +89,13 @@
 
 
 
+
+
+
     ///// WATCHES
     // TO CANCEL A TASK RUNNING ON THE COMMAND LINE, HIT: Ctrl + c
     gulp.task("watch", function () {
-        gulp.watch(jsSources, ["concat","updateTests"]);
+        gulp.watch(jsSources, ["compileJS","updateTests"]);
     });
 
 
@@ -78,7 +110,7 @@
 
 
     ////////// DEFAULT
-    gulp.task("default",["concat","moveSWFOutput","compileWidget","connect","watch","updateTests"]);
+    gulp.task("default",["compileJS","moveSWFOutput","compileWidget","connect","watch","updateTests"]);
 
 }());
 

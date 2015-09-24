@@ -114,7 +114,13 @@ var _extra = {};
      * The current version of Captivate Extra
      * @type {string}
      */
-    _extra.X.version = "0.0.2";
+    _extra.X.version = "$$VERSION_NUMBER$$";
+
+    /**
+     * The number of this build of Captivate Extra.
+     * @type {string}
+     */
+    _extra.X.buildNumber = "$$BUILD_NUMBER$$";
 
     /**
      * The current Captivate version
