@@ -6,7 +6,7 @@
  * Time: 9:02 AM
  * To change this template use File | Settings | File Templates.
  */
-_extra.initComponent(function () {
+_extra.initModule(function () {
     "use strict";
 
     //////////////////////////
@@ -80,6 +80,8 @@ _extra.initComponent(function () {
                 if (varPrefix === "") {
                     varPrefix = varNameSplitArray[1];
                 }
+
+                varPrefix = varPrefix.toLowerCase();
 
                 // If someone has added a callback for this kind of prefix.
                 if (variablePrefixCallbacks[varPrefix]) {

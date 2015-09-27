@@ -17,9 +17,12 @@
         gconnect = require("gulp-connect"),
         greplace = require("gulp-replace"),
         gjsoneditor = require("gulp-json-editor"),
+        path = require("path"),
+        karma = require("karma"),
+        karmaParseConfig = require("karma/lib/config").parseConfig,
         jsonPackage = require("./package.json");
 
-    var jr = "components/scripts/js/",
+    var jr = "components/scripts/js/dev/",
         jsSources = [jr + "main.js",
                      jr + "classes/callback.js",
                      jr + "managers/variables/generalVariableManager.js",
@@ -31,14 +34,55 @@
                      jr + "classes/variableChangeMonitor.js"],
         sr = "components/swf/",
         swfSources = [sr + "bin/captivateextra.swf"],
-        tr = "tests/output/",
-        testSources = [tr + "01_CE_Local_Storage_Variables/wr/w_5235/scripts",
-                       tr + "02_CE_Local_Storage_Variables_2/wr/w_5235/scripts",
-                       tr + "02_CE_Local_Storage_Variables_2/wr/w_5495/scripts"],
+        ctr = "tests/output/captivate/",
+        captivateTestSources = [ctr + "01_CE_Local_Storage_Variables/wr/w_5235/scripts",
+                       ctr + "02_CE_Local_Storage_Variables_2/wr/w_5235/scripts",
+                       ctr + "02_CE_Local_Storage_Variables_2/wr/w_5495/scripts"],
         captivateExtraDevLocation = "builds/development/wdgt_source/html5/scripts",
-        captivateExtraDevFileName = "captivate_extra.js";
+        captivateExtraDevFileName = "captivate_extra.js",
+        karmaConfig = "karma.conf.js";
 
     var buildNumber = jsonPackage.buildNumber;
+
+    //////////////////////////////////////
+    ///////// KARMA
+    //////////////////////////////////////
+    function runKarma(configFilePath, options, cb) {
+        configFilePath = path.resolve(configFilePath);
+
+        var log = gutil.log,
+            colours = gutil.colors,
+            config = karmaParseConfig(configFilePath, {}),
+            server;
+
+        Object.keys(options).forEach(function (key) {
+            config[key] = options[key];
+        });
+
+        server = new karma.Server(config, function(exitCode) {
+            log("Karma has exited with " + colours.red(exitCode));
+            cb();
+            process.exit(exitCode);
+        });
+        server.start();
+    }
+
+    gulp.task("test", function(cb) {
+        runKarma(karmaConfig, {
+            autoWatch: false,
+            singleRun: true
+        }, cb);
+    });
+
+    gulp.task("test-dev", function(cb) {
+        runKarma(karmaConfig, {
+            autoWatch: true,
+            singleRun: false
+        }, cb);
+    });
+    //////////////////////////////////////
+    ///////// TASKS
+    //////////////////////////////////////
 
     function iterateBuildNumber () {
         buildNumber += 1;
@@ -87,10 +131,10 @@
 
         var piper = gulp.src(captivateExtraDevLocation + "/" + captivateExtraDevFileName);
 
-        for (var i = 0; i < testSources.length; i+=1) {
+        for (var i = 0; i < captivateTestSources.length; i+=1) {
 
-            gutil.log("Copying Captivate Extra to: " + testSources[i]);
-            piper.pipe(gulp.dest(testSources[i]));
+            gutil.log("Copying Captivate Extra to: " + captivateTestSources[i]);
+            piper.pipe(gulp.dest(captivateTestSources[i]));
 
         }
 
@@ -122,7 +166,7 @@
 
 
     ////////// DEFAULT
-    gulp.task("default",["updateTests","moveSWFOutput","compileWidget","connect","watch"]);
+    gulp.task("default",["updateTests","moveSWFOutput","compileWidget","connect","watch","test-dev"]);
 
 }());
 

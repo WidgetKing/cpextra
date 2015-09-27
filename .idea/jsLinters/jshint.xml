@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="JSHintConfiguration" version="2.1.0" use-config-file="false">
+  <component name="JSHintConfiguration" version="2.8.0" use-config-file="false">
     <option bitwise="true" />
     <option camelcase="true" />
     <option curly="true" />
@@ -61,6 +61,7 @@
     <option passfail="false" />
     <option white="false" />
     <option maxerr="50" />
+    <option predef="_extra,jasmine,describe,xdescribe,before,beforeEach,after,afterEach,it,xit,it,inject,expect,spyOn,unitTests" />
   </component>
 </project>
 

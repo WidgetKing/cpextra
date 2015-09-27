@@ -6,10 +6,10 @@
  * Time: 1:28 PM
  * To change this template use File | Settings | File Templates.
  */
-_extra.initComponent(function () {
+_extra.initModule(function () {
     "use strict";
 
     _extra.slideObjectManager.projectTypeCallback.addCallback(_extra.slideObjectManager.types.TEXT_ENTRY_BOX, function () {
-        _extra.log("HERE");
+        _extra.log("lkjlk");
     });
 });

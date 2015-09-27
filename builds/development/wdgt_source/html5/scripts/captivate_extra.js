@@ -6,10 +6,8 @@
  * Time: 9:00 AM
  * To change this template use File | Settings | File Templates.
  */
-        // The internal Captivate Extra Object.
-var _extra = {};
 
-(function () {
+function initCaptivateExtra() {
 
     "use strict";
 
@@ -44,7 +42,7 @@ var _extra = {};
     // This function is used by other files who want to add their functionality to Captivate Extra.
     // If it turns out we want to abort creating Captivate Extra because it's already been defined, then this will
     // prevent the component from executing.
-    _extra.initComponent = function (component) {
+    _extra.initModule = function (component) {
 
         if (!_extra.hasBeenDefined) {
 
@@ -139,7 +137,7 @@ var _extra = {};
      * The number of this build of Captivate Extra.
      * @type {string}
      */
-    _extra.X.buildNumber = "56";
+    _extra.X.buildNumber = "64";
 
     /**
      * The current Captivate version
@@ -255,7 +253,15 @@ var _extra = {};
         _extra.X.log("Module Ready Event Fired");
     });*/
 
-} () );
+}
+
+// We do not automatically initiate Captivate Extra, because we might be running unit tests.
+// If the unit tests already define '_extra' then we'll skip over defining it to allow the unit tests to collect all
+// the data for the different modules.
+if (window._extra === undefined) {
+    window._extra = {};
+    initCaptivateExtra();
+}
 /* global _extra*/
 /**
  * Created with IntelliJ IDEA.
@@ -264,7 +270,7 @@ var _extra = {};
  * Time: 1:53 PM
  * To change this template use File | Settings | File Templates.
  */
-_extra.initComponent(function () {
+_extra.initModule(function () {
     "use strict";
     _extra.registerClass("Callback", function () {
         this.data = {};
@@ -298,7 +304,7 @@ _extra.initComponent(function () {
  * Time: 9:02 AM
  * To change this template use File | Settings | File Templates.
  */
-_extra.initComponent(function () {
+_extra.initModule(function () {
     "use strict";
 
     //////////////////////////
@@ -373,6 +379,8 @@ _extra.initComponent(function () {
                     varPrefix = varNameSplitArray[1];
                 }
 
+                varPrefix = varPrefix.toLowerCase();
+
                 // If someone has added a callback for this kind of prefix.
                 if (variablePrefixCallbacks[varPrefix]) {
 
@@ -406,7 +414,7 @@ _extra.initComponent(function () {
  * Time: 12:21 PM
  * To change this template use File | Settings | File Templates.
  */
-_extra.initComponent(function () {
+_extra.initModule(function () {
 
     "use strict";
 
@@ -479,7 +487,7 @@ _extra.initComponent(function () {
     });
 });
 /*global _extra*/
-_extra.initComponent(function () {
+_extra.initModule(function () {
 
     "use strict";
 
@@ -510,7 +518,7 @@ _extra.initComponent(function () {
  * Time: 1:28 PM
  * To change this template use File | Settings | File Templates.
  */
-_extra.initComponent(function () {
+_extra.initModule(function () {
    "use strict";
 
     _extra.slideObjectManager = {
@@ -553,11 +561,11 @@ _extra.initComponent(function () {
  * Time: 1:28 PM
  * To change this template use File | Settings | File Templates.
  */
-_extra.initComponent(function () {
+_extra.initModule(function () {
     "use strict";
 
     _extra.slideObjectManager.projectTypeCallback.addCallback(_extra.slideObjectManager.types.TEXT_ENTRY_BOX, function () {
-        _extra.log("HERE");
+        _extra.log("lkjlk");
     });
 });
 /**

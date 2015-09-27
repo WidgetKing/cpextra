@@ -6,10 +6,8 @@
  * Time: 9:00 AM
  * To change this template use File | Settings | File Templates.
  */
-        // The internal Captivate Extra Object.
-var _extra = {};
 
-(function () {
+function initCaptivateExtra() {
 
     "use strict";
 
@@ -44,7 +42,7 @@ var _extra = {};
     // This function is used by other files who want to add their functionality to Captivate Extra.
     // If it turns out we want to abort creating Captivate Extra because it's already been defined, then this will
     // prevent the component from executing.
-    _extra.initComponent = function (component) {
+    _extra.initModule = function (component) {
 
         if (!_extra.hasBeenDefined) {
 
@@ -255,4 +253,12 @@ var _extra = {};
         _extra.X.log("Module Ready Event Fired");
     });*/
 
-} () );
+}
+
+// We do not automatically initiate Captivate Extra, because we might be running unit tests.
+// If the unit tests already define '_extra' then we'll skip over defining it to allow the unit tests to collect all
+// the data for the different modules.
+if (window._extra === undefined) {
+    window._extra = {};
+    initCaptivateExtra();
+}

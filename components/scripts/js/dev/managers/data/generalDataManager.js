@@ -1,5 +1,5 @@
 /*global _extra*/
-_extra.initComponent(function () {
+_extra.initModule(function () {
 
     "use strict";
 
