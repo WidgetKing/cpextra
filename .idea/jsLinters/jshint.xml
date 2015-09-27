@@ -61,7 +61,7 @@
     <option passfail="false" />
     <option white="false" />
     <option maxerr="50" />
-    <option predef="_extra,jasmine,describe,xdescribe,before,beforeEach,after,afterEach,it,xit,it,inject,expect,spyOn,unitTests" />
+    <option predef="_extra,window,jasmine,describe,xdescribe,before,beforeEach,after,afterEach,it,xit,it,inject,expect,spyOn,unitTests" />
   </component>
 </project>
 

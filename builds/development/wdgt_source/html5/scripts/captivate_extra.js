@@ -1,23 +1,30 @@
-
-/** global
+/**
  * Created with IntelliJ IDEA.
  * User: Tristan
- * Date: 23/09/15
- * Time: 9:00 AM
+ * Date: 27/09/15
+ * Time: 9:33 AM
  * To change this template use File | Settings | File Templates.
  */
-
-function initCaptivateExtra() {
+function initExtra(topWindow) {
 
     "use strict";
 
-    ////////////////////////////////
-    //////// Private Members
-    ////////////////////////////////
+    if (!topWindow) {
+        topWindow = window;
+    }
 
-    // Object used to track which components want a function to be called when the movie is loaded.
-    var onFullyLoadedCallbacks = [];
+    // We do not automatically initiate Extra, because we might be running unit tests.
+    // If the unit tests already define '_extra' then we'll skip over defining it to allow the unit tests to collect all
+    // the data for the different modules.
+    if (window._extra === undefined) {
+        window._extra = {};
+    } else {
+        return;
+    }
 
+    ///////////////////////////////////
+    ///////// Private Methods
+    ///////////////////////////////////
     /**
      * Sends a message to the debug console of the browser, assuming the console is available.
      * @param message
@@ -28,550 +35,217 @@ function initCaptivateExtra() {
         }
     };
 
+    /**
+     * Send an error to the debug console of the browser, assuming the console is available.
+     * @param message
+     */
     _extra.error = function (message) {
         if (console) {
             console.error(message);
         }
     };
 
-    ////////////////////////////////
-    //////// INIT
-    ////////////////////////////////
-    _extra.X = {};
+    _extra.w = topWindow.top;
 
-    // This function is used by other files who want to add their functionality to Captivate Extra.
-    // If it turns out we want to abort creating Captivate Extra because it's already been defined, then this will
-    // prevent the component from executing.
-    _extra.initModule = function (component) {
 
-        if (!_extra.hasBeenDefined) {
 
-            var result = component();
+    //////////////
+    ///// Extra Pre-detection
+    //////////////
+    if (_extra.w.X !== undefined) {
 
-            if (result) {
-                onFullyLoadedCallbacks.push(result);
-            }
+        _extra.aborted = true;
 
-        }
+        _extra.registerModule = function() {
+            // Purposefully left blank as we don't want to do anything with the registered modules.
+        };
 
-    };
-
-    // There's not a whole lot we can do at the moment until we can access the internals of Captivate
-    // The first step is to find the window object of the main Captivate project
-    // The window object we access here is for the widget (which is loaded in an iFrame and treated as another
-    // web page)
-    function getCaptivateMainWindow(w) {
-
-        // If this is the first time we call this method, then we'll check the current window
-        if (!w) {
-            w = window;
-        }
-
-        // Loop up the windows until we find the magical cp object.
-        if (w.hasOwnProperty("cp")) {
-            return w;
-        } else {
-            return getCaptivateMainWindow(w.parent);
-        }
-    }
-
-    // Assign the main Captivate window object to our private w object
-    _extra.w = getCaptivateMainWindow();
-
-    if (_extra.w.X) {
-        // The Captivate Extra library has already been defined. We will not duplicate it.
-        _extra.hasBeenDefined = true;
-        _extra.error("Captivate Extra has already been defined and set up (Or the global 'X' variable has been used by another " +
-                "script) This could be caused by having multiple Captivate Extra widgets in your project." +
-                "This is not best practice. Please only use a single Captivate Extra widget.");
         return;
     } else {
-        _extra.hasBeenDefined = false;
-        // Expose the Captivate Extra library for use on the main window scope.
-        _extra.w.X = _extra.X;
+        _extra.aborted = false;
     }
 
 
+    //////////////
+    ///// Module Registry
+    //////////////
+    var moduleRegistry = {};
 
+    _extra.registerModule = function(moduleName, moduleDependencies, moduleConstructor) {
 
+        var registry,
+            dependency,
+            dependencyRegistry,
+            areDependenciesSetUp = true;
 
-
-
-
-
-    //////////////////////////////////
-    //////// Internal API Methods
-    //////////////////////////////////
-
-    // Object holds all the classes we use internally.
-    _extra.classes = {};
-
-    //
-    _extra.registerClass = function (name, classFunction) {
-        _extra.classes[name] = classFunction;
-    };
-
-    _extra.cp = _extra.w.cp;
-
-    window.CaptivateExtraWidgetInit = function () {
-        // Captivate is expecting to call this function because it's set up in the widget OAM as the widget's 'init'
-        // method.
-        // We define this function so as to prevent any potential errors.
-        onFullyLoaded();
-    };
-
-
-
-
-    //////////////////////////////////
-    //////// Public API Methods
-    //////////////////////////////////
-
-    /**
-     * The current version of Captivate Extra
-     * @type {string}
-     */
-    _extra.X.version = "0.0.2";
-
-    /**
-     * The number of this build of Captivate Extra.
-     * @type {string}
-     */
-    _extra.X.buildNumber = "64";
-
-    /**
-     * The current Captivate version
-     * @type {*}
-     */
-    _extra.X.captivateVersion = _extra.w.CaptivateVersion;
-
-    /**
-     * The raw Captivate Data object.
-     *
-     * State based functions:
-     * - BringBaseItemToFrontWithinState(c,b)
-     * - GetBaseItemsInAllStates(c,b)
-     * - GetMouseOverManager()
-     * - _changeState*c,b,d,e,f)
-     * - _hideCurrentState(c)
-     * - _showCurrentState(c)
-     * - changeState(c,b,d,e)
-     * - doesSupportStates(c)
-     * - getBaseStateItem(c)
-     * - getCurrentStateObjectForItem(a)
-     * - getDisplayObjByCP_UID(c)
-     * - getDisplayObjByKey(c)
-     * - getDisplayObjNameByCP_UID(c)
-     * - getInfoForStateChange(c,b)
-     * - getLocalisedStateName(c)
-     * - getOffsetPosition(c,b)
-     * - getParentStateObjectForItem(c)
-     * - getStateName(a,b)
-     * - goToNextState(c)
-     * - goToPreviousState(c)
-     * - hasStateOfType(a,b)
-     * - isBaseItemInState(a)
-     * - isInbuiltState(a)
-     * @type {*}
-     */
-    _extra.X.cp = _extra.cp;
-
-    /**
-     * The 'cpInterface' property is a reference to captivate's cpAPIInterface (which is available from the window scope).
-     *
-     * Public methods include
-     * - canNavigateToTime
-     * - canPlay
-     * - fastForward
-     * - getCurrentDeviceMode
-     * - getCurrentFrame
-     * - getCurrentSlideIndex
-     * - getDurationInFrames
-     * - getDurationInSeconds
-     * - getEventEmitter (For captivate enter exit slide events?)
-     * - getPlaySpeed
-     * - getVariableValue() - Pass in the name of the Captivate Variable. Function returns the value
-     * - getVolume
-     * - gotoSlide
-     * - isSWFOrHTMLContent
-     * - navigateToTime
-     * - next
-     * - pause
-     * - play
-     * - previous
-     * - rewind
-     * - setAllowForceQuitContainer
-     * - setVariableValue
-     * - setVolume
-     */
-    _extra.X.cpInterface = _extra.w.cpAPIInterface;
-
-    /**
-     * The location of the Captivate Variables.
-     * @type {*}
-     */
-    _extra.X.cpVariables = _extra.w;
-
-
-
-
-
-
-
-    //////////////////////////////////
-    //////// Private Methods
-    //////////////////////////////////
-    function onFullyLoaded() {
-
-        /////////////////
-        ////// ENTRY POINT
-        /////////////////
-        for (var i = 0; i < onFullyLoadedCallbacks.length; i += 1) {
-
-            onFullyLoadedCallbacks[i]();
-
+        function createRegistry(name) {
+            moduleRegistry[name] = {
+                "subordinates":{},
+                "instantiated": false
+            };
+            return moduleRegistry[name];
         }
 
-        // Now that the callbacks have been called, we can unload those functions from memory.
-        onFullyLoadedCallbacks = null;
-
-        // Begin inspecting Captivate movie elements
-
-        /////////// INSPECT VARIABLES
-
-
-
-    }
-
-
-
-    ////////////////// TEST PIT
-    // Should be deleted before making a production version
-
-    // There is potential we will need to listen to this event if the widget is loaded on the first frame of the movie
-    /*window.addEventListener("moduleReadyEvent", function () {
-        _extra.X.log("Module Ready Event Fired");
-    });*/
-
-}
-
-// We do not automatically initiate Captivate Extra, because we might be running unit tests.
-// If the unit tests already define '_extra' then we'll skip over defining it to allow the unit tests to collect all
-// the data for the different modules.
-if (window._extra === undefined) {
-    window._extra = {};
-    initCaptivateExtra();
-}
-/* global _extra*/
-/**
- * Created with IntelliJ IDEA.
- * User: Tristan
- * Date: 24/09/15
- * Time: 1:53 PM
- * To change this template use File | Settings | File Templates.
- */
-_extra.initModule(function () {
-    "use strict";
-    _extra.registerClass("Callback", function () {
-        this.data = {};
-        this.addCallback = function (index, callback) {
-            if (!this.data[index]) {
-                this.data[index] = [];
-            }
-            this.data[index].push(callback);
-        };
-        /*this.hasCallbackFor = function (index) {
-            return this.data[index] !== undefined;
-        };*/
-        this.sendToCallback = function (index,parameter) {
-            if (this.data[index]) {
-                var a = this.data[index];
-                for (var i = 0; i < a.length; i += 1) {
-                    a[i](parameter);
-                }
-            }
-        };
-        this.clear = function () {
-            this.data = {};
-        };
-    });
-});
-/*global _extra*/
-/**
- * Created with IntelliJ IDEA.
- * User: Tristan
- * Date: 23/09/15
- * Time: 9:02 AM
- * To change this template use File | Settings | File Templates.
- */
-_extra.initModule(function () {
-    "use strict";
-
-    //////////////////////////
-    /////// Private Variables
-    //////////////////////////
-    var variablePrefixCallbacks = {};
-
-
-    //////////////////////////
-    ////// Component Setup
-    //////////////////////////
-    window._extra.variableManager = {};
-    window._extra.variableManager.registerVariablePrefixCallback = function (prefix, callback) {
-
-        if (!variablePrefixCallbacks[prefix]) {
-            variablePrefixCallbacks[prefix] = [];
+        function registerSubordinate(moduleName,subordinateName) {
+            moduleRegistry[moduleName].subordinates[subordinateName] = moduleRegistry[subordinateName];
+            areDependenciesSetUp = false;
         }
 
-        variablePrefixCallbacks[prefix].push(callback);
-    };
+        // If the short hand has been used which passes in a module with no dependencies,
+        // account for that case.
+        if (moduleConstructor === undefined && typeof moduleDependencies === "function") {
+            moduleConstructor = moduleDependencies;
+            moduleDependencies = [];
 
-    ///////////////////////////
-    //////// Public Methods
-    ///////////////////////////
-    /**
-     * Changes the value of a Captivate Variable. This is the safest method of doing this, as Captivate Extra tickers
-     * a lot with variables, it wants to know in advance when they are changed. This function will ensure they are
-     * always updated in an acceptable manner.
-     * @param variableName The name of the variable to be updated
-     * @param value The value to assign said variable
-     */
-    _extra.X.setVariableValue = function (variableName, value) {
-        _extra.X.cpInterface.setVariableValue(variableName, value);
-    };
+        // If a single dependency has been passed in as a string rather than an array.
+        } else if (typeof moduleDependencies === "string") {
+            moduleDependencies = [moduleDependencies];
+        }
 
-    /**
-     * Gives you the value of a Captivate Variable. This is the safest method of doing this, as Captivate Extra tickers
-     * a lot with variables behind the scenes. Captivate Extra wants to be notified whenever a variable is accessed.
-     * This function will ensure the correct value is returned.
-     * @param variableName The name of the variable whose value you want returned
-     */
-    _extra.X.getVariableValue = function (variableName) {
-        return _extra.X.cpInterface.getVariableValue(variableName);
-    };
+        // If an object for this module has not been created, create that module.
+        if (!moduleRegistry[moduleName]) {
+            createRegistry(moduleName);
+        // If a module of this name has already been created, it may have been to record its subordinates
+        // On the other hand, if a contructor or dependencies parameter has been defined, another module
+        // has already reserved this module name. This can be caused if some storyline code gets included with
+        // the captivate export. Or visa versa
+        } else if (moduleRegistry[moduleName].dependencies !== undefined) {
+            throw Error("Tried to register two modules under the name: " + moduleName);
+        }
+
+        registry = moduleRegistry[moduleName];
+        registry.dependencies = moduleDependencies;
+        registry.moduleConstructor = moduleConstructor;
+
+        // Loop through the dependencies to see if they have already been called.
+        for (var i = 0; i < registry.dependencies.length; i += 1) {
 
 
-    // Function which is called when the movies has been loaded
-    return function () {
+            dependency = registry.dependencies[i];
+            dependencyRegistry = moduleRegistry[dependency];
 
-        var captivateVariables = _extra.cp.variablesManager.varInfos,
-            varInfo,
-            varName,
-            varNameSplitArray,
-            varPrefix,
-            i, j;
+            // Make sure we're not making this module depend on itself
+            if (dependency === moduleName) {
+                throw new Error("Can't set up a module as a dependency of itself");
+            }
 
-        for (i = 0; i < captivateVariables.length; i += 1) {
+            // The dependency module has already registered
+            if (dependencyRegistry) {
 
-            varInfo = captivateVariables[i];
-
-            if (!varInfo.systemDefined) {
-                // This is a user variable
-
-                varName = varInfo.name;
-                varNameSplitArray = varName.split("_");
-                varPrefix = varNameSplitArray[0];
-
-                // To support all variables as having an underscore '_' in front of their name
-                // we'll check if the first index is empty (as would be true in a variable name such as _ls_myVariable)
-                // If so, we'll use the second index as the variable's prefix (in that example it would be 'ls')
-                if (varPrefix === "") {
-                    varPrefix = varNameSplitArray[1];
+                // But the dependency module hasn't been called yet.
+                if (!dependencyRegistry.instantiated) {
+                    // Leave a note with the dependency module to try and call us once he's done.
+                    registerSubordinate(dependency,moduleName);
                 }
 
-                varPrefix = varPrefix.toLowerCase();
+            } else {
 
-                // If someone has added a callback for this kind of prefix.
-                if (variablePrefixCallbacks[varPrefix]) {
+                dependencyRegistry = createRegistry(dependency);
+                registerSubordinate(dependency,moduleName);
 
-                    // varInfo now becomes the variable to hold the array of callbacks.
-                    varInfo = variablePrefixCallbacks[varPrefix];
+            }
+        }
 
-                    // Loop through all callbacks and send them the name of the variable they want.
-                    for (j = 0; j < varInfo.length; j += 1) {
+        if (areDependenciesSetUp) {
 
-                        varInfo[j](varName);
+            initializeModule(moduleName);
+        }
 
+    };
+
+    function initializeModule(moduleName) {
+        var registry = moduleRegistry[moduleName],
+            subDep,
+            areAllDependenciesInitialized;
+
+
+        registry.onLoadCallback = registry.moduleConstructor();
+        registry.instantiated = true;
+
+        // Loop through all the modules that have dependencies on this one
+        for (var subordinateName in registry.subordinates) {
+            if (registry.subordinates.hasOwnProperty(subordinateName)) {
+
+
+                subDep = moduleRegistry[subordinateName];
+
+                // If through another tree we've already initialized this module, then don't do it again.
+                if (subDep.instantiated) {
+                    continue;
+                }
+
+                // If this gets set to false, then we won't initialize this model.
+                areAllDependenciesInitialized = true;
+
+
+                for (var i = 0; i < subDep.dependencies.length; i += 1) {
+
+                    if (!moduleRegistry[subDep.dependencies[i]].instantiated) {
+                        areAllDependenciesInitialized = false;
+                        break;
                     }
 
                 }
 
 
-            }
-
-        } // End of looping through Captivate Variables.
-
-        // All relevant callbacks called. We can unload this information now.
-        variablePrefixCallbacks = null;
-
-    };
-});
-/*global _extra*/
-/**
- * Created with IntelliJ IDEA.
- * User: Tristan
- * Date: 24/09/15
- * Time: 12:21 PM
- * To change this template use File | Settings | File Templates.
- */
-_extra.initModule(function () {
-
-    "use strict";
-
-    var storageVariables;
-
-    function saveStorageVariables() {
-        var storageVariableInfo,
-            variableName;
-
-        for (variableName in storageVariables) {
-
-            if (storageVariables.hasOwnProperty(variableName)) {
-
-                storageVariableInfo = storageVariables[variableName];
-                storageVariableInfo.storage.setItem(variableName,
-                                                    _extra.X.getVariableValue(variableName));
+                if (areAllDependenciesInitialized) {
+                    initializeModule(subordinateName);
+                }
 
             }
-
         }
-
     }
 
-    function initializeStorageVariables() {
-        storageVariables = {};
+    //////////////
+    ///// Define the public API
+    //////////////
+    _extra.X = {};
 
-        // Save the storage variables when the window closes.
-        _extra.w.addEventListener("unload", saveStorageVariables);
-    }
+    //////////////
+    ///// Call on load callbacks
+    //////////////
+    function callOnLoadCallbacks() {
 
-
-
-    function setUpStorageVariable(variableName, storage) {
-
-        // Initialize Storage Variables
-        if (!storageVariables) {
-            initializeStorageVariables();
-        }
-
-        // Check Storage
-        var storageValue = storage.getItem(variableName);
-        if (storageValue) {
-
-            // If this item can be of a number type, then write it to the variable as a number type.
-            if (!isNaN(storageValue)) {
-                storageValue = parseFloat(storageValue);
-            }
-
-
-
-            // We do have a valid value in storage
-            _extra.X.setVariableValue(variableName, storageValue);
-        }
-
-        // Save this variable to our records so that we can save its value to storage at the appropriate time.
-        storageVariables[variableName] = {
-            "storage": storage
-        };
-    }
-
-    setTimeout(saveStorageVariables,4000);
-
-    // Tap into the variable manager's callbacks. This is how we are notified of variables.
-    _extra.variableManager.registerVariablePrefixCallback("ls", function (variableName) {
-        setUpStorageVariable(variableName, _extra.w.localStorage);
-    });
-
-    _extra.variableManager.registerVariablePrefixCallback("ss", function (variableName) {
-        setUpStorageVariable(variableName, _extra.w.sessionStorage);
-    });
-});
-/*global _extra*/
-_extra.initModule(function () {
-
-    "use strict";
-
-    _extra.m = _extra.X.cp.model;
-    _extra.X.projectData = _extra.m;
-
-    _extra.dataManager = {};
-    _extra.dataManager.projectSlideObjectData = _extra.m.data;
-
-
-    return function () {
-
-    };
-});
-/**
- * Created with IntelliJ IDEA.
- * User: Tristan
- * Date: 24/09/15
- * Time: 1:28 PM
- * To change this template use File | Settings | File Templates.
- */
-
-/* global _extra*/
-/**
- * Created with IntelliJ IDEA.
- * User: Tristan
- * Date: 24/09/15
- * Time: 1:28 PM
- * To change this template use File | Settings | File Templates.
- */
-_extra.initModule(function () {
-   "use strict";
-
-    _extra.slideObjectManager = {
-        "types": {
-            "CLOSE_PATH":4,
-            "CLICK_BOX":13,
-            "HIGHLIGHT_BOX":14,
-            "CAPTION":19,
-            "TEXT_ENTRY_BOX":24,
-            "TEXT_ENTRY_BOX_SUBMIT_BUTTON":75,
-            "BUTTON":177
-        },
-        "projectTypeCallback":new _extra.classes.Callback()
-    };
-
-    return function () {
-        var pd = _extra.dataManager.projectSlideObjectData,
-            c = _extra.slideObjectManager.projectTypeCallback,
-            slideObjectName,
-            slideObjectData;
-
-        for (slideObjectName in pd) {
-
-            if (pd.hasOwnProperty(slideObjectName)) {
-
-                //_extra.log(pd);
-                slideObjectData = pd[slideObjectName];
-
-                c.sendToCallback(slideObjectData.type, slideObjectData);
-
+        var m;
+        for (var moduleName in moduleRegistry) {
+            if (moduleRegistry.hasOwnProperty(moduleName)) {
+                m = moduleRegistry[moduleName];
+                if (m.onLoadCallback) {
+                    m.onLoadCallback();
+                }
             }
         }
-    };
-});
-/*global _extra*/
-/**
- * Created with IntelliJ IDEA.
- * User: Tristan
- * Date: 24/09/15
- * Time: 1:28 PM
- * To change this template use File | Settings | File Templates.
- */
-_extra.initModule(function () {
-    "use strict";
+    }
 
-    _extra.slideObjectManager.projectTypeCallback.addCallback(_extra.slideObjectManager.types.TEXT_ENTRY_BOX, function () {
-        _extra.log("lkjlk");
-    });
-});
-/**
- * Created with IntelliJ IDEA.
- * User: Tristan
- * Date: 24/09/15
- * Time: 1:30 PM
- * To change this template use File | Settings | File Templates.
- */
+    //////////////
+    ///// Listen for Storyline Initialization
+    //////////////
+    var onStorylineLoaded = function () {
+
+        window.removeEventListener("unload", onStorylineLoaded);
+
+        if (window.story) {
+
+            _extra.log("I'm in Storyline");
+            callOnLoadCallbacks();
+
+        }
+
+    };
+
+
+    window.addEventListener("load", onStorylineLoaded);
+
+    //////////////
+    ///// Listen for Captivate Initialization
+    //////////////
+    window.CaptivateExtraWidgetInit = function() {
+        if (_extra.w.cp) {
+            _extra.log("I'm in Captivate");
+            window.removeEventListener("load", onStorylineLoaded);
+            callOnLoadCallbacks();
+        }
+    };
+}
+
+initExtra();
