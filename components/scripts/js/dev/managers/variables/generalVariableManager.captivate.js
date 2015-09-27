@@ -6,7 +6,7 @@
  * Time: 9:02 AM
  * To change this template use File | Settings | File Templates.
  */
-_extra.initModule(function () {
+_extra.registerModule("variableManager", ["outputInterfacesManager"], function () {
     "use strict";
     // CAAAAAAAPTIVATE!
     //////////////////////////

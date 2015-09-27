@@ -17,9 +17,9 @@ module.exports = function(config) {
     files: [
       'components/scripts/js/tests/testsSetup.js',
       'components/scripts/js/dev/main.js',
-      //'components/scripts/js/dev/**/*.js',
+      'components/scripts/js/dev/**/*.js',
       'components/scripts/js/tests/testsTeardown.js',
-      //'components/scripts/js/tests/**/*.js',
+      'components/scripts/js/tests/**/*.js',
       'components/scripts/js/tests/main.test.js'
     ],
 

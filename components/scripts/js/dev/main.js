@@ -45,7 +45,12 @@ function initExtra(topWindow) {
         }
     };
 
+    // The highest window, where we should be able to find the internal functions of the output
     _extra.w = topWindow.top;
+
+    // Constants used to identify modules that are specialized for Captivate or Storyline
+    _extra.CAPTIVATE = "cp";
+    _extra.STORYLINE = "sl";
 
 
 
@@ -56,7 +61,7 @@ function initExtra(topWindow) {
 
         _extra.aborted = true;
 
-        _extra.registerModule = function() {
+        _extra.registerModule = function () {
             // Purposefully left blank as we don't want to do anything with the registered modules.
         };
 
@@ -65,13 +70,60 @@ function initExtra(topWindow) {
         _extra.aborted = false;
     }
 
+    //////////////
+    ///// Class registry
+    //////////////
+    // Who would want extra classes?
+    _extra.classes = {};
+
+    _extra.registerClass = function (className, classConstructor, SuperClass) {
+
+        if (SuperClass) {
+
+            if (typeof SuperClass === "string") {
+
+
+                if (_extra.classes[SuperClass]) {
+
+                    SuperClass = _extra.classes[SuperClass];
+
+                } else {
+
+                    throw new Error("Could not find a class by the name of '" + SuperClass + "' to be used as a super class.");
+
+                }
+
+            }
+
+            if (SuperClass.constructor === Function) {
+
+                // Normal Inheritance
+                classConstructor.prototype = new SuperClass;
+                classConstructor.prototype.constructor = classConstructor;
+                classConstructor.prototype.parent = SuperClass.prototype;
+
+            }
+            else
+            {
+
+                // Pure Virtual Inheritance
+                classConstructor.prototype = SuperClass;
+                classConstructor.prototype.constructor = classConstructor;
+                classConstructor.prototype.parent = SuperClass;
+
+            }
+        }
+
+
+        _extra.classes[className] = classConstructor;
+    };
 
     //////////////
     ///// Module Registry
     //////////////
     var moduleRegistry = {};
 
-    _extra.registerModule = function(moduleName, moduleDependencies, moduleConstructor) {
+    _extra.registerModule = function (moduleName, moduleDependencies, moduleConstructor) {
 
         var registry,
             dependency,
@@ -93,7 +145,7 @@ function initExtra(topWindow) {
 
         // If the short hand has been used which passes in a module with no dependencies,
         // account for that case.
-        if (moduleConstructor === undefined && typeof moduleDependencies === "function") {
+        if (typeof moduleDependencies === "function") {
             moduleConstructor = moduleDependencies;
             moduleDependencies = [];
 
@@ -199,7 +251,10 @@ function initExtra(topWindow) {
     //////////////
     ///// Define the public API
     //////////////
-    _extra.X = {};
+    _extra.X = {
+        "version":"$$VERSION_NUMBER$$",
+        "build":"$$BUILD_NUMBER$$"
+    };
 
     //////////////
     ///// Call on load callbacks
@@ -226,7 +281,6 @@ function initExtra(topWindow) {
 
         if (window.story) {
 
-            _extra.log("I'm in Storyline");
             callOnLoadCallbacks();
 
         }
@@ -240,8 +294,9 @@ function initExtra(topWindow) {
     ///// Listen for Captivate Initialization
     //////////////
     window.CaptivateExtraWidgetInit = function() {
+        // Double check that we are actually in Captivate.
         if (_extra.w.cp) {
-            _extra.log("I'm in Captivate");
+            // Stop listening for Storyline initialization.
             window.removeEventListener("load", onStorylineLoaded);
             callOnLoadCallbacks();
         }

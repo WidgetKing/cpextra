@@ -8,10 +8,28 @@
 (function () {
 
     "use strict";
-    window.unitTests = {};
+    window.unitTests = {
+        "CAPTIVATE":"cp",
+        "STORYLINE":"sl"
+    };
     unitTests.modules = {};
-    unitTests.initModule = function(moduleName, moduleDependencies, moduleConstructor) {
-        unitTests.modules[moduleName] = moduleConstructor;
+    unitTests.registerModule = function(moduleName, moduleDependencies, moduleConstructor, softwareType) {
+
+        if (typeof moduleDependencies === "function") {
+
+            if (typeof moduleConstructor === "string") {
+                softwareType = moduleConstructor;
+            }
+
+            moduleConstructor = moduleDependencies;
+
+        }
+
+        if (softwareType) {
+            unitTests.modules[moduleName + "_" + softwareType] = moduleConstructor;
+        } else {
+            unitTests.modules[moduleName] = moduleConstructor;
+        }
     };
     window._extra = window.unitTests;
 

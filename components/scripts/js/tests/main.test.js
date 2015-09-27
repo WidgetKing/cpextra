@@ -72,6 +72,12 @@
             delete window.top.X;
         });
 
+        it("should define some constants which are used to identify Captivate and Storyline", function () {
+            initExtra();
+            expect(_extra.CAPTIVATE).toBeDefined();
+            expect(_extra.STORYLINE).toBeDefined();
+        });
+
     });
 
     describe("Test Suite for main.js module registering", function () {
@@ -181,6 +187,61 @@
             expect(a.dummy).toHaveBeenCalled();
         });
 
+        it("should be able to disregard software identifiers if passed in for unit testing sakes", function () {
+            _extra.registerModule("foo", a.dummy, "cp");
+            expect(a.dummy).toHaveBeenCalled();
+        });
+
+    });
+
+    describe("Test suite for main.js class repository and handling", function () {
+
+        beforeEach(function () {
+           initExtra();
+        });
+
+        afterEach(function () {
+            delete window._extra;
+        });
+
+        it("should be able to register and access a class", function () {
+            var classConstructor = function () {};
+            _extra.registerClass("MyClass", classConstructor);
+            expect(_extra.classes.MyClass).toBe(classConstructor);
+        });
+
+        it("should be able to handle inheritence of classes", function () {
+            var superClass = function () {};
+            superClass.prototype.prop1 = true;
+            var childClass = function () {};
+            superClass.prototype.prop2 = true;
+
+            _extra.registerClass("ChildClass", childClass, superClass);
+
+            var instance = new _extra.classes.ChildClass();
+            expect(instance.prop1).toBe(true);
+            expect(instance.prop2).toBe(true);
+        });
+
+        it("should be able to define super class through string", function () {
+            var superClass = function () {};
+            superClass.prototype.prop1 = true;
+            var childClass = function () {};
+            superClass.prototype.prop2 = true;
+
+            _extra.registerClass("SuperClass", superClass);
+            _extra.registerClass("ChildClass", childClass, "SuperClass");
+
+            var instance = new _extra.classes.ChildClass();
+            expect(instance.prop1).toBe(true);
+            expect(instance.prop2).toBe(true);
+        });
+
+        it("should throw and error if we try to make a class inherit from a super class that doesn't exist", function () {
+            expect(function () {
+                _extra.registerClass("ChildClass", function () {}, "SuperClass");
+            }).toThrow();
+        });
 
     });
 

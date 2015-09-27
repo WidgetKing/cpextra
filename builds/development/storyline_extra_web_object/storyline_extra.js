@@ -45,7 +45,12 @@ function initExtra(topWindow) {
         }
     };
 
+    // The highest window, where we should be able to find the internal functions of the output
     _extra.w = topWindow.top;
+
+    // Constants used to identify modules that are specialized for Captivate or Storyline
+    _extra.CAPTIVATE = "cp";
+    _extra.STORYLINE = "sl";
 
 
 
@@ -56,7 +61,7 @@ function initExtra(topWindow) {
 
         _extra.aborted = true;
 
-        _extra.registerModule = function() {
+        _extra.registerModule = function () {
             // Purposefully left blank as we don't want to do anything with the registered modules.
         };
 
@@ -65,13 +70,60 @@ function initExtra(topWindow) {
         _extra.aborted = false;
     }
 
+    //////////////
+    ///// Class registry
+    //////////////
+    // Who would want extra classes?
+    _extra.classes = {};
+
+    _extra.registerClass = function (className, classConstructor, SuperClass) {
+
+        if (SuperClass) {
+
+            if (typeof SuperClass === "string") {
+
+
+                if (_extra.classes[SuperClass]) {
+
+                    SuperClass = _extra.classes[SuperClass];
+
+                } else {
+
+                    throw new Error("Could not find a class by the name of '" + SuperClass + "' to be used as a super class.");
+
+                }
+
+            }
+
+            if (SuperClass.constructor === Function) {
+
+                // Normal Inheritance
+                classConstructor.prototype = new SuperClass;
+                classConstructor.prototype.constructor = classConstructor;
+                classConstructor.prototype.parent = SuperClass.prototype;
+
+            }
+            else
+            {
+
+                // Pure Virtual Inheritance
+                classConstructor.prototype = SuperClass;
+                classConstructor.prototype.constructor = classConstructor;
+                classConstructor.prototype.parent = SuperClass;
+
+            }
+        }
+
+
+        _extra.classes[className] = classConstructor;
+    };
 
     //////////////
     ///// Module Registry
     //////////////
     var moduleRegistry = {};
 
-    _extra.registerModule = function(moduleName, moduleDependencies, moduleConstructor) {
+    _extra.registerModule = function (moduleName, moduleDependencies, moduleConstructor) {
 
         var registry,
             dependency,
@@ -93,7 +145,7 @@ function initExtra(topWindow) {
 
         // If the short hand has been used which passes in a module with no dependencies,
         // account for that case.
-        if (moduleConstructor === undefined && typeof moduleDependencies === "function") {
+        if (typeof moduleDependencies === "function") {
             moduleConstructor = moduleDependencies;
             moduleDependencies = [];
 
@@ -199,7 +251,10 @@ function initExtra(topWindow) {
     //////////////
     ///// Define the public API
     //////////////
-    _extra.X = {};
+    _extra.X = {
+        "version":"0.0.2",
+        "build":"239"
+    };
 
     //////////////
     ///// Call on load callbacks
@@ -226,7 +281,6 @@ function initExtra(topWindow) {
 
         if (window.story) {
 
-            _extra.log("I'm in Storyline");
             callOnLoadCallbacks();
 
         }
@@ -240,8 +294,9 @@ function initExtra(topWindow) {
     ///// Listen for Captivate Initialization
     //////////////
     window.CaptivateExtraWidgetInit = function() {
+        // Double check that we are actually in Captivate.
         if (_extra.w.cp) {
-            _extra.log("I'm in Captivate");
+            // Stop listening for Storyline initialization.
             window.removeEventListener("load", onStorylineLoaded);
             callOnLoadCallbacks();
         }
@@ -249,3 +304,227 @@ function initExtra(topWindow) {
 }
 
 initExtra();
+/* global _extra*/
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 24/09/15
+ * Time: 1:53 PM
+ * To change this template use File | Settings | File Templates.
+ */
+_extra.registerModule("callback", function () {
+    "use strict";
+    _extra.registerClass("Callback", function () {
+        this.data = {};
+        this.addCallback = function (index, callback) {
+            if (!this.data[index]) {
+                this.data[index] = [];
+            }
+            this.data[index].push(callback);
+        };
+        this.hasCallbackFor = function (index) {
+            return this.data[index] !== undefined;
+        };
+        this.sendToCallback = function (index,parameter) {
+            if (this.data[index]) {
+                var a = this.data[index];
+                for (var i = 0; i < a.length; i += 1) {
+                    a[i](parameter);
+                }
+            }
+        };
+        this.clear = function () {
+            this.data = {};
+        };
+    });
+});
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 24/09/15
+ * Time: 1:30 PM
+ * To change this template use File | Settings | File Templates.
+ */
+
+/*global _extra*/
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 24/09/15
+ * Time: 1:28 PM
+ * To change this template use File | Settings | File Templates.
+ */
+_extra.registerModule("textBoxBehaviour", ["slideObjectManager"], function () {
+    "use strict";
+
+    _extra.slideObjectManager.projectTypeCallback.addCallback(_extra.slideObjectManager.types.TEXT_ENTRY_BOX, function () {
+        _extra.log("lkjlk");
+    });
+});
+/*global _extra*/
+_extra.registerModule("dataManager", ["outputIntefacesManager"], function () {
+
+    "use strict";
+
+    _extra.m = _extra.X.cp.model;
+    _extra.X.projectData = _extra.m;
+
+    _extra.dataManager = {};
+    _extra.dataManager.projectSlideObjectData = _extra.m.data;
+
+
+    return function () {
+
+    };
+});
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 24/09/15
+ * Time: 1:28 PM
+ * To change this template use File | Settings | File Templates.
+ */
+
+/* global _extra*/
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 24/09/15
+ * Time: 1:28 PM
+ * To change this template use File | Settings | File Templates.
+ */
+_extra.registerModule("slideObjectManager", ["dataManager"], function () {
+   "use strict";
+
+    _extra.slideObjectManager = {
+        "types": {
+            "CLOSE_PATH":4,
+            "CLICK_BOX":13,
+            "HIGHLIGHT_BOX":14,
+            "CAPTION":19,
+            "TEXT_ENTRY_BOX":24,
+            "TEXT_ENTRY_BOX_SUBMIT_BUTTON":75,
+            "BUTTON":177
+        },
+        "projectTypeCallback":new _extra.classes.Callback()
+    };
+
+    return function () {
+        var pd = _extra.dataManager.projectSlideObjectData,
+            c = _extra.slideObjectManager.projectTypeCallback,
+            slideObjectName,
+            slideObjectData;
+
+        for (slideObjectName in pd) {
+
+            if (pd.hasOwnProperty(slideObjectName)) {
+
+                //_extra.log(pd);
+                slideObjectData = pd[slideObjectName];
+
+                c.sendToCallback(slideObjectData.type, slideObjectData);
+
+            }
+        }
+    };
+});
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 27/09/15
+ * Time: 4:15 PM
+ * To change this template use File | Settings | File Templates.
+ */
+_extra.registerModule("softwareInterfacesManager", function () {
+    alert("STORYLINE");
+}, _extra.STORYLINE);
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 27/09/15
+ * Time: 8:10 AM
+ * To change this template use File | Settings | File Templates.
+ */
+_extra.registerModule("variableManager", ["outputInterfacesManager"], function () {
+   /////////////// STORYLINE!
+});
+/*global _extra*/
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 24/09/15
+ * Time: 12:21 PM
+ * To change this template use File | Settings | File Templates.
+ */
+_extra.registerModule("localStorageManager", ["variableManager"], function () {
+
+    "use strict";
+
+    var storageVariables;
+
+    function saveStorageVariables() {
+        var storageVariableInfo,
+            variableName;
+
+        for (variableName in storageVariables) {
+
+            if (storageVariables.hasOwnProperty(variableName)) {
+
+                storageVariableInfo = storageVariables[variableName];
+                storageVariableInfo.storage.setItem(variableName,
+                                                    _extra.X.getVariableValue(variableName));
+
+            }
+
+        }
+
+    }
+
+    function initializeStorageVariables() {
+        storageVariables = {};
+
+        // Save the storage variables when the window closes.
+        _extra.w.addEventListener("unload", saveStorageVariables);
+    }
+
+
+
+    function setUpStorageVariable(variableName, storage) {
+
+        // Initialize Storage Variables
+        if (!storageVariables) {
+            initializeStorageVariables();
+        }
+
+        // Check Storage
+        var storageValue = storage.getItem(variableName);
+        if (storageValue) {
+
+            // If this item can be of a number type, then write it to the variable as a number type.
+            if (!isNaN(storageValue)) {
+                storageValue = parseFloat(storageValue);
+            }
+
+
+
+            // We do have a valid value in storage
+            _extra.X.setVariableValue(variableName, storageValue);
+        }
+
+        // Save this variable to our records so that we can save its value to storage at the appropriate time.
+        storageVariables[variableName] = {
+            "storage": storage
+        };
+    }
+
+    setTimeout(saveStorageVariables,4000);
+
+    // Tap into the variable manager's callbacks. This is how we are notified of variables.
+    _extra.variableManager.registerVariablePrefixCallback("ls", function (variableName) {
+        setUpStorageVariable(variableName, _extra.w.localStorage);
+    });
+
+    _extra.variableManager.registerVariablePrefixCallback("ss", function (variableName) {
+        setUpStorageVariable(variableName, _extra.w.sessionStorage);
+    });
+});

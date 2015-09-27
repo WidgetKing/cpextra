@@ -23,8 +23,8 @@
         jsonPackage = require("./package.json");
 
     var jr = "components/scripts/js/dev/",
-        jsCaptivateSources = [jr + "main.js"],
-                     //jr + "**/!(*.storyline.js)"],
+        jsCaptivateSources = [jr + "main.js",
+                     jr + "**/!(*.storyline.js)"],
                      /*jr + "classes/callback.js",
                      jr + "managers/variables/generalVariableManager.captivate.js",
                      jr + "managers/variables/localStorageVariableManager.js",
@@ -33,8 +33,8 @@
                      jr + "managers/slideObjects/generalSlideObjectManager.js",
                      jr + "managers/behaviour/textBoxBehaviourManager.js",
                      jr + "classes/variableChangeMonitor.js"],*/
-        jsStorylineSources = [jr + "main.js"],
-                     //jr + "**/!(*.captivate.js)"],
+        jsStorylineSources = [jr + "main.js",
+                     jr + "**/!(*.captivate.js)"],
         sr = "components/swf/",
         swfSources = [sr + "bin/captivateextra.swf"],
 

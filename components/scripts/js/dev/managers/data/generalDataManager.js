@@ -1,5 +1,5 @@
 /*global _extra*/
-_extra.initModule(function () {
+_extra.registerModule("dataManager", ["outputIntefacesManager"], function () {
 
     "use strict";
 

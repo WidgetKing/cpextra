@@ -6,7 +6,7 @@
  * Time: 12:21 PM
  * To change this template use File | Settings | File Templates.
  */
-_extra.initModule(function () {
+_extra.registerModule("localStorageManager", ["variableManager"], function () {
 
     "use strict";
 

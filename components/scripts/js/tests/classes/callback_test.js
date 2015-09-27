@@ -5,10 +5,48 @@
  * Time: 8:37 PM
  * To change this template use File | Settings | File Templates.
  */
-describe("A suite", function() {
+describe("A suite for testing the callback class", function() {
     "use strict";
-   it("contains spec with an exception", function(){
-       expect(true).toBe(true);
-       expect(true).toBe(true);
+
+    // Get access to the callback class so we can start tests.
+    var Callback,
+        cb,
+        a = {};
+    window._extra = {};
+    window._extra.registerClass = function(name,classConstructor) {
+        Callback = classConstructor;
+    };
+
+    unitTests.modules.callback();
+    delete window._extra;
+
+
+    beforeEach(function () {
+        a.dummy = function () {};
+        spyOn(a,"dummy");
+
+        cb = new Callback();
+        cb.addCallback("foo", a.dummy);
+    });
+
+
+
+   it("should be able to add new callbacks", function() {
+       a.notherDummy = function () {};
+       spyOn(a,"notherDummy");
+       cb.addCallback("bar", a.notherDummy);
+
+       expect(cb.hasCallbackFor("bar")).toBe(true);
+       expect(cb.hasCallbackFor("foo")).toBe(true);
    });
+
+    it("should be able to pass information to stored callbacks", function () {
+        cb.sendToCallback("foo", "foobar");
+        expect(a.dummy).toHaveBeenCalledWith("foobar");
+    });
+
+    it("should be able to clear its own data", function () {
+        cb.clear();
+        expect(cb.hasCallbackFor("foo")).toBe(false);
+    });
 });

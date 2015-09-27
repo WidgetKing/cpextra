@@ -6,7 +6,7 @@
  * Time: 1:28 PM
  * To change this template use File | Settings | File Templates.
  */
-_extra.initModule(function () {
+_extra.registerModule("slideObjectManager", ["dataManager"], function () {
    "use strict";
 
     _extra.slideObjectManager = {
