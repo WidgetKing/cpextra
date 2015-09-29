@@ -49,8 +49,8 @@ function initExtra(topWindow) {
     _extra.w = topWindow.top;
 
     // Constants used to identify modules that are specialized for Captivate or Storyline
-    _extra.CAPTIVATE = "cp";
-    _extra.STORYLINE = "sl";
+    _extra.CAPTIVATE = "captivate";
+    _extra.STORYLINE = "storyline";
 
 
 
@@ -253,7 +253,7 @@ function initExtra(topWindow) {
     //////////////
     _extra.X = {
         "version":"0.0.2",
-        "build":"239"
+        "build":"413"
     };
 
     //////////////
@@ -272,6 +272,7 @@ function initExtra(topWindow) {
         }
     }
 
+
     //////////////
     ///// Listen for Storyline Initialization
     //////////////
@@ -279,7 +280,11 @@ function initExtra(topWindow) {
 
         window.removeEventListener("unload", onStorylineLoaded);
 
-        if (window.story) {
+        // It's possible this will be called in some unit tests. Generally we don't want
+        // this to be called, so we'll check the '_extra' variable to make sure we're not
+        // in a unit test.
+        // Should really look into an 'unload' method to stop this.
+        if (window.hasOwnProperty("_extra") && _extra.w.story) {
 
             callOnLoadCallbacks();
 
@@ -436,7 +441,20 @@ _extra.registerModule("slideObjectManager", ["dataManager"], function () {
  * To change this template use File | Settings | File Templates.
  */
 _extra.registerModule("softwareInterfacesManager", function () {
-    alert("STORYLINE");
+
+    "use strict";
+
+    // References to storyline api
+    _extra.storyline = {
+        "api":_extra.w.story,
+        "variables":_extra.w.story.variables,
+        "player":_extra.w.player
+    };
+
+    // TODO: Find Storyline Version variable
+
+    console.log(_extra.storyline.api);
+
 }, _extra.STORYLINE);
 /**
  * Created with IntelliJ IDEA.
@@ -445,9 +463,51 @@ _extra.registerModule("softwareInterfacesManager", function () {
  * Time: 8:10 AM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("variableManager", ["outputInterfacesManager"], function () {
-   /////////////// STORYLINE!
-});
+_extra.registerModule("generalVariableManager", ["softwareInterfacesManager", "callback"], function () {
+
+    "use strict";
+    //var variables = _extra.storyline
+
+    _extra.variableManager = {
+        "prefixCallback": new _extra.classes.Callback(),
+        "getVariableValue": function (variableName) {
+            return _extra.storyline.player.GetVar(variableName);
+        },
+        "setVariableValue": function (variableName, value) {
+            _extra.storyline.player.SetVar(variableName, value);
+        }
+    };
+
+    return function () {
+
+        var splitName,
+            prefix;
+
+        for (var name in _extra.storyline.variables) {
+            // TODO: Find a way to extract this so that the Captivate and Storyline versions aren't duplicating the same code.
+            if (_extra.storyline.variables.hasOwnProperty(name)) {
+
+                splitName = name.split("_");
+                prefix = splitName[0];
+
+                // To support all variables as having an underscore '_' in front of their name
+                // we'll check if the first index is empty (as would be true in a variable name such as _ls_myVariable)
+                // If so, we'll use the second index as the variable's prefix (in that example it would be 'ls')
+                if (prefix === "") {
+                    prefix = splitName[1];
+                }
+
+                prefix = prefix.toLowerCase();
+
+                // If someone has added a callback for this kind of prefix.
+                _extra.variableManager.prefixCallback.sendToCallback(prefix, name);
+
+            }
+        }
+
+    };
+
+}, _extra.STORYLINE);
 /*global _extra*/
 /**
  * Created with IntelliJ IDEA.
@@ -456,13 +516,14 @@ _extra.registerModule("variableManager", ["outputInterfacesManager"], function (
  * Time: 12:21 PM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("localStorageManager", ["variableManager"], function () {
+_extra.registerModule("localStorageManager", ["generalVariableManager"], function () {
 
     "use strict";
 
+
     var storageVariables;
 
-    function saveStorageVariables() {
+    _extra.variableManager.saveStorageVariables = function () {
         var storageVariableInfo,
             variableName;
 
@@ -472,19 +533,19 @@ _extra.registerModule("localStorageManager", ["variableManager"], function () {
 
                 storageVariableInfo = storageVariables[variableName];
                 storageVariableInfo.storage.setItem(variableName,
-                                                    _extra.X.getVariableValue(variableName));
+                                                    _extra.variableManager.getVariableValue(variableName));
 
             }
 
         }
 
-    }
+    };
 
     function initializeStorageVariables() {
         storageVariables = {};
 
         // Save the storage variables when the window closes.
-        _extra.w.addEventListener("unload", saveStorageVariables);
+        _extra.w.addEventListener("unload", _extra.variableManager.saveStorageVariables);
     }
 
 
@@ -508,7 +569,7 @@ _extra.registerModule("localStorageManager", ["variableManager"], function () {
 
 
             // We do have a valid value in storage
-            _extra.X.setVariableValue(variableName, storageValue);
+            _extra.variableManager.setVariableValue(variableName, storageValue);
         }
 
         // Save this variable to our records so that we can save its value to storage at the appropriate time.
@@ -517,14 +578,12 @@ _extra.registerModule("localStorageManager", ["variableManager"], function () {
         };
     }
 
-    setTimeout(saveStorageVariables,4000);
-
     // Tap into the variable manager's callbacks. This is how we are notified of variables.
-    _extra.variableManager.registerVariablePrefixCallback("ls", function (variableName) {
+    _extra.variableManager.prefixCallback.addCallback("ls", function (variableName) {
         setUpStorageVariable(variableName, _extra.w.localStorage);
     });
 
-    _extra.variableManager.registerVariablePrefixCallback("ss", function (variableName) {
+    _extra.variableManager.prefixCallback.addCallback("ss", function (variableName) {
         setUpStorageVariable(variableName, _extra.w.sessionStorage);
     });
 });

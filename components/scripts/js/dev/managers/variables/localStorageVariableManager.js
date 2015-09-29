@@ -6,13 +6,14 @@
  * Time: 12:21 PM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("localStorageManager", ["variableManager"], function () {
+_extra.registerModule("localStorageManager", ["generalVariableManager"], function () {
 
     "use strict";
 
+
     var storageVariables;
 
-    function saveStorageVariables() {
+    _extra.variableManager.saveStorageVariables = function () {
         var storageVariableInfo,
             variableName;
 
@@ -22,19 +23,19 @@ _extra.registerModule("localStorageManager", ["variableManager"], function () {
 
                 storageVariableInfo = storageVariables[variableName];
                 storageVariableInfo.storage.setItem(variableName,
-                                                    _extra.X.getVariableValue(variableName));
+                                                    _extra.variableManager.getVariableValue(variableName));
 
             }
 
         }
 
-    }
+    };
 
     function initializeStorageVariables() {
         storageVariables = {};
 
         // Save the storage variables when the window closes.
-        _extra.w.addEventListener("unload", saveStorageVariables);
+        _extra.w.addEventListener("unload", _extra.variableManager.saveStorageVariables);
     }
 
 
@@ -58,7 +59,7 @@ _extra.registerModule("localStorageManager", ["variableManager"], function () {
 
 
             // We do have a valid value in storage
-            _extra.X.setVariableValue(variableName, storageValue);
+            _extra.variableManager.setVariableValue(variableName, storageValue);
         }
 
         // Save this variable to our records so that we can save its value to storage at the appropriate time.
@@ -67,14 +68,12 @@ _extra.registerModule("localStorageManager", ["variableManager"], function () {
         };
     }
 
-    setTimeout(saveStorageVariables,4000);
-
     // Tap into the variable manager's callbacks. This is how we are notified of variables.
-    _extra.variableManager.registerVariablePrefixCallback("ls", function (variableName) {
+    _extra.variableManager.prefixCallback.addCallback("ls", function (variableName) {
         setUpStorageVariable(variableName, _extra.w.localStorage);
     });
 
-    _extra.variableManager.registerVariablePrefixCallback("ss", function (variableName) {
+    _extra.variableManager.prefixCallback.addCallback("ss", function (variableName) {
         setUpStorageVariable(variableName, _extra.w.sessionStorage);
     });
 });

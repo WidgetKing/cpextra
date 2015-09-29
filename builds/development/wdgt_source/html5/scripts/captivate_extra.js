@@ -49,8 +49,8 @@ function initExtra(topWindow) {
     _extra.w = topWindow.top;
 
     // Constants used to identify modules that are specialized for Captivate or Storyline
-    _extra.CAPTIVATE = "cp";
-    _extra.STORYLINE = "sl";
+    _extra.CAPTIVATE = "captivate";
+    _extra.STORYLINE = "storyline";
 
 
 
@@ -253,7 +253,7 @@ function initExtra(topWindow) {
     //////////////
     _extra.X = {
         "version":"0.0.2",
-        "build":"239"
+        "build":"413"
     };
 
     //////////////
@@ -272,6 +272,7 @@ function initExtra(topWindow) {
         }
     }
 
+
     //////////////
     ///// Listen for Storyline Initialization
     //////////////
@@ -279,7 +280,11 @@ function initExtra(topWindow) {
 
         window.removeEventListener("unload", onStorylineLoaded);
 
-        if (window.story) {
+        // It's possible this will be called in some unit tests. Generally we don't want
+        // this to be called, so we'll check the '_extra' variable to make sure we're not
+        // in a unit test.
+        // Should really look into an 'unload' method to stop this.
+        if (window.hasOwnProperty("_extra") && _extra.w.story) {
 
             callOnLoadCallbacks();
 
@@ -436,7 +441,20 @@ _extra.registerModule("slideObjectManager", ["dataManager"], function () {
  * To change this template use File | Settings | File Templates.
  */
 _extra.registerModule("softwareInterfacesManager", function () {
-    alert("CAPTIVATE");
+
+    "use strict";
+
+    // Define a private object to hold the references to the different poitns in
+    // the Captivate API
+    _extra.captivate = {
+        "api":_extra.w.cp,
+        "version":_extra.w.CaptivateVersion,
+        "variables":_extra.w,
+        "interface":_extra.w.cpAPIInterface,
+        "eventDispatcher":_extra.w.cpAPIEventEmitter,
+        "model":_extra.w.cp.model
+    };
+
 }, _extra.CAPTIVATE);
 /*global _extra*/
 /**
@@ -446,108 +464,61 @@ _extra.registerModule("softwareInterfacesManager", function () {
  * Time: 9:02 AM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("variableManager", ["outputInterfacesManager"], function () {
+_extra.registerModule("generalVariableManager", ["softwareInterfacesManager", "callback"], function () {
     "use strict";
-    // CAAAAAAAPTIVATE!
-    //////////////////////////
-    /////// Private Variables
-    //////////////////////////
-    var variablePrefixCallbacks = {};
 
+    var variableInfo = _extra.captivate.api.variablesManager.varInfos;
 
     //////////////////////////
-    ////// Component Setup
+    ////// Variable Manager Object Setup
     //////////////////////////
-    window._extra.variableManager = {};
-    window._extra.variableManager.registerVariablePrefixCallback = function (prefix, callback) {
-
-        if (!variablePrefixCallbacks[prefix]) {
-            variablePrefixCallbacks[prefix] = [];
+    _extra.variableManager = {
+        "prefixCallback":new _extra.classes.Callback(),
+        "getVariableValue": function (variableName) {
+            return _extra.captivate.interface.getVariableValue(variableName);
+        },
+        "setVariableValue": function (variableName, value) {
+            _extra.captivate.interface.setVariableValue(variableName, value);
         }
-
-        variablePrefixCallbacks[prefix].push(callback);
-    };
-
-    ///////////////////////////
-    //////// Public Methods
-    ///////////////////////////
-    /**
-     * Changes the value of a Captivate Variable. This is the safest method of doing this, as Captivate Extra tickers
-     * a lot with variables, it wants to know in advance when they are changed. This function will ensure they are
-     * always updated in an acceptable manner.
-     * @param variableName The name of the variable to be updated
-     * @param value The value to assign said variable
-     */
-    _extra.X.setVariableValue = function (variableName, value) {
-        _extra.X.cpInterface.setVariableValue(variableName, value);
-    };
-
-    /**
-     * Gives you the value of a Captivate Variable. This is the safest method of doing this, as Captivate Extra tickers
-     * a lot with variables behind the scenes. Captivate Extra wants to be notified whenever a variable is accessed.
-     * This function will ensure the correct value is returned.
-     * @param variableName The name of the variable whose value you want returned
-     */
-    _extra.X.getVariableValue = function (variableName) {
-        return _extra.X.cpInterface.getVariableValue(variableName);
     };
 
 
-    // Function which is called when the movies has been loaded
     return function () {
 
-        var captivateVariables = _extra.cp.variablesManager.varInfos,
-            varInfo,
-            varName,
-            varNameSplitArray,
-            varPrefix,
-            i, j;
+        var name,
+            splitName,
+            prefix,
+            varData;
 
-        for (i = 0; i < captivateVariables.length; i += 1) {
+        for (var i = 0; i < variableInfo.length; i+=1) {
+            varData = variableInfo[i];
 
-            varInfo = captivateVariables[i];
-
-            if (!varInfo.systemDefined) {
+            if (!varData.systemDefined) {
                 // This is a user variable
 
-                varName = varInfo.name;
-                varNameSplitArray = varName.split("_");
-                varPrefix = varNameSplitArray[0];
+                name = varData.name;
+                splitName = name.split("_");
+                prefix = splitName[0];
 
                 // To support all variables as having an underscore '_' in front of their name
                 // we'll check if the first index is empty (as would be true in a variable name such as _ls_myVariable)
                 // If so, we'll use the second index as the variable's prefix (in that example it would be 'ls')
-                if (varPrefix === "") {
-                    varPrefix = varNameSplitArray[1];
+                if (prefix === "") {
+                    prefix = splitName[1];
                 }
 
-                varPrefix = varPrefix.toLowerCase();
+                prefix = prefix.toLowerCase();
 
                 // If someone has added a callback for this kind of prefix.
-                if (variablePrefixCallbacks[varPrefix]) {
-
-                    // varInfo now becomes the variable to hold the array of callbacks.
-                    varInfo = variablePrefixCallbacks[varPrefix];
-
-                    // Loop through all callbacks and send them the name of the variable they want.
-                    for (j = 0; j < varInfo.length; j += 1) {
-
-                        varInfo[j](varName);
-
-                    }
-
-                }
-
+                _extra.variableManager.prefixCallback.sendToCallback(prefix,name);
 
             }
 
-        } // End of looping through Captivate Variables.
-
-        // All relevant callbacks called. We can unload this information now.
-        variablePrefixCallbacks = null;
+        }
 
     };
-});
+
+}, _extra.CAPTIVATE);
 /*global _extra*/
 /**
  * Created with IntelliJ IDEA.
@@ -556,13 +527,14 @@ _extra.registerModule("variableManager", ["outputInterfacesManager"], function (
  * Time: 12:21 PM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("localStorageManager", ["variableManager"], function () {
+_extra.registerModule("localStorageManager", ["generalVariableManager"], function () {
 
     "use strict";
 
+
     var storageVariables;
 
-    function saveStorageVariables() {
+    _extra.variableManager.saveStorageVariables = function () {
         var storageVariableInfo,
             variableName;
 
@@ -572,19 +544,19 @@ _extra.registerModule("localStorageManager", ["variableManager"], function () {
 
                 storageVariableInfo = storageVariables[variableName];
                 storageVariableInfo.storage.setItem(variableName,
-                                                    _extra.X.getVariableValue(variableName));
+                                                    _extra.variableManager.getVariableValue(variableName));
 
             }
 
         }
 
-    }
+    };
 
     function initializeStorageVariables() {
         storageVariables = {};
 
         // Save the storage variables when the window closes.
-        _extra.w.addEventListener("unload", saveStorageVariables);
+        _extra.w.addEventListener("unload", _extra.variableManager.saveStorageVariables);
     }
 
 
@@ -608,7 +580,7 @@ _extra.registerModule("localStorageManager", ["variableManager"], function () {
 
 
             // We do have a valid value in storage
-            _extra.X.setVariableValue(variableName, storageValue);
+            _extra.variableManager.setVariableValue(variableName, storageValue);
         }
 
         // Save this variable to our records so that we can save its value to storage at the appropriate time.
@@ -617,14 +589,12 @@ _extra.registerModule("localStorageManager", ["variableManager"], function () {
         };
     }
 
-    setTimeout(saveStorageVariables,4000);
-
     // Tap into the variable manager's callbacks. This is how we are notified of variables.
-    _extra.variableManager.registerVariablePrefixCallback("ls", function (variableName) {
+    _extra.variableManager.prefixCallback.addCallback("ls", function (variableName) {
         setUpStorageVariable(variableName, _extra.w.localStorage);
     });
 
-    _extra.variableManager.registerVariablePrefixCallback("ss", function (variableName) {
+    _extra.variableManager.prefixCallback.addCallback("ss", function (variableName) {
         setUpStorageVariable(variableName, _extra.w.sessionStorage);
     });
 });

@@ -45,6 +45,16 @@ describe("A suite for testing the callback class", function() {
         expect(a.dummy).toHaveBeenCalledWith("foobar");
     });
 
+    it("should be able to notify more than one callback", function () {
+        a.notherDummy = function () {};
+        spyOn(a,"notherDummy");
+        cb.addCallback("foo", a.notherDummy);
+        cb.sendToCallback("foo", "foobar");
+
+        expect(a.dummy).toHaveBeenCalledWith("foobar");
+        expect(a.notherDummy).toHaveBeenCalledWith("foobar");
+    });
+
     it("should be able to clear its own data", function () {
         cb.clear();
         expect(cb.hasCallbackFor("foo")).toBe(false);

@@ -49,8 +49,8 @@ function initExtra(topWindow) {
     _extra.w = topWindow.top;
 
     // Constants used to identify modules that are specialized for Captivate or Storyline
-    _extra.CAPTIVATE = "cp";
-    _extra.STORYLINE = "sl";
+    _extra.CAPTIVATE = "captivate";
+    _extra.STORYLINE = "storyline";
 
 
 
@@ -272,6 +272,7 @@ function initExtra(topWindow) {
         }
     }
 
+
     //////////////
     ///// Listen for Storyline Initialization
     //////////////
@@ -279,7 +280,11 @@ function initExtra(topWindow) {
 
         window.removeEventListener("unload", onStorylineLoaded);
 
-        if (window.story) {
+        // It's possible this will be called in some unit tests. Generally we don't want
+        // this to be called, so we'll check the '_extra' variable to make sure we're not
+        // in a unit test.
+        // Should really look into an 'unload' method to stop this.
+        if (window.hasOwnProperty("_extra") && _extra.w.story) {
 
             callOnLoadCallbacks();
 

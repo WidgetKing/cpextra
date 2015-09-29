@@ -6,5 +6,18 @@
  * To change this template use File | Settings | File Templates.
  */
 _extra.registerModule("softwareInterfacesManager", function () {
-    alert("STORYLINE");
+
+    "use strict";
+
+    // References to storyline api
+    _extra.storyline = {
+        "api":_extra.w.story,
+        "variables":_extra.w.story.variables,
+        "player":_extra.w.player
+    };
+
+    // TODO: Find Storyline Version variable
+
+    console.log(_extra.storyline.api);
+
 }, _extra.STORYLINE);

@@ -1,7 +1,7 @@
 {
   "name": "captivateextra",
   "version": "0.0.2",
-  "buildNumber": 239,
+  "buildNumber": 413,
   "description": "An extension for Adobe Captivate which adds extra features, streamlines day-to-day worflows and fixes certain bugs or unexpected behaviours inside of Captivate. ONLY WORKS FOR HTML EXPORT!",
   "main": "index.js",
   "repository": {
@@ -21,6 +21,7 @@
     "jasmine-core": "^2.3.4",
     "karma": "^0.13.10",
     "karma-chrome-launcher": "^0.2.0",
+    "karma-coverage": "^0.5.2",
     "karma-jasmine": "^0.3.6"
   }
 }
