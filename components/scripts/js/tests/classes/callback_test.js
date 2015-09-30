@@ -9,23 +9,15 @@ describe("A suite for testing the callback class", function() {
     "use strict";
 
     // Get access to the callback class so we can start tests.
-    var Callback,
-        cb,
+    var cb,
         a = {};
-    window._extra = {};
-    window._extra.registerClass = function(name,classConstructor) {
-        Callback = classConstructor;
-    };
-
-    unitTests.modules.callback();
-    delete window._extra;
 
 
     beforeEach(function () {
         a.dummy = function () {};
         spyOn(a,"dummy");
 
-        cb = new Callback();
+        cb = new unitTests.classes.Callback();
         cb.addCallback("foo", a.dummy);
     });
 

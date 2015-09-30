@@ -9,7 +9,7 @@
 _extra.registerModule("textBoxBehaviour", ["slideObjectManager"], function () {
     "use strict";
 
-    _extra.slideObjectManager.projectTypeCallback.addCallback(_extra.slideObjectManager.types.TEXT_ENTRY_BOX, function () {
+    /*_extra.slideObjectManager.projectTypeCallback.addCallback(_extra.slideObjectManager.types.TEXT_ENTRY_BOX, function () {
         _extra.log("lkjlk");
-    });
+    });*/
 });

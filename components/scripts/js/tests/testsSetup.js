@@ -15,6 +15,14 @@
     window.unitTests = {
         "CAPTIVATE":"captivate",
         "STORYLINE":"storyline",
+        "getModule": function (name, software) {
+            if (software) {
+                return unitTests.modules[name + "_" + software];
+            } else {
+                return unitTests.modules[name];
+            }
+
+        },
         "getCaptivateMockObject": function () {
             return {
                 "w": {
@@ -80,7 +88,9 @@
         }
     };
     unitTests.classes = {};
-    unitTests.registerClass = function (className, classConstructor, SuperClass) {
+    unitTests.softwareClasses = {};
+    unitTests.registerClass = function (className, classConstructor, SuperClass, software) {
+
 
         if (SuperClass) {
 
@@ -118,8 +128,26 @@
             }
         }
 
+        if (software) {
+            if (!unitTests.softwareClasses[className]) {
+                unitTests.softwareClasses[className] = {};
+            }
 
+            unitTests.softwareClasses[className][software] = classConstructor;
+
+        }
         _extra.classes[className] = classConstructor;
+    };
+
+    /**
+     * Some of the classes we build have a Captivate version and a Storyline version. These will need to be instantiated
+     * by certain managers. So to make sure the storyline manager won't instantiate the captivate class, we have this function
+     * to designate which version of the class is available on the unitTests.classes object.
+     * @param className
+     * @param software Which software version of the class should be assigned to unitTests.classes
+     */
+    unitTests.setSoftwareClassAsMain = function (className, software) {
+        unitTests.classes[className] = unitTests.softwareClasses[className][software];
     };
 
     window._extra = window.unitTests;

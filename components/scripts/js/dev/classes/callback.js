@@ -6,7 +6,7 @@
  * Time: 1:53 PM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("callback", function () {
+_extra.registerModule("Callback", function () {
     "use strict";
     _extra.registerClass("Callback", function () {
         this.data = {};

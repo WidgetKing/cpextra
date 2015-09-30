@@ -253,7 +253,7 @@ function initExtra(topWindow) {
     //////////////
     _extra.X = {
         "version":"0.0.2",
-        "build":"413"
+        "build":"582"
     };
 
     //////////////
@@ -317,7 +317,7 @@ initExtra();
  * Time: 1:53 PM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("callback", function () {
+_extra.registerModule("Callback", function () {
     "use strict";
     _extra.registerClass("Callback", function () {
         this.data = {};
@@ -351,6 +351,85 @@ _extra.registerModule("callback", function () {
  * To change this template use File | Settings | File Templates.
  */
 
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 30/09/15
+ * Time: 4:32 PM
+ * To change this template use File | Settings | File Templates.
+ */
+_extra.registerModule("createSlideObjectData", ["factoryManager", "globalSlideObjectTypes", "TextEntryBoxDataProxy"], function () {
+    "use strict";
+    _extra.factories.createSlideObjectData = function (name, data, type) {
+
+        switch (type) {
+
+            case _extra.slideObjectsTypes.TEXT_ENTRY_BOX :
+                return new _extra.classes.TextEntryBoxDataProxy(name, data);
+                break;
+
+        }
+
+    };
+});
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 30/09/15
+ * Time: 4:26 PM
+ * To change this template use File | Settings | File Templates.
+ */
+_extra.registerModule("factoryManager", function () {
+
+    "use strict";
+
+    _extra.factories = {
+
+    };
+
+});
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 30/09/15
+ * Time: 4:14 PM
+ * To change this template use File | Settings | File Templates.
+ */
+_extra.registerModule("BaseSlideObjectDataProxy", function () {
+    "use strict";
+    function BaseSlideObjectData(name, data) {
+        this._name = name;
+        this._data = data;
+    }
+
+    BaseSlideObjectData.prototype = {
+        get name(){
+            return this._name;
+        },
+        get data() {
+            return this._data;
+        }
+    };
+    _extra.registerClass("BaseSlideObjectDataProxy", BaseSlideObjectData);
+});
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 30/09/15
+ * Time: 6:09 PM
+ * To change this template use File | Settings | File Templates.
+ */
+_extra.registerModule("TextEntryBoxDataProxy", ["BaseSlideObjectDataProxy"], function () {
+    "use strict";
+
+    function TextEntryBoxDataProxy(name, data) {
+        // Call super constructor
+        _extra.classes.BaseSlideObjectDataProxy.call(this, name, data);
+    }
+
+
+    _extra.registerClass("TextEntryBoxDataProxy", TextEntryBoxDataProxy,"BaseSlideObjectDataProxy", _extra.STORYLINE);
+}, _extra.STORYLINE);
 /*global _extra*/
 /**
  * Created with IntelliJ IDEA.
@@ -362,26 +441,30 @@ _extra.registerModule("callback", function () {
 _extra.registerModule("textBoxBehaviour", ["slideObjectManager"], function () {
     "use strict";
 
-    _extra.slideObjectManager.projectTypeCallback.addCallback(_extra.slideObjectManager.types.TEXT_ENTRY_BOX, function () {
+    /*_extra.slideObjectManager.projectTypeCallback.addCallback(_extra.slideObjectManager.types.TEXT_ENTRY_BOX, function () {
         _extra.log("lkjlk");
-    });
+    });*/
 });
-/*global _extra*/
-_extra.registerModule("dataManager", ["outputIntefacesManager"], function () {
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 30/09/15
+ * Time: 3:54 PM
+ * To change this template use File | Settings | File Templates.
+ */
+_extra.registerModule("generalDataManager", ["softwareInterfacesManager"], function () {
 
     "use strict";
 
-    _extra.m = _extra.X.cp.model;
-    _extra.X.projectData = _extra.m;
-
-    _extra.dataManager = {};
-    _extra.dataManager.projectSlideObjectData = _extra.m.data;
-
-
-    return function () {
+    _extra.dataManager = {
 
     };
-});
+
+    _extra.dataManager.getSlideObjectDataByName = function () {
+
+    };
+
+}, _extra.STORYLINE);
 /**
  * Created with IntelliJ IDEA.
  * User: Tristan
@@ -390,47 +473,41 @@ _extra.registerModule("dataManager", ["outputIntefacesManager"], function () {
  * To change this template use File | Settings | File Templates.
  */
 
-/* global _extra*/
 /**
  * Created with IntelliJ IDEA.
  * User: Tristan
- * Date: 24/09/15
- * Time: 1:28 PM
+ * Date: 30/09/15
+ * Time: 3:52 PM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("slideObjectManager", ["dataManager"], function () {
-   "use strict";
+_extra.registerModule("generalSlideObjectManager", ["generalDataManager"], function () {
 
-    _extra.slideObjectManager = {
-        "types": {
-            "CLOSE_PATH":4,
-            "CLICK_BOX":13,
-            "HIGHLIGHT_BOX":14,
-            "CAPTION":19,
-            "TEXT_ENTRY_BOX":24,
-            "TEXT_ENTRY_BOX_SUBMIT_BUTTON":75,
-            "BUTTON":177
-        },
-        "projectTypeCallback":new _extra.classes.Callback()
+    "use strict";
+
+    _extra.slideObjects = {
+
     };
 
+    ////////////////////
+    //////// ON LOAD CALLBACK
+    ////////////////////
     return function () {
-        var pd = _extra.dataManager.projectSlideObjectData,
-            c = _extra.slideObjectManager.projectTypeCallback,
-            slideObjectName,
-            slideObjectData;
 
-        for (slideObjectName in pd) {
+    };
 
-            if (pd.hasOwnProperty(slideObjectName)) {
+}, _extra.STORYLINE);
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 30/09/15
+ * Time: 4:52 PM
+ * To change this template use File | Settings | File Templates.
+ */
+_extra.registerModule("globalSlideObjectTypes",function () {
+    "use strict";
 
-                //_extra.log(pd);
-                slideObjectData = pd[slideObjectName];
-
-                c.sendToCallback(slideObjectData.type, slideObjectData);
-
-            }
-        }
+    _extra.slideObjectsTypes = {
+        "TEXT_ENTRY_BOX":1
     };
 });
 /**
@@ -463,7 +540,7 @@ _extra.registerModule("softwareInterfacesManager", function () {
  * Time: 8:10 AM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("generalVariableManager", ["softwareInterfacesManager", "callback"], function () {
+_extra.registerModule("generalVariableManager", ["softwareInterfacesManager", "Callback"], function () {
 
     "use strict";
     //var variables = _extra.storyline

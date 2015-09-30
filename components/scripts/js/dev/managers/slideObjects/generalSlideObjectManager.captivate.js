@@ -6,10 +6,23 @@
  * Time: 1:28 PM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("slideObjectManager", ["dataManager"], function () {
+_extra.registerModule("generalSlideObjectManager", ["generalDataManager", "Callback"], function () {
    "use strict";
 
-    _extra.slideObjectManager = {
+    _extra.slideObjects = {
+        "projectSlideObjectDataCallback": new _extra.classes.Callback()
+    };
+
+
+
+    ////////////////////
+    ///// ON LOAD CALLBACK
+    ////////////////////
+    return function () {
+
+    };
+
+    /*_extra.slideObjectManager = {
         "types": {
             "CLOSE_PATH":4,
             "CLICK_BOX":13,
@@ -39,5 +52,5 @@ _extra.registerModule("slideObjectManager", ["dataManager"], function () {
 
             }
         }
-    };
-});
+    };*/
+},_extra.CAPTIVATE);

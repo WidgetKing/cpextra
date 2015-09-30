@@ -253,7 +253,7 @@ function initExtra(topWindow) {
     //////////////
     _extra.X = {
         "version":"0.0.2",
-        "build":"413"
+        "build":"582"
     };
 
     //////////////
@@ -317,7 +317,7 @@ initExtra();
  * Time: 1:53 PM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("callback", function () {
+_extra.registerModule("Callback", function () {
     "use strict";
     _extra.registerClass("Callback", function () {
         this.data = {};
@@ -351,6 +351,85 @@ _extra.registerModule("callback", function () {
  * To change this template use File | Settings | File Templates.
  */
 
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 30/09/15
+ * Time: 4:32 PM
+ * To change this template use File | Settings | File Templates.
+ */
+_extra.registerModule("createSlideObjectData", ["factoryManager", "globalSlideObjectTypes", "TextEntryBoxDataProxy"], function () {
+    "use strict";
+    _extra.factories.createSlideObjectData = function (name, data, type) {
+
+        switch (type) {
+
+            case _extra.slideObjectsTypes.TEXT_ENTRY_BOX :
+                return new _extra.classes.TextEntryBoxDataProxy(name, data);
+                break;
+
+        }
+
+    };
+});
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 30/09/15
+ * Time: 4:26 PM
+ * To change this template use File | Settings | File Templates.
+ */
+_extra.registerModule("factoryManager", function () {
+
+    "use strict";
+
+    _extra.factories = {
+
+    };
+
+});
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 30/09/15
+ * Time: 4:14 PM
+ * To change this template use File | Settings | File Templates.
+ */
+_extra.registerModule("BaseSlideObjectDataProxy", function () {
+    "use strict";
+    function BaseSlideObjectData(name, data) {
+        this._name = name;
+        this._data = data;
+    }
+
+    BaseSlideObjectData.prototype = {
+        get name(){
+            return this._name;
+        },
+        get data() {
+            return this._data;
+        }
+    };
+    _extra.registerClass("BaseSlideObjectDataProxy", BaseSlideObjectData);
+});
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 30/09/15
+ * Time: 5:28 PM
+ * To change this template use File | Settings | File Templates.
+ */
+_extra.registerModule("TextEntryBoxDataProxy", ["BaseSlideObjectDataProxy"], function () {
+    "use strict";
+
+    function TextEntryBoxDataProxy(name, data) {
+        // Call super constructor
+        _extra.classes.BaseSlideObjectDataProxy.call(this, name, data);
+    }
+
+
+    _extra.registerClass("TextEntryBoxDataProxy", TextEntryBoxDataProxy,"BaseSlideObjectDataProxy", _extra.CAPTIVATE);
+}, _extra.CAPTIVATE);
 /*global _extra*/
 /**
  * Created with IntelliJ IDEA.
@@ -362,16 +441,56 @@ _extra.registerModule("callback", function () {
 _extra.registerModule("textBoxBehaviour", ["slideObjectManager"], function () {
     "use strict";
 
-    _extra.slideObjectManager.projectTypeCallback.addCallback(_extra.slideObjectManager.types.TEXT_ENTRY_BOX, function () {
+    /*_extra.slideObjectManager.projectTypeCallback.addCallback(_extra.slideObjectManager.types.TEXT_ENTRY_BOX, function () {
         _extra.log("lkjlk");
-    });
+    });*/
 });
 /*global _extra*/
-_extra.registerModule("dataManager", ["outputIntefacesManager"], function () {
+_extra.registerModule("generalDataManager", ["softwareInterfacesManager", "globalSlideObjectTypes", "createSlideObjectData"], function () {
 
     "use strict";
 
-    _extra.m = _extra.X.cp.model;
+    var projectData = _extra.captivate.model.data;
+    /*
+    submitted for your interest.
+    This data should be gradually migrated into the function bellow.
+    var captivateSlideObjectTypes = {
+        "CLOSE_PATH":4,
+        "CLICK_BOX":13,
+        "HIGHLIGHT_BOX":14,
+        "CAPTION":19,
+        "TEXT_ENTRY_BOX":24, // Implemented
+        "TEXT_ENTRY_BOX_SUBMIT_BUTTON":75,
+        "BUTTON":177
+    };
+     */
+
+    function convertCaptivateDataTypesToGlobalDataTypes(cpType) {
+        switch (cpType) {
+            case 24 :
+                return _extra.slideObjectsTypes.TEXT_ENTRY_BOX;
+                break;
+        }
+    }
+
+    _extra.dataManager = {
+
+    };
+
+    _extra.dataManager.getSlideObjectDataByName = function (name) {
+        var data = {
+            "base": projectData[name]
+        };
+
+        if (data.base) {
+            data.container = projectData[name + "c"];
+            return _extra.factories.createSlideObjectData(name, data, convertCaptivateDataTypesToGlobalDataTypes(data.base.type));
+        }
+        return null;
+    };
+
+    _extra.log(_extra.dataManager.getSlideObjectDataByName("Text_Entry_Box_1"));
+    /*_extra.m = _extra.X.cp.model;
     _extra.X.projectData = _extra.m;
 
     _extra.dataManager = {};
@@ -380,8 +499,8 @@ _extra.registerModule("dataManager", ["outputIntefacesManager"], function () {
 
     return function () {
 
-    };
-});
+    };*/
+}, _extra.CAPTIVATE);
 /**
  * Created with IntelliJ IDEA.
  * User: Tristan
@@ -398,10 +517,23 @@ _extra.registerModule("dataManager", ["outputIntefacesManager"], function () {
  * Time: 1:28 PM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("slideObjectManager", ["dataManager"], function () {
+_extra.registerModule("generalSlideObjectManager", ["generalDataManager", "Callback"], function () {
    "use strict";
 
-    _extra.slideObjectManager = {
+    _extra.slideObjects = {
+        "projectSlideObjectDataCallback": new _extra.classes.Callback()
+    };
+
+
+
+    ////////////////////
+    ///// ON LOAD CALLBACK
+    ////////////////////
+    return function () {
+
+    };
+
+    /*_extra.slideObjectManager = {
         "types": {
             "CLOSE_PATH":4,
             "CLICK_BOX":13,
@@ -431,6 +563,20 @@ _extra.registerModule("slideObjectManager", ["dataManager"], function () {
 
             }
         }
+    };*/
+},_extra.CAPTIVATE);
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 30/09/15
+ * Time: 4:52 PM
+ * To change this template use File | Settings | File Templates.
+ */
+_extra.registerModule("globalSlideObjectTypes",function () {
+    "use strict";
+
+    _extra.slideObjectsTypes = {
+        "TEXT_ENTRY_BOX":1
     };
 });
 /**
@@ -464,7 +610,7 @@ _extra.registerModule("softwareInterfacesManager", function () {
  * Time: 9:02 AM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("generalVariableManager", ["softwareInterfacesManager", "callback"], function () {
+_extra.registerModule("generalVariableManager", ["softwareInterfacesManager", "Callback"], function () {
     "use strict";
 
     var variableInfo = _extra.captivate.api.variablesManager.varInfos;
