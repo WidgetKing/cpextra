@@ -13,11 +13,10 @@ _extra.registerModule("softwareInterfacesManager", function () {
     _extra.storyline = {
         "api":_extra.w.story,
         "variables":_extra.w.story.variables,
-        "player":_extra.w.player
+        "player":_extra.w.player,
+        "slidesData":_extra.w.story.allSlides
     };
 
     // TODO: Find Storyline Version variable
-
-    console.log(_extra.storyline.api);
 
 }, _extra.STORYLINE);

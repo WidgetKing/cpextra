@@ -54,7 +54,12 @@
                         "variables":{
                             "ls_localStorage":"local_storage_value",
                             "ss_sessionStorage":"session_storage_value"
-                        }
+                        },
+                        "allSlides":[
+                            {
+
+                            }
+                        ]
                     },
                     "player": {
 

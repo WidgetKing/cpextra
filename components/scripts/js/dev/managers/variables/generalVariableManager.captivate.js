@@ -21,6 +21,9 @@ _extra.registerModule("generalVariableManager", ["softwareInterfacesManager", "C
         },
         "setVariableValue": function (variableName, value) {
             _extra.captivate.interface.setVariableValue(variableName, value);
+        },
+        "hasVariable": function (variableName) {
+            return _extra.captivate.variables[variableName] !== undefined;
         }
     };
 

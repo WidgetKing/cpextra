@@ -35,6 +35,7 @@ function initExtra(topWindow) {
         }
     };
 
+
     /**
      * Send an error to the debug console of the browser, assuming the console is available.
      * @param message
@@ -46,7 +47,7 @@ function initExtra(topWindow) {
     };
 
     // The highest window, where we should be able to find the internal functions of the output
-    _extra.w = topWindow.top;
+    _extra.w = topWindow.parent;
 
     // Constants used to identify modules that are specialized for Captivate or Storyline
     _extra.CAPTIVATE = "captivate";

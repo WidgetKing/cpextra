@@ -10,7 +10,7 @@ _extra.registerModule("generalSlideObjectManager", ["generalDataManager", "Callb
    "use strict";
 
     _extra.slideObjects = {
-        "projectSlideObjectDataCallback": new _extra.classes.Callback()
+        "allObjectsOfTypeCallback": new _extra.classes.Callback()
     };
 
 
@@ -19,6 +19,24 @@ _extra.registerModule("generalSlideObjectManager", ["generalDataManager", "Callb
     ///// ON LOAD CALLBACK
     ////////////////////
     return function () {
+
+        // Go through the data for all objects in the project in order to find all of a certain type.
+        // Then send their names to the allObjectsOfTypeCallback.
+        // Directly this functionality is for the TextEntryBox Behaviour module.
+        var projectData = _extra.captivate.allSlideObjectsData,
+            slideObjectData,
+            slideObjectType;
+
+        for (var slideObjectName in projectData) {
+            if (projectData.hasOwnProperty(slideObjectName)) {
+
+                slideObjectData = projectData[slideObjectName];
+                slideObjectType = _extra.dataTypes.convertSlideObjectType(slideObjectData.type);
+
+                _extra.slideObjects.allObjectsOfTypeCallback.sendToCallback(slideObjectType, slideObjectName);
+
+            }
+        }
 
     };
 

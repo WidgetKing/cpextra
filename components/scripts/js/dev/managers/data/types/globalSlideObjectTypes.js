@@ -8,7 +8,13 @@
 _extra.registerModule("globalSlideObjectTypes",function () {
     "use strict";
 
-    _extra.slideObjectsTypes = {
-        "TEXT_ENTRY_BOX":1
+    _extra.dataTypes = {
+        "slideObjects": {
+            "UNKNOWN": 0,
+            "TEXT_ENTRY_BOX":1
+        }
     };
+    /*_extra.slideObjectsTypes = {
+
+    };*/
 });

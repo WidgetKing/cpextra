@@ -17,7 +17,8 @@ _extra.registerModule("softwareInterfacesManager", function () {
         "variables":_extra.w,
         "interface":_extra.w.cpAPIInterface,
         "eventDispatcher":_extra.w.cpAPIEventEmitter,
-        "model":_extra.w.cp.model
+        "model":_extra.w.cp.model,
+        "allSlideObjectsData":_extra.w.cp.model.data
     };
 
 }, _extra.CAPTIVATE);

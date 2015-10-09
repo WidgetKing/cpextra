@@ -17,6 +17,9 @@ _extra.registerModule("generalVariableManager", ["softwareInterfacesManager", "C
         },
         "setVariableValue": function (variableName, value) {
             _extra.storyline.player.SetVar(variableName, value);
+        },
+        "hasVariable": function (variableName) {
+            return _extra.storyline.variables[variableName] !== undefined;
         }
     };
 

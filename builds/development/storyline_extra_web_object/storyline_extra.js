@@ -35,6 +35,7 @@ function initExtra(topWindow) {
         }
     };
 
+
     /**
      * Send an error to the debug console of the browser, assuming the console is available.
      * @param message
@@ -46,7 +47,7 @@ function initExtra(topWindow) {
     };
 
     // The highest window, where we should be able to find the internal functions of the output
-    _extra.w = topWindow.top;
+    _extra.w = topWindow.parent;
 
     // Constants used to identify modules that are specialized for Captivate or Storyline
     _extra.CAPTIVATE = "captivate";
@@ -253,7 +254,7 @@ function initExtra(topWindow) {
     //////////////
     _extra.X = {
         "version":"0.0.2",
-        "build":"582"
+        "build":"706"
     };
 
     //////////////
@@ -358,15 +359,18 @@ _extra.registerModule("Callback", function () {
  * Time: 4:32 PM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("createSlideObjectData", ["factoryManager", "globalSlideObjectTypes", "TextEntryBoxDataProxy"], function () {
+_extra.registerModule("createSlideObjectData", ["factoryManager"], function () {
     "use strict";
+
+    // We have not added requirements for each of the proxy classes as in theory this function would not be called until
+    // onload time. However, if we do run into the case where we need to call this before then... Well... Bummer.
+
     _extra.factories.createSlideObjectData = function (name, data, type) {
 
         switch (type) {
 
-            case _extra.slideObjectsTypes.TEXT_ENTRY_BOX :
+            case _extra.dataTypes.slideObjects.TEXT_ENTRY_BOX :
                 return new _extra.classes.TextEntryBoxDataProxy(name, data);
-                break;
 
         }
 
@@ -430,20 +434,50 @@ _extra.registerModule("TextEntryBoxDataProxy", ["BaseSlideObjectDataProxy"], fun
 
     _extra.registerClass("TextEntryBoxDataProxy", TextEntryBoxDataProxy,"BaseSlideObjectDataProxy", _extra.STORYLINE);
 }, _extra.STORYLINE);
-/*global _extra*/
 /**
  * Created with IntelliJ IDEA.
  * User: Tristan
- * Date: 24/09/15
- * Time: 1:28 PM
+ * Date: 2/10/15
+ * Time: 5:06 PM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("textBoxBehaviour", ["slideObjectManager"], function () {
-    "use strict";
+_extra.registerModule("behaviourManager", ["generalVariableManager"], function () {
 
-    /*_extra.slideObjectManager.projectTypeCallback.addCallback(_extra.slideObjectManager.types.TEXT_ENTRY_BOX, function () {
-        _extra.log("lkjlk");
-    });*/
+    "use strict";
+    var behaviourVariablePrefix = "xbehavior";
+    var behaviourModules = {};
+
+    _extra.behaviourManager = {
+
+    };
+
+    function instantiateBehaviourModule(behaviourVariable) {
+        var module = behaviourModules[behaviourVariable];
+        if (!module.instantiated) {
+            module.moduleConstructor();
+            module.instantiated = true;
+        }
+    }
+
+    _extra.behaviourManager.registerBehaviourModule = function (behaviourVariableSuffix, moduleConstructor, onLoadFunction) {
+        var behaviourVariable = behaviourVariablePrefix + behaviourVariableSuffix,
+            info = {};
+        if (behaviourModules[behaviourVariable]) {
+            // We already have a behaviour module of this type.
+            throw new Error("Illegally attempted to register two behaviour modules with the name: " + behaviourVariableSuffix);
+        }
+
+        info.moduleConstructor = moduleConstructor;
+        info.instantiated = false;
+        info.onLoadCallback = onLoadFunction;
+
+        behaviourModules[behaviourVariable] = info;
+
+        if (!_extra.variableManager.hasVariable(behaviourVariable)) {
+            instantiateBehaviourModule(behaviourVariable);
+        }
+    };
+
 });
 /**
  * Created with IntelliJ IDEA.
@@ -499,20 +533,6 @@ _extra.registerModule("generalSlideObjectManager", ["generalDataManager"], funct
 /**
  * Created with IntelliJ IDEA.
  * User: Tristan
- * Date: 30/09/15
- * Time: 4:52 PM
- * To change this template use File | Settings | File Templates.
- */
-_extra.registerModule("globalSlideObjectTypes",function () {
-    "use strict";
-
-    _extra.slideObjectsTypes = {
-        "TEXT_ENTRY_BOX":1
-    };
-});
-/**
- * Created with IntelliJ IDEA.
- * User: Tristan
  * Date: 27/09/15
  * Time: 4:15 PM
  * To change this template use File | Settings | File Templates.
@@ -525,12 +545,11 @@ _extra.registerModule("softwareInterfacesManager", function () {
     _extra.storyline = {
         "api":_extra.w.story,
         "variables":_extra.w.story.variables,
-        "player":_extra.w.player
+        "player":_extra.w.player,
+        "slidesData":_extra.w.story.allSlides
     };
 
     // TODO: Find Storyline Version variable
-
-    console.log(_extra.storyline.api);
 
 }, _extra.STORYLINE);
 /**
@@ -552,6 +571,9 @@ _extra.registerModule("generalVariableManager", ["softwareInterfacesManager", "C
         },
         "setVariableValue": function (variableName, value) {
             _extra.storyline.player.SetVar(variableName, value);
+        },
+        "hasVariable": function (variableName) {
+            return _extra.storyline.variables[variableName] !== undefined;
         }
     };
 
@@ -663,4 +685,34 @@ _extra.registerModule("localStorageManager", ["generalVariableManager"], functio
     _extra.variableManager.prefixCallback.addCallback("ss", function (variableName) {
         setUpStorageVariable(variableName, _extra.w.sessionStorage);
     });
+});
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 1/10/15
+ * Time: 2:37 PM
+ * To change this template use File | Settings | File Templates.
+ */
+_extra.registerModule("dataTypeConverters",["globalSlideObjectTypes"], function () {
+
+}, _extra.STORYLINE);
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 30/09/15
+ * Time: 4:52 PM
+ * To change this template use File | Settings | File Templates.
+ */
+_extra.registerModule("globalSlideObjectTypes",function () {
+    "use strict";
+
+    _extra.dataTypes = {
+        "slideObjects": {
+            "UNKNOWN": 0,
+            "TEXT_ENTRY_BOX":1
+        }
+    };
+    /*_extra.slideObjectsTypes = {
+
+    };*/
 });
