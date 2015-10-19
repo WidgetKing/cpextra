@@ -10,7 +10,10 @@ _extra.registerModule("slideObjectManager_software", ["generalDataManager", "Cal
     "use strict";
 
     _extra.slideObjects = {
-
+        "getSlideObjectElement": function(id) {
+            _extra.log("_extra.slideObjects.getSlideObjectElement has yet to be defined");
+            return _extra.w.document.getElementById(id);
+        }
     };
 
     ////////////////////

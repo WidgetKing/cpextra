@@ -14,5 +14,6 @@ _extra.registerModule("publicAPIManager", function () {
 
         _extra.X.getSlideData = _extra.slideManager.getSlideData;
         _extra.X.gotoSlide = _extra.slideManager.gotoSlide;
+        _extra.X.getSlideObjectByName = _extra.slideObjects.getSlideObjectByName;
     };
 });

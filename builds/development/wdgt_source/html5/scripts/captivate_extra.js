@@ -261,7 +261,7 @@ function initExtra(topWindow) {
     //////////////
     _extra.X = {
         "version":"0.0.2",
-        "build":"1113"
+        "build":"1133"
     };
 
     //////////////
@@ -825,6 +825,7 @@ _extra.registerModule("publicAPIManager", function () {
 
         _extra.X.getSlideData = _extra.slideManager.getSlideData;
         _extra.X.gotoSlide = _extra.slideManager.gotoSlide;
+        _extra.X.getSlideObjectByName = _extra.slideObjects.getSlideObjectByName;
     };
 });
 /**
@@ -910,6 +911,9 @@ _extra.registerModule("slideObjectManager_software", ["generalDataManager", "Cal
 
     _extra.slideObjects = {
         "allObjectsOfTypeCallback": new _extra.classes.Callback(),
+        "getSlideObjectElement": function(id) {
+            return _extra.w.document.getElementById("re-" + id + "c");
+        },
         "getSlideObjectNamesMatchingWildcardName": function (query, returnProxies) {
 
             var wildcardIndex = query.indexOf(_extra.slideObjects.WILDCARD_CHARACTER);
@@ -1049,7 +1053,13 @@ _extra.registerModule("slideObjectManager_global", ["slideObjectManager_software
             id = DOMElement.id;
         } else {
             // We were given the id of a dom element, so we have to find it.
-            _extra.w.document.getElementById(id);
+            DOMElement = _extra.slideObjects.getSlideObjectElement(id);
+            //DOMElement = _extra.w.document.getElementById(id);
+
+            // If we could not find the slide object, then... BYE BYE!
+            if (!DOMElement) {
+                return null;
+            }
         }
 
         if (!slideObjectProxies[id]) {
@@ -1057,6 +1067,22 @@ _extra.registerModule("slideObjectManager_global", ["slideObjectManager_software
         }
 
         return slideObjectProxies[id];
+
+    };
+
+    _extra.slideObjects.getSlideObjectByName = function (query) {
+
+        if (query.indexOf(_extra.slideObjects.WILDCARD_CHARACTER) > -1) {
+
+            // There is a wildcard, so we'll return a list.
+            return _extra.slideObjects.getSlideObjectNamesMatchingWildcardName(query, true);
+
+        } else {
+
+            // No wildcard. Grab the object directly of this name.
+            return _extra.slideObjects.getSlideObjectProxy(query);
+
+        }
 
     };
 

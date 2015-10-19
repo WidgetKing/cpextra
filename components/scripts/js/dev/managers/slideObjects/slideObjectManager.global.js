@@ -21,7 +21,13 @@ _extra.registerModule("slideObjectManager_global", ["slideObjectManager_software
             id = DOMElement.id;
         } else {
             // We were given the id of a dom element, so we have to find it.
-            _extra.w.document.getElementById(id);
+            DOMElement = _extra.slideObjects.getSlideObjectElement(id);
+            //DOMElement = _extra.w.document.getElementById(id);
+
+            // If we could not find the slide object, then... BYE BYE!
+            if (!DOMElement) {
+                return null;
+            }
         }
 
         if (!slideObjectProxies[id]) {
@@ -29,6 +35,22 @@ _extra.registerModule("slideObjectManager_global", ["slideObjectManager_software
         }
 
         return slideObjectProxies[id];
+
+    };
+
+    _extra.slideObjects.getSlideObjectByName = function (query) {
+
+        if (query.indexOf(_extra.slideObjects.WILDCARD_CHARACTER) > -1) {
+
+            // There is a wildcard, so we'll return a list.
+            return _extra.slideObjects.getSlideObjectNamesMatchingWildcardName(query, true);
+
+        } else {
+
+            // No wildcard. Grab the object directly of this name.
+            return _extra.slideObjects.getSlideObjectProxy(query);
+
+        }
 
     };
 

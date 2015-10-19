@@ -11,6 +11,9 @@ _extra.registerModule("slideObjectManager_software", ["generalDataManager", "Cal
 
     _extra.slideObjects = {
         "allObjectsOfTypeCallback": new _extra.classes.Callback(),
+        "getSlideObjectElement": function(id) {
+            return _extra.w.document.getElementById("re-" + id + "c");
+        },
         "getSlideObjectNamesMatchingWildcardName": function (query, returnProxies) {
 
             var wildcardIndex = query.indexOf(_extra.slideObjects.WILDCARD_CHARACTER);
