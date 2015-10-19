@@ -7,9 +7,10 @@
  */
 _extra.registerModule("BaseSlideObjectDataProxy", function () {
     "use strict";
-    function BaseSlideObjectData(name, data) {
+    function BaseSlideObjectData(name, data, type) {
         this._name = name;
         this._data = data;
+        this._type = type;
     }
 
     BaseSlideObjectData.prototype = {
@@ -18,6 +19,9 @@ _extra.registerModule("BaseSlideObjectDataProxy", function () {
         },
         get data() {
             return this._data;
+        },
+        get type(){
+            return this._type;
         }
     };
     _extra.registerClass("BaseSlideObjectDataProxy", BaseSlideObjectData);

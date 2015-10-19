@@ -44,13 +44,16 @@
         ctr = "tests/output/captivate/",
         captivateTestSources = [ctr + "01_CE_Local_Storage_Variables/wr/w_5235/scripts",
                                ctr + "02_CE_Local_Storage_Variables_2/wr/w_5235/scripts",
-                               ctr + "02_CE_Local_Storage_Variables_2/wr/w_5495/scripts"],
+                               ctr + "02_CE_Local_Storage_Variables_2/wr/w_5495/scripts",
+                               ctr + "03_CE_TextEntryBox_Behaviour_Changes/wr/w_5235/scripts",
+                               ctr + "05_CE_SlideTests/wr/w_5235/scripts"],
 
         storylineExtraDevLocation = "builds/development/storyline_extra_web_object",
         storylineExtraDevFileName = "storyline_extra.js",
         str = "tests/output/storyline/",
         storylineTestSources = [str + "01_CE_Local_Storage_Variables_1 - Storyline output/story_content/WebObjects/6O4Z2639lm4",
-                                str + "01_CE_Local_Storage_Variables_2 - Storyline output/story_content/WebObjects/64qP4KPGj6t"],
+                                str + "01_CE_Local_Storage_Variables_2 - Storyline output/story_content/WebObjects/64qP4KPGj6t",
+                                str + "02_SE_Slide_Tests - Storyline output/story_content/WebObjects/6pcKh8TGeK4"],
         karmaConfig = "karma.conf.js";
 
     var buildNumber = jsonPackage.buildNumber;

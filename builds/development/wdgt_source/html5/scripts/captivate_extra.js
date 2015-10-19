@@ -54,7 +54,6 @@ function initExtra(topWindow) {
     _extra.STORYLINE = "storyline";
 
 
-
     //////////////
     ///// Extra Pre-detection
     //////////////
@@ -65,6 +64,8 @@ function initExtra(topWindow) {
         _extra.registerModule = function () {
             // Purposefully left blank as we don't want to do anything with the registered modules.
         };
+
+        _extra.log("Aborted initializing Extra for a second time, as we have detected the window.X property has already been defined.");
 
         return;
     } else {
@@ -78,6 +79,12 @@ function initExtra(topWindow) {
     _extra.classes = {};
 
     _extra.registerClass = function (className, classConstructor, SuperClass) {
+
+        if (SuperClass === _extra.STORYLINE || SuperClass === _extra.CAPTIVATE) {
+            // In this case, this is the class registering that it is an impementation for a certain software.
+            // Rather than saying it wants to extend the 'storyline' class.
+            SuperClass = null;
+        }
 
         if (SuperClass) {
 
@@ -254,7 +261,7 @@ function initExtra(topWindow) {
     //////////////
     _extra.X = {
         "version":"0.0.2",
-        "build":"706"
+        "build":"1113"
     };
 
     //////////////
@@ -367,13 +374,43 @@ _extra.registerModule("createSlideObjectData", ["factoryManager"], function () {
 
     _extra.factories.createSlideObjectData = function (name, data, type) {
 
+
+
         switch (type) {
 
             case _extra.dataTypes.slideObjects.TEXT_ENTRY_BOX :
-                return new _extra.classes.TextEntryBoxDataProxy(name, data);
+                return new _extra.classes.TextEntryBoxDataProxy(name, data, type);
+
+            default :
+                return new _extra.classes.BaseSlideObjectDataProxy(name, data, type);
 
         }
 
+    };
+});
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 20/10/15
+ * Time: 6:38 AM
+ * To change this template use File | Settings | File Templates.
+ */
+_extra.registerModule("createSlideObjectProxy",["factoryManager"], function () {
+
+    "use strict";
+
+    _extra.factories.createSlideObjectProxy = function (id, element) {
+        var data = _extra.dataManager.getSlideObjectDataByName(id);
+
+        switch (data.type) {
+            /*case _extra.dataTypes.slideObjects.TEXT_ENTRY_BOX :
+
+                break;*/
+
+            default :
+                return new _extra.classes.BaseSlideObjectProxy(element, data);
+
+        }
     };
 });
 /**
@@ -401,9 +438,10 @@ _extra.registerModule("factoryManager", function () {
  */
 _extra.registerModule("BaseSlideObjectDataProxy", function () {
     "use strict";
-    function BaseSlideObjectData(name, data) {
+    function BaseSlideObjectData(name, data, type) {
         this._name = name;
         this._data = data;
+        this._type = type;
     }
 
     BaseSlideObjectData.prototype = {
@@ -412,10 +450,62 @@ _extra.registerModule("BaseSlideObjectDataProxy", function () {
         },
         get data() {
             return this._data;
+        },
+        get type(){
+            return this._type;
         }
     };
     _extra.registerClass("BaseSlideObjectDataProxy", BaseSlideObjectData);
 });
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 20/10/15
+ * Time: 7:07 AM
+ * To change this template use File | Settings | File Templates.
+ */
+_extra.registerModule("BaseSlideObjectProxy", function () {
+
+    "use strict";
+
+    function BaseSlideObjectProxy(element, data) {
+        this.DOMElement = element;
+        this._data = data;
+    }
+
+    BaseSlideObjectProxy.prototype = {
+        get name(){
+            return this.DOMElement.id;
+        },
+        get data() {
+            return this._data;
+        },
+        get type(){
+            return this._data.type;
+        }
+    };
+
+    _extra.registerClass("BaseSlideObjectProxy", BaseSlideObjectProxy, _extra.CAPTIVATE);
+
+}, _extra.CAPTIVATE);
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 15/10/15
+ * Time: 3:05 PM
+ * To change this template use File | Settings | File Templates.
+ */
+_extra.registerModule("SlideDataProxy", function () {
+
+    "use strict";
+
+    function SlideDataProxy(data) {
+        this.name = data.base.lb;
+    }
+
+    _extra.registerClass("SlideDataProxy", SlideDataProxy, _extra.CAPTIVATE);
+
+}, _extra.CAPTIVATE);
 /**
  * Created with IntelliJ IDEA.
  * User: Tristan
@@ -426,13 +516,51 @@ _extra.registerModule("BaseSlideObjectDataProxy", function () {
 _extra.registerModule("TextEntryBoxDataProxy", ["BaseSlideObjectDataProxy"], function () {
     "use strict";
 
-    function TextEntryBoxDataProxy(name, data) {
+    function TextEntryBoxDataProxy(name, data, type) {
+
         // Call super constructor
-        _extra.classes.BaseSlideObjectDataProxy.call(this, name, data);
+        _extra.classes.BaseSlideObjectDataProxy.call(this, name, data, type);
+
+        this._isResponsive = typeof data.container.txt === "object";
     }
 
 
-    _extra.registerClass("TextEntryBoxDataProxy", TextEntryBoxDataProxy,"BaseSlideObjectDataProxy", _extra.CAPTIVATE);
+    _extra.registerClass("TextEntryBoxDataProxy", TextEntryBoxDataProxy, "BaseSlideObjectDataProxy", _extra.CAPTIVATE);
+
+    Object.defineProperty(TextEntryBoxDataProxy.prototype,"variable", {
+        get: function() {
+            return this._data.base.vn;
+        }
+    });
+
+    Object.defineProperty(TextEntryBoxDataProxy.prototype,"defaultText", {
+        get: function() {
+            if (this._isResponsive) {
+                // TODO: Implement a way to find out what current breakpoint is active so that we can return the appropriate information.
+                _extra.error("TextEntryBoxData.defaultText getter for Captivate responsive projects has yet to be implemented");
+                return null;
+            } else {
+                return this._data.container.txt;
+            }
+        },
+        set: function(value) {
+
+            // In responsive projects this property will be set as an object to allow different default text according ot screen size.
+            if (this._isResponsive) {
+                for (var screenSize in this._data.container.txt) {
+                    // Go through all the screen sizes and change its default value.
+                    if (this._data.container.txt.hasOwnProperty(screenSize)) {
+                        this._data.container.txt[screenSize] = value;
+                    }
+                }
+            } else {
+                // In a non responsive project this is much more direct.
+                this._data.container.txt = value;
+            }
+        }
+    });
+
+
 }, _extra.CAPTIVATE);
 /**
  * Created with IntelliJ IDEA.
@@ -447,34 +575,84 @@ _extra.registerModule("behaviourManager", ["generalVariableManager"], function (
     var behaviourVariablePrefix = "xbehavior";
     var behaviourModules = {};
 
+
     _extra.behaviourManager = {
 
-    };
+        /**
+         * Takes information for a behaviour module and enables it at the appropriate time.
+         *
+         * A behaviour module is a part of Extra which has been built to change the default behaviour of the target software.
+         *
+         * Examples include, stopping TextEntryBoxes from being blank when they first appear, thereby preventing their variables
+         * from losing their values needlessly.
+         * @param behaviourVariableSuffix
+         * @param behaviourInfo
+         * @returns {boolean}
+         */
+            "registerBehaviourModule": function (behaviourVariableSuffix, behaviourInfo) {
 
-    function instantiateBehaviourModule(behaviourVariable) {
-        var module = behaviourModules[behaviourVariable];
-        if (!module.instantiated) {
-            module.moduleConstructor();
-            module.instantiated = true;
-        }
-    }
+            // What the name for the variable that manages this behaviour should look like.
+            var behaviourVariable = behaviourVariablePrefix + behaviourVariableSuffix;
 
-    _extra.behaviourManager.registerBehaviourModule = function (behaviourVariableSuffix, moduleConstructor, onLoadFunction) {
-        var behaviourVariable = behaviourVariablePrefix + behaviourVariableSuffix,
-            info = {};
-        if (behaviourModules[behaviourVariable]) {
-            // We already have a behaviour module of this type.
-            throw new Error("Illegally attempted to register two behaviour modules with the name: " + behaviourVariableSuffix);
-        }
+            function onBehaviourVariableChange () {
 
-        info.moduleConstructor = moduleConstructor;
-        info.instantiated = false;
-        info.onLoadCallback = onLoadFunction;
+                if (_extra.variableManager.getVariableValue(behaviourVariable)) {
 
-        behaviourModules[behaviourVariable] = info;
+                    if (!behaviourInfo.enabled) {
+                        behaviourInfo.enable();
+                        behaviourInfo.enabled = true;
+                    }
 
-        if (!_extra.variableManager.hasVariable(behaviourVariable)) {
-            instantiateBehaviourModule(behaviourVariable);
+                } else {
+
+                    if (behaviourInfo.enabled) {
+                        behaviourInfo.disable();
+                        behaviourInfo.enabled = false;
+                    }
+
+                }
+            }
+
+            // Now check to see if a variable has been defined to manage this behaviour. If it has, then we will save this
+            // behaviour.
+
+            if (!_extra.variableManager.hasVariable(behaviourVariable)) {
+                // Check to see if the behaviour variable has been defined with an underscore at the front of its name.
+                behaviourVariable = "_" + behaviourVariable;
+                if (!_extra.variableManager.hasVariable(behaviourVariable)) {
+                    // Show the behaviour module that there is no variable defined to manage the behaviour and it is therefore
+                    // unneccesary to instantiate.
+                    return false;
+                }
+            }
+
+
+            // Check validity of passed in information.
+            if (behaviourModules[behaviourVariable]) {
+                // We already have a behaviour module of this type.
+                throw new Error("Illegally attempted to register two behaviour modules with the name: " + behaviourVariableSuffix);
+            } else if (!behaviourInfo.enable) {
+                throw new Error("Illegally tried to submit a behaviour module without an enable method specified in the behaviourInfo parameter object.");
+            } else if (!behaviourInfo.disable) {
+                throw new Error("Illegally tried to submit a behaviour module without a disable method specified in the behaviourInfo parameter object.");
+            }
+
+            // Save behaviour
+            behaviourModules[behaviourVariable] = behaviourInfo;
+            behaviourInfo.enabled = false;
+
+
+
+            // Every time the behaviour variable changes, we'll make sure the module is enabled or disabled accordingly.
+            _extra.variableManager.listenForVariableChange(behaviourVariable, onBehaviourVariableChange);
+
+            // We'll also enable or disable
+            onBehaviourVariableChange();
+
+            // Let the module know there is a variable set up to manage the behaviour and it is therefore approved to
+            // continue instantiation
+            return true;
+
         }
     };
 
@@ -487,13 +665,105 @@ _extra.registerModule("behaviourManager", ["generalVariableManager"], function (
  * Time: 1:28 PM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("textBoxBehaviour", ["slideObjectManager","generalVariableManager"], function () {
+_extra.registerModule("preventTextEntryBoxOverwrite", ["generalSlideObject_global", "behaviourManager", "eventManager"], function () {
     "use strict";
 
-    /*_extra.slideObjectManager.projectTypeCallback.addCallback(_extra.slideObjectManager.types.TEXT_ENTRY_BOX, function () {
-        _extra.log("lkjlk");
-    });*/
-});
+    ///////////////////////
+    ////////// Private Variables
+    ///////////////////////
+
+    var hasCollectedTextBoxData = false,
+        textEntryBoxData = {},
+        areVariablesInitliazed = false,
+        behaviourModuleInfo = {
+            // Automatically called by _extra.behaviourManager in response to the value of the xbehaviourPreventTextEntryBoxOverwrite variable
+        "enable": function () {
+            if (hasCollectedTextBoxData) {
+                for (var textEntryBoxName in textEntryBoxData) {
+                    if (textEntryBoxData.hasOwnProperty(textEntryBoxName)) {
+                        enableVariable(textEntryBoxName);
+                    }
+                }
+            }
+        },
+        "disable": function () {
+            if (hasCollectedTextBoxData) {
+                for (var textEntryBoxName in textEntryBoxData) {
+                    if (textEntryBoxData.hasOwnProperty(textEntryBoxName)) {
+                        disableVariable(textEntryBoxName);
+                    }
+                }
+            }
+        }
+    };
+
+
+
+    ///////////////////////
+    ////////// Private Functions
+    ///////////////////////
+
+    function enableVariable(textEntryBoxName) {
+        var d = textEntryBoxData[textEntryBoxName];
+
+        _extra.variableManager.listenForVariableChange(d.data.variable, d.onVariableChange);
+        d.onVariableChange();
+    }
+
+    function disableVariable(textEntryBoxName) {
+        var d = textEntryBoxData[textEntryBoxName];
+        _extra.variableManager.stopListeningForVariableChange(d.data.variable, d.onVariableChange);
+    }
+
+    ///////////////////////
+    ////////// Confirm Variable Initilization.
+    ///////////////////////
+    function onVariablesInit() {
+        _extra.eventDispatcher.removeEventListener("variablesInitialized", onVariablesInit);
+        areVariablesInitliazed = true;
+        if (behaviourModuleInfo.enabled) {
+            for (var textEntryBoxName in textEntryBoxData) {
+                if (textEntryBoxData.hasOwnProperty(textEntryBoxName)) {
+                    enableVariable(textEntryBoxName);
+                }
+            }
+        }
+    }
+
+    _extra.eventDispatcher.addEventListener("variablesInitialized", onVariablesInit);
+
+    ///////////////////////
+    ////////// Initialization
+    ///////////////////////
+
+    if (_extra.behaviourManager.registerBehaviourModule("PreventTextEntryBoxOverwrite", behaviourModuleInfo)) {
+
+
+
+        // The behaviour manager has approved of us being instantiated! Proceed.
+        _extra.slideObjects.allObjectsOfTypeCallback.addCallback(_extra.dataTypes.slideObjects.TEXT_ENTRY_BOX, function (textEntryBoxName) {
+
+            hasCollectedTextBoxData = true;
+
+            // Get the data for the text entry box
+            var tebData = _extra.dataManager.getSlideObjectDataByName(textEntryBoxName);
+
+            textEntryBoxData[textEntryBoxName] = {
+                "data": tebData,
+                "onVariableChange": function () {
+                    tebData.defaultText = _extra.variableManager.getVariableValue(tebData.variable);
+                }
+            };
+
+            if (behaviourModuleInfo.enabled && areVariablesInitliazed) {
+                enableVariable(textEntryBoxName);
+            }
+
+        });
+
+    }
+
+}, _extra.CAPTIVATE);
 /*global _extra*/
 _extra.registerModule("generalDataManager", ["softwareInterfacesManager", "dataTypeConverters", "createSlideObjectData"], function () {
 
@@ -531,11 +801,102 @@ _extra.registerModule("generalDataManager", ["softwareInterfacesManager", "dataT
 /**
  * Created with IntelliJ IDEA.
  * User: Tristan
- * Date: 24/09/15
- * Time: 1:28 PM
+ * Date: 11/10/15
+ * Time: 4:13 PM
  * To change this template use File | Settings | File Templates.
  */
+_extra.registerModule("eventManager", function () {
+    "use strict";
+    _extra.eventDispatcher = document.createElement("p");
+});
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 15/10/15
+ * Time: 3:49 PM
+ * To change this template use File | Settings | File Templates.
+ */
+_extra.registerModule("publicAPIManager", function () {
+    "use strict";
 
+    // We'll wait for everything to be defined before setting up the public API.
+    return function () {
+        _extra.w.X = _extra.X;
+
+        _extra.X.getSlideData = _extra.slideManager.getSlideData;
+        _extra.X.gotoSlide = _extra.slideManager.gotoSlide;
+    };
+});
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 15/10/15
+ * Time: 2:04 PM
+ * To change this template use File | Settings | File Templates.
+ */
+_extra.registerModule("slideManager_software", ["softwareInterfacesManager"], function () {
+
+    "use strict";
+
+    var slideIDs = _extra.captivate.model.data.project_main.slides.split(","),
+        tempBaseData,
+        tempContainerData;
+
+    _extra.slideManager = {
+        "_slideDatas": [],
+        "slideNames": [],
+        "gotoSlide":function (index) {
+            if (typeof index === "string") {
+                index = _extra.slideManager.getSlideIndexFromName(index);
+            }
+
+            _extra.captivate.interface.gotoSlide(index);
+        },
+        "currentSlideDOMElement":_extra.w.document.getElementById("div_Slide")
+    };
+
+    slideIDs.forEach(function(slideID){
+        tempBaseData = _extra.captivate.model.data[slideID];
+        tempContainerData = _extra.captivate.model.data[slideID + "c"];
+        _extra.slideManager._slideDatas.push({
+            "base":tempBaseData,
+            "container":tempContainerData
+        });
+        _extra.slideManager.slideNames.push(tempBaseData.lb);
+    });
+
+
+
+}, _extra.CAPTIVATE);
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 15/10/15
+ * Time: 5:10 PM
+ * To change this template use File | Settings | File Templates.
+ */
+_extra.registerModule("slideManager_global",["slideManager_software"],function() {
+
+    "use strict";
+
+    _extra.slideManager.getSlideData = function (index) {
+        if (typeof index === "string") {
+            index = _extra.slideManager.getSlideIndexFromName(index);
+        }
+
+        if (index === -1) {
+            return null;
+        } else {
+            return new _extra.classes.SlideDataProxy(_extra.slideManager._slideDatas[index]);
+        }
+    };
+
+    _extra.slideManager.getSlideIndexFromName = function (name) {
+        return _extra.slideManager.slideNames.indexOf(name);
+    };
+
+    // TODO: Define: play, pause, gotoPreviousSlide, gotoNextSlide, currentSlideNumber
+});
 /* global _extra*/
 /**
  * Created with IntelliJ IDEA.
@@ -544,11 +905,66 @@ _extra.registerModule("generalDataManager", ["softwareInterfacesManager", "dataT
  * Time: 1:28 PM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("generalSlideObjectManager", ["generalDataManager", "Callback"], function () {
+_extra.registerModule("slideObjectManager_software", ["generalDataManager", "Callback", "slideManager_global"], function () {
    "use strict";
 
     _extra.slideObjects = {
-        "allObjectsOfTypeCallback": new _extra.classes.Callback()
+        "allObjectsOfTypeCallback": new _extra.classes.Callback(),
+        "getSlideObjectNamesMatchingWildcardName": function (query, returnProxies) {
+
+            var wildcardIndex = query.indexOf(_extra.slideObjects.WILDCARD_CHARACTER);
+            if (wildcardIndex > -1) {
+
+                // There is a wildcard character in the query.
+
+                // The following comments are written as if the query passed is is: My_@_Box
+
+                // The part of the query before the wildcard character: My_
+                var start = query.substr(0,wildcardIndex),
+                // The part of the query after the wildcard character: _Box
+                    end = query.substr(wildcardIndex + 1, query.length - 1),
+
+                    slide = _extra.slideManager.currentSlideDOMElement,
+                    id,
+                    list = [];
+
+                slide.childNodes.forEach(function (child) {
+                    id = child.id;
+
+                    // Check if this slide objects's name matches the first part of the passed in query.
+                    if (id.substr(0,start.length) === start) {
+
+                        // Now check if it matches the last part.
+                        if (id.substr(id.length - end.length, id.length - 1) === end) {
+
+                            // The query matches, so we'll add this child to the list of display objects we'll return.
+                            if (returnProxies) {
+
+                                list.push(_extra.slideObjects.getSlideObjectProxy(id));
+
+                            } else {
+
+                                list.push(id);
+
+                            }
+
+                        }
+
+                    }
+                });
+
+                // If we have found no matches, then return nothing.
+                if (list.length === 0) {
+                    list = null;
+                }
+
+                return list;
+            }
+
+            // Endpoint if no wildcard was passed in.
+            return null;
+
+        }
     };
 
 
@@ -613,6 +1029,42 @@ _extra.registerModule("generalSlideObjectManager", ["generalDataManager", "Callb
 /**
  * Created with IntelliJ IDEA.
  * User: Tristan
+ * Date: 15/10/15
+ * Time: 6:06 PM
+ * To change this template use File | Settings | File Templates.
+ */
+_extra.registerModule("slideObjectManager_global", ["slideObjectManager_software"], function () {
+    "use strict";
+
+    var slideObjectProxies = {};
+
+    _extra.slideObjects.WILDCARD_CHARACTER = "@";
+    _extra.slideObjects.getSlideObjectProxy = function (id) {
+
+        var DOMElement;
+
+        // If we were passed in a DOM element rather than the id of a DOM element...
+        if (typeof id === "object") {
+            DOMElement = id;
+            id = DOMElement.id;
+        } else {
+            // We were given the id of a dom element, so we have to find it.
+            _extra.w.document.getElementById(id);
+        }
+
+        if (!slideObjectProxies[id]) {
+            slideObjectProxies[id] = _extra.factories.createSlideObjectProxy(id, DOMElement);
+        }
+
+        return slideObjectProxies[id];
+
+    };
+
+    // TODO: Should clear slideObjectProxies when entering a new slide.
+});
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
  * Date: 27/09/15
  * Time: 4:15 PM
  * To change this template use File | Settings | File Templates.
@@ -660,6 +1112,12 @@ _extra.registerModule("generalVariableManager", ["softwareInterfacesManager", "C
         },
         "hasVariable": function (variableName) {
             return _extra.captivate.variables[variableName] !== undefined;
+        },
+        "listenForVariableChange": function (variableName, callback) {
+            _extra.captivate.eventDispatcher.addEventListener("CPAPI_VARIABLEVALUECHANGED",callback,variableName);
+        },
+        "stopListeningForVariableChange": function(variableName, callback) {
+            _extra.captivate.eventDispatcher.removeEventListener("CPAPI_VARIABLEVALUECHANGED",callback,variableName);
         }
     };
 
@@ -696,6 +1154,9 @@ _extra.registerModule("generalVariableManager", ["softwareInterfacesManager", "C
             }
 
         }
+
+        // Dispatch event to let the rest of the modules know the variables have been initialized.
+        _extra.eventDispatcher.dispatchEvent(new Event("variablesInitialized"));
 
     };
 

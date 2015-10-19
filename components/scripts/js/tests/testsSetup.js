@@ -96,6 +96,13 @@
     unitTests.softwareClasses = {};
     unitTests.registerClass = function (className, classConstructor, SuperClass, software) {
 
+        // If we've passed in the software as the third parameter instead of the fourth
+        if (!software && SuperClass === unitTests.CAPTIVATE || SuperClass === unitTests.STORYLINE) {
+            software = SuperClass;
+            SuperClass = null;
+        }
+
+        alert("Register Class\nclassName: " + className + "\nclassSoftware: " + software);
 
         if (SuperClass) {
 
@@ -134,6 +141,9 @@
         }
 
         if (software) {
+
+            alert("Registered class as belonging to: " + software);
+
             if (!unitTests.softwareClasses[className]) {
                 unitTests.softwareClasses[className] = {};
             }

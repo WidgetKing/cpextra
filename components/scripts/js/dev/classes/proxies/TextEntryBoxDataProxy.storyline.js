@@ -8,11 +8,20 @@
 _extra.registerModule("TextEntryBoxDataProxy", ["BaseSlideObjectDataProxy"], function () {
     "use strict";
 
-    function TextEntryBoxDataProxy(name, data) {
+    function TextEntryBoxDataProxy(name, data, type) {
         // Call super constructor
-        _extra.classes.BaseSlideObjectDataProxy.call(this, name, data);
+        _extra.classes.BaseSlideObjectDataProxy.call(this, name, data, type);
     }
 
 
+
+
     _extra.registerClass("TextEntryBoxDataProxy", TextEntryBoxDataProxy,"BaseSlideObjectDataProxy", _extra.STORYLINE);
+
+    Object.defineProperty(TextEntryBoxDataProxy.prototype,"variable", {
+            get: function() {
+                _extra.error("TextEntryBoxDataProxy.variable has yet to be defined!");
+                return null;
+            }
+        });
 }, _extra.STORYLINE);

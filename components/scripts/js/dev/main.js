@@ -54,7 +54,6 @@ function initExtra(topWindow) {
     _extra.STORYLINE = "storyline";
 
 
-
     //////////////
     ///// Extra Pre-detection
     //////////////
@@ -65,6 +64,8 @@ function initExtra(topWindow) {
         _extra.registerModule = function () {
             // Purposefully left blank as we don't want to do anything with the registered modules.
         };
+
+        _extra.log("Aborted initializing Extra for a second time, as we have detected the window.X property has already been defined.");
 
         return;
     } else {
@@ -78,6 +79,12 @@ function initExtra(topWindow) {
     _extra.classes = {};
 
     _extra.registerClass = function (className, classConstructor, SuperClass) {
+
+        if (SuperClass === _extra.STORYLINE || SuperClass === _extra.CAPTIVATE) {
+            // In this case, this is the class registering that it is an impementation for a certain software.
+            // Rather than saying it wants to extend the 'storyline' class.
+            SuperClass = null;
+        }
 
         if (SuperClass) {
 

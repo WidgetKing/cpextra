@@ -13,10 +13,15 @@ _extra.registerModule("createSlideObjectData", ["factoryManager"], function () {
 
     _extra.factories.createSlideObjectData = function (name, data, type) {
 
+
+
         switch (type) {
 
             case _extra.dataTypes.slideObjects.TEXT_ENTRY_BOX :
-                return new _extra.classes.TextEntryBoxDataProxy(name, data);
+                return new _extra.classes.TextEntryBoxDataProxy(name, data, type);
+
+            default :
+                return new _extra.classes.BaseSlideObjectDataProxy(name, data, type);
 
         }
 

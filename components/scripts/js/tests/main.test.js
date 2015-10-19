@@ -223,6 +223,25 @@
             expect(instance.prop2).toBe(true);
         });
 
+        it("should not try to find '" + unitTests.CAPTIVATE + "' or '" + unitTests.STORYLINE + "' as super classes", function () {
+            function SuperClass() {
+
+            }
+            SuperClass.prototype.property = "foobar";
+            _extra.registerClass(unitTests.CAPTIVATE, SuperClass);
+            _extra.registerClass(unitTests.STORYLINE, SuperClass);
+
+            _extra.registerClass("ChildClassCaptivate", function(){}, unitTests.CAPTIVATE);
+            _extra.registerClass("ChildClassStoryline", function(){}, unitTests.STORYLINE);
+
+            var instance = new _extra.classes.ChildClassCaptivate();
+            expect(instance.property).not.toBeDefined();
+            instance = new _extra.classes.ChildClassStoryline();
+            expect(instance.property).not.toBeDefined();
+
+
+        });
+
         it("should be able to define super class through string", function () {
             var superClass = function () {};
             superClass.prototype.prop1 = true;

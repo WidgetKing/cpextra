@@ -20,6 +20,12 @@ _extra.registerModule("generalVariableManager", ["softwareInterfacesManager", "C
         },
         "hasVariable": function (variableName) {
             return _extra.storyline.variables[variableName] !== undefined;
+        },
+        "listenForVariableChange": function (variableName, callback) {
+            _extra.error("_extra.variableManager.listenForVariableChange logic has yet to be implemented");
+        },
+        "stopListeningForVariableChange": function(variableName, callback) {
+            _extra.error("_extra.variableManager.stopListeningForVariableChange logic has yet to be implemented");
         }
     };
 
@@ -49,6 +55,9 @@ _extra.registerModule("generalVariableManager", ["softwareInterfacesManager", "C
 
             }
         }
+
+        // Dispatch event to let the rest of the modules know the variables have been initialized.
+        _extra.eventDispatcher.dispatchEvent(new Event("variablesInitialized"));
 
     };
 

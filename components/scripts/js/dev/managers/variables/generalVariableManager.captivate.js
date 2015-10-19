@@ -24,6 +24,12 @@ _extra.registerModule("generalVariableManager", ["softwareInterfacesManager", "C
         },
         "hasVariable": function (variableName) {
             return _extra.captivate.variables[variableName] !== undefined;
+        },
+        "listenForVariableChange": function (variableName, callback) {
+            _extra.captivate.eventDispatcher.addEventListener("CPAPI_VARIABLEVALUECHANGED",callback,variableName);
+        },
+        "stopListeningForVariableChange": function(variableName, callback) {
+            _extra.captivate.eventDispatcher.removeEventListener("CPAPI_VARIABLEVALUECHANGED",callback,variableName);
         }
     };
 
@@ -60,6 +66,9 @@ _extra.registerModule("generalVariableManager", ["softwareInterfacesManager", "C
             }
 
         }
+
+        // Dispatch event to let the rest of the modules know the variables have been initialized.
+        _extra.eventDispatcher.dispatchEvent(new Event("variablesInitialized"));
 
     };
 
