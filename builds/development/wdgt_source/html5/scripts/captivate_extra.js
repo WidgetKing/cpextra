@@ -261,7 +261,7 @@ function initExtra(topWindow) {
     //////////////
     _extra.X = {
         "version":"0.0.2",
-        "build":"1133"
+        "build":"1233"
     };
 
     //////////////
@@ -826,6 +826,11 @@ _extra.registerModule("publicAPIManager", function () {
         _extra.X.getSlideData = _extra.slideManager.getSlideData;
         _extra.X.gotoSlide = _extra.slideManager.gotoSlide;
         _extra.X.getSlideObjectByName = _extra.slideObjects.getSlideObjectByName;
+        _extra.X.hide = _extra.slideObjects.hide;
+        _extra.X.show = _extra.slideObjects.show;
+        _extra.X.disable = _extra.slideObjects.disable;
+        _extra.X.enable = _extra.slideObjects.enable;
+        _extra.X.changeState = _extra.slideObjects.changeState;
     };
 });
 /**
@@ -909,10 +914,50 @@ _extra.registerModule("slideManager_global",["slideManager_software"],function()
 _extra.registerModule("slideObjectManager_software", ["generalDataManager", "Callback", "slideManager_global"], function () {
    "use strict";
 
+    /**
+     * This function takes a query, converts it into a list of slide objects, then applies a function to those slide objects.
+     *
+     * Useful for enhancing Captivate's own internal show, hide, and enable, disable functions.
+     */
+    function enactFunctionOnSlideObjects(query, method) {
+        if (query.indexOf(_extra.slideObjects.WILDCARD_CHARACTER) > -1) {
+
+            var list = _extra.slideObjects.getSlideObjectNamesMatchingWildcardName(query, false);
+
+            for (var i = 0; i < list.length; i += 1) {
+
+                method(list[i]);
+
+            }
+
+        } else {
+
+            method(query);
+
+        }
+    }
+
     _extra.slideObjects = {
         "allObjectsOfTypeCallback": new _extra.classes.Callback(),
         "getSlideObjectElement": function(id) {
             return _extra.w.document.getElementById("re-" + id + "c");
+        },
+        "hide":function (query) {
+            enactFunctionOnSlideObjects(query, _extra.captivate.api.hide);
+        },
+        "show":function (query) {
+            enactFunctionOnSlideObjects(query, _extra.captivate.api.show);
+        },
+        "enable":function (query) {
+            enactFunctionOnSlideObjects(query, _extra.captivate.api.enable);
+        },
+        "disable":function (query) {
+            enactFunctionOnSlideObjects(query, _extra.captivate.api.disable);
+        },
+        "changeState":function (query, state) {
+            enactFunctionOnSlideObjects(query, function (slideObjectName) {
+                _extra.captivate.api.changeState(slideObjectName, state);
+            });
         },
         "getSlideObjectNamesMatchingWildcardName": function (query, returnProxies) {
 
@@ -930,9 +975,11 @@ _extra.registerModule("slideObjectManager_software", ["generalDataManager", "Cal
 
                     slide = _extra.slideManager.currentSlideDOMElement,
                     id,
-                    list = [];
+                    list = [],
+                    child;
 
-                slide.childNodes.forEach(function (child) {
+                for (var i = 0; i < slide.childNodes.length; i += 1) {
+                    child = slide.childNodes[i];
                     id = child.id;
 
                     // Check if this slide objects's name matches the first part of the passed in query.
@@ -955,7 +1002,7 @@ _extra.registerModule("slideObjectManager_software", ["generalDataManager", "Cal
                         }
 
                     }
-                });
+                }
 
                 // If we have found no matches, then return nothing.
                 if (list.length === 0) {
@@ -1112,6 +1159,138 @@ _extra.registerModule("softwareInterfacesManager", function () {
     };
 
 }, _extra.CAPTIVATE);
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 20/10/15
+ * Time: 9:38 AM
+ * To change this template use File | Settings | File Templates.
+ */
+_extra.registerModule("commandVariables",["generalVariableManager","slideObjectManager_global"], function () {
+
+    "use strict";
+
+    var COMMAND_VARIABLE_PREFIX = "xcmnd",
+        variableName,
+
+        commandVariables = {};
+
+    _extra.variableManager.registerCommandVariable = function (variableSuffix, callback, parameterHandler) {
+        if (commandVariables[variableSuffix]) {
+            return;
+        }
+
+        if (!parameterHandler) {
+
+            // Default method for parameter handling is to invoke the callback once for each parameter.
+            parameterHandler = function (parameters, callback) {
+
+                for (var i = 0; i < parameters.length; i += 1) {
+
+                    callback(parameters[i]);
+
+                }
+
+            };
+
+        }
+
+        commandVariables[variableSuffix] = {
+            "callback":callback,
+            "parameterHandler": parameterHandler
+        };
+    };
+
+    ////////////////////////////////
+    ////////// Parameter Handler Types
+    function sendParametersAsParameters(parameters, callback) {
+        callback.apply({}, parameters);
+    }
+
+    ///////////////////////////////////////////////////////////////////////
+    /////////////// LIST OF COMMAND VARIABLES
+    ///////////////////////////////////////////////////////////////////////
+    _extra.variableManager.registerCommandVariable("Hide", _extra.slideObjects.hide);
+    _extra.variableManager.registerCommandVariable("Show", _extra.slideObjects.show);
+    _extra.variableManager.registerCommandVariable("Enable", _extra.slideObjects.enable);
+    _extra.variableManager.registerCommandVariable("Disable", _extra.slideObjects.disable);
+
+    _extra.variableManager.registerCommandVariable("ChangeState", _extra.slideObjects.changeState, sendParametersAsParameters);
+
+
+
+
+    ///////////////////////////////////////////////////////////////////////
+    /////////////// SETTING UP COMMAND VARIABLES
+    ///////////////////////////////////////////////////////////////////////
+    return function () {
+
+
+
+        function listenForCommandVariableChange(variableName,variableMetadata) {
+
+            _extra.variableManager.listenForVariableChange(variableName, function () {
+
+
+                var value = _extra.variableManager.getVariableValue(variableName);
+
+                // If we have been given nothing, then we will not bother informing the command variable.
+                // This likely comes from clearing the command variable after enacting its command.
+                if (value !== "") {
+
+                    // Remove spaces from value string
+                    value = value.replace(/\s+/g,'');
+                    var parameters = value.split(",");
+                    variableMetadata.parameterHandler(parameters, variableMetadata.callback);
+                    _extra.variableManager.setVariableValue(variableName,"");
+
+                }
+
+
+            });
+        }
+
+        // We will now go through all the command variables and set them up.
+        for (var variableSuffix in commandVariables) {
+            if (commandVariables.hasOwnProperty(variableSuffix)) {
+
+                variableName = COMMAND_VARIABLE_PREFIX + variableSuffix;
+
+
+
+                // Check to find valid variable.
+                if (!_extra.variableManager.hasVariable(variableName)) {
+
+                    // Variable with normal name doesn't exist. Try to find one with a semicolon in front.
+                    variableName = "_" + variableName;
+
+                    if (!_extra.variableManager.hasVariable(variableName)) {
+
+                        // There is no valid variable by this name. Continue to the next one.
+                        continue;
+
+                    }
+
+                }
+
+                // Now set up the variable's behaviour
+                listenForCommandVariableChange(variableName, commandVariables[variableSuffix]);
+
+            }
+        }
+
+
+        // Unload
+        commandVariables = null;
+        _extra.variableManager.registerCommandVariable = null;
+
+    };
+
+
+
+
+
+});
 /*global _extra*/
 /**
  * Created with IntelliJ IDEA.
@@ -1137,7 +1316,7 @@ _extra.registerModule("generalVariableManager", ["softwareInterfacesManager", "C
             _extra.captivate.interface.setVariableValue(variableName, value);
         },
         "hasVariable": function (variableName) {
-            return _extra.captivate.variables[variableName] !== undefined;
+            return _extra.captivate.variables.hasOwnProperty(variableName);
         },
         "listenForVariableChange": function (variableName, callback) {
             _extra.captivate.eventDispatcher.addEventListener("CPAPI_VARIABLEVALUECHANGED",callback,variableName);

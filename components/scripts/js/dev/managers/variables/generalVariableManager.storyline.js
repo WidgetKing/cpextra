@@ -19,7 +19,7 @@ _extra.registerModule("generalVariableManager", ["softwareInterfacesManager", "C
             _extra.storyline.player.SetVar(variableName, value);
         },
         "hasVariable": function (variableName) {
-            return _extra.storyline.variables[variableName] !== undefined;
+            return _extra.storyline.variables.hasOwnProperty(variableName);
         },
         "listenForVariableChange": function (variableName, callback) {
             _extra.error("_extra.variableManager.listenForVariableChange logic has yet to be implemented");

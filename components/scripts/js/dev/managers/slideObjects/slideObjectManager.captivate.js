@@ -9,10 +9,50 @@
 _extra.registerModule("slideObjectManager_software", ["generalDataManager", "Callback", "slideManager_global"], function () {
    "use strict";
 
+    /**
+     * This function takes a query, converts it into a list of slide objects, then applies a function to those slide objects.
+     *
+     * Useful for enhancing Captivate's own internal show, hide, and enable, disable functions.
+     */
+    function enactFunctionOnSlideObjects(query, method) {
+        if (query.indexOf(_extra.slideObjects.WILDCARD_CHARACTER) > -1) {
+
+            var list = _extra.slideObjects.getSlideObjectNamesMatchingWildcardName(query, false);
+
+            for (var i = 0; i < list.length; i += 1) {
+
+                method(list[i]);
+
+            }
+
+        } else {
+
+            method(query);
+
+        }
+    }
+
     _extra.slideObjects = {
         "allObjectsOfTypeCallback": new _extra.classes.Callback(),
         "getSlideObjectElement": function(id) {
             return _extra.w.document.getElementById("re-" + id + "c");
+        },
+        "hide":function (query) {
+            enactFunctionOnSlideObjects(query, _extra.captivate.api.hide);
+        },
+        "show":function (query) {
+            enactFunctionOnSlideObjects(query, _extra.captivate.api.show);
+        },
+        "enable":function (query) {
+            enactFunctionOnSlideObjects(query, _extra.captivate.api.enable);
+        },
+        "disable":function (query) {
+            enactFunctionOnSlideObjects(query, _extra.captivate.api.disable);
+        },
+        "changeState":function (query, state) {
+            enactFunctionOnSlideObjects(query, function (slideObjectName) {
+                _extra.captivate.api.changeState(slideObjectName, state);
+            });
         },
         "getSlideObjectNamesMatchingWildcardName": function (query, returnProxies) {
 
@@ -30,9 +70,11 @@ _extra.registerModule("slideObjectManager_software", ["generalDataManager", "Cal
 
                     slide = _extra.slideManager.currentSlideDOMElement,
                     id,
-                    list = [];
+                    list = [],
+                    child;
 
-                slide.childNodes.forEach(function (child) {
+                for (var i = 0; i < slide.childNodes.length; i += 1) {
+                    child = slide.childNodes[i];
                     id = child.id;
 
                     // Check if this slide objects's name matches the first part of the passed in query.
@@ -55,7 +97,7 @@ _extra.registerModule("slideObjectManager_software", ["generalDataManager", "Cal
                         }
 
                     }
-                });
+                }
 
                 // If we have found no matches, then return nothing.
                 if (list.length === 0) {

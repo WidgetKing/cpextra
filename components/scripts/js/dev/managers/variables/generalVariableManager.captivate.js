@@ -23,7 +23,7 @@ _extra.registerModule("generalVariableManager", ["softwareInterfacesManager", "C
             _extra.captivate.interface.setVariableValue(variableName, value);
         },
         "hasVariable": function (variableName) {
-            return _extra.captivate.variables[variableName] !== undefined;
+            return _extra.captivate.variables.hasOwnProperty(variableName);
         },
         "listenForVariableChange": function (variableName, callback) {
             _extra.captivate.eventDispatcher.addEventListener("CPAPI_VARIABLEVALUECHANGED",callback,variableName);

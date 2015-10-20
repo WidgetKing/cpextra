@@ -46,7 +46,9 @@
                                ctr + "02_CE_Local_Storage_Variables_2/wr/w_5235/scripts",
                                ctr + "02_CE_Local_Storage_Variables_2/wr/w_5495/scripts",
                                ctr + "03_CE_TextEntryBox_Behaviour_Changes/wr/w_5235/scripts",
-                               ctr + "05_CE_SlideTests/wr/w_5235/scripts"],
+                               ctr + "05_CE_SlideTests/wr/w_5235/scripts",
+                               ctr + "06_CE_Command_Variables/wr/w_5235/scripts",
+                               ctr + "06_CE_Command_Variables/wr/w_5687/scripts"],
 
         storylineExtraDevLocation = "builds/development/storyline_extra_web_object",
         storylineExtraDevFileName = "storyline_extra.js",
