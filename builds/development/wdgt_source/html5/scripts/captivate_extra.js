@@ -261,7 +261,7 @@ function initExtra(topWindow) {
     //////////////
     _extra.X = {
         "version":"0.0.2",
-        "build":"1233"
+        "build":"1287"
     };
 
     //////////////
@@ -351,14 +351,6 @@ _extra.registerModule("Callback", function () {
         };
     });
 });
-/**
- * Created with IntelliJ IDEA.
- * User: Tristan
- * Date: 24/09/15
- * Time: 1:30 PM
- * To change this template use File | Settings | File Templates.
- */
-
 /**
  * Created with IntelliJ IDEA.
  * User: Tristan
@@ -840,7 +832,7 @@ _extra.registerModule("publicAPIManager", function () {
  * Time: 2:04 PM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("slideManager_software", ["softwareInterfacesManager"], function () {
+_extra.registerModule("slideManager_software", ["softwareInterfacesManager", "Callback"], function () {
 
     "use strict";
 
@@ -851,6 +843,7 @@ _extra.registerModule("slideManager_software", ["softwareInterfacesManager"], fu
     _extra.slideManager = {
         "_slideDatas": [],
         "slideNames": [],
+        "currentSlideDOMElement":_extra.w.document.getElementById("div_Slide"),
         "gotoSlide":function (index) {
             if (typeof index === "string") {
                 index = _extra.slideManager.getSlideIndexFromName(index);
@@ -858,8 +851,17 @@ _extra.registerModule("slideManager_software", ["softwareInterfacesManager"], fu
 
             _extra.captivate.interface.gotoSlide(index);
         },
-        "currentSlideDOMElement":_extra.w.document.getElementById("div_Slide")
+        "getCurrentSlideNumber": function() {
+            return _extra.captivate.variables.cpInfoCurrentSlideIndex;
+        },
+        "getCurrentSceneNumber": function () {
+            return 0;
+        }
     };
+
+
+    ////////////////////////////////
+    ////////// slideNames Array Setup
 
     slideIDs.forEach(function(slideID){
         tempBaseData = _extra.captivate.model.data[slideID];
@@ -871,6 +873,14 @@ _extra.registerModule("slideManager_software", ["softwareInterfacesManager"], fu
         _extra.slideManager.slideNames.push(tempBaseData.lb);
     });
 
+
+
+    ///////////////////////////////////////////////////////////////////////
+    /////////////// ON ENTER SLIDE
+    ///////////////////////////////////////////////////////////////////////
+    _extra.slideManager.addEnterSlideEventListener = function (callback) {
+        _extra.captivate.eventDispatcher.addEventListener(_extra.captivate.events.SLIDE_ENTER, callback);
+    };
 
 
 }, _extra.CAPTIVATE);
@@ -885,6 +895,11 @@ _extra.registerModule("slideManager_global",["slideManager_software"],function()
 
     "use strict";
 
+    /**
+     * Returns an object that formats the data for a particular slide.
+     * @param index
+     * @returns {*}
+     */
     _extra.slideManager.getSlideData = function (index) {
         if (typeof index === "string") {
             index = _extra.slideManager.getSlideIndexFromName(index);
@@ -897,9 +912,59 @@ _extra.registerModule("slideManager_global",["slideManager_software"],function()
         }
     };
 
+
+    /**
+     * Converts a slide name into a slide index.
+     * @param name
+     * @returns {*}
+     */
     _extra.slideManager.getSlideIndexFromName = function (name) {
         return _extra.slideManager.slideNames.indexOf(name);
     };
+
+    /**
+     * Allows you to register with the slideManager to be informed when we enter a new slide.
+     * Register '*' to be informed of all slides.
+     * Register a number (eg: 3) to be informed when we reach that particular slide.
+     * @type {_extra.classes.Callback}
+     */
+    _extra.slideManager.enterSlideCallback = new _extra.classes.Callback();
+
+
+
+
+    ////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
+    //////////////////// ON SLIDE ENTER
+    ////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
+    // This is the start point for a lot of functionality
+    function onSlideEnter() {
+        var currentScene = _extra.slideManager.getCurrentSceneNumber(),
+            currentSlide = _extra.slideManager.getCurrentSlideNumber();
+
+        // Notify all callbacks registered as universal (or "*")
+        _extra.slideManager.enterSlideCallback.sendToCallback("*", currentSlide);
+
+        // If we are on the first scene of the project, then we'll allow callbacks that don't define scene number.
+        // Such as: 3
+        if (currentScene === 0) {
+            _extra.slideManager.enterSlideCallback.sendToCallback(currentSlide, currentSlide);
+        }
+
+        // Notify all callbacks registered to this specific scene and slide index (1.3)
+        _extra.slideManager.enterSlideCallback.sendToCallback(currentScene + "." + currentSlide, currentSlide);
+
+
+    }
+
+    // From now on, when moving into a new slide, we'll call the above function,
+    _extra.slideManager.addEnterSlideEventListener(onSlideEnter);
+
+    // Call this onLoad, as that is the first slide.
+    return onSlideEnter;
+
+
 
     // TODO: Define: play, pause, gotoPreviousSlide, gotoNextSlide, currentSlideNumber
 });
@@ -1155,7 +1220,95 @@ _extra.registerModule("softwareInterfacesManager", function () {
         "interface":_extra.w.cpAPIInterface,
         "eventDispatcher":_extra.w.cpAPIEventEmitter,
         "model":_extra.w.cp.model,
-        "allSlideObjectsData":_extra.w.cp.model.data
+        "allSlideObjectsData":_extra.w.cp.model.data,
+        "events":{
+            /**
+             * Event Data:
+             * - slideNumber
+             * - frameNumber
+             * - lcpversion (?)
+             */
+            "SLIDE_ENTER":"CPAPI_SLIDEENTER",
+            /**
+             * Event Data:
+             * - slideNumber
+             * - frameNumber
+             * - lcpversion (?)
+             * - percentageSlideSeen = NUMBER
+             */
+            "SLIDE_EXIT":"CPAPI_SLIDEEXIT",
+            "PLAYBAR_SCRUBBING_BEGIN":"CPAPI_STARTPLAYBARSCRUBBING",
+            "PLAYBAR_SCRUBBING_END":"CPAPI_ENDPLAYBARSCRUBBING",
+            /**
+             * Event Data:
+             * - frameNumber
+             * - includedInQuiz
+             * - issuccess
+             * - itemname
+             * - objecttype
+             * - questioneventdata
+             * - slideNumber
+             */
+            "INTERACTIVE_ITEM_SUBMIT":"CPAPI_INTERACTIVEITEMSUBMIT",
+            "MOVIE_PAUSE":"CPAPI_MOVIEPAUSE",
+            "MOVIE_RESUME":"CPAPI_MOVIERESUME",
+            "MOVIE_START":"CPAPI_MOVIESTART",
+            "MOVIE_STOP":"CPAPI_MOVIESTOP",
+            /**
+             * Event Data:
+             * - correctAnswer=STRING;
+             * - infiniteAttempts=BOOLEAN;
+             * - interactionID=NUMBER;
+             * - objectiveID=STRING;
+             * - questionAnswered=BOOLEAN;
+             * - questionAnsweredCorrectly=BOOLEAN;
+             * - questionAttempts=NUMBER;
+             * - questionMaxAttempts=NUMBER;
+             * - questionMaxScore=NUMBER;
+             * - questionNumber=NUMBER;
+             * - questionScore=NUMBER;
+             * - questionScoringType=[object Object],{Name:STRING};
+             * - questionType=STRING;
+             * - quizName=STRING;
+             * - reportAnswers=BOOLEAN;
+             * - selectedAnswer=STRING;
+             * - slideNumber=NUMBER;
+             */
+            "QUESTION_SKIP":"CPAPI_QUESTIONSKIP",
+            /**
+             * Event Data:
+             * - correctAnswer=STRING;
+             * - infiniteAttempts=BOOLEAN;
+             * - interactionID=NUMBER;
+             * - objectiveID=STRING;
+             * - questionAnswered=BOOLEAN;
+             * - questionAnsweredCorrectly=BOOLEAN;
+             * - questionAttempts=NUMBER;
+             * - questionMaxAttempts=NUMBER;
+             * - questionMaxScore=NUMBER;
+             * - questionNumber=NUMBER;
+             * - questionScore=NUMBER;
+             * - questionScoringType=[object Object],{Name:STRING};
+             * - questionType=STRING;
+             * - quizName=STRING;
+             * - reportAnswers=BOOLEAN;
+             * - selectedAnswer=STRING;
+             * - slideNumber=NUMBER;
+             */
+            "QUESTION_SUBMIT":"CPAPI_QUESTIONSUBMIT",
+            /**
+             * Subscribing to this event requires a third parameter to be passed into the eventListener method.
+             * This third parameter should be the name of the Captivate Variable you wish to listen for.
+             *
+             * Event Data:
+             * - captivateVersion=STRING;
+             * - varName=STRING;
+             * - oldVal=STRIN;
+             * - newVal=STRING;
+             */
+            "VARIABLE_VALUE_CHANGED":"CPAPI_VARIABLEVALUECHANGED"
+
+        }
     };
 
 }, _extra.CAPTIVATE);
@@ -1172,9 +1325,40 @@ _extra.registerModule("commandVariables",["generalVariableManager","slideObjectM
 
     var COMMAND_VARIABLE_PREFIX = "xcmnd",
         variableName,
-
         commandVariables = {};
 
+    ////////////////////////////////
+    ////////// Parameter Handler Types
+
+    // When a command variable is sent something like: 1,2,3,4
+    // These functions decide how the parameters should be sent to the function tied into the variable.
+    _extra.variableManager.parameterHandlers = {
+        // This one sends them like this:
+        // callback(1,2,3,4);
+        "sendParametersAsParameters": function (parameters, callback) {
+            callback.apply(_extra, parameters);
+        },
+        // This one sends them like this:
+        // callback(1);
+        // callback(2);
+        // callback(3);
+        // callback(4);
+        "executeOncePerParameter": function (parameters, callback) {
+
+            for (var i = 0; i < parameters.length; i += 1) {
+
+                callback(parameters[i]);
+
+            }
+
+        }
+    };
+
+    ////////////////////////////////
+    ////////// registerCommandVariable method
+
+    // There may be other parts of the program who wish to register their own command variables (perhaps individual ones for Captivate or Storyline)
+    // So we expose function to allow them to register.
     _extra.variableManager.registerCommandVariable = function (variableSuffix, callback, parameterHandler) {
         if (commandVariables[variableSuffix]) {
             return;
@@ -1183,15 +1367,7 @@ _extra.registerModule("commandVariables",["generalVariableManager","slideObjectM
         if (!parameterHandler) {
 
             // Default method for parameter handling is to invoke the callback once for each parameter.
-            parameterHandler = function (parameters, callback) {
-
-                for (var i = 0; i < parameters.length; i += 1) {
-
-                    callback(parameters[i]);
-
-                }
-
-            };
+            parameterHandler = _extra.variableManager.parameterHandlers.executeOncePerParameter;
 
         }
 
@@ -1201,11 +1377,6 @@ _extra.registerModule("commandVariables",["generalVariableManager","slideObjectM
         };
     };
 
-    ////////////////////////////////
-    ////////// Parameter Handler Types
-    function sendParametersAsParameters(parameters, callback) {
-        callback.apply({}, parameters);
-    }
 
     ///////////////////////////////////////////////////////////////////////
     /////////////// LIST OF COMMAND VARIABLES
@@ -1215,7 +1386,8 @@ _extra.registerModule("commandVariables",["generalVariableManager","slideObjectM
     _extra.variableManager.registerCommandVariable("Enable", _extra.slideObjects.enable);
     _extra.variableManager.registerCommandVariable("Disable", _extra.slideObjects.disable);
 
-    _extra.variableManager.registerCommandVariable("ChangeState", _extra.slideObjects.changeState, sendParametersAsParameters);
+    _extra.variableManager.registerCommandVariable("ChangeState", _extra.slideObjects.changeState,
+                                                   _extra.variableManager.parameterHandlers.sendParametersAsParameters);
 
 
 
@@ -1283,6 +1455,7 @@ _extra.registerModule("commandVariables",["generalVariableManager","slideObjectM
         // Unload
         commandVariables = null;
         _extra.variableManager.registerCommandVariable = null;
+        _extra.variableManager.parameterHandlers = null;
 
     };
 

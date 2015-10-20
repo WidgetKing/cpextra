@@ -11,9 +11,40 @@ _extra.registerModule("commandVariables",["generalVariableManager","slideObjectM
 
     var COMMAND_VARIABLE_PREFIX = "xcmnd",
         variableName,
-
         commandVariables = {};
 
+    ////////////////////////////////
+    ////////// Parameter Handler Types
+
+    // When a command variable is sent something like: 1,2,3,4
+    // These functions decide how the parameters should be sent to the function tied into the variable.
+    _extra.variableManager.parameterHandlers = {
+        // This one sends them like this:
+        // callback(1,2,3,4);
+        "sendParametersAsParameters": function (parameters, callback) {
+            callback.apply(_extra, parameters);
+        },
+        // This one sends them like this:
+        // callback(1);
+        // callback(2);
+        // callback(3);
+        // callback(4);
+        "executeOncePerParameter": function (parameters, callback) {
+
+            for (var i = 0; i < parameters.length; i += 1) {
+
+                callback(parameters[i]);
+
+            }
+
+        }
+    };
+
+    ////////////////////////////////
+    ////////// registerCommandVariable method
+
+    // There may be other parts of the program who wish to register their own command variables (perhaps individual ones for Captivate or Storyline)
+    // So we expose function to allow them to register.
     _extra.variableManager.registerCommandVariable = function (variableSuffix, callback, parameterHandler) {
         if (commandVariables[variableSuffix]) {
             return;
@@ -22,15 +53,7 @@ _extra.registerModule("commandVariables",["generalVariableManager","slideObjectM
         if (!parameterHandler) {
 
             // Default method for parameter handling is to invoke the callback once for each parameter.
-            parameterHandler = function (parameters, callback) {
-
-                for (var i = 0; i < parameters.length; i += 1) {
-
-                    callback(parameters[i]);
-
-                }
-
-            };
+            parameterHandler = _extra.variableManager.parameterHandlers.executeOncePerParameter;
 
         }
 
@@ -40,11 +63,6 @@ _extra.registerModule("commandVariables",["generalVariableManager","slideObjectM
         };
     };
 
-    ////////////////////////////////
-    ////////// Parameter Handler Types
-    function sendParametersAsParameters(parameters, callback) {
-        callback.apply({}, parameters);
-    }
 
     ///////////////////////////////////////////////////////////////////////
     /////////////// LIST OF COMMAND VARIABLES
@@ -54,7 +72,8 @@ _extra.registerModule("commandVariables",["generalVariableManager","slideObjectM
     _extra.variableManager.registerCommandVariable("Enable", _extra.slideObjects.enable);
     _extra.variableManager.registerCommandVariable("Disable", _extra.slideObjects.disable);
 
-    _extra.variableManager.registerCommandVariable("ChangeState", _extra.slideObjects.changeState, sendParametersAsParameters);
+    _extra.variableManager.registerCommandVariable("ChangeState", _extra.slideObjects.changeState,
+                                                   _extra.variableManager.parameterHandlers.sendParametersAsParameters);
 
 
 
@@ -122,6 +141,7 @@ _extra.registerModule("commandVariables",["generalVariableManager","slideObjectM
         // Unload
         commandVariables = null;
         _extra.variableManager.registerCommandVariable = null;
+        _extra.variableManager.parameterHandlers = null;
 
     };
 

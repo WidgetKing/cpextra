@@ -5,7 +5,7 @@
  * Time: 2:04 PM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("slideManager_software", ["softwareInterfacesManager"], function () {
+_extra.registerModule("slideManager_software", ["softwareInterfacesManager", "Callback"], function () {
 
     "use strict";
 
@@ -16,6 +16,7 @@ _extra.registerModule("slideManager_software", ["softwareInterfacesManager"], fu
     _extra.slideManager = {
         "_slideDatas": [],
         "slideNames": [],
+        "currentSlideDOMElement":_extra.w.document.getElementById("div_Slide"),
         "gotoSlide":function (index) {
             if (typeof index === "string") {
                 index = _extra.slideManager.getSlideIndexFromName(index);
@@ -23,8 +24,17 @@ _extra.registerModule("slideManager_software", ["softwareInterfacesManager"], fu
 
             _extra.captivate.interface.gotoSlide(index);
         },
-        "currentSlideDOMElement":_extra.w.document.getElementById("div_Slide")
+        "getCurrentSlideNumber": function() {
+            return _extra.captivate.variables.cpInfoCurrentSlideIndex;
+        },
+        "getCurrentSceneNumber": function () {
+            return 0;
+        }
     };
+
+
+    ////////////////////////////////
+    ////////// slideNames Array Setup
 
     slideIDs.forEach(function(slideID){
         tempBaseData = _extra.captivate.model.data[slideID];
@@ -36,6 +46,14 @@ _extra.registerModule("slideManager_software", ["softwareInterfacesManager"], fu
         _extra.slideManager.slideNames.push(tempBaseData.lb);
     });
 
+
+
+    ///////////////////////////////////////////////////////////////////////
+    /////////////// ON ENTER SLIDE
+    ///////////////////////////////////////////////////////////////////////
+    _extra.slideManager.addEnterSlideEventListener = function (callback) {
+        _extra.captivate.eventDispatcher.addEventListener(_extra.captivate.events.SLIDE_ENTER, callback);
+    };
 
 
 }, _extra.CAPTIVATE);
