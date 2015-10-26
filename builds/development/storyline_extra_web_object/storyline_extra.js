@@ -261,7 +261,7 @@ function initExtra(topWindow) {
     //////////////
     _extra.X = {
         "version":"0.0.2",
-        "build":"1287"
+        "build":"1539"
     };
 
     //////////////
@@ -350,6 +350,144 @@ _extra.registerModule("Callback", function () {
             this.data = {};
         };
     });
+});
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 26/10/15
+ * Time: 3:56 PM
+ * To change this template use File | Settings | File Templates.
+ */
+_extra.registerModule("SlideObjectStateManager", function () {
+
+    "use strict";
+
+    function SlideObjectStateManager (slideObject, data) {
+
+        var that = this,
+            isMouseOver = false,
+            isMouseDown = false,
+            previousNormalState = "Normal";
+
+        this.slideObject = slideObject;
+        this.data = data;
+
+
+
+        ///////////////////////////////////////////////////////////////////////
+        /////////////// Variable Validity
+        ///////////////////////////////////////////////////////////////////////
+        function findStateWithValidVariables(shouldEvaluate, stateData) {
+            if (shouldEvaluate) {
+
+                //var stateCondition;
+
+                for (var stateName in stateData) {
+                    if (stateData.hasOwnProperty(stateName)) {
+
+                        slideObject.changeState(stateName);
+                        return true;
+
+                    }
+                }
+
+            }
+
+            return false;
+        }
+
+        function evaluateState() {
+
+            if (!findStateWithValidVariables(isMouseDown, data.d)) {
+                if (!findStateWithValidVariables(isMouseOver, data.r)) {
+
+                    if (!findStateWithValidVariables(true, data.n)) {
+
+                        slideObject.changeState(previousNormalState);
+                        // TODO: Switch to the last normal state
+                    }
+
+                }
+            }
+
+        }
+
+        ///////////////////////////////////////////////////////////////////////
+        /////////////// Event Listeners
+        ///////////////////////////////////////////////////////////////////////
+        ////////////////////////////////
+        ////////// Mouse Over
+        this.onRollover = function () {
+            // Remove Listener
+            slideObject.removeEventListener("mouseover", that.onRollover);
+            // Update Information
+            isMouseOver = true;
+            // Change State
+            evaluateState();
+            // Listen for new mouse event
+            slideObject.addEventListener("mouseout", that.onRollout);
+        };
+
+        this.onRollout = function () {
+            slideObject.removeEventListener("mouseout", that.onRollout);
+            isMouseOver = false;
+            evaluateState();
+            slideObject.addEventListener("mouseover", that.onRollover);
+        };
+
+        ////////////////////////////////
+        ////////// Mouse Down
+        this.onMouseDown = function () {
+
+            slideObject.removeEventListener("mousedown", that.onMouseDown);
+
+            isMouseDown = true;
+
+            evaluateState();
+
+            _extra.w.document.addEventListener("mouseup", that.onMouseUp);
+        };
+
+        this.onMouseUp = function () {
+
+            _extra.w.document.removeEventListener("mouseup", that.onMouseUp);
+
+            isMouseDown = false;
+
+            evaluateState();
+
+            slideObject.addEventListener("mousedown", that.onMouseDown);
+        };
+
+
+
+
+
+        ///////////////////////////////////////////////////////////////////////
+        /////////////// Kick off
+        ///////////////////////////////////////////////////////////////////////
+        if (data.r) {
+            slideObject.addEventListener("mouseover", this.onRollover);
+        }
+
+        if (data.d) {
+            slideObject.addEventListener("mousedown", this.onMouseDown);
+        }
+
+        // TODO: evaluateState here in order to check variables that have already been set.
+    }
+
+    SlideObjectStateManager.prototype.unload = function () {
+        this.slideObject.removeEventListener("mouseover", this.onRollover);
+        this.slideObject.removeEventListener("mouseout", this.onRollout);
+        this.slideObject.removeEventListener("mousedown", this.onMouseDown);
+        _extra.w.document.removeEventListener("mouseup", this.onMouseUp);
+
+        this.slideObject = null;
+        this.data = null;
+    };
+
+    _extra.registerClass("SlideObjectStateManager", SlideObjectStateManager);
 });
 /**
  * Created with IntelliJ IDEA.
@@ -445,6 +583,15 @@ _extra.registerModule("BaseSlideObjectDataProxy", function () {
         },
         get type(){
             return this._type;
+        },
+        get states() {
+            if (!this._states) {
+                this._states = [];
+
+                _extra.error("BaseSlideObjectData.states has yet to be implemented");
+            }
+
+            return this._states;
         }
     };
     _extra.registerClass("BaseSlideObjectDataProxy", BaseSlideObjectData);
@@ -475,6 +622,10 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
         get type(){
             return this._data.type;
         }
+    };
+
+    BaseSlideObjectProxy.prototype.changeState = function (stateName) {
+        _extra.slideObjects.changeState(this.name, stateName);
     };
 
     _extra.registerClass("BaseSlideObjectProxy", BaseSlideObjectProxy, _extra.STORYLINE);
@@ -636,7 +787,7 @@ _extra.registerModule("generalDataManager", ["softwareInterfacesManager"], funct
     };
 
     _extra.dataManager.getSlideObjectDataByName = function () {
-
+        _extra.error("_extra.dataManager.getSlideObjectDataByName has yet to be implemented");
     };
 
 }, _extra.STORYLINE);
@@ -679,156 +830,25 @@ _extra.registerModule("publicAPIManager", function () {
  * Created with IntelliJ IDEA.
  * User: Tristan
  * Date: 15/10/15
- * Time: 5:10 PM
- * To change this template use File | Settings | File Templates.
- */
-_extra.registerModule("slideManager_global",["slideManager_software"],function() {
-
-    "use strict";
-
-    /**
-     * Returns an object that formats the data for a particular slide.
-     * @param index
-     * @returns {*}
-     */
-    _extra.slideManager.getSlideData = function (index) {
-        if (typeof index === "string") {
-            index = _extra.slideManager.getSlideIndexFromName(index);
-        }
-
-        if (index === -1) {
-            return null;
-        } else {
-            return new _extra.classes.SlideDataProxy(_extra.slideManager._slideDatas[index]);
-        }
-    };
-
-
-    /**
-     * Converts a slide name into a slide index.
-     * @param name
-     * @returns {*}
-     */
-    _extra.slideManager.getSlideIndexFromName = function (name) {
-        return _extra.slideManager.slideNames.indexOf(name);
-    };
-
-    /**
-     * Allows you to register with the slideManager to be informed when we enter a new slide.
-     * Register '*' to be informed of all slides.
-     * Register a number (eg: 3) to be informed when we reach that particular slide.
-     * @type {_extra.classes.Callback}
-     */
-    _extra.slideManager.enterSlideCallback = new _extra.classes.Callback();
-
-
-
-
-    ////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////
-    //////////////////// ON SLIDE ENTER
-    ////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////
-    // This is the start point for a lot of functionality
-    function onSlideEnter() {
-        var currentScene = _extra.slideManager.getCurrentSceneNumber(),
-            currentSlide = _extra.slideManager.getCurrentSlideNumber();
-
-        // Notify all callbacks registered as universal (or "*")
-        _extra.slideManager.enterSlideCallback.sendToCallback("*", currentSlide);
-
-        // If we are on the first scene of the project, then we'll allow callbacks that don't define scene number.
-        // Such as: 3
-        if (currentScene === 0) {
-            _extra.slideManager.enterSlideCallback.sendToCallback(currentSlide, currentSlide);
-        }
-
-        // Notify all callbacks registered to this specific scene and slide index (1.3)
-        _extra.slideManager.enterSlideCallback.sendToCallback(currentScene + "." + currentSlide, currentSlide);
-
-
-    }
-
-    // From now on, when moving into a new slide, we'll call the above function,
-    _extra.slideManager.addEnterSlideEventListener(onSlideEnter);
-
-    // Call this onLoad, as that is the first slide.
-    return onSlideEnter;
-
-
-
-    // TODO: Define: play, pause, gotoPreviousSlide, gotoNextSlide, currentSlideNumber
-});
-/**
- * Created with IntelliJ IDEA.
- * User: Tristan
- * Date: 15/10/15
- * Time: 2:04 PM
- * To change this template use File | Settings | File Templates.
- */
-_extra.registerModule("slideManager_software", ["softwareInterfacesManager","Callback"], function () {
-
-    "use strict";
-
-    var tempData;
-
-    _extra.slideManager = {
-        "_slideDatas":[],
-        "slideNames":[],
-        "gotoSlide":function (index) {
-            if (typeof index === "string") {
-                index = _extra.slideManager.getSlideIndexFromName(index);
-            }
-
-            _extra.error("Not defined for Storyline");
-        },
-        "getCurrentSceneNumber": function() {
-            return _extra.storyline.player.currentSlide().sceneIndex;
-        },
-        "getCurrentSlideNumber": function() {
-            return _extra.storyline.player.currentSlide().sceneSlideIndex;
-        }
-    };
-
-    //_extra.log(_extra.storyline.player.currentSlide());
-
-    for (var i = 0; i < _extra.storyline.slidesData.length; i += 1) {
-        tempData = _extra.storyline.slidesData[i];
-        _extra.slideManager._slideDatas.push(tempData);
-        _extra.slideManager.slideNames.push(tempData.title);
-    }
-
-
-    _extra.slideManager.addEnterSlideEventListener = function (callback) {
-        // onnextslide
-        // onbeforeslidejump
-        // onbeforeslidein
-        // ontransitionincomplete
-        // onslidestart
-        //_extra.error("_extra.slideManager.addEnterSlideEventListener has not been implemented");
-        // LOOK IN TO: registerVariableEventSubscriber
-
-        // What's holding this up is finding out how you're supposed to add listeners to these events
-    };
-
-
-
-
-}, _extra.STORYLINE);
-
-/**
- * Created with IntelliJ IDEA.
- * User: Tristan
- * Date: 15/10/15
  * Time: 6:06 PM
  * To change this template use File | Settings | File Templates.
  */
 _extra.registerModule("slideObjectManager_global", ["slideObjectManager_software"], function () {
     "use strict";
 
+    /**
+     * List of proxy objects associated with slideObjects. This helps us avoid duplication.
+     * @type {{}}
+     */
     var slideObjectProxies = {};
 
     _extra.slideObjects.WILDCARD_CHARACTER = "@";
+    /**
+     * When entering a slide, the manager will look through all the slide objects on that slide and send the relevant
+     * slide object names to this callback.
+     * @type {_extra.classes.Callback}
+     */
+    _extra.slideObjects.enteredSlideChildObjectsCallbacks = new _extra.classes.Callback();
     _extra.slideObjects.getSlideObjectProxy = function (id) {
 
         var DOMElement;
@@ -848,6 +868,8 @@ _extra.registerModule("slideObjectManager_global", ["slideObjectManager_software
             }
         }
 
+        // Create new proxy object IF a proxy object hasn't already been created.
+        // Otherwise we'll return the previous object.
         if (!slideObjectProxies[id]) {
             slideObjectProxies[id] = _extra.factories.createSlideObjectProxy(id, DOMElement);
         }
@@ -872,7 +894,27 @@ _extra.registerModule("slideObjectManager_global", ["slideObjectManager_software
 
     };
 
-    // TODO: Should clear slideObjectProxies when entering a new slide.
+    ///////////////////////////////////////////////////////////////////////
+    /////////////// ON SLIDE ENTER
+    ///////////////////////////////////////////////////////////////////////
+    _extra.slideManager.enterSlideCallback.addCallback("*", function () {
+
+        // Clear the proxy list as we are on a new slide with new objects
+        slideObjectProxies = {};
+
+        var slideObjectsData = _extra.slideManager.getSlideData(),
+            slideObjectName;
+
+
+
+        for (var i = 0; i < slideObjectsData.slideObjects.length; i += 1) {
+            slideObjectName = slideObjectsData.slideObjects[i];
+
+            _extra.slideObjects.enteredSlideChildObjectsCallbacks.sendToCallback("*", slideObjectName);
+
+        }
+
+    });
 });
 /**
  * Created with IntelliJ IDEA.
@@ -1220,6 +1262,158 @@ _extra.registerModule("localStorageManager", ["generalVariableManager"], functio
 /**
  * Created with IntelliJ IDEA.
  * User: Tristan
+ * Date: 15/10/15
+ * Time: 5:10 PM
+ * To change this template use File | Settings | File Templates.
+ */
+_extra.registerModule("slideManager_global",["slideManager_software"],function() {
+
+    "use strict";
+
+    _extra.slideManager.currentSceneNumber = 0;
+    _extra.slideManager.currentSlideNumber = 0;
+    _extra.slideManager.currentSlideID = "0.0";
+
+    /**
+     * Returns an object that formats the data for a particular slide.
+     * @param index
+     * @returns {*}
+     */
+    _extra.slideManager.getSlideData = function (index) {
+        if (typeof index === "string") {
+            index = _extra.slideManager.getSlideIndexFromName(index);
+        } else if (index === undefined) {
+            index = _extra.slideManager.currentSlideNumber;
+        }
+
+        if (index === -1) {
+            return null;
+        } else {
+            return new _extra.classes.SlideDataProxy(_extra.slideManager._slideDatas[index]);
+        }
+    };
+
+
+    /**
+     * Converts a slide name into a slide index.
+     * @param name
+     * @returns {*}
+     */
+    _extra.slideManager.getSlideIndexFromName = function (name) {
+        return _extra.slideManager.slideNames.indexOf(name);
+    };
+
+    /**
+     * Allows you to register with the slideManager to be informed when we enter a new slide.
+     * Register '*' to be informed of all slides.
+     * Register a number (eg: 3) to be informed when we reach that particular slide.
+     * @type {_extra.classes.Callback}
+     */
+    _extra.slideManager.enterSlideCallback = new _extra.classes.Callback();
+
+
+
+
+    ////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
+    //////////////////// ON SLIDE ENTER
+    ////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
+    // This is the start point for a lot of functionality
+    function onSlideEnter() {
+        var currentScene = _extra.slideManager.getCurrentSceneNumber(),
+            currentSlide = _extra.slideManager.getCurrentSlideNumber(),
+            currentSlideID = currentScene + "." + currentSlide;
+
+        _extra.slideManager.currentSceneNumber = currentScene;
+        _extra.slideManager.currentSlideNumber = currentSlide;
+        _extra.slideManager.currentSlideID = currentSlideID;
+
+        // Notify all callbacks registered as universal (or "*")
+        _extra.slideManager.enterSlideCallback.sendToCallback("*", currentSlideID);
+
+        // If we are on the first scene of the project, then we'll allow callbacks that don't define scene number.
+        // Such as: 3
+        if (currentScene === 0) {
+            _extra.slideManager.enterSlideCallback.sendToCallback(currentSlide, currentSlideID);
+        }
+
+        // Notify all callbacks registered to this specific scene and slide index (1.3)
+        _extra.slideManager.enterSlideCallback.sendToCallback(currentSlideID, currentSlideID);
+
+
+    }
+
+    // From now on, when moving into a new slide, we'll call the above function,
+    _extra.slideManager.addEnterSlideEventListener(onSlideEnter);
+
+    // Call this onLoad, as that is the first slide.
+    return onSlideEnter;
+
+
+
+    // TODO: Define: play, pause, gotoPreviousSlide, gotoNextSlide, currentSlideNumber
+});
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 15/10/15
+ * Time: 2:04 PM
+ * To change this template use File | Settings | File Templates.
+ */
+_extra.registerModule("slideManager_software", ["softwareInterfacesManager","Callback"], function () {
+
+    "use strict";
+
+    var tempData;
+
+    _extra.slideManager = {
+        "_slideDatas":[],
+        "slideNames":[],
+        "gotoSlide":function (index) {
+            if (typeof index === "string") {
+                index = _extra.slideManager.getSlideIndexFromName(index);
+            }
+
+            _extra.error("Not defined for Storyline");
+        },
+        "getCurrentSceneNumber": function() {
+            return _extra.storyline.player.currentSlide().sceneIndex;
+        },
+        "getCurrentSlideNumber": function() {
+            return _extra.storyline.player.currentSlide().sceneSlideIndex;
+        }
+    };
+
+    //_extra.log(_extra.storyline.player.currentSlide());
+
+    for (var i = 0; i < _extra.storyline.slidesData.length; i += 1) {
+        tempData = _extra.storyline.slidesData[i];
+        _extra.slideManager._slideDatas.push(tempData);
+        _extra.slideManager.slideNames.push(tempData.title);
+    }
+
+
+    _extra.slideManager.addEnterSlideEventListener = function (callback) {
+        // onnextslide
+        // onbeforeslidejump
+        // onbeforeslidein
+        // ontransitionincomplete
+        // onslidestart
+        //_extra.error("_extra.slideManager.addEnterSlideEventListener has not been implemented");
+        // LOOK IN TO: registerVariableEventSubscriber
+
+        // What's holding this up is finding out how you're supposed to add listeners to these events
+    };
+
+
+
+
+}, _extra.STORYLINE);
+
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
  * Date: 1/10/15
  * Time: 2:37 PM
  * To change this template use File | Settings | File Templates.
@@ -1246,4 +1440,298 @@ _extra.registerModule("globalSlideObjectTypes",function () {
     /*_extra.slideObjectsTypes = {
 
     };*/
+});
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 20/10/15
+ * Time: 4:24 PM
+ * To change this template use File | Settings | File Templates.
+ */
+_extra.registerModule("registerStateMetaData",["slideObjectManager_global", "SlideObjectStateManager", "slideManager_global"], function () {
+
+    "use strict";
+
+    var stateManagers = {},
+        ROLLOVER = "r",
+        MOUSEDOWN = "d",
+        NORMAL = "n";
+
+    _extra.slideObjects.states = {
+
+        ///////////////////////////////////////////////////////////////////////
+        /////////////// Register States for Automatic Switching
+        ///////////////////////////////////////////////////////////////////////
+        registerStateMetaData: function (slideObjectName, data) {
+
+            var slideObjectProxy,
+                currentSlideID = _extra.slideManager.currentSlideID,
+                currentSlideStateManagers;
+
+            // If this is the first slide object to be registering for the current slide
+            if (!stateManagers[currentSlideID]) {
+                stateManagers[currentSlideID] = {};
+            }
+            currentSlideStateManagers = stateManagers[currentSlideID];
+
+            // If we have already details about this object here, then something has gone wrong.
+            if (currentSlideStateManagers[slideObjectName]) {
+                throw new Error("At _extra.slideObjects.states.registerStateMetaData, tried to register data for '" + slideObjectName + "' twice. " +
+                "Has unloading of this data from a previous slide been unsuccessful?");
+
+            }
+
+
+            slideObjectProxy = _extra.slideObjects.getSlideObjectByName(slideObjectName);
+            currentSlideStateManagers[slideObjectName] = new _extra.classes.SlideObjectStateManager(slideObjectProxy, data);
+        },
+        "isAutomaticallyChangingStates":function (comparisonName) {
+
+            var slideManager,
+                slideID,
+                slideObjectName;
+
+            for (slideID in stateManagers) {
+                if (stateManagers.hasOwnProperty(slideID)) {
+
+                    slideManager = stateManagers[slideID];
+
+                    for (slideObjectName in slideManager) {
+                        if (slideManager.hasOwnProperty(slideObjectName)) {
+
+                            if (slideObjectName === comparisonName) {
+                                return true;
+                            }
+
+                        }
+                    }
+
+                }
+            }
+
+            return false;
+
+        }
+    };
+
+    ///////////////////////////////////////////////////////////////////////
+    /////////////// Unload State Managers From Previous Slides
+    ///////////////////////////////////////////////////////////////////////
+
+    _extra.slideManager.enterSlideCallback.addCallback("*", function (currentSlideID) {
+        var slideManager,
+            slideID,
+            slideObjectName;
+
+        for (slideID in stateManagers) {
+
+            // If we are moving into state managers for a slide which is not the current slide...
+            if (stateManagers.hasOwnProperty(slideID) && slideID !== currentSlideID) {
+
+                slideManager = stateManagers[slideID];
+
+                // Then we'll want to unload these state managers
+                for (slideObjectName in slideManager) {
+                    if (slideManager.hasOwnProperty(slideObjectName)) {
+
+                        slideManager[slideObjectName].unload();
+
+                    }
+                }
+
+                // Remove this information so we don't have to loop through it next slide.
+                delete stateManagers[slideID];
+            }
+        }
+    });
+
+
+
+    ///////////////////////////////////////////////////////////////////////
+    /////////////// Parse State Names
+    ///////////////////////////////////////////////////////////////////////
+    _extra.slideObjects.enteredSlideChildObjectsCallbacks.addCallback("*", function (slideObjectName) {
+
+        // TODO: Unload the stateManagers from the previous slide.
+
+        // This function is sent the name of every slide object on the current slide, one by one.
+        // It will analyse its states to see if there are any that interact with extra.
+        var data = _extra.dataManager.getSlideObjectDataByName(slideObjectName),
+            stateName,
+            splitStateName,
+            slideObjectMetaData = {},
+            result;
+
+
+        function detectIfMouseEvent(event){
+            switch (event.toLowerCase()) {
+                case "down":
+                case "mousedown":
+                    return MOUSEDOWN;
+
+
+                case "rollover":
+                case "over":
+                case "mouseover":
+                    return ROLLOVER;
+
+                // Not a mouse event
+                default :
+                    return null;
+            }
+        }
+
+        function getMouseEvent(splitName) {
+            // check to see if the first section of the state name (x_MYVARIABLE_down) is a mouse evenet.
+            result = detectIfMouseEvent(splitName[0]);
+
+            if (result) {
+                // Remove the mouse index
+                splitName.shift();
+
+                // If we have not found an event AND the last index is not the first index.
+            } else if (splitName.length > 1) {
+                result = detectIfMouseEvent(splitName[splitName.length - 1]);
+
+                if (result) {
+                    // Remove the last index
+                    splitName.length -= 1;
+                }
+            }
+
+            if (result) {
+                return result;
+            } else {
+                return NORMAL;
+            }
+        }
+
+        function getVariablesData(splitName, fullName) {
+            var variableData = {},
+                previousIndexVariable = false,
+                segment;
+
+            // There are multiple places in the loop below where we might want to register a variable, so we abstract
+            // that functionality into a function.
+            function registerVariable(variableName) {
+
+                // x_var_var
+                if (variableData.hasOwnProperty(variableName)) {
+
+                    throw new Error("State name '" + fullName + "' illegally tried to register '" + variableName + "' twice.");
+
+                } else {
+
+                    variableData[variableName] = null;
+
+                }
+
+            }
+
+            // Turn strings into Booleans
+            function validateVariableValue(value) {
+                switch (value.toLowerCase()) {
+                    case "true":
+                        return true;
+
+                    case "false":
+                        return false;
+
+                    default :
+                        return value;
+                }
+            }
+
+
+            ////////////////////////////////
+            ////////// Begin looping through the state names.
+            for (var i = 0; i < splitName.length; i += 1) {
+
+                segment = splitName[i];
+
+                if (previousIndexVariable) {
+
+                    if(isNaN(segment)) {
+
+                        // x_var1_var2
+                        if (_extra.variableManager.hasVariable(segment)) {
+
+                            registerVariable(segment);
+
+                            previousIndexVariable = segment;
+
+                        // x_var1_value
+                        } else {
+                            variableData[previousIndexVariable] = validateVariableValue(segment);
+                            previousIndexVariable = null;
+                        }
+
+                        // x_var_1
+                    } else {
+
+                        variableData[previousIndexVariable] = parseInt(segment);
+                        previousIndexVariable = null;
+
+                    }
+
+                } else {
+
+                    // x_var
+                    if (_extra.variableManager.hasVariable(segment)) {
+                        registerVariable(segment);
+                    // x_invalidVar
+                    } else {
+                        throw new Error("Could not find variable by the name of '" + segment + "' as present in state name: '" + fullName + "'");
+                    }
+
+                    // If the previous index was a value, then this index MUST be a variable.
+                    previousIndexVariable = segment;
+                }
+
+
+            }
+
+            if (Object.keys(variableData).length <= 0) {
+                return null;
+            }
+
+            return variableData;
+        }
+
+
+
+
+
+
+
+
+
+
+        for (var i = 0; i < data.states.length; i += 1) {
+            stateName = data.states[i];
+
+            if (stateName.substr(0,2).toLowerCase() === "x_") {
+
+                // The following comments assume that the state name is: x_myvariable_down
+                splitStateName = stateName.split("_");
+                splitStateName.shift(); // Remove the first index which is 'x' anyway.
+
+                result = getMouseEvent(splitStateName);
+                if (!slideObjectMetaData[result]) {
+                    slideObjectMetaData[result] = {};
+                }
+
+                slideObjectMetaData[result][stateName] = getVariablesData(splitStateName, stateName);
+
+            }
+        }
+
+        if (Object.keys(slideObjectMetaData).length > 0) {
+            // If this variable has a value, it means we must have run across a valid method at some point.
+            // Therefore, we register the meta data.
+            _extra.slideObjects.states.registerStateMetaData(slideObjectName, slideObjectMetaData);
+        }
+
+    });
+
 });

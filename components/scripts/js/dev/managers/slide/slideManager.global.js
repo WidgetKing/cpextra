@@ -9,6 +9,10 @@ _extra.registerModule("slideManager_global",["slideManager_software"],function()
 
     "use strict";
 
+    _extra.slideManager.currentSceneNumber = 0;
+    _extra.slideManager.currentSlideNumber = 0;
+    _extra.slideManager.currentSlideID = "0.0";
+
     /**
      * Returns an object that formats the data for a particular slide.
      * @param index
@@ -17,6 +21,8 @@ _extra.registerModule("slideManager_global",["slideManager_software"],function()
     _extra.slideManager.getSlideData = function (index) {
         if (typeof index === "string") {
             index = _extra.slideManager.getSlideIndexFromName(index);
+        } else if (index === undefined) {
+            index = _extra.slideManager.currentSlideNumber;
         }
 
         if (index === -1) {
@@ -55,19 +61,24 @@ _extra.registerModule("slideManager_global",["slideManager_software"],function()
     // This is the start point for a lot of functionality
     function onSlideEnter() {
         var currentScene = _extra.slideManager.getCurrentSceneNumber(),
-            currentSlide = _extra.slideManager.getCurrentSlideNumber();
+            currentSlide = _extra.slideManager.getCurrentSlideNumber(),
+            currentSlideID = currentScene + "." + currentSlide;
+
+        _extra.slideManager.currentSceneNumber = currentScene;
+        _extra.slideManager.currentSlideNumber = currentSlide;
+        _extra.slideManager.currentSlideID = currentSlideID;
 
         // Notify all callbacks registered as universal (or "*")
-        _extra.slideManager.enterSlideCallback.sendToCallback("*", currentSlide);
+        _extra.slideManager.enterSlideCallback.sendToCallback("*", currentSlideID);
 
         // If we are on the first scene of the project, then we'll allow callbacks that don't define scene number.
         // Such as: 3
         if (currentScene === 0) {
-            _extra.slideManager.enterSlideCallback.sendToCallback(currentSlide, currentSlide);
+            _extra.slideManager.enterSlideCallback.sendToCallback(currentSlide, currentSlideID);
         }
 
         // Notify all callbacks registered to this specific scene and slide index (1.3)
-        _extra.slideManager.enterSlideCallback.sendToCallback(currentScene + "." + currentSlide, currentSlide);
+        _extra.slideManager.enterSlideCallback.sendToCallback(currentSlideID, currentSlideID);
 
 
     }

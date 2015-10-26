@@ -5,20 +5,18 @@ _extra.registerModule("generalDataManager", ["softwareInterfacesManager", "dataT
 
     _extra.dataManager = {
 
-    };
+        "getSlideObjectDataByName": function (name) {
+            var data = {
+                "base": _extra.captivate.allSlideObjectsData[name]
+            };
 
-    _extra.dataManager.getSlideObjectDataByName = function (name) {
-        var data = {
-            "base": _extra.captivate.allSlideObjectsData[name]
-        };
-
-        if (data.base) {
-            data.container = _extra.captivate.allSlideObjectsData[name + "c"];
-            return _extra.factories.createSlideObjectData(name, data, _extra.dataTypes.convertSlideObjectType(data.base.type));
+            if (data.base) {
+                data.container = _extra.captivate.allSlideObjectsData[name + "c"];
+                return _extra.factories.createSlideObjectData(name, data, _extra.dataTypes.convertSlideObjectType(data.base.type));
+            }
+            return null;
         }
-        return null;
     };
-
 
     //_extra.log(_extra.dataManager.getSlideObjectDataByName("Text_Entry_Box_1"));
     /*_extra.m = _extra.X.cp.model;

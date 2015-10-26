@@ -26,6 +26,10 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
         }
     };
 
+    BaseSlideObjectProxy.prototype.changeState = function (stateName) {
+        _extra.slideObjects.changeState(this.name, stateName);
+    };
+
     _extra.registerClass("BaseSlideObjectProxy", BaseSlideObjectProxy, _extra.CAPTIVATE);
 
 }, _extra.CAPTIVATE);

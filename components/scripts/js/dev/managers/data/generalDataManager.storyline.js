@@ -14,7 +14,7 @@ _extra.registerModule("generalDataManager", ["softwareInterfacesManager"], funct
     };
 
     _extra.dataManager.getSlideObjectDataByName = function () {
-
+        _extra.error("_extra.dataManager.getSlideObjectDataByName has yet to be implemented");
     };
 
 }, _extra.STORYLINE);

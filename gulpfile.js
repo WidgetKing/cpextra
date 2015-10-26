@@ -48,14 +48,16 @@
                                ctr + "03_CE_TextEntryBox_Behaviour_Changes/wr/w_5235/scripts",
                                ctr + "05_CE_SlideTests/wr/w_5235/scripts",
                                ctr + "06_CE_Command_Variables/wr/w_5235/scripts",
-                               ctr + "06_CE_Command_Variables/wr/w_5687/scripts"],
+                               ctr + "06_CE_Command_Variables/wr/w_5687/scripts",
+                               ctr + "07_CE_Slide_Object_State_Tests/wr/w_5235/scripts"],
 
         storylineExtraDevLocation = "builds/development/storyline_extra_web_object",
         storylineExtraDevFileName = "storyline_extra.js",
         str = "tests/output/storyline/",
         storylineTestSources = [str + "01_CE_Local_Storage_Variables_1 - Storyline output/story_content/WebObjects/6O4Z2639lm4",
                                 str + "01_CE_Local_Storage_Variables_2 - Storyline output/story_content/WebObjects/64qP4KPGj6t",
-                                str + "02_SE_Slide_Tests - Storyline output/story_content/WebObjects/6pcKh8TGeK4"],
+                                str + "02_SE_Slide_Tests - Storyline output/story_content/WebObjects/6pcKh8TGeK4",
+                                str + "03_SE_State_Tests - Storyline output/story_content/WebObjects/6f6bu2xv9vO"],
         karmaConfig = "karma.conf.js";
 
     var buildNumber = jsonPackage.buildNumber;

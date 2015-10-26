@@ -22,7 +22,25 @@ _extra.registerModule("BaseSlideObjectDataProxy", function () {
         },
         get type(){
             return this._type;
+        },
+        get states() {
+            if (!this._states) {
+                this._states = [];
+
+                var rawStatesArray = this._data.base.stl;
+
+                for (var i = 0; i < rawStatesArray.length; i += 1) {
+
+                    this._states.push(rawStatesArray[i].stn);
+
+                }
+            }
+
+            return this._states;
         }
     };
+
+    //BaseSlideObjectData.prototype.get
+
     _extra.registerClass("BaseSlideObjectDataProxy", BaseSlideObjectData);
 });

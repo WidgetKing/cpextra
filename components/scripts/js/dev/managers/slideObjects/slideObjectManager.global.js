@@ -8,9 +8,19 @@
 _extra.registerModule("slideObjectManager_global", ["slideObjectManager_software"], function () {
     "use strict";
 
+    /**
+     * List of proxy objects associated with slideObjects. This helps us avoid duplication.
+     * @type {{}}
+     */
     var slideObjectProxies = {};
 
     _extra.slideObjects.WILDCARD_CHARACTER = "@";
+    /**
+     * When entering a slide, the manager will look through all the slide objects on that slide and send the relevant
+     * slide object names to this callback.
+     * @type {_extra.classes.Callback}
+     */
+    _extra.slideObjects.enteredSlideChildObjectsCallbacks = new _extra.classes.Callback();
     _extra.slideObjects.getSlideObjectProxy = function (id) {
 
         var DOMElement;
@@ -30,6 +40,8 @@ _extra.registerModule("slideObjectManager_global", ["slideObjectManager_software
             }
         }
 
+        // Create new proxy object IF a proxy object hasn't already been created.
+        // Otherwise we'll return the previous object.
         if (!slideObjectProxies[id]) {
             slideObjectProxies[id] = _extra.factories.createSlideObjectProxy(id, DOMElement);
         }
@@ -54,5 +66,25 @@ _extra.registerModule("slideObjectManager_global", ["slideObjectManager_software
 
     };
 
-    // TODO: Should clear slideObjectProxies when entering a new slide.
+    ///////////////////////////////////////////////////////////////////////
+    /////////////// ON SLIDE ENTER
+    ///////////////////////////////////////////////////////////////////////
+    _extra.slideManager.enterSlideCallback.addCallback("*", function () {
+
+        // Clear the proxy list as we are on a new slide with new objects
+        slideObjectProxies = {};
+
+        var slideObjectsData = _extra.slideManager.getSlideData(),
+            slideObjectName;
+
+
+
+        for (var i = 0; i < slideObjectsData.slideObjects.length; i += 1) {
+            slideObjectName = slideObjectsData.slideObjects[i];
+
+            _extra.slideObjects.enteredSlideChildObjectsCallbacks.sendToCallback("*", slideObjectName);
+
+        }
+
+    });
 });
