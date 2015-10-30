@@ -19,6 +19,6 @@ _extra.registerModule("publicAPIManager", function () {
         _extra.X.show = _extra.slideObjects.show;
         _extra.X.disable = _extra.slideObjects.disable;
         _extra.X.enable = _extra.slideObjects.enable;
-        _extra.X.changeState = _extra.slideObjects.changeState;
+        _extra.X.changeState = _extra.slideObjects.states.change;
     };
 });

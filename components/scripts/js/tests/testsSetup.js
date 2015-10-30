@@ -29,6 +29,9 @@
                     "cp": {
                         "model": {
 
+                        },
+                        "movie":{
+
                         }
                     },
                     "cpAPIInterface": {

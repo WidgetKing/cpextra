@@ -52,6 +52,8 @@ _extra.registerModule("slideManager_software", ["softwareInterfacesManager", "Ca
     /////////////// ON ENTER SLIDE
     ///////////////////////////////////////////////////////////////////////
     _extra.slideManager.addEnterSlideEventListener = function (callback) {
+        // For some reason in Chrome when this is called we can't send anything to the console.
+        // However, the code is still working.
         _extra.captivate.eventDispatcher.addEventListener(_extra.captivate.events.SLIDE_ENTER, callback);
     };
 

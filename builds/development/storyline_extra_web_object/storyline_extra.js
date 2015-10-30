@@ -256,17 +256,23 @@ function initExtra(topWindow) {
         }
     }
 
-    //////////////
-    ///// Define the public API
-    //////////////
+    ///////////////////////////////////////////////////////////////////////
+    /////////////// Get jQuery
+    ///////////////////////////////////////////////////////////////////////
+
+    _extra.$ = _extra.w.$;
+
+    ///////////////////////////////////////////////////////////////////////
+    /////////////// Define the public API
+    ///////////////////////////////////////////////////////////////////////
     _extra.X = {
         "version":"0.0.2",
-        "build":"1539"
+        "build":"2062"
     };
 
-    //////////////
-    ///// Call on load callbacks
-    //////////////
+    ///////////////////////////////////////////////////////////////////////
+    /////////////// On Load Callbacks
+    ///////////////////////////////////////////////////////////////////////
     function callOnLoadCallbacks() {
 
         var m;
@@ -281,9 +287,12 @@ function initExtra(topWindow) {
     }
 
 
+    ///////////////////////////////////////////////////////////////////////
+    /////////////// Initialization
+    ///////////////////////////////////////////////////////////////////////
     //////////////
     ///// Listen for Storyline Initialization
-    //////////////
+
     var onStorylineLoaded = function () {
 
         window.removeEventListener("unload", onStorylineLoaded);
@@ -305,7 +314,7 @@ function initExtra(topWindow) {
 
     //////////////
     ///// Listen for Captivate Initialization
-    //////////////
+
     window.CaptivateExtraWidgetInit = function() {
         // Double check that we are actually in Captivate.
         if (_extra.w.cp) {
@@ -317,178 +326,6 @@ function initExtra(topWindow) {
 }
 
 initExtra();
-/* global _extra*/
-/**
- * Created with IntelliJ IDEA.
- * User: Tristan
- * Date: 24/09/15
- * Time: 1:53 PM
- * To change this template use File | Settings | File Templates.
- */
-_extra.registerModule("Callback", function () {
-    "use strict";
-    _extra.registerClass("Callback", function () {
-        this.data = {};
-        this.addCallback = function (index, callback) {
-            if (!this.data[index]) {
-                this.data[index] = [];
-            }
-            this.data[index].push(callback);
-        };
-        this.hasCallbackFor = function (index) {
-            return this.data[index] !== undefined;
-        };
-        this.sendToCallback = function (index,parameter) {
-            if (this.data[index]) {
-                var a = this.data[index];
-                for (var i = 0; i < a.length; i += 1) {
-                    a[i](parameter);
-                }
-            }
-        };
-        this.clear = function () {
-            this.data = {};
-        };
-    });
-});
-/**
- * Created with IntelliJ IDEA.
- * User: Tristan
- * Date: 26/10/15
- * Time: 3:56 PM
- * To change this template use File | Settings | File Templates.
- */
-_extra.registerModule("SlideObjectStateManager", function () {
-
-    "use strict";
-
-    function SlideObjectStateManager (slideObject, data) {
-
-        var that = this,
-            isMouseOver = false,
-            isMouseDown = false,
-            previousNormalState = "Normal";
-
-        this.slideObject = slideObject;
-        this.data = data;
-
-
-
-        ///////////////////////////////////////////////////////////////////////
-        /////////////// Variable Validity
-        ///////////////////////////////////////////////////////////////////////
-        function findStateWithValidVariables(shouldEvaluate, stateData) {
-            if (shouldEvaluate) {
-
-                //var stateCondition;
-
-                for (var stateName in stateData) {
-                    if (stateData.hasOwnProperty(stateName)) {
-
-                        slideObject.changeState(stateName);
-                        return true;
-
-                    }
-                }
-
-            }
-
-            return false;
-        }
-
-        function evaluateState() {
-
-            if (!findStateWithValidVariables(isMouseDown, data.d)) {
-                if (!findStateWithValidVariables(isMouseOver, data.r)) {
-
-                    if (!findStateWithValidVariables(true, data.n)) {
-
-                        slideObject.changeState(previousNormalState);
-                        // TODO: Switch to the last normal state
-                    }
-
-                }
-            }
-
-        }
-
-        ///////////////////////////////////////////////////////////////////////
-        /////////////// Event Listeners
-        ///////////////////////////////////////////////////////////////////////
-        ////////////////////////////////
-        ////////// Mouse Over
-        this.onRollover = function () {
-            // Remove Listener
-            slideObject.removeEventListener("mouseover", that.onRollover);
-            // Update Information
-            isMouseOver = true;
-            // Change State
-            evaluateState();
-            // Listen for new mouse event
-            slideObject.addEventListener("mouseout", that.onRollout);
-        };
-
-        this.onRollout = function () {
-            slideObject.removeEventListener("mouseout", that.onRollout);
-            isMouseOver = false;
-            evaluateState();
-            slideObject.addEventListener("mouseover", that.onRollover);
-        };
-
-        ////////////////////////////////
-        ////////// Mouse Down
-        this.onMouseDown = function () {
-
-            slideObject.removeEventListener("mousedown", that.onMouseDown);
-
-            isMouseDown = true;
-
-            evaluateState();
-
-            _extra.w.document.addEventListener("mouseup", that.onMouseUp);
-        };
-
-        this.onMouseUp = function () {
-
-            _extra.w.document.removeEventListener("mouseup", that.onMouseUp);
-
-            isMouseDown = false;
-
-            evaluateState();
-
-            slideObject.addEventListener("mousedown", that.onMouseDown);
-        };
-
-
-
-
-
-        ///////////////////////////////////////////////////////////////////////
-        /////////////// Kick off
-        ///////////////////////////////////////////////////////////////////////
-        if (data.r) {
-            slideObject.addEventListener("mouseover", this.onRollover);
-        }
-
-        if (data.d) {
-            slideObject.addEventListener("mousedown", this.onMouseDown);
-        }
-
-        // TODO: evaluateState here in order to check variables that have already been set.
-    }
-
-    SlideObjectStateManager.prototype.unload = function () {
-        this.slideObject.removeEventListener("mouseover", this.onRollover);
-        this.slideObject.removeEventListener("mouseout", this.onRollout);
-        this.slideObject.removeEventListener("mousedown", this.onMouseDown);
-        _extra.w.document.removeEventListener("mouseup", this.onMouseUp);
-
-        this.slideObject = null;
-        this.data = null;
-    };
-
-    _extra.registerClass("SlideObjectStateManager", SlideObjectStateManager);
-});
 /**
  * Created with IntelliJ IDEA.
  * User: Tristan
@@ -559,123 +396,507 @@ _extra.registerModule("factoryManager", function () {
     };
 
 });
+/* global _extra*/
 /**
  * Created with IntelliJ IDEA.
  * User: Tristan
- * Date: 30/09/15
- * Time: 4:14 PM
+ * Date: 24/09/15
+ * Time: 1:53 PM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("BaseSlideObjectDataProxy", function () {
+_extra.registerModule("Callback", function () {
     "use strict";
-    function BaseSlideObjectData(name, data, type) {
-        this._name = name;
-        this._data = data;
-        this._type = type;
-    }
 
-    BaseSlideObjectData.prototype = {
-        get name(){
-            return this._name;
-        },
-        get data() {
-            return this._data;
-        },
-        get type(){
-            return this._type;
-        },
-        get states() {
-            if (!this._states) {
-                this._states = [];
 
-                _extra.error("BaseSlideObjectData.states has yet to be implemented");
+    _extra.registerClass("Callback", function () {
+
+        this.data = {};
+        this.addCallback = function (index, callback) {
+            if (!this.data[index]) {
+                this.data[index] = [];
             }
+            this.data[index].push(callback);
+        };
+        this.hasCallbackFor = function (index) {
+            return this.data[index] !== undefined;
+        };
+        this.sendToCallback = function (index,parameter) {
+            if (this.data[index]) {
+                var a = this.data[index];
+                for (var i = 0; i < a.length; i += 1) {
+                    a[i](parameter);
+                }
+            }
+        };
+        this.forEach = function (method) {
 
-            return this._states;
-        }
-    };
-    _extra.registerClass("BaseSlideObjectDataProxy", BaseSlideObjectData);
+            var a;
+
+            for (var index in this.data) {
+                if (this.data.hasOwnProperty(index)) {
+
+                    a = this.data[index];
+                    for (var i = 0; i < a.length; i += 1) {
+                        method(index,a[i]);
+                    }
+
+                }
+            }
+        };
+
+        this.removeCallback = function (index,callbackToRemove) {
+            if (this.data[index]) {
+                var a = this.data[index],
+                    registeredCallback;
+                for (var i = 0; i < a.length; i += 1) {
+                    registeredCallback = a[i];
+                    if (callbackToRemove === registeredCallback) {
+                        a.splice(i,1);
+
+                        // If we have just deleted the last callback for this index, then we'll delete the array so that
+                        // hasCallbackFor() will be able to respond accurately.
+                        if (a.length <= 0) {
+                            delete this.data[index];
+                        }
+                        break;
+                    }
+
+                }
+            }
+        };
+        this.clear = function () {
+            this.data = {};
+        };
+
+    });
 });
 /**
  * Created with IntelliJ IDEA.
  * User: Tristan
- * Date: 20/10/15
- * Time: 7:07 AM
+ * Date: 29/10/15
+ * Time: 2:21 PM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("BaseSlideObjectProxy", function () {
+_extra.registerModule("Model", function () {
 
     "use strict";
 
-    function BaseSlideObjectProxy(element, data) {
-        this.DOMElement = element;
-        this._data = data;
-    }
+    function Model() {
 
-    BaseSlideObjectProxy.prototype = {
-        get name(){
-            return this.DOMElement.id;
-        },
-        get data() {
-            return this._data;
-        },
-        get type(){
-            return this._data.type;
-        }
-    };
+        var m = {};
 
-    BaseSlideObjectProxy.prototype.changeState = function (stateName) {
-        _extra.slideObjects.changeState(this.name, stateName);
-    };
+        this.updateCallback = new _extra.classes.Callback();
 
-    _extra.registerClass("BaseSlideObjectProxy", BaseSlideObjectProxy, _extra.STORYLINE);
+        this.write = function (slideObjectName, property, value) {
 
-}, _extra.STORYLINE);
-/**
- * Created with IntelliJ IDEA.
- * User: Tristan
- * Date: 15/10/15
- * Time: 3:05 PM
- * To change this template use File | Settings | File Templates.
- */
-_extra.registerModule("SlideDataProxy", function () {
+            var objectData,
+                previousValue,
+                callbackData;
 
-    "use strict";
-
-    function SlideDataProxy(data) {
-        this.name = data.title;
-    }
-
-    _extra.registerClass("SlideDataProxy", SlideDataProxy, _extra.STORYLINE);
-
-}, _extra.STORYLINE);
-/**
- * Created with IntelliJ IDEA.
- * User: Tristan
- * Date: 30/09/15
- * Time: 6:09 PM
- * To change this template use File | Settings | File Templates.
- */
-_extra.registerModule("TextEntryBoxDataProxy", ["BaseSlideObjectDataProxy"], function () {
-    "use strict";
-
-    function TextEntryBoxDataProxy(name, data, type) {
-        // Call super constructor
-        _extra.classes.BaseSlideObjectDataProxy.call(this, name, data, type);
-    }
-
-
-
-
-    _extra.registerClass("TextEntryBoxDataProxy", TextEntryBoxDataProxy,"BaseSlideObjectDataProxy", _extra.STORYLINE);
-
-    Object.defineProperty(TextEntryBoxDataProxy.prototype,"variable", {
-            get: function() {
-                _extra.error("TextEntryBoxDataProxy.variable has yet to be defined!");
-                return null;
+            // If this is the first time we've written to this object...
+            if (!m[slideObjectName]) {
+                m[slideObjectName] = {};
             }
-        });
-}, _extra.STORYLINE);
+
+            objectData = m[slideObjectName];
+            previousValue = objectData[property];
+
+
+            // If the value has changed, then we'll update the model and inform the callbacks.
+            if (previousValue !== value) {
+
+                // UPDATE MODEL
+                objectData[property] = value;
+
+                callbackData = {
+                    "slideObjectName":slideObjectName,
+                    "property":property,
+                    "previousValue":previousValue,
+                    "currentValue":value
+                };
+
+
+                this.updateCallback.sendToCallback("*",callbackData);
+                this.updateCallback.sendToCallback(slideObjectName,callbackData);
+            }
+        };
+
+
+        this.retrieve = function (slideObjectName, property) {
+            if (property && m[slideObjectName]) {
+
+                return m[slideObjectName][property];
+
+            } else {
+
+                return m[slideObjectName];
+
+            }
+        };
+
+
+    }
+
+    _extra.registerClass("Model", Model);
+
+});
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 29/10/15
+ * Time: 1:54 PM
+ * To change this template use File | Settings | File Templates.
+ */
+_extra.registerModule("ModelListener", function () {
+
+    "use strict";
+
+    function ModelListener(name, model) {
+
+        ///////////////////////////////////////////////////////////////////////
+        /////////////// Variables
+        ///////////////////////////////////////////////////////////////////////
+        ////////////////////////////////
+        ////////// Private
+        var properties = {};
+
+        ////////////////////////////////
+        ////////// Public
+        this.model = model;
+
+        ///////////////////////////////////////////////////////////////////////
+        /////////////// Public Methods
+        ///////////////////////////////////////////////////////////////////////
+        this.addProperty = function (propertyName, onChangeCallback, defaultValue) {
+            properties[propertyName] = {
+                "onChangeCallback":onChangeCallback,
+                "defaultValue":defaultValue
+            };
+
+            if (model.retrieve(name,propertyName) === undefined) {
+                // If this has not been set previously, then we'll write its default value.
+                model.write(name,propertyName,defaultValue);
+            }
+
+            onChangeCallback(null, model.retrieve(name, propertyName));
+        };
+
+        this.unload = function () {
+            properties = null;
+            model.updateCallback.removeCallback(name, onModelUpdate);
+            model = null;
+        };
+
+
+
+
+        ///////////////////////////////////////////////////////////////////////
+        /////////////// On Model Update
+        ///////////////////////////////////////////////////////////////////////
+        function onModelUpdate(data) {
+
+            if (properties[data.property]) {
+
+                properties[data.property].onChangeCallback(data.previousValue, data.currentValue);
+
+            }
+
+        }
+
+        model.updateCallback.addCallback(name, onModelUpdate);
+
+
+    }
+
+
+
+    _extra.registerClass("ModelListener", ModelListener);
+
+});
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 26/10/15
+ * Time: 3:56 PM
+ * To change this template use File | Settings | File Templates.
+ */
+_extra.registerModule("SlideObjectStateManager", function () {
+
+    "use strict";
+
+    function SlideObjectStateManager (slideObject, data) {
+
+
+        var that = this,
+            isMouseOver = false,
+            isMouseDown = false,
+            previousNormalState = slideObject.state;
+
+        this.slideObject = slideObject;
+        this.data = data;
+
+
+
+
+
+
+        ///////////////////////////////////////////////////////////////////////
+        /////////////// Util Methods
+        ///////////////////////////////////////////////////////////////////////
+        function isManagedState(stateName) {
+
+            var mouseEventDetails,
+                managedStateName;
+
+            for (var mouseEvent in data) {
+                if (data.hasOwnProperty(mouseEvent)) {
+
+                    mouseEventDetails = data[mouseEvent];
+                    for (managedStateName in mouseEventDetails) {
+                        if (mouseEventDetails.hasOwnProperty(managedStateName) &&
+                            managedStateName === stateName) {
+
+                            return true;
+
+                        }
+                    }
+
+                }
+            }
+
+            return false;
+        }
+
+        function doVariableValueComparison(variableValue, intendedValue) {
+            if (typeof variableValue !== "boolean" && !isNaN(variableValue)) {
+                variableValue = parseFloat(variableValue);
+            } else if (variableValue === "false") {
+                variableValue = false;
+            }
+            // I know here I use '!=' instead of '!==' but that is intentional as I want false == 0
+            return variableValue == intendedValue;
+        }
+
+
+        ///////////////////////////////////////////////////////////////////////
+        /////////////// State Inspection
+        ///////////////////////////////////////////////////////////////////////
+        function findStateWithValidVariables(shouldEvaluate, stateData) {
+
+            // This shouldEvaluate calculation is done here instead of the proceeding function because it reduces
+            // repetition.
+            if (shouldEvaluate) {
+
+                var variableData,
+                    variableName,
+                    isStateValid;
+
+                // Loop through { r: { x_rollover... } }
+                for (var stateName in stateData) {
+                    if (stateData.hasOwnProperty(stateName)) {
+
+                        variableData = stateData[stateName];
+                        // We assume the state to be valid until we find proof that it's not.
+                        // We need many variables to be true to work, and only one to be false to break it.
+                        isStateValid = true;
+
+                        // Loop through { r: { x_rollover: { variableName ... } }
+                        for (variableName in variableData) {
+                            if (variableData.hasOwnProperty(variableName)) {
+
+                                if (!doVariableValueComparison(_extra.variableManager.getVariableValue(variableName),
+                                                               variableData[variableName])) {
+
+                                    isStateValid = false;
+                                    break;
+
+                                }
+
+                            }
+                        }
+
+                        // If we have checked all the variables in this state as a NO.
+                        if (isStateValid) {
+
+                            slideObject.changeState(stateName);
+                            return true;
+
+                        }
+
+                    }
+                }
+
+            }
+
+            return false;
+        }
+
+        function evaluateState() {
+
+            // Mouse down states take priority, even if there are valid rollover or normal states.
+            if (!findStateWithValidVariables(isMouseDown, data.d)) {
+                // Rollover states take priority over normal states.
+                if (!findStateWithValidVariables(isMouseOver, data.r)) {
+
+                    // Normal states have the lowest priority.
+                    if (!findStateWithValidVariables(true, data.n)) {
+
+                        slideObject.changeState(previousNormalState);
+
+                    }
+
+                }
+            }
+
+        }
+
+
+
+
+        ///////////////////////////////////////////////////////////////////////
+        /////////////// Event Listeners
+        ///////////////////////////////////////////////////////////////////////
+        ////////////////////////////////
+        ////////// Mouse Over
+        this.onRollover = function () {
+            // Remove Listener
+            slideObject.removeEventListener("mouseover", that.onRollover);
+            // Update Information
+            isMouseOver = true;
+            // Change State
+            evaluateState();
+            // Listen for new mouse event
+            slideObject.addEventListener("mouseout", that.onRollout);
+        };
+
+        this.onRollout = function () {
+
+            slideObject.removeEventListener("mouseout", that.onRollout);
+            isMouseOver = false;
+            evaluateState();
+            slideObject.addEventListener("mouseover", that.onRollover);
+
+        };
+
+        ////////////////////////////////
+        ////////// Mouse Down
+        this.onMouseDown = function () {
+
+            slideObject.removeEventListener("mousedown", that.onMouseDown);
+            isMouseDown = true;
+            evaluateState();
+            _extra.w.document.addEventListener("mouseup", that.onMouseUp);
+
+        };
+
+        this.onMouseUp = function () {
+
+            _extra.w.document.removeEventListener("mouseup", that.onMouseUp);
+            isMouseDown = false;
+            evaluateState();
+            slideObject.addEventListener("mousedown", that.onMouseDown);
+
+        };
+
+        ////////////////////////////////
+        ////////// Start Listening
+        if (data.r) {
+            slideObject.addEventListener("mouseover", this.onRollover);
+        }
+
+        if (data.d) {
+            slideObject.addEventListener("mousedown", this.onMouseDown);
+        }
+
+
+
+
+
+
+        ///////////////////////////////////////////////////////////////////////
+        /////////////// Manage finding the 'normal' state
+        ///////////////////////////////////////////////////////////////////////
+        this.onStateChangeCallback =  function (details) {
+            // If this is not a state that we are automatically switching to...
+            if (!isManagedState(details.stateName)) {
+                // Then we should switch back to this state as the 'normal' state.
+                previousNormalState = details.stateName;
+            }
+        };
+
+        _extra.slideObjects.states.changeCallback.addCallback(slideObject.name, this.onStateChangeCallback);
+
+
+
+
+
+
+        ///////////////////////////////////////////////////////////////////////
+        /////////////// Manage listening for Variables changing
+        ///////////////////////////////////////////////////////////////////////
+        var eventName,
+            eventData,
+            stateName,
+            variableData,
+            variableName,
+            variableListeners = {};
+
+        // Looping through { r... d... n...}
+        for (eventName in data) {
+            if (data.hasOwnProperty(eventName)) {
+
+                eventData = data[eventName];
+
+                // Looping through { r: { x_over ... } }
+                for (stateName in eventData) {
+                    if (eventData.hasOwnProperty(stateName)) {
+
+                        variableData = eventData[stateName];
+
+                        // Looping through { r: { x_over : { variableName ... } } }
+                        for (variableName in variableData) {
+                            if (variableData.hasOwnProperty(variableName)) {
+
+                                // If we're not already listening for this variable.
+                                if (!variableListeners[variableName]) {
+
+                                    _extra.variableManager.listenForVariableChange(variableName, evaluateState);
+                                    // Mark this as true to avoid listening to this variable more than once.
+                                    variableListeners[variableName] = true;
+
+                                }
+
+                            }
+                        }
+
+                    }
+                }
+
+            }
+        }
+
+
+        ////////////////////////////////
+        ////////// KICK OFF!
+        ///// Check to see if there are any states that are valid now.
+        evaluateState();
+        
+    }
+
+    SlideObjectStateManager.prototype.unload = function () {
+        this.slideObject.removeEventListener("mouseover", this.onRollover);
+        this.slideObject.removeEventListener("mouseout", this.onRollout);
+        this.slideObject.removeEventListener("mousedown", this.onMouseDown);
+        _extra.w.document.removeEventListener("mouseup", this.onMouseUp);
+
+        _extra.slideObjects.states.changeCallback.removeCallback(this.slideObject.name, this.onStateChangeCallback);
+
+        this.slideObject = null;
+        this.data = null;
+    };
+
+    _extra.registerClass("SlideObjectStateManager", SlideObjectStateManager);
+});
 /**
  * Created with IntelliJ IDEA.
  * User: Tristan
@@ -823,441 +1044,8 @@ _extra.registerModule("publicAPIManager", function () {
         _extra.X.show = _extra.slideObjects.show;
         _extra.X.disable = _extra.slideObjects.disable;
         _extra.X.enable = _extra.slideObjects.enable;
-        _extra.X.changeState = _extra.slideObjects.changeState;
+        _extra.X.changeState = _extra.slideObjects.states.change;
     };
-});
-/**
- * Created with IntelliJ IDEA.
- * User: Tristan
- * Date: 15/10/15
- * Time: 6:06 PM
- * To change this template use File | Settings | File Templates.
- */
-_extra.registerModule("slideObjectManager_global", ["slideObjectManager_software"], function () {
-    "use strict";
-
-    /**
-     * List of proxy objects associated with slideObjects. This helps us avoid duplication.
-     * @type {{}}
-     */
-    var slideObjectProxies = {};
-
-    _extra.slideObjects.WILDCARD_CHARACTER = "@";
-    /**
-     * When entering a slide, the manager will look through all the slide objects on that slide and send the relevant
-     * slide object names to this callback.
-     * @type {_extra.classes.Callback}
-     */
-    _extra.slideObjects.enteredSlideChildObjectsCallbacks = new _extra.classes.Callback();
-    _extra.slideObjects.getSlideObjectProxy = function (id) {
-
-        var DOMElement;
-
-        // If we were passed in a DOM element rather than the id of a DOM element...
-        if (typeof id === "object") {
-            DOMElement = id;
-            id = DOMElement.id;
-        } else {
-            // We were given the id of a dom element, so we have to find it.
-            DOMElement = _extra.slideObjects.getSlideObjectElement(id);
-            //DOMElement = _extra.w.document.getElementById(id);
-
-            // If we could not find the slide object, then... BYE BYE!
-            if (!DOMElement) {
-                return null;
-            }
-        }
-
-        // Create new proxy object IF a proxy object hasn't already been created.
-        // Otherwise we'll return the previous object.
-        if (!slideObjectProxies[id]) {
-            slideObjectProxies[id] = _extra.factories.createSlideObjectProxy(id, DOMElement);
-        }
-
-        return slideObjectProxies[id];
-
-    };
-
-    _extra.slideObjects.getSlideObjectByName = function (query) {
-
-        if (query.indexOf(_extra.slideObjects.WILDCARD_CHARACTER) > -1) {
-
-            // There is a wildcard, so we'll return a list.
-            return _extra.slideObjects.getSlideObjectNamesMatchingWildcardName(query, true);
-
-        } else {
-
-            // No wildcard. Grab the object directly of this name.
-            return _extra.slideObjects.getSlideObjectProxy(query);
-
-        }
-
-    };
-
-    ///////////////////////////////////////////////////////////////////////
-    /////////////// ON SLIDE ENTER
-    ///////////////////////////////////////////////////////////////////////
-    _extra.slideManager.enterSlideCallback.addCallback("*", function () {
-
-        // Clear the proxy list as we are on a new slide with new objects
-        slideObjectProxies = {};
-
-        var slideObjectsData = _extra.slideManager.getSlideData(),
-            slideObjectName;
-
-
-
-        for (var i = 0; i < slideObjectsData.slideObjects.length; i += 1) {
-            slideObjectName = slideObjectsData.slideObjects[i];
-
-            _extra.slideObjects.enteredSlideChildObjectsCallbacks.sendToCallback("*", slideObjectName);
-
-        }
-
-    });
-});
-/**
- * Created with IntelliJ IDEA.
- * User: Tristan
- * Date: 30/09/15
- * Time: 3:52 PM
- * To change this template use File | Settings | File Templates.
- */
-_extra.registerModule("slideObjectManager_software", ["generalDataManager", "Callback", "slideManager_global"], function () {
-
-    "use strict";
-
-    _extra.slideObjects = {
-        "getSlideObjectElement": function(id) {
-            _extra.log("_extra.slideObjects.getSlideObjectElement has yet to be defined");
-            return _extra.w.document.getElementById(id);
-        }
-    };
-
-    ////////////////////
-    //////// ON LOAD CALLBACK
-    ////////////////////
-    return function () {
-
-    };
-
-}, _extra.STORYLINE);
-/**
- * Created with IntelliJ IDEA.
- * User: Tristan
- * Date: 27/09/15
- * Time: 4:15 PM
- * To change this template use File | Settings | File Templates.
- */
-_extra.registerModule("softwareInterfacesManager", function () {
-
-    "use strict";
-
-    // References to storyline api
-    _extra.storyline = {
-        "api":_extra.w.story,
-        "variables":_extra.w.story.variables,
-        "player":_extra.w.player,
-        "slidesData":_extra.w.story.allSlides
-    };
-
-    // TODO: Find Storyline Version variable
-
-}, _extra.STORYLINE);
-/**
- * Created with IntelliJ IDEA.
- * User: Tristan
- * Date: 20/10/15
- * Time: 9:38 AM
- * To change this template use File | Settings | File Templates.
- */
-_extra.registerModule("commandVariables",["generalVariableManager","slideObjectManager_global"], function () {
-
-    "use strict";
-
-    var COMMAND_VARIABLE_PREFIX = "xcmnd",
-        variableName,
-        commandVariables = {};
-
-    ////////////////////////////////
-    ////////// Parameter Handler Types
-
-    // When a command variable is sent something like: 1,2,3,4
-    // These functions decide how the parameters should be sent to the function tied into the variable.
-    _extra.variableManager.parameterHandlers = {
-        // This one sends them like this:
-        // callback(1,2,3,4);
-        "sendParametersAsParameters": function (parameters, callback) {
-            callback.apply(_extra, parameters);
-        },
-        // This one sends them like this:
-        // callback(1);
-        // callback(2);
-        // callback(3);
-        // callback(4);
-        "executeOncePerParameter": function (parameters, callback) {
-
-            for (var i = 0; i < parameters.length; i += 1) {
-
-                callback(parameters[i]);
-
-            }
-
-        }
-    };
-
-    ////////////////////////////////
-    ////////// registerCommandVariable method
-
-    // There may be other parts of the program who wish to register their own command variables (perhaps individual ones for Captivate or Storyline)
-    // So we expose function to allow them to register.
-    _extra.variableManager.registerCommandVariable = function (variableSuffix, callback, parameterHandler) {
-        if (commandVariables[variableSuffix]) {
-            return;
-        }
-
-        if (!parameterHandler) {
-
-            // Default method for parameter handling is to invoke the callback once for each parameter.
-            parameterHandler = _extra.variableManager.parameterHandlers.executeOncePerParameter;
-
-        }
-
-        commandVariables[variableSuffix] = {
-            "callback":callback,
-            "parameterHandler": parameterHandler
-        };
-    };
-
-
-    ///////////////////////////////////////////////////////////////////////
-    /////////////// LIST OF COMMAND VARIABLES
-    ///////////////////////////////////////////////////////////////////////
-    _extra.variableManager.registerCommandVariable("Hide", _extra.slideObjects.hide);
-    _extra.variableManager.registerCommandVariable("Show", _extra.slideObjects.show);
-    _extra.variableManager.registerCommandVariable("Enable", _extra.slideObjects.enable);
-    _extra.variableManager.registerCommandVariable("Disable", _extra.slideObjects.disable);
-
-    _extra.variableManager.registerCommandVariable("ChangeState", _extra.slideObjects.changeState,
-                                                   _extra.variableManager.parameterHandlers.sendParametersAsParameters);
-
-
-
-
-    ///////////////////////////////////////////////////////////////////////
-    /////////////// SETTING UP COMMAND VARIABLES
-    ///////////////////////////////////////////////////////////////////////
-    return function () {
-
-
-
-        function listenForCommandVariableChange(variableName,variableMetadata) {
-
-            _extra.variableManager.listenForVariableChange(variableName, function () {
-
-
-                var value = _extra.variableManager.getVariableValue(variableName);
-
-                // If we have been given nothing, then we will not bother informing the command variable.
-                // This likely comes from clearing the command variable after enacting its command.
-                if (value !== "") {
-
-                    // Remove spaces from value string
-                    value = value.replace(/\s+/g,'');
-                    var parameters = value.split(",");
-                    variableMetadata.parameterHandler(parameters, variableMetadata.callback);
-                    _extra.variableManager.setVariableValue(variableName,"");
-
-                }
-
-
-            });
-        }
-
-        // We will now go through all the command variables and set them up.
-        for (var variableSuffix in commandVariables) {
-            if (commandVariables.hasOwnProperty(variableSuffix)) {
-
-                variableName = COMMAND_VARIABLE_PREFIX + variableSuffix;
-
-
-
-                // Check to find valid variable.
-                if (!_extra.variableManager.hasVariable(variableName)) {
-
-                    // Variable with normal name doesn't exist. Try to find one with a semicolon in front.
-                    variableName = "_" + variableName;
-
-                    if (!_extra.variableManager.hasVariable(variableName)) {
-
-                        // There is no valid variable by this name. Continue to the next one.
-                        continue;
-
-                    }
-
-                }
-
-                // Now set up the variable's behaviour
-                listenForCommandVariableChange(variableName, commandVariables[variableSuffix]);
-
-            }
-        }
-
-
-        // Unload
-        commandVariables = null;
-        _extra.variableManager.registerCommandVariable = null;
-        _extra.variableManager.parameterHandlers = null;
-
-    };
-
-
-
-
-
-});
-/**
- * Created with IntelliJ IDEA.
- * User: Tristan
- * Date: 27/09/15
- * Time: 8:10 AM
- * To change this template use File | Settings | File Templates.
- */
-_extra.registerModule("generalVariableManager", ["softwareInterfacesManager", "Callback"], function () {
-
-    "use strict";
-    //var variables = _extra.storyline
-
-    _extra.variableManager = {
-        "prefixCallback": new _extra.classes.Callback(),
-        "getVariableValue": function (variableName) {
-            return _extra.storyline.player.GetVar(variableName);
-        },
-        "setVariableValue": function (variableName, value) {
-            _extra.storyline.player.SetVar(variableName, value);
-        },
-        "hasVariable": function (variableName) {
-            return _extra.storyline.variables.hasOwnProperty(variableName);
-        },
-        "listenForVariableChange": function (variableName, callback) {
-            _extra.error("_extra.variableManager.listenForVariableChange logic has yet to be implemented");
-        },
-        "stopListeningForVariableChange": function(variableName, callback) {
-            _extra.error("_extra.variableManager.stopListeningForVariableChange logic has yet to be implemented");
-        }
-    };
-
-    return function () {
-
-        var splitName,
-            prefix;
-
-        for (var name in _extra.storyline.variables) {
-            // TODO: Find a way to extract this so that the Captivate and Storyline versions aren't duplicating the same code.
-            if (_extra.storyline.variables.hasOwnProperty(name)) {
-
-                splitName = name.split("_");
-                prefix = splitName[0];
-
-                // To support all variables as having an underscore '_' in front of their name
-                // we'll check if the first index is empty (as would be true in a variable name such as _ls_myVariable)
-                // If so, we'll use the second index as the variable's prefix (in that example it would be 'ls')
-                if (prefix === "") {
-                    prefix = splitName[1];
-                }
-
-                prefix = prefix.toLowerCase();
-
-                // If someone has added a callback for this kind of prefix.
-                _extra.variableManager.prefixCallback.sendToCallback(prefix, name);
-
-            }
-        }
-
-        // Dispatch event to let the rest of the modules know the variables have been initialized.
-        _extra.eventDispatcher.dispatchEvent(new Event("variablesInitialized"));
-
-    };
-
-}, _extra.STORYLINE);
-/*global _extra*/
-/**
- * Created with IntelliJ IDEA.
- * User: Tristan
- * Date: 24/09/15
- * Time: 12:21 PM
- * To change this template use File | Settings | File Templates.
- */
-_extra.registerModule("localStorageManager", ["generalVariableManager"], function () {
-
-    "use strict";
-
-
-    var storageVariables;
-
-    _extra.variableManager.saveStorageVariables = function () {
-        var storageVariableInfo,
-            variableName;
-
-        for (variableName in storageVariables) {
-
-            if (storageVariables.hasOwnProperty(variableName)) {
-
-                storageVariableInfo = storageVariables[variableName];
-                storageVariableInfo.storage.setItem(variableName,
-                                                    _extra.variableManager.getVariableValue(variableName));
-
-            }
-
-        }
-
-    };
-
-    function initializeStorageVariables() {
-        storageVariables = {};
-
-        // Save the storage variables when the window closes.
-        _extra.w.addEventListener("unload", _extra.variableManager.saveStorageVariables);
-    }
-
-
-
-    function setUpStorageVariable(variableName, storage) {
-
-        // Initialize Storage Variables
-        if (!storageVariables) {
-            initializeStorageVariables();
-        }
-
-        // Check Storage
-        var storageValue = storage.getItem(variableName);
-        if (storageValue) {
-
-            // If this item can be of a number type, then write it to the variable as a number type.
-            if (!isNaN(storageValue)) {
-                storageValue = parseFloat(storageValue);
-            }
-
-
-
-            // We do have a valid value in storage
-            _extra.variableManager.setVariableValue(variableName, storageValue);
-        }
-
-        // Save this variable to our records so that we can save its value to storage at the appropriate time.
-        storageVariables[variableName] = {
-            "storage": storage
-        };
-    }
-
-    // Tap into the variable manager's callbacks. This is how we are notified of variables.
-    _extra.variableManager.prefixCallback.addCallback("ls", function (variableName) {
-        setUpStorageVariable(variableName, _extra.w.localStorage);
-    });
-
-    _extra.variableManager.prefixCallback.addCallback("ss", function (variableName) {
-        setUpStorageVariable(variableName, _extra.w.sessionStorage);
-    });
 });
 /**
  * Created with IntelliJ IDEA.
@@ -1414,6 +1202,668 @@ _extra.registerModule("slideManager_software", ["softwareInterfacesManager","Cal
 /**
  * Created with IntelliJ IDEA.
  * User: Tristan
+ * Date: 15/10/15
+ * Time: 6:06 PM
+ * To change this template use File | Settings | File Templates.
+ */
+_extra.registerModule("slideObjectManager_global", ["slideObjectManager_software"], function () {
+    "use strict";
+
+
+    /**
+     * List of proxy objects associated with slideObjects. This helps us avoid duplication.
+     * @type {{}}
+     */
+    var slideObjectProxies = {};
+
+    _extra.slideObjects.WILDCARD_CHARACTER = "@";
+    /**
+     * When entering a slide, the manager will look through all the slide objects on that slide and send the relevant
+     * slide object names to this callback.
+     * @type {_extra.classes.Callback}
+     */
+    _extra.slideObjects.enteredSlideChildObjectsCallbacks = new _extra.classes.Callback();
+    _extra.slideObjects.getSlideObjectProxy = function (id) {
+
+        var DOMElement;
+
+        // If we were passed in a DOM element rather than the id of a DOM element...
+        if (typeof id === "object") {
+            DOMElement = id;
+            id = DOMElement.id;
+        } else {
+            // We were given the id of a dom element, so we have to find it.
+            DOMElement = _extra.slideObjects.getSlideObjectElement(id);
+            //DOMElement = _extra.w.document.getElementById(id);
+
+            // If we could not find the slide object, then... BYE BYE!
+            if (!DOMElement) {
+                return null;
+            }
+        }
+
+        // Create new proxy object IF a proxy object hasn't already been created.
+        // Otherwise we'll return the previous object.
+        if (!slideObjectProxies[id]) {
+            slideObjectProxies[id] = _extra.factories.createSlideObjectProxy(id, DOMElement);
+        }
+
+        return slideObjectProxies[id];
+
+    };
+
+    _extra.slideObjects.getSlideObjectByName = function (query) {
+
+        if (query.indexOf(_extra.slideObjects.WILDCARD_CHARACTER) > -1) {
+
+            // There is a wildcard, so we'll return a list.
+            return _extra.slideObjects.getSlideObjectNamesMatchingWildcardName(query, true);
+
+        } else {
+
+            // No wildcard. Grab the object directly of this name.
+            return _extra.slideObjects.getSlideObjectProxy(query);
+
+        }
+
+    };
+
+    ///////////////////////////////////////////////////////////////////////
+    /////////////// ON SLIDE ENTER
+    ///////////////////////////////////////////////////////////////////////
+    _extra.slideManager.enterSlideCallback.addCallback("*", function () {
+
+        // Run through the list of slide object proxies and unload them
+        for (var slideObjectName in slideObjectProxies) {
+            if (slideObjectProxies.hasOwnProperty(slideObjectName)) {
+
+                slideObjectProxies[slideObjectName].unload();
+
+            }
+        }
+
+        // Clear the proxy list as we are on a new slide with new objects
+        slideObjectProxies = {};
+
+        var slideData = _extra.slideManager.getSlideData(),
+            slideObjectName;
+
+
+
+        for (var i = 0; i < slideData.slideObjects.length; i += 1) {
+            slideObjectName = slideData.slideObjects[i];
+
+            _extra.slideObjects.enteredSlideChildObjectsCallbacks.sendToCallback("*", slideObjectName);
+
+        }
+
+    });
+});
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 30/09/15
+ * Time: 3:52 PM
+ * To change this template use File | Settings | File Templates.
+ */
+_extra.registerModule("slideObjectManager_software", ["generalDataManager", "Callback", "slideManager_global"], function () {
+
+    "use strict";
+
+    _extra.slideObjects = {
+        "getSlideObjectElement": function(id) {
+            _extra.log("_extra.slideObjects.getSlideObjectElement has yet to be defined");
+            return _extra.w.document.getElementById(id);
+        }
+    };
+
+    ////////////////////
+    //////// ON LOAD CALLBACK
+    ////////////////////
+    return function () {
+
+    };
+
+}, _extra.STORYLINE);
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 27/09/15
+ * Time: 4:15 PM
+ * To change this template use File | Settings | File Templates.
+ */
+_extra.registerModule("softwareInterfacesManager", function () {
+
+    "use strict";
+
+    // References to storyline api
+    _extra.storyline = {
+        "api":_extra.w.story,
+        "variables":_extra.w.story.variables,
+        "player":_extra.w.player,
+        "slidesData":_extra.w.story.allSlides
+    };
+
+    // TODO: Find Storyline Version variable
+
+}, _extra.STORYLINE);
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 20/10/15
+ * Time: 9:38 AM
+ * To change this template use File | Settings | File Templates.
+ */
+_extra.registerModule("commandVariables",["generalVariableManager","stateManager_global"], function () {
+
+    "use strict";
+
+    var COMMAND_VARIABLE_PREFIX = "xcmnd",
+        variableName,
+        commandVariables = {};
+
+    ////////////////////////////////
+    ////////// Parameter Handler Types
+
+    // When a command variable is sent something like: 1,2,3,4
+    // These functions decide how the parameters should be sent to the function tied into the variable.
+    _extra.variableManager.parameterHandlers = {
+        // This one sends them like this:
+        // callback(1,2,3,4);
+        "sendParametersAsParameters": function (parameters, callback) {
+            callback.apply(_extra, parameters);
+        },
+        // This one sends them like this:
+        // callback(1);
+        // callback(2);
+        // callback(3);
+        // callback(4);
+        "executeOncePerParameter": function (parameters, callback) {
+
+            for (var i = 0; i < parameters.length; i += 1) {
+
+                callback(parameters[i]);
+
+            }
+
+        }
+    };
+
+    ////////////////////////////////
+    ////////// registerCommandVariable method
+
+    // There may be other parts of the program who wish to register their own command variables (perhaps individual ones for Captivate or Storyline)
+    // So we expose function to allow them to register.
+    _extra.variableManager.registerCommandVariable = function (variableSuffix, callback, parameterHandler) {
+        if (commandVariables[variableSuffix]) {
+            return;
+        }
+
+        if (!parameterHandler) {
+
+            // Default method for parameter handling is to invoke the callback once for each parameter.
+            parameterHandler = _extra.variableManager.parameterHandlers.executeOncePerParameter;
+
+        }
+
+        commandVariables[variableSuffix] = {
+            "callback":callback,
+            "parameterHandler": parameterHandler
+        };
+    };
+
+
+    ///////////////////////////////////////////////////////////////////////
+    /////////////// LIST OF COMMAND VARIABLES
+    ///////////////////////////////////////////////////////////////////////
+    _extra.variableManager.registerCommandVariable("Hide", _extra.slideObjects.hide);
+    _extra.variableManager.registerCommandVariable("Show", _extra.slideObjects.show);
+    _extra.variableManager.registerCommandVariable("Enable", _extra.slideObjects.enable);
+    _extra.variableManager.registerCommandVariable("Disable", _extra.slideObjects.disable);
+    _extra.variableManager.registerCommandVariable("EnableForMouse", _extra.slideObjects.enableForMouse);
+    _extra.variableManager.registerCommandVariable("DisableForMouse", _extra.slideObjects.disableForMouse);
+
+    _extra.variableManager.registerCommandVariable("ChangeState", _extra.slideObjects.states.change,
+                                                   _extra.variableManager.parameterHandlers.sendParametersAsParameters);
+
+
+
+
+    ///////////////////////////////////////////////////////////////////////
+    /////////////// SETTING UP COMMAND VARIABLES
+    ///////////////////////////////////////////////////////////////////////
+    return function () {
+
+
+
+        function listenForCommandVariableChange(variableName,variableMetadata) {
+
+            _extra.variableManager.listenForVariableChange(variableName, function () {
+
+
+                var value = _extra.variableManager.getVariableValue(variableName);
+
+                // If we have been given nothing, then we will not bother informing the command variable.
+                // This likely comes from clearing the command variable after enacting its command.
+                if (value !== "") {
+
+                    // Remove spaces from value string
+                    value = value.replace(/\s+/g,'');
+                    var parameters = value.split(",");
+                    variableMetadata.parameterHandler(parameters, variableMetadata.callback);
+                    _extra.variableManager.setVariableValue(variableName,"");
+
+                }
+
+
+            });
+        }
+
+        // We will now go through all the command variables and set them up.
+        for (var variableSuffix in commandVariables) {
+            if (commandVariables.hasOwnProperty(variableSuffix)) {
+
+                variableName = COMMAND_VARIABLE_PREFIX + variableSuffix;
+
+
+
+                // Check to find valid variable.
+                if (!_extra.variableManager.hasVariable(variableName)) {
+
+                    // Variable with normal name doesn't exist. Try to find one with a semicolon in front.
+                    variableName = "_" + variableName;
+
+                    if (!_extra.variableManager.hasVariable(variableName)) {
+
+                        // There is no valid variable by this name. Continue to the next one.
+                        continue;
+
+                    }
+
+                }
+
+                // Now set up the variable's behaviour
+                listenForCommandVariableChange(variableName, commandVariables[variableSuffix]);
+
+            }
+        }
+
+
+        // Unload
+        commandVariables = null;
+        _extra.variableManager.registerCommandVariable = null;
+        _extra.variableManager.parameterHandlers = null;
+
+    };
+
+
+
+
+
+});
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 27/09/15
+ * Time: 8:10 AM
+ * To change this template use File | Settings | File Templates.
+ */
+_extra.registerModule("generalVariableManager", ["softwareInterfacesManager", "Callback"], function () {
+
+    "use strict";
+    //var variables = _extra.storyline
+
+    _extra.variableManager = {
+        "prefixCallback": new _extra.classes.Callback(),
+        "getVariableValue": function (variableName) {
+            return _extra.storyline.player.GetVar(variableName);
+        },
+        "setVariableValue": function (variableName, value) {
+            _extra.storyline.player.SetVar(variableName, value);
+        },
+        "hasVariable": function (variableName) {
+            return _extra.storyline.variables.hasOwnProperty(variableName);
+        },
+        "listenForVariableChange": function (variableName, callback) {
+            _extra.error("_extra.variableManager.listenForVariableChange logic has yet to be implemented");
+        },
+        "stopListeningForVariableChange": function(variableName, callback) {
+            _extra.error("_extra.variableManager.stopListeningForVariableChange logic has yet to be implemented");
+        }
+    };
+
+    return function () {
+
+        var splitName,
+            prefix;
+
+        for (var name in _extra.storyline.variables) {
+            // TODO: Find a way to extract this so that the Captivate and Storyline versions aren't duplicating the same code.
+            if (_extra.storyline.variables.hasOwnProperty(name)) {
+
+                splitName = name.split("_");
+                prefix = splitName[0];
+
+                // To support all variables as having an underscore '_' in front of their name
+                // we'll check if the first index is empty (as would be true in a variable name such as _ls_myVariable)
+                // If so, we'll use the second index as the variable's prefix (in that example it would be 'ls')
+                if (prefix === "") {
+                    prefix = splitName[1];
+                }
+
+                prefix = prefix.toLowerCase();
+
+                // If someone has added a callback for this kind of prefix.
+                _extra.variableManager.prefixCallback.sendToCallback(prefix, name);
+
+            }
+        }
+
+        // Dispatch event to let the rest of the modules know the variables have been initialized.
+        _extra.eventDispatcher.dispatchEvent(new Event("variablesInitialized"));
+
+    };
+
+}, _extra.STORYLINE);
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 29/10/15
+ * Time: 10:46 AM
+ * To change this template use File | Settings | File Templates.
+ */
+_extra.registerModule("getVariableManager", ["generalVariableManager"] ,function () {
+
+    "use strict";
+
+    var getVariables;
+
+    // Tap into the variable manager's callbacks. This is how we are notified of variables.
+    _extra.variableManager.prefixCallback.addCallback("get", function (variableName) {
+
+        ///////////////////////////////////////////////////////////////////////
+        /////////////// Retrieve GET variables
+        ///////////////////////////////////////////////////////////////////////
+        if (!getVariables) {
+            // Set up get variables.
+            // This should only happen once, so that we don't waste cpu.
+
+            // Get variable code comes from Andy E's comment at the site bellow.
+            // http://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript
+            var match,
+                pl     = /\+/g,  // Regex for replacing addition symbol with a space
+                search = /([^&=]+)=?([^&]*)/g,
+                decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
+                query  = _extra.w.document.location.search.substring(1),
+                GETVariableName;
+
+            getVariables = {};
+            while ((match = search.exec(query)) !== null) {
+
+                GETVariableName = decode(match[1]);
+                // Check if the variable name lacks the 'get_' prefix
+                if (GETVariableName.substr(0,4).toLowerCase() !== "get_" &&
+                    GETVariableName.substr(0,5).toLowerCase() !== "_get_") {
+
+                    GETVariableName = "get_" + GETVariableName;
+                }
+
+                // Assign to our getVariables library.
+                getVariables[GETVariableName] = decode(match[2]);
+            }
+
+        }
+
+
+
+        ///////////////////////////////////////////////////////////////////////
+        /////////////// Assign GET variables to Captivate Variables
+        ///////////////////////////////////////////////////////////////////////
+        var result = getVariables[variableName];
+
+        // If we have failed to get the result of the variable because it has an underscore at the start of its name.
+        if (!result && variableName.charAt(0) === "_") {
+            result = getVariables[variableName.substr(1,variableName.length)];
+        }
+
+        // If this variable has not been defined
+        if (result === undefined) {
+            result = null;
+
+        // If this is a number;
+        } else if (!isNaN(result)) {
+            result = parseFloat(result);
+        }
+
+        // Set variable value!
+        _extra.variableManager.setVariableValue(variableName, result);
+
+
+        // TODO: Unload this after initialization.
+
+    });
+});
+/*global _extra*/
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 24/09/15
+ * Time: 12:21 PM
+ * To change this template use File | Settings | File Templates.
+ */
+_extra.registerModule("localStorageManager", ["generalVariableManager"], function () {
+
+    "use strict";
+
+
+    var storageVariables;
+
+    _extra.variableManager.saveStorageVariables = function () {
+        var storageVariableInfo,
+            variableName;
+
+        for (variableName in storageVariables) {
+
+            if (storageVariables.hasOwnProperty(variableName)) {
+
+                storageVariableInfo = storageVariables[variableName];
+                storageVariableInfo.storage.setItem(variableName,
+                                                    _extra.variableManager.getVariableValue(variableName));
+
+            }
+
+        }
+
+    };
+
+    function initializeStorageVariables() {
+        storageVariables = {};
+
+        // Save the storage variables when the window closes.
+        _extra.w.addEventListener("unload", _extra.variableManager.saveStorageVariables);
+    }
+
+
+
+    function setUpStorageVariable(variableName, storage) {
+
+        // Initialize Storage Variables
+        if (!storageVariables) {
+            initializeStorageVariables();
+        }
+
+        // Check Storage
+        var storageValue = storage.getItem(variableName);
+        if (storageValue) {
+
+            // If this item can be of a number type, then write it to the variable as a number type.
+            if (!isNaN(storageValue)) {
+                storageValue = parseFloat(storageValue);
+            }
+
+
+
+            // We do have a valid value in storage
+            _extra.variableManager.setVariableValue(variableName, storageValue);
+        }
+
+        // Save this variable to our records so that we can save its value to storage at the appropriate time.
+        storageVariables[variableName] = {
+            "storage": storage
+        };
+    }
+
+    // Tap into the variable manager's callbacks. This is how we are notified of variables.
+    _extra.variableManager.prefixCallback.addCallback("ls", function (variableName) {
+        setUpStorageVariable(variableName, _extra.w.localStorage);
+    });
+
+    _extra.variableManager.prefixCallback.addCallback("ss", function (variableName) {
+        setUpStorageVariable(variableName, _extra.w.sessionStorage);
+    });
+});
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 30/09/15
+ * Time: 4:14 PM
+ * To change this template use File | Settings | File Templates.
+ */
+_extra.registerModule("BaseSlideObjectDataProxy", function () {
+    "use strict";
+    function BaseSlideObjectData(name, data, type) {
+        this._name = name;
+        this._data = data;
+        this._type = type;
+    }
+
+    BaseSlideObjectData.prototype = {
+        get name(){
+            return this._name;
+        },
+        get data() {
+            return this._data;
+        },
+        get type(){
+            return this._type;
+        },
+        get states() {
+            if (!this._states) {
+                this._states = [];
+
+                _extra.error("BaseSlideObjectData.states has yet to be implemented");
+            }
+
+            return this._states;
+        }
+    };
+    _extra.registerClass("BaseSlideObjectDataProxy", BaseSlideObjectData);
+});
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 20/10/15
+ * Time: 7:07 AM
+ * To change this template use File | Settings | File Templates.
+ */
+_extra.registerModule("BaseSlideObjectProxy", function () {
+
+    "use strict";
+
+    function BaseSlideObjectProxy(element, data) {
+        this.DOMElement = element;
+        this._data = data;
+    }
+
+    BaseSlideObjectProxy.prototype = {
+        get name(){
+            return this.DOMElement.id;
+        },
+        get data() {
+            return this._data;
+        },
+        get type(){
+            return this._data.type;
+        }
+    };
+
+    BaseSlideObjectProxy.prototype.changeState = function (stateName) {
+        _extra.slideObjects.states.change(this.name, stateName);
+    };
+
+    BaseSlideObjectProxy.prototype.unload = function () {
+
+    };
+
+    _extra.registerClass("BaseSlideObjectProxy", BaseSlideObjectProxy, _extra.STORYLINE);
+
+}, _extra.STORYLINE);
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 15/10/15
+ * Time: 3:05 PM
+ * To change this template use File | Settings | File Templates.
+ */
+_extra.registerModule("SlideDataProxy", function () {
+
+    "use strict";
+
+    function SlideDataProxy(data) {
+        this.name = data.title;
+    }
+
+    _extra.registerClass("SlideDataProxy", SlideDataProxy, _extra.STORYLINE);
+
+}, _extra.STORYLINE);
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 27/10/15
+ * Time: 11:00 AM
+ * To change this template use File | Settings | File Templates.
+ */
+_extra.registerModule("StateDataProxy",function () {
+
+    "use strict";
+
+    function StateDataProxy() {
+
+    }
+
+    _extra.registerClass("StateDataProxy", StateDataProxy);
+
+}, _extra.CAPTIVATE);
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 30/09/15
+ * Time: 6:09 PM
+ * To change this template use File | Settings | File Templates.
+ */
+_extra.registerModule("TextEntryBoxDataProxy", ["BaseSlideObjectDataProxy"], function () {
+    "use strict";
+
+    function TextEntryBoxDataProxy(name, data, type) {
+        // Call super constructor
+        _extra.classes.BaseSlideObjectDataProxy.call(this, name, data, type);
+    }
+
+
+
+
+    _extra.registerClass("TextEntryBoxDataProxy", TextEntryBoxDataProxy,"BaseSlideObjectDataProxy", _extra.STORYLINE);
+
+    Object.defineProperty(TextEntryBoxDataProxy.prototype,"variable", {
+            get: function() {
+                _extra.error("TextEntryBoxDataProxy.variable has yet to be defined!");
+                return null;
+            }
+        });
+}, _extra.STORYLINE);
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
  * Date: 1/10/15
  * Time: 2:37 PM
  * To change this template use File | Settings | File Templates.
@@ -1444,11 +1894,47 @@ _extra.registerModule("globalSlideObjectTypes",function () {
 /**
  * Created with IntelliJ IDEA.
  * User: Tristan
+ * Date: 29/10/15
+ * Time: 1:07 PM
+ * To change this template use File | Settings | File Templates.
+ */
+_extra.registerModule("slideObjectModelManager", ["slideObjectManager_global", "Model"], function () {
+
+    ////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
+    //////////////////// THE SLIDE OBJECT MODEL
+    ////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
+    ///////////// The slide object model is used in the following cases.
+    ///////////// Say we have a command variable that sets whether a slide object is mouse enabled or not.
+    ///////////// If we set 'slide_object_1' to be mouse enabled on the same slide it's on, well that's simple enough.
+    ///////////// But, what if it was set on another slide, and needed to be applied when we reach the slide with
+    ///////////// 'slide_object_1'?
+    ///////////// What's more, what if we do set 'slide_object_1' to be mouse enabled while on its slide, then go
+    ///////////// to the next slide, then come back? It must remember that 'slide_object_1' should be mouse enabled.
+    ///////////// To do this, we record the slide object's details here in this model. The slide object will always
+    ///////////// come here to reference whether it should be mouse enabled or disabled. These methods are never
+    ///////////// directly changed on the slide object. The model is changed, and the slide object updates itself.
+    ///////////// That way we have consistency. And it's prettier.
+
+
+    "use strict";
+
+    _extra.slideObjects.model = new _extra.classes.Model();
+    // And that's that problem fixed.
+    // :-)
+
+    // TODO: Handle situation where we update the model for a slide object that hasn't had a proxy made for it.
+    // TODO: Handle moving into a slide and creating proxies for all objects with models.
+});
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
  * Date: 20/10/15
  * Time: 4:24 PM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("registerStateMetaData",["slideObjectManager_global", "SlideObjectStateManager", "slideManager_global"], function () {
+_extra.registerModule("registerStateMetaData",["slideObjectManager_global", "SlideObjectStateManager", "slideManager_global","stateManager_global"], function () {
 
     "use strict";
 
@@ -1457,62 +1943,64 @@ _extra.registerModule("registerStateMetaData",["slideObjectManager_global", "Sli
         MOUSEDOWN = "d",
         NORMAL = "n";
 
-    _extra.slideObjects.states = {
-
-        ///////////////////////////////////////////////////////////////////////
-        /////////////// Register States for Automatic Switching
-        ///////////////////////////////////////////////////////////////////////
-        registerStateMetaData: function (slideObjectName, data) {
-
-            var slideObjectProxy,
-                currentSlideID = _extra.slideManager.currentSlideID,
-                currentSlideStateManagers;
-
-            // If this is the first slide object to be registering for the current slide
-            if (!stateManagers[currentSlideID]) {
-                stateManagers[currentSlideID] = {};
-            }
-            currentSlideStateManagers = stateManagers[currentSlideID];
-
-            // If we have already details about this object here, then something has gone wrong.
-            if (currentSlideStateManagers[slideObjectName]) {
-                throw new Error("At _extra.slideObjects.states.registerStateMetaData, tried to register data for '" + slideObjectName + "' twice. " +
-                "Has unloading of this data from a previous slide been unsuccessful?");
-
-            }
 
 
-            slideObjectProxy = _extra.slideObjects.getSlideObjectByName(slideObjectName);
-            currentSlideStateManagers[slideObjectName] = new _extra.classes.SlideObjectStateManager(slideObjectProxy, data);
-        },
-        "isAutomaticallyChangingStates":function (comparisonName) {
+    ///////////////////////////////////////////////////////////////////////
+    /////////////// Register States for Automatic Switching
+    ///////////////////////////////////////////////////////////////////////
+    _extra.slideObjects.states.registerStateMetaData = function (slideObjectName, data) {
 
-            var slideManager,
-                slideID,
-                slideObjectName;
+        var slideObjectProxy,
+            currentSlideID = _extra.slideManager.currentSlideID,
+            currentSlideStateManagers;
 
-            for (slideID in stateManagers) {
-                if (stateManagers.hasOwnProperty(slideID)) {
+        // If this is the first slide object to be registering for the current slide
+        if (!stateManagers[currentSlideID]) {
+            stateManagers[currentSlideID] = {};
+        }
+        currentSlideStateManagers = stateManagers[currentSlideID];
 
-                    slideManager = stateManagers[slideID];
-
-                    for (slideObjectName in slideManager) {
-                        if (slideManager.hasOwnProperty(slideObjectName)) {
-
-                            if (slideObjectName === comparisonName) {
-                                return true;
-                            }
-
-                        }
-                    }
-
-                }
-            }
-
-            return false;
+        // If we have already details about this object here, then something has gone wrong.
+        if (currentSlideStateManagers[slideObjectName]) {
+            _extra.error("At _extra.slideObjects.states.registerStateMetaData, tried to register data for '" + slideObjectName + "' twice. " +
+            "Has unloading of this data from a previous slide been unsuccessful?");
 
         }
+
+
+        slideObjectProxy = _extra.slideObjects.getSlideObjectByName(slideObjectName);
+        currentSlideStateManagers[slideObjectName] = new _extra.classes.SlideObjectStateManager(slideObjectProxy, data);
     };
+
+
+    _extra.slideObjects.states.isAutomaticallyChangingStates = function (comparisonName) {
+
+        var slideManager,
+            slideID,
+            slideObjectName;
+
+        for (slideID in stateManagers) {
+            if (stateManagers.hasOwnProperty(slideID)) {
+
+                slideManager = stateManagers[slideID];
+
+                for (slideObjectName in slideManager) {
+                    if (slideManager.hasOwnProperty(slideObjectName)) {
+
+                        if (slideObjectName === comparisonName) {
+                            return true;
+                        }
+
+                    }
+                }
+
+            }
+        }
+
+        return false;
+
+    };
+
 
     ///////////////////////////////////////////////////////////////////////
     /////////////// Unload State Managers From Previous Slides
@@ -1552,7 +2040,6 @@ _extra.registerModule("registerStateMetaData",["slideObjectManager_global", "Sli
     ///////////////////////////////////////////////////////////////////////
     _extra.slideObjects.enteredSlideChildObjectsCallbacks.addCallback("*", function (slideObjectName) {
 
-        // TODO: Unload the stateManagers from the previous slide.
 
         // This function is sent the name of every slide object on the current slide, one by one.
         // It will analyse its states to see if there are any that interact with extra.
@@ -1574,6 +2061,11 @@ _extra.registerModule("registerStateMetaData",["slideObjectManager_global", "Sli
                 case "over":
                 case "mouseover":
                     return ROLLOVER;
+
+                case "normal":
+                    // Although the default case of returning 'null' will eventually be turned to NORMAL anyway,
+                    // We have to return NORMAL here so that the 'normal' keyword is removed from the splitName array in getMouseEvent().
+                    return NORMAL;
 
                 // Not a mouse event
                 default :
@@ -1609,6 +2101,7 @@ _extra.registerModule("registerStateMetaData",["slideObjectManager_global", "Sli
         function getVariablesData(splitName, fullName) {
             var variableData = {},
                 previousIndexVariable = false,
+                potentialVariableName,
                 segment;
 
             // There are multiple places in the loop below where we might want to register a variable, so we abstract
@@ -1618,7 +2111,7 @@ _extra.registerModule("registerStateMetaData",["slideObjectManager_global", "Sli
                 // x_var_var
                 if (variableData.hasOwnProperty(variableName)) {
 
-                    throw new Error("State name '" + fullName + "' illegally tried to register '" + variableName + "' twice.");
+                    _extra.error("State name '" + fullName + "' illegally tried to register '" + variableName + "' twice.");
 
                 } else {
 
@@ -1645,6 +2138,10 @@ _extra.registerModule("registerStateMetaData",["slideObjectManager_global", "Sli
 
             ////////////////////////////////
             ////////// Begin looping through the state names.
+
+            // x_var_ls_variable_name
+            // Currently the above format is not supported as I can't think of a way to confirm that
+            // 'ls' is part of a a variable name and not the value that 'var' should be set to.
             for (var i = 0; i < splitName.length; i += 1) {
 
                 segment = splitName[i];
@@ -1666,7 +2163,7 @@ _extra.registerModule("registerStateMetaData",["slideObjectManager_global", "Sli
                             previousIndexVariable = null;
                         }
 
-                        // x_var_1
+                    // x_var_1
                     } else {
 
                         variableData[previousIndexVariable] = parseInt(segment);
@@ -1676,16 +2173,35 @@ _extra.registerModule("registerStateMetaData",["slideObjectManager_global", "Sli
 
                 } else {
 
+                    // If we have been dealing with a variable name that has underscores, then we may have been
+                    // building up the variable's name in the potentialVariableName
+                    if (potentialVariableName) {
+                        segment = potentialVariableName + "_" + segment;
+                        potentialVariableName = null;
+                    }
                     // x_var
                     if (_extra.variableManager.hasVariable(segment)) {
                         registerVariable(segment);
-                    // x_invalidVar
+                        // If the previous index was a value, then this index MUST be a variable.
+                        previousIndexVariable = segment;
+
+                    // x_invalidVar OR x_var_name
                     } else {
-                        throw new Error("Could not find variable by the name of '" + segment + "' as present in state name: '" + fullName + "'");
+
+                        // x_invalidVar
+                        if (i >= splitName.length - 1) {
+                            _extra.error("Could not find variable by the name of '" + segment +
+                                         "' as present in state name: '" + fullName + "'");
+                        // x_var_name
+                        } else {
+                            // We have yet to reach the end of the array, so there's still potential this is an invalid
+                            // name, but for the moment we'll assume we're working with a variable name with
+                            // underscores.
+                            potentialVariableName = segment;
+                        }
                     }
 
-                    // If the previous index was a value, then this index MUST be a variable.
-                    previousIndexVariable = segment;
+
                 }
 
 
@@ -1706,8 +2222,8 @@ _extra.registerModule("registerStateMetaData",["slideObjectManager_global", "Sli
 
 
 
-
         for (var i = 0; i < data.states.length; i += 1) {
+
             stateName = data.states[i];
 
             if (stateName.substr(0,2).toLowerCase() === "x_") {
@@ -1726,12 +2242,40 @@ _extra.registerModule("registerStateMetaData",["slideObjectManager_global", "Sli
             }
         }
 
+
         if (Object.keys(slideObjectMetaData).length > 0) {
             // If this variable has a value, it means we must have run across a valid method at some point.
             // Therefore, we register the meta data.
             _extra.slideObjects.states.registerStateMetaData(slideObjectName, slideObjectMetaData);
         }
 
+
     });
 
 });
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 27/10/15
+ * Time: 7:24 AM
+ * To change this template use File | Settings | File Templates.
+ */
+_extra.registerModule("stateManager_global",["stateManager_software"],function () {
+    "use strict";
+
+
+
+});
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 27/10/15
+ * Time: 7:24 AM
+ * To change this template use File | Settings | File Templates.
+ */
+_extra.registerModule("stateManager_software",["Callback","slideObjectManager_global"],function () {
+    "use strict";
+
+
+
+}, _extra.STORYLINE);

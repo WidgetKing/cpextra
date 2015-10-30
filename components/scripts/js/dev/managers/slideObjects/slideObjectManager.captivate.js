@@ -9,49 +9,54 @@
 _extra.registerModule("slideObjectManager_software", ["generalDataManager", "Callback", "slideManager_global"], function () {
    "use strict";
 
-    /**
-     * This function takes a query, converts it into a list of slide objects, then applies a function to those slide objects.
-     *
-     * Useful for enhancing Captivate's own internal show, hide, and enable, disable functions.
-     */
-    function enactFunctionOnSlideObjects(query, method) {
-        if (query.indexOf(_extra.slideObjects.WILDCARD_CHARACTER) > -1) {
-
-            var list = _extra.slideObjects.getSlideObjectNamesMatchingWildcardName(query, false);
-
-            for (var i = 0; i < list.length; i += 1) {
-
-                method(list[i]);
-
-            }
-
-        } else {
-
-            method(query);
-
-        }
-    }
 
     _extra.slideObjects = {
         "allObjectsOfTypeCallback": new _extra.classes.Callback(),
+        /**
+         * This function takes a query, converts it into a list of slide objects, then applies a function to those slide objects.
+         *
+         * Useful for enhancing Captivate's own internal show, hide, and enable, disable functions.
+         */
+        "enactFunctionOnSlideObjects": function (query, method) {
+            if (query.indexOf(_extra.slideObjects.WILDCARD_CHARACTER) > -1) {
+
+                var list = _extra.slideObjects.getSlideObjectNamesMatchingWildcardName(query, false);
+
+                for (var i = 0; i < list.length; i += 1) {
+
+                    method(list[i]);
+
+                }
+
+            } else {
+
+                method(query);
+
+            }
+        },
         "getSlideObjectElement": function(id) {
             return _extra.w.document.getElementById("re-" + id + "c");
         },
         "hide":function (query) {
-            enactFunctionOnSlideObjects(query, _extra.captivate.api.hide);
+            _extra.slideObjects.enactFunctionOnSlideObjects(query, _extra.captivate.api.hide);
         },
         "show":function (query) {
-            enactFunctionOnSlideObjects(query, _extra.captivate.api.show);
+            _extra.slideObjects.enactFunctionOnSlideObjects(query, _extra.captivate.api.show);
         },
         "enable":function (query) {
-            enactFunctionOnSlideObjects(query, _extra.captivate.api.enable);
+            _extra.slideObjects.enactFunctionOnSlideObjects(query, _extra.captivate.api.enable);
         },
         "disable":function (query) {
-            enactFunctionOnSlideObjects(query, _extra.captivate.api.disable);
+            _extra.slideObjects.enactFunctionOnSlideObjects(query, _extra.captivate.api.disable);
         },
-        "changeState":function (query, state) {
-            enactFunctionOnSlideObjects(query, function (slideObjectName) {
-                _extra.captivate.api.changeState(slideObjectName, state);
+        "enableForMouse":function (query) {
+            _extra.slideObjects.enactFunctionOnSlideObjects(query, function (slideObjectName) {
+                _extra.slideObjects.model.write(slideObjectName, "enableForMouse", true);
+            });
+        },
+        "disableForMouse":function (query) {
+            _extra.slideObjects.enactFunctionOnSlideObjects(query, function (slideObjectName) {
+                _extra.slideObjects.model.write(slideObjectName, "enableForMouse", false);
             });
         },
         "getSlideObjectNamesMatchingWildcardName": function (query, returnProxies) {

@@ -5,7 +5,7 @@
  * Time: 9:38 AM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("commandVariables",["generalVariableManager","slideObjectManager_global"], function () {
+_extra.registerModule("commandVariables",["generalVariableManager","stateManager_global"], function () {
 
     "use strict";
 
@@ -71,8 +71,10 @@ _extra.registerModule("commandVariables",["generalVariableManager","slideObjectM
     _extra.variableManager.registerCommandVariable("Show", _extra.slideObjects.show);
     _extra.variableManager.registerCommandVariable("Enable", _extra.slideObjects.enable);
     _extra.variableManager.registerCommandVariable("Disable", _extra.slideObjects.disable);
+    _extra.variableManager.registerCommandVariable("EnableForMouse", _extra.slideObjects.enableForMouse);
+    _extra.variableManager.registerCommandVariable("DisableForMouse", _extra.slideObjects.disableForMouse);
 
-    _extra.variableManager.registerCommandVariable("ChangeState", _extra.slideObjects.changeState,
+    _extra.variableManager.registerCommandVariable("ChangeState", _extra.slideObjects.states.change,
                                                    _extra.variableManager.parameterHandlers.sendParametersAsParameters);
 
 

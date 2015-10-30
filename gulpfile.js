@@ -49,7 +49,9 @@
                                ctr + "05_CE_SlideTests/wr/w_5235/scripts",
                                ctr + "06_CE_Command_Variables/wr/w_5235/scripts",
                                ctr + "06_CE_Command_Variables/wr/w_5687/scripts",
-                               ctr + "07_CE_Slide_Object_State_Tests/wr/w_5235/scripts"],
+                               ctr + "07_CE_Slide_Object_State_Tests/wr/w_5235/scripts",
+                               ctr + "08_CE_Typed_Variables/wr/w_5235/scripts",
+                               ctr + "09_CE_Get_Variables/wr/w_5235/scripts"],
 
         storylineExtraDevLocation = "builds/development/storyline_extra_web_object",
         storylineExtraDevFileName = "storyline_extra.js",

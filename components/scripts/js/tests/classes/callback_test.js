@@ -51,4 +51,22 @@ describe("A suite for testing the callback class", function() {
         cb.clear();
         expect(cb.hasCallbackFor("foo")).toBe(false);
     });
+
+    it("should allow us to remove a specific callback", function () {
+        cb.removeCallback("foo", a.dummy);
+        cb.sendToCallback("foo","bar");
+        expect(a.dummy).not.toHaveBeenCalled();
+        expect(cb.hasCallbackFor("foo")).toBe(false);
+    });
+
+    it("should be able to use a function to loop through all the callbacks", function () {
+        var anotherDummy = jasmine.createSpy("anotherDummy");
+        var spy = jasmine.createSpy("spy");
+        cb.addCallback("foo", anotherDummy);
+        cb.forEach(spy);
+
+        expect(spy.calls.count()).toEqual(2);
+        expect(spy.calls.argsFor(0)).toEqual(["foo", a.dummy]);
+        expect(spy.calls.argsFor(1)).toEqual(["foo", anotherDummy]);
+    });
 });

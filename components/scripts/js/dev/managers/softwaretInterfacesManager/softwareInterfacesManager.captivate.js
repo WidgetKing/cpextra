@@ -19,6 +19,7 @@ _extra.registerModule("softwareInterfacesManager", function () {
         "eventDispatcher":_extra.w.cpAPIEventEmitter,
         "model":_extra.w.cp.model,
         "allSlideObjectsData":_extra.w.cp.model.data,
+        "movie":_extra.w.cp.movie,
         "events":{
             /**
              * Event Data:

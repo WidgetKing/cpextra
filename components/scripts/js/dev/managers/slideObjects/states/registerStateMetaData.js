@@ -5,7 +5,7 @@
  * Time: 4:24 PM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("registerStateMetaData",["slideObjectManager_global", "SlideObjectStateManager", "slideManager_global"], function () {
+_extra.registerModule("registerStateMetaData",["slideObjectManager_global", "SlideObjectStateManager", "slideManager_global","stateManager_global"], function () {
 
     "use strict";
 
@@ -14,62 +14,64 @@ _extra.registerModule("registerStateMetaData",["slideObjectManager_global", "Sli
         MOUSEDOWN = "d",
         NORMAL = "n";
 
-    _extra.slideObjects.states = {
-
-        ///////////////////////////////////////////////////////////////////////
-        /////////////// Register States for Automatic Switching
-        ///////////////////////////////////////////////////////////////////////
-        registerStateMetaData: function (slideObjectName, data) {
-
-            var slideObjectProxy,
-                currentSlideID = _extra.slideManager.currentSlideID,
-                currentSlideStateManagers;
-
-            // If this is the first slide object to be registering for the current slide
-            if (!stateManagers[currentSlideID]) {
-                stateManagers[currentSlideID] = {};
-            }
-            currentSlideStateManagers = stateManagers[currentSlideID];
-
-            // If we have already details about this object here, then something has gone wrong.
-            if (currentSlideStateManagers[slideObjectName]) {
-                throw new Error("At _extra.slideObjects.states.registerStateMetaData, tried to register data for '" + slideObjectName + "' twice. " +
-                "Has unloading of this data from a previous slide been unsuccessful?");
-
-            }
 
 
-            slideObjectProxy = _extra.slideObjects.getSlideObjectByName(slideObjectName);
-            currentSlideStateManagers[slideObjectName] = new _extra.classes.SlideObjectStateManager(slideObjectProxy, data);
-        },
-        "isAutomaticallyChangingStates":function (comparisonName) {
+    ///////////////////////////////////////////////////////////////////////
+    /////////////// Register States for Automatic Switching
+    ///////////////////////////////////////////////////////////////////////
+    _extra.slideObjects.states.registerStateMetaData = function (slideObjectName, data) {
 
-            var slideManager,
-                slideID,
-                slideObjectName;
+        var slideObjectProxy,
+            currentSlideID = _extra.slideManager.currentSlideID,
+            currentSlideStateManagers;
 
-            for (slideID in stateManagers) {
-                if (stateManagers.hasOwnProperty(slideID)) {
+        // If this is the first slide object to be registering for the current slide
+        if (!stateManagers[currentSlideID]) {
+            stateManagers[currentSlideID] = {};
+        }
+        currentSlideStateManagers = stateManagers[currentSlideID];
 
-                    slideManager = stateManagers[slideID];
-
-                    for (slideObjectName in slideManager) {
-                        if (slideManager.hasOwnProperty(slideObjectName)) {
-
-                            if (slideObjectName === comparisonName) {
-                                return true;
-                            }
-
-                        }
-                    }
-
-                }
-            }
-
-            return false;
+        // If we have already details about this object here, then something has gone wrong.
+        if (currentSlideStateManagers[slideObjectName]) {
+            _extra.error("At _extra.slideObjects.states.registerStateMetaData, tried to register data for '" + slideObjectName + "' twice. " +
+            "Has unloading of this data from a previous slide been unsuccessful?");
 
         }
+
+
+        slideObjectProxy = _extra.slideObjects.getSlideObjectByName(slideObjectName);
+        currentSlideStateManagers[slideObjectName] = new _extra.classes.SlideObjectStateManager(slideObjectProxy, data);
     };
+
+
+    _extra.slideObjects.states.isAutomaticallyChangingStates = function (comparisonName) {
+
+        var slideManager,
+            slideID,
+            slideObjectName;
+
+        for (slideID in stateManagers) {
+            if (stateManagers.hasOwnProperty(slideID)) {
+
+                slideManager = stateManagers[slideID];
+
+                for (slideObjectName in slideManager) {
+                    if (slideManager.hasOwnProperty(slideObjectName)) {
+
+                        if (slideObjectName === comparisonName) {
+                            return true;
+                        }
+
+                    }
+                }
+
+            }
+        }
+
+        return false;
+
+    };
+
 
     ///////////////////////////////////////////////////////////////////////
     /////////////// Unload State Managers From Previous Slides
@@ -109,7 +111,6 @@ _extra.registerModule("registerStateMetaData",["slideObjectManager_global", "Sli
     ///////////////////////////////////////////////////////////////////////
     _extra.slideObjects.enteredSlideChildObjectsCallbacks.addCallback("*", function (slideObjectName) {
 
-        // TODO: Unload the stateManagers from the previous slide.
 
         // This function is sent the name of every slide object on the current slide, one by one.
         // It will analyse its states to see if there are any that interact with extra.
@@ -131,6 +132,11 @@ _extra.registerModule("registerStateMetaData",["slideObjectManager_global", "Sli
                 case "over":
                 case "mouseover":
                     return ROLLOVER;
+
+                case "normal":
+                    // Although the default case of returning 'null' will eventually be turned to NORMAL anyway,
+                    // We have to return NORMAL here so that the 'normal' keyword is removed from the splitName array in getMouseEvent().
+                    return NORMAL;
 
                 // Not a mouse event
                 default :
@@ -166,6 +172,7 @@ _extra.registerModule("registerStateMetaData",["slideObjectManager_global", "Sli
         function getVariablesData(splitName, fullName) {
             var variableData = {},
                 previousIndexVariable = false,
+                potentialVariableName,
                 segment;
 
             // There are multiple places in the loop below where we might want to register a variable, so we abstract
@@ -175,7 +182,7 @@ _extra.registerModule("registerStateMetaData",["slideObjectManager_global", "Sli
                 // x_var_var
                 if (variableData.hasOwnProperty(variableName)) {
 
-                    throw new Error("State name '" + fullName + "' illegally tried to register '" + variableName + "' twice.");
+                    _extra.error("State name '" + fullName + "' illegally tried to register '" + variableName + "' twice.");
 
                 } else {
 
@@ -202,6 +209,10 @@ _extra.registerModule("registerStateMetaData",["slideObjectManager_global", "Sli
 
             ////////////////////////////////
             ////////// Begin looping through the state names.
+
+            // x_var_ls_variable_name
+            // Currently the above format is not supported as I can't think of a way to confirm that
+            // 'ls' is part of a a variable name and not the value that 'var' should be set to.
             for (var i = 0; i < splitName.length; i += 1) {
 
                 segment = splitName[i];
@@ -223,7 +234,7 @@ _extra.registerModule("registerStateMetaData",["slideObjectManager_global", "Sli
                             previousIndexVariable = null;
                         }
 
-                        // x_var_1
+                    // x_var_1
                     } else {
 
                         variableData[previousIndexVariable] = parseInt(segment);
@@ -233,16 +244,35 @@ _extra.registerModule("registerStateMetaData",["slideObjectManager_global", "Sli
 
                 } else {
 
+                    // If we have been dealing with a variable name that has underscores, then we may have been
+                    // building up the variable's name in the potentialVariableName
+                    if (potentialVariableName) {
+                        segment = potentialVariableName + "_" + segment;
+                        potentialVariableName = null;
+                    }
                     // x_var
                     if (_extra.variableManager.hasVariable(segment)) {
                         registerVariable(segment);
-                    // x_invalidVar
+                        // If the previous index was a value, then this index MUST be a variable.
+                        previousIndexVariable = segment;
+
+                    // x_invalidVar OR x_var_name
                     } else {
-                        throw new Error("Could not find variable by the name of '" + segment + "' as present in state name: '" + fullName + "'");
+
+                        // x_invalidVar
+                        if (i >= splitName.length - 1) {
+                            _extra.error("Could not find variable by the name of '" + segment +
+                                         "' as present in state name: '" + fullName + "'");
+                        // x_var_name
+                        } else {
+                            // We have yet to reach the end of the array, so there's still potential this is an invalid
+                            // name, but for the moment we'll assume we're working with a variable name with
+                            // underscores.
+                            potentialVariableName = segment;
+                        }
                     }
 
-                    // If the previous index was a value, then this index MUST be a variable.
-                    previousIndexVariable = segment;
+
                 }
 
 
@@ -263,8 +293,8 @@ _extra.registerModule("registerStateMetaData",["slideObjectManager_global", "Sli
 
 
 
-
         for (var i = 0; i < data.states.length; i += 1) {
+
             stateName = data.states[i];
 
             if (stateName.substr(0,2).toLowerCase() === "x_") {
@@ -283,11 +313,13 @@ _extra.registerModule("registerStateMetaData",["slideObjectManager_global", "Sli
             }
         }
 
+
         if (Object.keys(slideObjectMetaData).length > 0) {
             // If this variable has a value, it means we must have run across a valid method at some point.
             // Therefore, we register the meta data.
             _extra.slideObjects.states.registerStateMetaData(slideObjectName, slideObjectMetaData);
         }
+
 
     });
 

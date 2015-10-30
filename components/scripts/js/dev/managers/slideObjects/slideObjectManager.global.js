@@ -8,6 +8,7 @@
 _extra.registerModule("slideObjectManager_global", ["slideObjectManager_software"], function () {
     "use strict";
 
+
     /**
      * List of proxy objects associated with slideObjects. This helps us avoid duplication.
      * @type {{}}
@@ -71,16 +72,25 @@ _extra.registerModule("slideObjectManager_global", ["slideObjectManager_software
     ///////////////////////////////////////////////////////////////////////
     _extra.slideManager.enterSlideCallback.addCallback("*", function () {
 
+        // Run through the list of slide object proxies and unload them
+        for (var slideObjectName in slideObjectProxies) {
+            if (slideObjectProxies.hasOwnProperty(slideObjectName)) {
+
+                slideObjectProxies[slideObjectName].unload();
+
+            }
+        }
+
         // Clear the proxy list as we are on a new slide with new objects
         slideObjectProxies = {};
 
-        var slideObjectsData = _extra.slideManager.getSlideData(),
+        var slideData = _extra.slideManager.getSlideData(),
             slideObjectName;
 
 
 
-        for (var i = 0; i < slideObjectsData.slideObjects.length; i += 1) {
-            slideObjectName = slideObjectsData.slideObjects[i];
+        for (var i = 0; i < slideData.slideObjects.length; i += 1) {
+            slideObjectName = slideData.slideObjects[i];
 
             _extra.slideObjects.enteredSlideChildObjectsCallbacks.sendToCallback("*", slideObjectName);
 

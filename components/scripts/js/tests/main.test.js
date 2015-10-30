@@ -78,6 +78,15 @@
             expect(_extra.STORYLINE).toBeDefined();
         });
 
+        it("should get a reference to the jQuery library", function () {
+            window.top.$ = "foobar";
+
+            initExtra();
+            expect(_extra.$).toBe("foobar");
+
+            delete window.$;
+        });
+
     });
 
     describe("Test Suite for main.js module registering", function () {
