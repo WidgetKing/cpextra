@@ -35,6 +35,9 @@ _extra.registerModule("SlideDataProxy", function () {
 
             }
             return this._slideObjects;
+        },
+        get id() {
+            return this._data.container.dn;
         }
     };
 

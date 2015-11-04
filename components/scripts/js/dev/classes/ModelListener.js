@@ -26,17 +26,25 @@ _extra.registerModule("ModelListener", function () {
         /////////////// Public Methods
         ///////////////////////////////////////////////////////////////////////
         this.addProperty = function (propertyName, onChangeCallback, defaultValue) {
+
+            var dataBaseValue = model.retrieve(name,propertyName);
+
             properties[propertyName] = {
                 "onChangeCallback":onChangeCallback,
                 "defaultValue":defaultValue
             };
 
-            if (model.retrieve(name,propertyName) === undefined) {
+            if (dataBaseValue === undefined && defaultValue) {
+
                 // If this has not been set previously, then we'll write its default value.
                 model.write(name,propertyName,defaultValue);
+                dataBaseValue = defaultValue;
+
             }
 
-            onChangeCallback(null, model.retrieve(name, propertyName));
+            if (dataBaseValue) {
+                onChangeCallback(null, dataBaseValue);
+            }
         };
 
         this.unload = function () {

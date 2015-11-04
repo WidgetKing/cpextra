@@ -9,6 +9,38 @@ _extra.registerModule("StateDataProxy",function () {
 
     "use strict";
 
+
+    ///////////////////////////////////////////////////////////////////////
+    /////////////// PRIVATE STATIC FUNCTIONS
+    ///////////////////////////////////////////////////////////////////////
+    function removePXSuffix(value) {
+        if (value.substr(value.length - 2, 2) === "px") {
+            value = value.substr(0,value.length - 2);
+        }
+
+        return parseFloat(value);
+    }
+
+    function doCSSPropertySet(value, offsetProperty, cssProperty, that) {
+
+        var offset = that.primaryObject[offsetProperty];
+
+        that.slideObjects.forEach(function (data) {
+
+            var valueForSlideObject = value;
+            valueForSlideObject -= offset - data[offsetProperty];
+            valueForSlideObject = valueForSlideObject + "px";
+
+            _extra.cssManager.editCSSOn(data.upperDIV, cssProperty, valueForSlideObject);
+            _extra.cssManager.editCSSOn(data.contentDIV, cssProperty, valueForSlideObject);
+        });
+
+    }
+
+    ///////////////////////////////////////////////////////////////////////
+    /////////////// CONSTRUCTOR
+    ///////////////////////////////////////////////////////////////////////
+
     function StateDataProxy(data) {
 
         if (data) {
@@ -24,11 +56,15 @@ _extra.registerModule("StateDataProxy",function () {
                     // Formatted Data for slideObject within state.
                     "upperDIV":tempData.actualParent,
                     "contentDIV":tempData.element.parentNode,
-                    //"offsetX":tempData.bounds.minX - x,
-                    //"offsetY":tempData.bounds.minY - y,
+                    "originalX":tempData.bounds.minX,
+                    "originalY":tempData.bounds.minY,
+                    "originalWidth":tempData.bounds.maxX - tempData.bounds.minX,
+                    "originalHeight":tempData.bounds.maxY - tempData.bounds.minY,
                     "rawData":tempData
                 });
             }
+
+            this.primaryObject = this.slideObjects[0];
 
         }
     }
@@ -36,6 +72,57 @@ _extra.registerModule("StateDataProxy",function () {
     StateDataProxy.prototype = {
         get name() {
             return this._data.stn;
+        },
+
+
+
+
+        get x () {
+            return removePXSuffix(this.primaryObject.upperDIV.style.left);
+        },
+        set x (value) {
+
+            doCSSPropertySet(value, "originalX", "left", this);
+
+        },
+
+
+        get y () {
+            return removePXSuffix(this.primaryObject.upperDIV.style.top);
+        },
+        set y (value) {
+
+            doCSSPropertySet(value, "originalY", "top", this);
+
+        },
+
+
+        get width () {
+            return removePXSuffix(this.primaryObject.upperDIV.style.width);
+        },
+        set width (value) {
+
+            doCSSPropertySet(value, "originalWidth", "width", this);
+
+        },
+
+
+        get height () {
+            return removePXSuffix(this.primaryObject.upperDIV.style.height);
+        },
+        set height (value) {
+
+            doCSSPropertySet(value, "originalHeight", "height", this);
+
+        },
+
+
+
+        get originalX() {
+            return this.primaryObject.originalX;
+        },
+        get originalY() {
+            return this.primaryObject.originalY;
         }
     };
 
@@ -59,22 +146,25 @@ _extra.registerModule("StateDataProxy",function () {
 
     };
 
-    StateDataProxy.prototype.addClass = function (className, classDetails) {
-        var style = _extra.w.document.createElement("style");
-        style.type = "text/css";
-        style.innerHTML = classDetails;
-        _extra.w.document.getElementsByTagName("head")[0].appendChild(style);
-        // TODO: This should be handed off to some _extra.cssManager as currently we're adding the disabledForMouse class twice
-
-        className = " " + className;
+    StateDataProxy.prototype.addClass = function (className) {
         this.slideObjects.forEach(function (data) {
-            data.upperDIV.className += className;
-            data.contentDIV.className += className;
+            _extra.cssManager.addClassTo(data.upperDIV, className);
+            _extra.cssManager.addClassTo(data.contentDIV, className);
         });
     };
 
     StateDataProxy.prototype.removeClass = function(className) {
+        this.slideObjects.forEach(function (data) {
+            _extra.cssManager.removeClassFrom(data.upperDIV, className);
+            _extra.cssManager.removeClassFrom(data.contentDIV, className);
+        });
+    };
 
+    StateDataProxy.prototype.editCSS = function(property, value) {
+        this.slideObjects.forEach(function (data) {
+            _extra.cssManager.editCSSOn(data.upperDIV, property, value);
+            _extra.cssManager.editCSSOn(data.contentDIV, property, value);
+        });
     };
 
     _extra.registerClass("StateDataProxy", StateDataProxy);

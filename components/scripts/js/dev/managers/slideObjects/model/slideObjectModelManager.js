@@ -31,6 +31,43 @@ _extra.registerModule("slideObjectModelManager", ["slideObjectManager_global", "
     // And that's that problem fixed.
     // :-)
 
+    ///////////////////////////////////////////////////////////////////////
+    /////////////// SLIDE OBJECT PROXY CREATING
+    ///////////////////////////////////////////////////////////////////////
+
+    ////////////////////////////////
+    ////////// When slide object is on slide
+    // Handling the case where model data is set for an object which doesn't have a proxy created to handle it
+    var originalWriteMethod = _extra.slideObjects.model.write;
+    // Parasite on to the write function
+    _extra.slideObjects.model.write = function(slideObjectName, property, value) {
+
+        // Default behaviour
+        originalWriteMethod(slideObjectName, property, value);
+
+        // Check if a slide object needs to be created
+        if (_extra.slideManager.hasSlideObjectOnSlide(slideObjectName) && !_extra.slideObjects.doesProxyExistFor(slideObjectName)) {
+
+            _extra.slideObjects.getSlideObjectByName(slideObjectName);
+
+        }
+    };
+
+    ////////////////////////////////
+    ////////// When moving into a slide with and object that has data in the model
+    _extra.slideObjects.enteredSlideChildObjectsCallbacks.addCallback("*", function (slideObjectName) {
+
+        // Do we have data for this in the model?
+        if (_extra.slideObjects.model.hasDataFor(slideObjectName) && !_extra.slideObjects.doesProxyExistFor(slideObjectName)) {
+
+            _extra.slideObjects.getSlideObjectByName(slideObjectName);
+
+        }
+
+
+    });
+
+
     // TODO: Handle situation where we update the model for a slide object that hasn't had a proxy made for it.
     // TODO: Handle moving into a slide and creating proxies for all objects with models.
 });

@@ -5,7 +5,7 @@
  * Time: 8:10 AM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("generalVariableManager", ["softwareInterfacesManager", "Callback"], function () {
+_extra.registerModule("variableManager", ["softwareInterfacesManager", "Callback"], function () {
 
     "use strict";
     //var variables = _extra.storyline

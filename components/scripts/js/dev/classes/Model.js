@@ -11,15 +11,29 @@ _extra.registerModule("Model", function () {
 
     function Model() {
 
-        var m = {};
+        var m = {},
+            callback = new _extra.classes.Callback();
 
-        this.updateCallback = new _extra.classes.Callback();
+        this.updateCallback = callback;
+
+        function notifyCallback(son,p,pv,v) {
+
+            var callbackData = {
+                "slideObjectName":son,
+                "property":p,
+                "previousValue":pv,
+                "currentValue":v
+            };
+
+
+            callback.sendToCallback("*",callbackData);
+            callback.sendToCallback(son,callbackData);
+        }
 
         this.write = function (slideObjectName, property, value) {
 
             var objectData,
-                previousValue,
-                callbackData;
+                previousValue;
 
             // If this is the first time we've written to this object...
             if (!m[slideObjectName]) {
@@ -36,16 +50,9 @@ _extra.registerModule("Model", function () {
                 // UPDATE MODEL
                 objectData[property] = value;
 
-                callbackData = {
-                    "slideObjectName":slideObjectName,
-                    "property":property,
-                    "previousValue":previousValue,
-                    "currentValue":value
-                };
+                notifyCallback(slideObjectName, property, previousValue, value);
 
 
-                this.updateCallback.sendToCallback("*",callbackData);
-                this.updateCallback.sendToCallback(slideObjectName,callbackData);
             }
         };
 
@@ -60,6 +67,30 @@ _extra.registerModule("Model", function () {
                 return m[slideObjectName];
 
             }
+        };
+
+        this.hasDataFor = function (slideObjectName) {
+            return m.hasOwnProperty(slideObjectName);
+        };
+
+        this.update = function (slideObjectName) {
+            var objectData = m[slideObjectName],
+                value;
+
+            if (objectData) {
+
+                for (var property in objectData) {
+                    if (objectData.hasOwnProperty(property)) {
+
+                        value = objectData[property];
+
+                        notifyCallback(slideObjectName,property,value,value);
+
+                    }
+                }
+
+            }
+
         };
 
 

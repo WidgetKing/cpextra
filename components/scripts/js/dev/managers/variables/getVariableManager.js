@@ -5,7 +5,7 @@
  * Time: 10:46 AM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("getVariableManager", ["generalVariableManager"] ,function () {
+_extra.registerModule("getVariableManager", ["variableManager"] ,function () {
 
     "use strict";
 

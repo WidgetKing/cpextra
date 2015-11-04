@@ -6,7 +6,7 @@
  * Time: 1:28 PM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("preventTextEntryBoxOverwrite", ["generalSlideObject_global", "behaviourManager", "eventManager"], function () {
+_extra.registerModule("preventTextEntryBoxOverwrite", ["generalSlideObject_global", "preferenceManager", "eventManager"], function () {
     "use strict";
 
     ///////////////////////
@@ -17,7 +17,7 @@ _extra.registerModule("preventTextEntryBoxOverwrite", ["generalSlideObject_globa
         textEntryBoxData = {},
         areVariablesInitliazed = false,
         behaviourModuleInfo = {
-            // Automatically called by _extra.behaviourManager in response to the value of the xbehaviourPreventTextEntryBoxOverwrite variable
+            // Automatically called by _extra.preferenceManager in response to the value of the xbehaviourPreventTextEntryBoxOverwrite variable
         "enable": function () {
             if (hasCollectedTextBoxData) {
                 for (var textEntryBoxName in textEntryBoxData) {
@@ -77,7 +77,7 @@ _extra.registerModule("preventTextEntryBoxOverwrite", ["generalSlideObject_globa
     ////////// Initialization
     ///////////////////////
 
-    if (_extra.behaviourManager.registerBehaviourModule("PreventTextEntryBoxOverwrite", behaviourModuleInfo)) {
+    if (_extra.preferenceManager.registerPreferenceModule("PreventTextEntryBoxOverwrite", behaviourModuleInfo)) {
 
 
 

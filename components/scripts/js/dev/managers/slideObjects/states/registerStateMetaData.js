@@ -21,6 +21,7 @@ _extra.registerModule("registerStateMetaData",["slideObjectManager_global", "Sli
     ///////////////////////////////////////////////////////////////////////
     _extra.slideObjects.states.registerStateMetaData = function (slideObjectName, data) {
 
+
         var slideObjectProxy,
             currentSlideID = _extra.slideManager.currentSlideID,
             currentSlideStateManagers;
@@ -38,9 +39,10 @@ _extra.registerModule("registerStateMetaData",["slideObjectManager_global", "Sli
 
         }
 
-
         slideObjectProxy = _extra.slideObjects.getSlideObjectByName(slideObjectName);
         currentSlideStateManagers[slideObjectName] = new _extra.classes.SlideObjectStateManager(slideObjectProxy, data);
+
+
     };
 
 
@@ -112,6 +114,8 @@ _extra.registerModule("registerStateMetaData",["slideObjectManager_global", "Sli
     _extra.slideObjects.enteredSlideChildObjectsCallbacks.addCallback("*", function (slideObjectName) {
 
 
+
+
         // This function is sent the name of every slide object on the current slide, one by one.
         // It will analyse its states to see if there are any that interact with extra.
         var data = _extra.dataManager.getSlideObjectDataByName(slideObjectName),
@@ -168,6 +172,7 @@ _extra.registerModule("registerStateMetaData",["slideObjectManager_global", "Sli
                 return NORMAL;
             }
         }
+
 
         function getVariablesData(splitName, fullName) {
             var variableData = {},

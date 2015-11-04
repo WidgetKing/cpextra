@@ -77,10 +77,14 @@ _extra.registerModule("slideManager_global",["slideManager_software"],function()
             _extra.slideManager.enterSlideCallback.sendToCallback(currentSlide, currentSlideID);
         }
 
+
         // Notify all callbacks registered to this specific scene and slide index (1.3)
         _extra.slideManager.enterSlideCallback.sendToCallback(currentSlideID, currentSlideID);
 
 
+        if (_extra.slideManager.hasOwnProperty("software_onSlideEnter")) {
+            _extra.slideManager.software_onSlideEnter();
+        }
     }
 
     // From now on, when moving into a new slide, we'll call the above function,

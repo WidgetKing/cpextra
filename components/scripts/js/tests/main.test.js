@@ -185,7 +185,7 @@
         });
 
         // Have not found a way to make this test work
-        xit("should not call module's onload callback from the 'load' event listener, if not in Storyline", function () {
+        /*xit("should not call module's onload callback from the 'load' event listener, if not in Storyline", function () {
             _extra.registerModule("foo",function () {
                 return a.dummy;
             });
@@ -194,7 +194,7 @@
             loadEvent.initEvent("load", true, true);
             window.document.dispatchEvent(loadEvent);
             expect(a.dummy).toHaveBeenCalled();
-        });
+        });*/
 
         it("should be able to disregard software identifiers if passed in for unit testing sakes", function () {
             _extra.registerModule("foo", a.dummy, "cp");

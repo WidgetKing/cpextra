@@ -30,8 +30,8 @@ function initExtra(topWindow) {
      * @param message
      */
     _extra.log = function (message) {
-        if (console) {
-            console.log(message);
+        if (_extra.console) {
+            _extra.console.log(message);
         }
     };
 
@@ -41,13 +41,14 @@ function initExtra(topWindow) {
      * @param message
      */
     _extra.error = function (message) {
-        if (console) {
-            console.error(message);
+        if (_extra.console) {
+            _extra.console.error(message);
         }
     };
 
     // The highest window, where we should be able to find the internal functions of the output
     _extra.w = topWindow.parent;
+    _extra.console = _extra.w.console;
 
     // Constants used to identify modules that are specialized for Captivate or Storyline
     _extra.CAPTIVATE = "captivate";
@@ -280,7 +281,9 @@ function initExtra(topWindow) {
             if (moduleRegistry.hasOwnProperty(moduleName)) {
                 m = moduleRegistry[moduleName];
                 if (m.onLoadCallback) {
+
                     m.onLoadCallback();
+
                 }
             }
         }

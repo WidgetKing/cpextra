@@ -5,13 +5,14 @@
  * Time: 9:38 AM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("commandVariables",["generalVariableManager","stateManager_global"], function () {
+_extra.registerModule("commandVariableManager",["variableManager","stateManager_global"], function () {
 
     "use strict";
 
     var COMMAND_VARIABLE_PREFIX = "xcmnd",
         variableName,
         commandVariables = {};
+
 
     ////////////////////////////////
     ////////// Parameter Handler Types
@@ -64,21 +65,6 @@ _extra.registerModule("commandVariables",["generalVariableManager","stateManager
     };
 
 
-    ///////////////////////////////////////////////////////////////////////
-    /////////////// LIST OF COMMAND VARIABLES
-    ///////////////////////////////////////////////////////////////////////
-    _extra.variableManager.registerCommandVariable("Hide", _extra.slideObjects.hide);
-    _extra.variableManager.registerCommandVariable("Show", _extra.slideObjects.show);
-    _extra.variableManager.registerCommandVariable("Enable", _extra.slideObjects.enable);
-    _extra.variableManager.registerCommandVariable("Disable", _extra.slideObjects.disable);
-    _extra.variableManager.registerCommandVariable("EnableForMouse", _extra.slideObjects.enableForMouse);
-    _extra.variableManager.registerCommandVariable("DisableForMouse", _extra.slideObjects.disableForMouse);
-
-    _extra.variableManager.registerCommandVariable("ChangeState", _extra.slideObjects.states.change,
-                                                   _extra.variableManager.parameterHandlers.sendParametersAsParameters);
-
-
-
 
     ///////////////////////////////////////////////////////////////////////
     /////////////// SETTING UP COMMAND VARIABLES
@@ -89,8 +75,8 @@ _extra.registerModule("commandVariables",["generalVariableManager","stateManager
 
         function listenForCommandVariableChange(variableName,variableMetadata) {
 
-            _extra.variableManager.listenForVariableChange(variableName, function () {
 
+            _extra.variableManager.listenForVariableChange(variableName, function () {
 
                 var value = _extra.variableManager.getVariableValue(variableName);
 
@@ -115,7 +101,6 @@ _extra.registerModule("commandVariables",["generalVariableManager","stateManager
             if (commandVariables.hasOwnProperty(variableSuffix)) {
 
                 variableName = COMMAND_VARIABLE_PREFIX + variableSuffix;
-
 
 
                 // Check to find valid variable.

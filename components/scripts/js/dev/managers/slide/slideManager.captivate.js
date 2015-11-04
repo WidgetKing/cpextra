@@ -9,13 +9,14 @@ _extra.registerModule("slideManager_software", ["softwareInterfacesManager", "Ca
 
     "use strict";
 
-    var slideIDs = _extra.captivate.model.data.project_main.slides.split(","),
+    var slideIds = _extra.captivate.model.data.project_main.slides.split(","),
         tempBaseData,
         tempContainerData;
 
     _extra.slideManager = {
         "_slideDatas": [],
         "slideNames": [],
+        "currentSlideId":null,
         "currentSlideDOMElement":_extra.w.document.getElementById("div_Slide"),
         "gotoSlide":function (index) {
             if (typeof index === "string") {
@@ -29,6 +30,20 @@ _extra.registerModule("slideManager_software", ["softwareInterfacesManager", "Ca
         },
         "getCurrentSceneNumber": function () {
             return 0;
+        },
+        "hasSlideObjectOnSlide": function (slideObjectName, slideIndex) {
+
+            if (!slideIndex) {
+                slideIndex = _extra.slideManager.currentSlideNumber;
+            }
+
+            var details = _extra.captivate.model.data[slideObjectName];
+
+            return details && details.apsn === slideIds[slideIndex];
+
+        },
+        "software_onSlideEnter":function() {
+            this.currentSlideId = slideIds[_extra.slideManager.currentSlideNumber];
         }
     };
 
@@ -36,7 +51,7 @@ _extra.registerModule("slideManager_software", ["softwareInterfacesManager", "Ca
     ////////////////////////////////
     ////////// slideNames Array Setup
 
-    slideIDs.forEach(function(slideID){
+    slideIds.forEach(function(slideID){
         tempBaseData = _extra.captivate.model.data[slideID];
         tempContainerData = _extra.captivate.model.data[slideID + "c"];
         _extra.slideManager._slideDatas.push({

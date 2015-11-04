@@ -6,7 +6,7 @@
  * Time: 9:02 AM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("generalVariableManager", ["softwareInterfacesManager", "Callback"], function () {
+_extra.registerModule("variableManager", ["softwareInterfacesManager", "Callback"], function () {
     "use strict";
 
     var variableInfo = _extra.captivate.api.variablesManager.varInfos;

@@ -34,8 +34,11 @@ _extra.registerModule("slideObjectManager_software", ["generalDataManager", "Cal
 
             }
         },
+        "hasSlideObjectInProject":function (slideObjectName) {
+            return _extra.captivate.allSlideObjectsData.hasOwnProperty(slideObjectName);
+        },
         "getSlideObjectElement": function(id) {
-            return _extra.w.document.getElementById("re-" + id + "c");
+            return _extra.w.document.getElementById(id);
         },
         "hide":function (query) {
             _extra.slideObjects.enactFunctionOnSlideObjects(query, _extra.captivate.api.hide);
@@ -48,16 +51,6 @@ _extra.registerModule("slideObjectManager_software", ["generalDataManager", "Cal
         },
         "disable":function (query) {
             _extra.slideObjects.enactFunctionOnSlideObjects(query, _extra.captivate.api.disable);
-        },
-        "enableForMouse":function (query) {
-            _extra.slideObjects.enactFunctionOnSlideObjects(query, function (slideObjectName) {
-                _extra.slideObjects.model.write(slideObjectName, "enableForMouse", true);
-            });
-        },
-        "disableForMouse":function (query) {
-            _extra.slideObjects.enactFunctionOnSlideObjects(query, function (slideObjectName) {
-                _extra.slideObjects.model.write(slideObjectName, "enableForMouse", false);
-            });
         },
         "getSlideObjectNamesMatchingWildcardName": function (query, returnProxies) {
 

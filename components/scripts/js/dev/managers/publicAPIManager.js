@@ -12,6 +12,7 @@ _extra.registerModule("publicAPIManager", function () {
     return function () {
         _extra.w.X = _extra.X;
 
+        _extra.X._ = _extra;
         _extra.X.getSlideData = _extra.slideManager.getSlideData;
         _extra.X.gotoSlide = _extra.slideManager.gotoSlide;
         _extra.X.getSlideObjectByName = _extra.slideObjects.getSlideObjectByName;

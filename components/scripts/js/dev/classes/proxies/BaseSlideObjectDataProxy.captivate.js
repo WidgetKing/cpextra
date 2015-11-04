@@ -30,8 +30,11 @@ _extra.registerModule("BaseSlideObjectDataProxy", function () {
         get data() {
             return this._data;
         },
-        get type(){
+        get type() {
             return this._type;
+        },
+        get uid() {
+            return this._data.container.uid;
         },
         get states() {
 
@@ -55,7 +58,20 @@ _extra.registerModule("BaseSlideObjectDataProxy", function () {
             return this._states;
         },
         get currentStateName() {
-            return this.states[this._initialStateData.currentState];
+            if (this.states.length <= 0) {
+                return "Normal";
+            } else {
+                return this.states[this._initialStateData.currentState];
+            }
+        },
+        get isInteractiveObject() {
+            return this._data.base.hasOwnProperty("oca");
+        },
+        get successAction() {
+            return this._data.base.oca;
+        },
+        get failureAction() {
+            return this._data.base.ofa;
         }
     };
 
@@ -69,12 +85,25 @@ _extra.registerModule("BaseSlideObjectDataProxy", function () {
             // Set public variable so we can keep track of whether this is the first time or not.
             this._stateDatas = stateDatas;
 
-            // Loop through the state information
-            this._initialStateData.states.forEach(function (rawStateData) {
-                stateDataProxy = new _extra.classes.StateDataProxy(rawStateData);
-                // Assign this data to the holder object.
-                stateDatas[stateDataProxy.name] = stateDataProxy;
-            });
+            if (this._initialStateData.states.length <= 1) {
+
+                // This object does not have any states.
+                // So we have to fake the data.
+                stateDatas[stateName] = new _extra.classes.StateDataProxy({
+                    "stsi":[this.uid],
+                    "stn":"Normal"
+                });
+
+            } else {
+
+                // Loop through the state information
+                this._initialStateData.states.forEach(function (rawStateData) {
+                    stateDataProxy = new _extra.classes.StateDataProxy(rawStateData);
+                    // Assign this data to the holder object.
+                    stateDatas[stateDataProxy.name] = stateDataProxy;
+                });
+
+            }
         }
 
         return this._stateDatas[stateName];

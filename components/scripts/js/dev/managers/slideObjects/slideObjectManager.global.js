@@ -24,6 +24,7 @@ _extra.registerModule("slideObjectManager_global", ["slideObjectManager_software
     _extra.slideObjects.enteredSlideChildObjectsCallbacks = new _extra.classes.Callback();
     _extra.slideObjects.getSlideObjectProxy = function (id) {
 
+
         var DOMElement;
 
         // If we were passed in a DOM element rather than the id of a DOM element...
@@ -47,8 +48,14 @@ _extra.registerModule("slideObjectManager_global", ["slideObjectManager_software
             slideObjectProxies[id] = _extra.factories.createSlideObjectProxy(id, DOMElement);
         }
 
+
+
         return slideObjectProxies[id];
 
+    };
+
+    _extra.slideObjects.doesProxyExistFor = function (slideObjectName) {
+        return slideObjectProxies.hasOwnProperty(slideObjectName);
     };
 
     _extra.slideObjects.getSlideObjectByName = function (query) {
@@ -84,15 +91,14 @@ _extra.registerModule("slideObjectManager_global", ["slideObjectManager_software
         // Clear the proxy list as we are on a new slide with new objects
         slideObjectProxies = {};
 
-        var slideData = _extra.slideManager.getSlideData(),
-            slideObjectName;
-
-
+        var slideData = _extra.slideManager.getSlideData();
 
         for (var i = 0; i < slideData.slideObjects.length; i += 1) {
             slideObjectName = slideData.slideObjects[i];
 
             _extra.slideObjects.enteredSlideChildObjectsCallbacks.sendToCallback("*", slideObjectName);
+
+            //_extra.slideObjects.enteredSlideChildObjectsCallbacks.sendToCallback(_extra.slideManager.currentSlideNumber, slideObjectName);
 
         }
 
