@@ -13,7 +13,10 @@ _extra.registerModule("localStorageManager", ["variableManager"], function () {
 
     var storageVariables;
 
+    // When storage variables are saved is decided by the xprefSaveLocalStorage variable, whose behaviour is
+    // managed by dev/managers/preferences/localStorageVariableManager.js
     _extra.variableManager.saveStorageVariables = function () {
+
         var storageVariableInfo,
             variableName;
 
@@ -33,9 +36,6 @@ _extra.registerModule("localStorageManager", ["variableManager"], function () {
 
     function initializeStorageVariables() {
         storageVariables = {};
-
-        // Save the storage variables when the window closes.
-        _extra.w.addEventListener("unload", _extra.variableManager.saveStorageVariables);
     }
 
 
@@ -52,8 +52,8 @@ _extra.registerModule("localStorageManager", ["variableManager"], function () {
         if (storageValue) {
 
             // If this item can be of a number type, then write it to the variable as a number type.
-            if (!isNaN(storageValue)) {
-                storageValue = parseFloat(storageValue);
+            if (!_extra.w.isNaN(storageValue)) {
+                storageValue = _extra.w.parseFloat(storageValue);
             }
 
 

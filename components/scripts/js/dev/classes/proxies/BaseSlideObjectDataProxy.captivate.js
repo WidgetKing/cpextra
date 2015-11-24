@@ -75,6 +75,7 @@ _extra.registerModule("BaseSlideObjectDataProxy", function () {
         }
     };
 
+
     BaseSlideObjectData.prototype.getDataForState = function (stateName) {
         // If this is the first time we've called this method for this instance.
         if (!this._stateDatas) {

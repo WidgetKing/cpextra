@@ -45,6 +45,9 @@ _extra.registerModule("slideObjectManager_global", ["slideObjectManager_software
         // Create new proxy object IF a proxy object hasn't already been created.
         // Otherwise we'll return the previous object.
         if (!slideObjectProxies[id]) {
+            // Set this first, because it's possible hasProxyFor will be checked before the proxy has had a chance
+            // to be assigned. The line below prevents an infininte loop.
+            slideObjectProxies[id] = true;
             slideObjectProxies[id] = _extra.factories.createSlideObjectProxy(id, DOMElement);
         }
 
@@ -54,7 +57,7 @@ _extra.registerModule("slideObjectManager_global", ["slideObjectManager_software
 
     };
 
-    _extra.slideObjects.doesProxyExistFor = function (slideObjectName) {
+    _extra.slideObjects.hasProxyFor = function (slideObjectName) {
         return slideObjectProxies.hasOwnProperty(slideObjectName);
     };
 
@@ -97,6 +100,8 @@ _extra.registerModule("slideObjectManager_global", ["slideObjectManager_software
             slideObjectName = slideData.slideObjects[i];
 
             _extra.slideObjects.enteredSlideChildObjectsCallbacks.sendToCallback("*", slideObjectName);
+            _extra.slideObjects.enteredSlideChildObjectsCallbacks.sendToCallback(
+                    _extra.dataManager.getSlideObjectTypeByName(slideObjectName), slideObjectName);
 
             //_extra.slideObjects.enteredSlideChildObjectsCallbacks.sendToCallback(_extra.slideManager.currentSlideNumber, slideObjectName);
 

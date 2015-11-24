@@ -6,13 +6,36 @@
  * Time: 1:28 PM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("preventTextEntryBoxOverwrite", ["generalSlideObject_global", "preferenceManager", "eventManager"], function () {
+_extra.registerModule("preventTextEntryBoxOverwrite", ["slideObjectManager_global", "preferenceManager", "eventManager",
+                      "globalSlideObjectTypes"], function () {
     "use strict";
+
+    function onSlideEnter(slideObjectName) {
+
+        var data = _extra.dataManager.getSlideObjectDataByName(slideObjectName);
+        data.defaultText = _extra.variableManager.getVariableValue(data.variable);
+
+    }
+
+    var behaviourModuleInfo = {
+        "enable": function () {
+
+            _extra.slideObjects.enteredSlideChildObjectsCallbacks.addCallback(_extra.dataTypes.slideObjects.TEXT_ENTRY_BOX, onSlideEnter);
+
+        },
+        "disable": function () {
+
+            _extra.slideObjects.enteredSlideChildObjectsCallbacks.removeCallback(_extra.dataTypes.slideObjects.TEXT_ENTRY_BOX, onSlideEnter);
+
+        }
+    };
+
+    _extra.preferenceManager.registerPreferenceModule("PreventTEBOverwrite", behaviourModuleInfo);
 
     ///////////////////////
     ////////// Private Variables
     ///////////////////////
-
+    /*
     var hasCollectedTextBoxData = false,
         textEntryBoxData = {},
         areVariablesInitliazed = false,
@@ -60,7 +83,7 @@ _extra.registerModule("preventTextEntryBoxOverwrite", ["generalSlideObject_globa
     ////////// Confirm Variable Initilization.
     ///////////////////////
     function onVariablesInit() {
-        _extra.eventDispatcher.removeEventListener("variablesInitialized", onVariablesInit);
+        _extra.eventManager.eventDispatcher.removeEventListener("variablesInitialized", onVariablesInit);
         areVariablesInitliazed = true;
         if (behaviourModuleInfo.enabled) {
             for (var textEntryBoxName in textEntryBoxData) {
@@ -71,13 +94,20 @@ _extra.registerModule("preventTextEntryBoxOverwrite", ["generalSlideObject_globa
         }
     }
 
-    _extra.eventDispatcher.addEventListener("variablesInitialized", onVariablesInit);
+    _extra.eventManager.eventDispatcher.addEventListener("variablesInitialized", onVariablesInit);
 
-    ///////////////////////
-    ////////// Initialization
-    ///////////////////////
 
-    if (_extra.preferenceManager.registerPreferenceModule("PreventTextEntryBoxOverwrite", behaviourModuleInfo)) {
+
+
+
+
+    ////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
+    //////////////////// Initialization
+    ////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
+
+    if (_extra.preferenceManager.registerPreferenceModule("PreventTEBOverwrite", behaviourModuleInfo)) { //xprefPreventTEBOverwrite
 
 
 
@@ -103,5 +133,7 @@ _extra.registerModule("preventTextEntryBoxOverwrite", ["generalSlideObject_globa
         });
 
     }
+
+    */
 
 }, _extra.CAPTIVATE);

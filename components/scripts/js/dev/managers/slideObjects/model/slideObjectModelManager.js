@@ -5,7 +5,7 @@
  * Time: 1:07 PM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("slideObjectModelManager", ["slideObjectManager_global", "Model"], function () {
+_extra.registerModule("slideObjectModelManager", ["slideObjectManager_global", "Model", "slideObjectProxyAutoInstantiator"], function () {
 
     ////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////
@@ -46,28 +46,14 @@ _extra.registerModule("slideObjectModelManager", ["slideObjectManager_global", "
         originalWriteMethod(slideObjectName, property, value);
 
         // Check if a slide object needs to be created
-        if (_extra.slideManager.hasSlideObjectOnSlide(slideObjectName) && !_extra.slideObjects.doesProxyExistFor(slideObjectName)) {
+        var result = _extra.slideObjects.proxyAutoInstantiator.check(slideObjectName);
 
-            _extra.slideObjects.getSlideObjectByName(slideObjectName);
-
+        if (!result) {
+            _extra.error("CV001", slideObjectName);
         }
     };
 
-    ////////////////////////////////
-    ////////// When moving into a slide with and object that has data in the model
-    _extra.slideObjects.enteredSlideChildObjectsCallbacks.addCallback("*", function (slideObjectName) {
-
-        // Do we have data for this in the model?
-        if (_extra.slideObjects.model.hasDataFor(slideObjectName) && !_extra.slideObjects.doesProxyExistFor(slideObjectName)) {
-
-            _extra.slideObjects.getSlideObjectByName(slideObjectName);
-
-        }
+    _extra.slideObjects.proxyAutoInstantiator.registerModelLookup(_extra.slideObjects.model.hasDataFor);
 
 
-    });
-
-
-    // TODO: Handle situation where we update the model for a slide object that hasn't had a proxy made for it.
-    // TODO: Handle moving into a slide and creating proxies for all objects with models.
 });

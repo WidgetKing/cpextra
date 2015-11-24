@@ -18,6 +18,7 @@ _extra.registerModule("slideManager_software", ["softwareInterfacesManager", "Ca
         "slideNames": [],
         "currentSlideId":null,
         "currentSlideDOMElement":_extra.w.document.getElementById("div_Slide"),
+        "isSlideLoaded":false,
         "gotoSlide":function (index) {
             if (typeof index === "string") {
                 index = _extra.slideManager.getSlideIndexFromName(index);
@@ -43,7 +44,9 @@ _extra.registerModule("slideManager_software", ["softwareInterfacesManager", "Ca
 
         },
         "software_onSlideEnter":function() {
+
             this.currentSlideId = slideIds[_extra.slideManager.currentSlideNumber];
+
         }
     };
 
@@ -71,6 +74,13 @@ _extra.registerModule("slideManager_software", ["softwareInterfacesManager", "Ca
         // However, the code is still working.
         _extra.captivate.eventDispatcher.addEventListener(_extra.captivate.events.SLIDE_ENTER, callback);
     };
+
+    ///////////////////////////////////////////////////////////////////////
+    /////////////// ON EXIT SLIDE
+    ///////////////////////////////////////////////////////////////////////
+    _extra.captivate.eventDispatcher.addEventListener(_extra.captivate.events.SLIDE_EXIT, function () {
+        _extra.slideManager.isSlideLoaded = false;
+    });
 
 
 }, _extra.CAPTIVATE);

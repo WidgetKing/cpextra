@@ -25,6 +25,7 @@
         },
         "getCaptivateMockObject": function () {
             return {
+                "classes":unitTests.classes,
                 "w": {
                     "cp": {
                         "model": {
@@ -43,7 +44,12 @@
                     "CaptivateVersion":"9.0.0",
                     "cpInfoCurrentSlide":1,
                     "ls_localStorage":"local_storage_value",
-                    "ss_sessionStorage":"session_storage_value"
+                    "ss_sessionStorage":"session_storage_value",
+                    "Object":Object,
+                    "parseInt":parseInt,
+                    "parseFloat":parseFloat,
+                    "isNaN":isNaN,
+                    "document":document
                 },
                 "log": function () {
 

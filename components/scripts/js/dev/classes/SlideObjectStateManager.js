@@ -11,7 +11,6 @@ _extra.registerModule("SlideObjectStateManager", function () {
 
     function SlideObjectStateManager (slideObject, data) {
 
-
         var that = this,
             isMouseOver = false,
             isMouseDown = false,
@@ -19,7 +18,6 @@ _extra.registerModule("SlideObjectStateManager", function () {
 
         this.slideObject = slideObject;
         this.data = data;
-
 
 
 
@@ -53,11 +51,36 @@ _extra.registerModule("SlideObjectStateManager", function () {
         }
 
         function doVariableValueComparison(variableValue, intendedValue) {
-            if (typeof variableValue !== "boolean" && !isNaN(variableValue)) {
-                variableValue = parseFloat(variableValue);
-            } else if (variableValue === "false") {
-                variableValue = false;
+
+            // This means no destination value was given to the state. The state name would look something like: x_MyVar
+            // In this case we'll assume this should be true.
+            // We don't correct this further up, because it may yet be useful to know if the user did or didn't
+            // specify a value.
+            if (intendedValue === null) {
+                intendedValue = true;
             }
+
+
+            if (typeof variableValue !== "boolean" && !_extra.w.isNaN(variableValue)) {
+
+                variableValue = _extra.w.parseFloat(variableValue);
+
+            } else if (typeof variableValue === "string") {
+
+                // We want TRUE to still be a valid boolean.
+                var lowerCaseVariableValue = variableValue.toLowerCase();
+
+                if (lowerCaseVariableValue === "true") {
+
+                    variableValue = true;
+
+                } else if (lowerCaseVariableValue === "false") {
+
+                    variableValue = false;
+                }
+
+            }
+
             // I know here I use '!=' instead of '!==' but that is intentional as I want false == 0
             return variableValue == intendedValue;
         }
@@ -67,6 +90,7 @@ _extra.registerModule("SlideObjectStateManager", function () {
         /////////////// State Inspection
         ///////////////////////////////////////////////////////////////////////
         function findStateWithValidVariables(shouldEvaluate, stateData) {
+
 
             // This shouldEvaluate calculation is done here instead of the proceeding function because it reduces
             // repetition.
@@ -88,6 +112,7 @@ _extra.registerModule("SlideObjectStateManager", function () {
                         // Loop through { r: { x_rollover: { variableName ... } }
                         for (variableName in variableData) {
                             if (variableData.hasOwnProperty(variableName)) {
+
 
                                 if (!doVariableValueComparison(_extra.variableManager.getVariableValue(variableName),
                                                                variableData[variableName])) {
@@ -118,6 +143,7 @@ _extra.registerModule("SlideObjectStateManager", function () {
 
         function evaluateState() {
 
+
             // Mouse down states take priority, even if there are valid rollover or normal states.
             if (!findStateWithValidVariables(isMouseDown, data.d)) {
                 // Rollover states take priority over normal states.
@@ -145,21 +171,21 @@ _extra.registerModule("SlideObjectStateManager", function () {
         ////////// Mouse Over
         this.onRollover = function () {
             // Remove Listener
-            slideObject.removeEventListener("mouseover", that.onRollover);
+            slideObject.removeEventListener(_extra.eventManager.events.MOUSE_OVER, that.onRollover);
             // Update Information
             isMouseOver = true;
             // Change State
             evaluateState();
             // Listen for new mouse event
-            slideObject.addEventListener("mouseout", that.onRollout);
+            slideObject.addEventListener(_extra.eventManager.events.MOUSE_OUT, that.onRollout);
         };
 
         this.onRollout = function () {
 
-            slideObject.removeEventListener("mouseout", that.onRollout);
+            slideObject.removeEventListener(_extra.eventManager.events.MOUSE_OUT, that.onRollout);
             isMouseOver = false;
             evaluateState();
-            slideObject.addEventListener("mouseover", that.onRollover);
+            slideObject.addEventListener(_extra.eventManager.events.MOUSE_OVER, that.onRollover);
 
         };
 
@@ -167,30 +193,30 @@ _extra.registerModule("SlideObjectStateManager", function () {
         ////////// Mouse Down
         this.onMouseDown = function () {
 
-            slideObject.removeEventListener("mousedown", that.onMouseDown);
+            slideObject.removeEventListener(_extra.eventManager.events.MOUSE_DOWN, that.onMouseDown);
             isMouseDown = true;
             evaluateState();
-            _extra.w.document.addEventListener("mouseup", that.onMouseUp);
+            _extra.w.document.addEventListener(_extra.eventManager.events.MOUSE_UP, that.onMouseUp);
 
         };
 
         this.onMouseUp = function () {
 
-            _extra.w.document.removeEventListener("mouseup", that.onMouseUp);
+            _extra.w.document.removeEventListener(_extra.eventManager.events.MOUSE_UP, that.onMouseUp);
             isMouseDown = false;
             evaluateState();
-            slideObject.addEventListener("mousedown", that.onMouseDown);
+            slideObject.addEventListener(_extra.eventManager.events.MOUSE_DOWN, that.onMouseDown);
 
         };
 
         ////////////////////////////////
         ////////// Start Listening
         if (data.r) {
-            slideObject.addEventListener("mouseover", this.onRollover);
+            slideObject.addEventListener(_extra.eventManager.events.MOUSE_OVER, this.onRollover);
         }
 
         if (data.d) {
-            slideObject.addEventListener("mousedown", this.onMouseDown);
+            slideObject.addEventListener(_extra.eventManager.events.MOUSE_DOWN, this.onMouseDown);
         }
 
 
@@ -269,10 +295,10 @@ _extra.registerModule("SlideObjectStateManager", function () {
     }
 
     SlideObjectStateManager.prototype.unload = function () {
-        this.slideObject.removeEventListener("mouseover", this.onRollover);
-        this.slideObject.removeEventListener("mouseout", this.onRollout);
-        this.slideObject.removeEventListener("mousedown", this.onMouseDown);
-        _extra.w.document.removeEventListener("mouseup", this.onMouseUp);
+        this.slideObject.removeEventListener(_extra.eventManager.events.MOUSE_OVER, this.onRollover);
+        this.slideObject.removeEventListener(_extra.eventManager.events.MOUSE_OUT, this.onRollout);
+        this.slideObject.removeEventListener(_extra.eventManager.events.MOUSE_DOWN, this.onMouseDown);
+        _extra.w.document.removeEventListener(_extra.eventManager.events.MOUSE_UP, this.onMouseUp);
 
         _extra.slideObjects.states.changeCallback.removeCallback(this.slideObject.name, this.onStateChangeCallback);
 

@@ -1,10 +1,20 @@
-/**
- * Created with IntelliJ IDEA.
- * User: Tristan
- * Date: 27/09/15
- * Time: 9:33 AM
- * To change this template use File | Settings | File Templates.
+/*
+ * Copyright (c) 2015 Tristan Ward
+ * ALL RIGHTS RESERVED
+ *
+ * This is part of a paid piece of software. It may not be used in any kind of project without a license granted by
+ * the copyright holder or a company approved by the copyright holder.
+ *
+ * You may not redistribute, repackage, or resell this code, nor may you pass it off as your own creation.
+ *
  */
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+//////////////////// EXTRA INITIALIZATION
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
 function initExtra(topWindow) {
 
     "use strict";
@@ -25,26 +35,49 @@ function initExtra(topWindow) {
     ///////////////////////////////////
     ///////// Private Methods
     ///////////////////////////////////
-    /**
-     * Sends a message to the debug console of the browser, assuming the console is available.
-     * @param message
-     */
-    _extra.log = function (message) {
-        if (_extra.console) {
-            _extra.console.log(message);
-        }
-    };
+
+    // This is wrapped in a function because it will need to be reinvoked later if this is IE
+    // See the IE SAFETY section for more details.
+    function createLoggingMethods() {
+        /**
+         * Sends a message to the debug console of the browser, assuming the console is available.
+         * @param message
+         */
+        _extra.log = function (message) {
+
+            if (_extra.debugging) {
+
+                _extra.debugging.log(message);
+
+            } else if (_extra.console) {
+
+                _extra.console.log(message);
+
+            }
+            //alert(message);
+        };
 
 
-    /**
-     * Send an error to the debug console of the browser, assuming the console is available.
-     * @param message
-     */
-    _extra.error = function (message) {
-        if (_extra.console) {
-            _extra.console.error(message);
-        }
-    };
+        /**
+         * Send an error to the debug console of the browser, assuming the console is available.
+         * @param message
+         */
+        _extra.error = function (message) {
+
+            if (_extra.debugging) {
+
+                _extra.debugging.error.apply(this, arguments);
+
+            } else if (_extra.console) {
+
+                _extra.console.error(message);
+
+            }
+
+        };
+    }
+    createLoggingMethods();
+
 
     // The highest window, where we should be able to find the internal functions of the output
     _extra.w = topWindow.parent;
@@ -73,6 +106,14 @@ function initExtra(topWindow) {
         _extra.aborted = false;
     }
 
+    ///////////////////////////////////////////////////////////////////////
+    /////////////// POST DUPLICATION DETECTION
+    ///////////////////////////////////////////////////////////////////////
+
+    // I've decided that _extra should always be accessible form the main window. This helps with a lot of
+    // IE compatibility.
+    _extra.w._extra = _extra;
+
     //////////////
     ///// Class registry
     //////////////
@@ -80,6 +121,8 @@ function initExtra(topWindow) {
     _extra.classes = {};
 
     _extra.registerClass = function (className, classConstructor, SuperClass) {
+
+        var Inheritence = function () {};
 
         if (SuperClass === _extra.STORYLINE || SuperClass === _extra.CAPTIVATE) {
             // In this case, this is the class registering that it is an impementation for a certain software.
@@ -104,7 +147,13 @@ function initExtra(topWindow) {
 
             }
 
-            if (SuperClass.constructor === Function) {
+            // This method is based on this article: http://stackoverflow.com/questions/6042565/inheritance-in-javascript
+            Inheritence.prototype = SuperClass.prototype;
+            classConstructor.prototype = new Inheritence();
+            classConstructor.prototype.constructor = classConstructor;
+            classConstructor.baseConstructor = SuperClass;
+            classConstructor.superClass = SuperClass.prototype;
+            /*if (SuperClass.constructor === Function) {
 
                 // Normal Inheritance
                 classConstructor.prototype = new SuperClass;
@@ -120,7 +169,7 @@ function initExtra(topWindow) {
                 classConstructor.prototype.constructor = classConstructor;
                 classConstructor.prototype.parent = SuperClass;
 
-            }
+            }*/
         }
 
 
@@ -220,7 +269,10 @@ function initExtra(topWindow) {
             areAllDependenciesInitialized;
 
 
-        registry.onLoadCallback = registry.moduleConstructor();
+        // --------------- HERE IS THE TEST!
+        registry.onLoadCallback = safelyInvokeModule(registry.moduleConstructor);
+        /// The working code
+        //registry.onLoadCallback = registry.moduleConstructor();
         registry.instantiated = true;
 
         // Loop through all the modules that have dependencies on this one
@@ -264,12 +316,47 @@ function initExtra(topWindow) {
     _extra.$ = _extra.w.$;
 
     ///////////////////////////////////////////////////////////////////////
+    /////////////// Detect Browser
+    ///////////////////////////////////////////////////////////////////////
+    _extra.isIE = /*@cc_on!@*/false || !!document.documentMode; // At least IE6
+
+    ///////////////////////////////////////////////////////////////////////
     /////////////// Define the public API
     ///////////////////////////////////////////////////////////////////////
     _extra.X = {
         "version":"$$VERSION_NUMBER$$",
         "build":"$$BUILD_NUMBER$$"
     };
+
+
+    ////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
+    //////////////////// IE SAFETY!
+    ////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
+
+    // Widgets are loaded in iFrames. Therefore their code is generally executed inside the iFrame.
+    // When an iFrame is unloaded, internet explorer for security reasons, ensures that no code from that iFrame
+    // can be executed now that it has been unloaded.
+    // For most widgets this is not an issue as they only opperate on a single slide. Captivate Extra on the other hand
+    // is not one of those widgets. We need to make sure our code can be executed well into the future.
+    // Therefore we sneak around this issue by converting the module code to a string, and then getting Captivate's
+    // window object to run that string as javascript code. Internet Explorer will then see that code as originating
+    // from the main window, rather than the iFrame, and will allow it to be run after the iFrame has been unloaded.
+    // Now of course performing this 'eval' is 'evil'. However, the evil is reduced by only doing this inside of
+    // Internet Explorer. Other browsers do not have this issue.
+    function safelyInvokeModule(method) {
+        if (_extra.isIE) {
+            return _extra.w.eval("(" + method.toString() + "())");
+        } else {
+            return method();
+        }
+    }
+
+    if (_extra.isIE) {
+        safelyInvokeModule(createLoggingMethods);
+    }
+
 
     ///////////////////////////////////////////////////////////////////////
     /////////////// On Load Callbacks
@@ -282,7 +369,13 @@ function initExtra(topWindow) {
                 m = moduleRegistry[moduleName];
                 if (m.onLoadCallback) {
 
-                    m.onLoadCallback();
+                    try {
+                        // --------------- HERE IS THE TEST!
+                        safelyInvokeModule(m.onLoadCallback);
+                        //m.onLoadCallback();
+                    } catch (e) {
+                        _extra.error("Encountered error at module: " + moduleName + "<br/>Details: <br/>" + e);
+                    }
 
                 }
             }
@@ -298,7 +391,7 @@ function initExtra(topWindow) {
 
     var onStorylineLoaded = function () {
 
-        window.removeEventListener("unload", onStorylineLoaded);
+        window.removeEventListener("load", onStorylineLoaded);
 
         // It's possible this will be called in some unit tests. Generally we don't want
         // this to be called, so we'll check the '_extra' variable to make sure we're not

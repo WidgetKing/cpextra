@@ -6,10 +6,8 @@
  * Time: 9:02 AM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("variableManager", ["softwareInterfacesManager", "Callback"], function () {
+_extra.registerModule("variableManager", ["softwareInterfacesManager", "Callback", "CustomEvent"], function () {
     "use strict";
-
-    var variableInfo = _extra.captivate.api.variablesManager.varInfos;
 
     //////////////////////////
     ////// Variable Manager Object Setup
@@ -39,7 +37,8 @@ _extra.registerModule("variableManager", ["softwareInterfacesManager", "Callback
         var name,
             splitName,
             prefix,
-            varData;
+            varData,
+            variableInfo = _extra.captivate.api.variablesManager.varInfos;
 
         for (var i = 0; i < variableInfo.length; i+=1) {
             varData = variableInfo[i];
@@ -68,7 +67,7 @@ _extra.registerModule("variableManager", ["softwareInterfacesManager", "Callback
         }
 
         // Dispatch event to let the rest of the modules know the variables have been initialized.
-        _extra.eventDispatcher.dispatchEvent(new Event("variablesInitialized"));
+        _extra.eventManager.eventDispatcher.dispatchEvent(_extra.createEvent("variablesInitialized"));
 
     };
 

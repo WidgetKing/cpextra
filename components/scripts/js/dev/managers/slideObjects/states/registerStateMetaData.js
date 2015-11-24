@@ -34,8 +34,8 @@ _extra.registerModule("registerStateMetaData",["slideObjectManager_global", "Sli
 
         // If we have already details about this object here, then something has gone wrong.
         if (currentSlideStateManagers[slideObjectName]) {
-            _extra.error("At _extra.slideObjects.states.registerStateMetaData, tried to register data for '" + slideObjectName + "' twice. " +
-            "Has unloading of this data from a previous slide been unsuccessful?");
+
+            _extra.error("AS003", slideObjectName);
 
         }
 
@@ -114,8 +114,6 @@ _extra.registerModule("registerStateMetaData",["slideObjectManager_global", "Sli
     _extra.slideObjects.enteredSlideChildObjectsCallbacks.addCallback("*", function (slideObjectName) {
 
 
-
-
         // This function is sent the name of every slide object on the current slide, one by one.
         // It will analyse its states to see if there are any that interact with extra.
         var data = _extra.dataManager.getSlideObjectDataByName(slideObjectName),
@@ -187,7 +185,7 @@ _extra.registerModule("registerStateMetaData",["slideObjectManager_global", "Sli
                 // x_var_var
                 if (variableData.hasOwnProperty(variableName)) {
 
-                    _extra.error("State name '" + fullName + "' illegally tried to register '" + variableName + "' twice.");
+                    _extra.error("AS002", slideObjectName, fullName, variableName);
 
                 } else {
 
@@ -224,7 +222,7 @@ _extra.registerModule("registerStateMetaData",["slideObjectManager_global", "Sli
 
                 if (previousIndexVariable) {
 
-                    if(isNaN(segment)) {
+                    if(_extra.w.isNaN(segment)) {
 
                         // x_var1_var2
                         if (_extra.variableManager.hasVariable(segment)) {
@@ -242,7 +240,7 @@ _extra.registerModule("registerStateMetaData",["slideObjectManager_global", "Sli
                     // x_var_1
                     } else {
 
-                        variableData[previousIndexVariable] = parseInt(segment);
+                        variableData[previousIndexVariable] = _extra.w.parseInt(segment);
                         previousIndexVariable = null;
 
                     }
@@ -266,8 +264,10 @@ _extra.registerModule("registerStateMetaData",["slideObjectManager_global", "Sli
 
                         // x_invalidVar
                         if (i >= splitName.length - 1) {
-                            _extra.error("Could not find variable by the name of '" + segment +
-                                         "' as present in state name: '" + fullName + "'");
+                            _extra.error("AS001",slideObjectName, fullName, segment);
+                            /*_extra.error("Unable to find a variable named: '" + segment +
+                                         "' while analysing the state named: '" + fullName + "' on the slide object named: '" + slideObjectName +
+                                         "'.<br/>To correct this issue, ensure the variable and state names match.");*/
                         // x_var_name
                         } else {
                             // We have yet to reach the end of the array, so there's still potential this is an invalid
@@ -283,7 +283,7 @@ _extra.registerModule("registerStateMetaData",["slideObjectManager_global", "Sli
 
             }
 
-            if (Object.keys(variableData).length <= 0) {
+            if (_extra.w.Object.keys(variableData).length <= 0) {
                 return null;
             }
 
@@ -319,7 +319,7 @@ _extra.registerModule("registerStateMetaData",["slideObjectManager_global", "Sli
         }
 
 
-        if (Object.keys(slideObjectMetaData).length > 0) {
+        if (_extra.w.Object.keys(slideObjectMetaData).length > 0) {
             // If this variable has a value, it means we must have run across a valid method at some point.
             // Therefore, we register the meta data.
             _extra.slideObjects.states.registerStateMetaData(slideObjectName, slideObjectMetaData);

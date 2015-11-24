@@ -10,22 +10,42 @@ _extra.registerModule("parameterParser", ["variableManager"], function () {
     "use strict";
 
     _extra.variableManager.parse = {
-        "string":function (string) {
+        "string":function (string, customType) {
 
-            var data = {};
+            var data = {
+                "value":string
+            };
 
-            data.isSlideObject = _extra.slideObjects.hasSlideObjectInProject(string);
-            data.isVariable = _extra.variableManager.hasVariable(string);
-            data.isQuery = string.indexOf(_extra.slideObjects.WILDCARD_CHARACTER) !== -1;
+            if (string) {
+
+                data.isSlideObject = _extra.slideObjects.hasSlideObjectInProject(string);
+                data.isVariable = _extra.variableManager.hasVariable(string);
+                data.isQuery = string.indexOf(_extra.slideObjects.WILDCARD_CHARACTER) !== -1;
+
+                // If we have custom type and have not found it to match any of the other types.
+                if (customType && !data.isSlideObject && !data.isVariable && !data.isQuery) {
+                    data.isCustomType = customType(string, data);
+                }
+
+            } else {
+
+                // Null string
+                data.isSlideObject = false;
+                data.isVariable = false;
+                data.isQuery = false;
+                data.isBlank = true;
+
+            }
+
 
             // Check variable data
             if (data.isVariable) {
 
                 var value = _extra.variableManager.getVariableValue(string);
-                data.isValueNumber = !isNaN(value);
+                data.isValueNumber = !_extra.w.isNaN(value);
 
                 if (data.isValueNumber) {
-                    value = parseFloat(value);
+                    value = _extra.w.parseFloat(value);
                     data.isValueSlideObject = false;
                 } else if (value !== null) {
                     // Remove spaces from value string
@@ -39,6 +59,40 @@ _extra.registerModule("parameterParser", ["variableManager"], function () {
             }
 
             return data;
+        },
+        "boolean": function (value) {
+
+            function parseNumber(value) {
+                return value >= 1;
+            }
+
+            switch (typeof value) {
+
+                case "number" :
+                    return parseNumber(value);
+
+                case "string":
+                    if (isNaN(value)) {
+
+                        value = value.toLowerCase();
+
+                        return !(value === "false" || value === "no" || value === "fail" || value === "failure") ;
+
+                    } else {
+
+                        // This is a number in disguise!
+                        return parseNumber(_extra.w.parseInt(value));
+
+                    }
+
+
+                    break;
+
+                default:
+                    return null;
+
+            }
+
         }
     };
 

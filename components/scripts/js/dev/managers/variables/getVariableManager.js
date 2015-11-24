@@ -64,8 +64,8 @@ _extra.registerModule("getVariableManager", ["variableManager"] ,function () {
             result = null;
 
         // If this is a number;
-        } else if (!isNaN(result)) {
-            result = parseFloat(result);
+        } else if (!_extra.w.isNaN(result)) {
+            result = _extra.w.parseFloat(result);
         }
 
         // Set variable value!

@@ -9,6 +9,8 @@ _extra.registerModule("slideManager_global",["slideManager_software"],function()
 
     "use strict";
 
+    var rawExtra = _extra;
+
     _extra.slideManager.currentSceneNumber = 0;
     _extra.slideManager.currentSlideNumber = 0;
     _extra.slideManager.currentSlideID = "0.0";
@@ -60,6 +62,15 @@ _extra.registerModule("slideManager_global",["slideManager_software"],function()
     ////////////////////////////////////////////////////////////////////////////////
     // This is the start point for a lot of functionality
     function onSlideEnter() {
+
+        // In Internet Explorer, _extra will be deleted when we move out of its slide. So we'll add it back to the
+        // window object.
+        if (!_extra) {
+            console.log(window);
+            window._extra = rawExtra;
+            //rawExtra.w.X._ = rawExtra;
+        }
+
         var currentScene = _extra.slideManager.getCurrentSceneNumber(),
             currentSlide = _extra.slideManager.getCurrentSlideNumber(),
             currentSlideID = currentScene + "." + currentSlide;
@@ -70,6 +81,11 @@ _extra.registerModule("slideManager_global",["slideManager_software"],function()
 
         // Notify all callbacks registered as universal (or "*")
         _extra.slideManager.enterSlideCallback.sendToCallback("*", currentSlideID);
+
+        // Manage any special things that should be done for the software.
+        if (_extra.slideManager.hasOwnProperty("software_onSlideEnter")) {
+            _extra.slideManager.software_onSlideEnter();
+        }
 
         // If we are on the first scene of the project, then we'll allow callbacks that don't define scene number.
         // Such as: 3
@@ -82,9 +98,7 @@ _extra.registerModule("slideManager_global",["slideManager_software"],function()
         _extra.slideManager.enterSlideCallback.sendToCallback(currentSlideID, currentSlideID);
 
 
-        if (_extra.slideManager.hasOwnProperty("software_onSlideEnter")) {
-            _extra.slideManager.software_onSlideEnter();
-        }
+
     }
 
     // From now on, when moving into a new slide, we'll call the above function,

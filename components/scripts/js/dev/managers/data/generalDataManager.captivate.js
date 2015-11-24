@@ -5,16 +5,28 @@ _extra.registerModule("generalDataManager", ["softwareInterfacesManager", "dataT
 
     _extra.dataManager = {
 
-        "getSlideObjectDataByName": function (name) {
+        "getSlideObjectDataByName": function (slideObjectName) {
             var data = {
-                "base": _extra.captivate.allSlideObjectsData[name]
+                "base": _extra.captivate.allSlideObjectsData[slideObjectName]
             };
 
             if (data.base) {
-                data.container = _extra.captivate.allSlideObjectsData[name + "c"];
-                return _extra.factories.createSlideObjectData(name, data, _extra.dataTypes.convertSlideObjectType(data.base.type));
+                data.container = _extra.captivate.allSlideObjectsData[slideObjectName + "c"];
+                return _extra.factories.createSlideObjectData(slideObjectName, data, _extra.dataTypes.convertSlideObjectType(data.base.type));
             }
             return null;
+        },
+        "getSlideObjectTypeByName": function (slideObjectName) {
+
+            var data = _extra.captivate.allSlideObjectsData[slideObjectName];
+
+            if (data) {
+
+                return _extra.dataTypes.convertSlideObjectType(data.type);
+
+            }
+
+            return NaN;
         }
     };
 

@@ -5,12 +5,16 @@
  * Time: 5:06 PM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("preferenceManager", ["variableManager"], function () {
+_extra.registerModule("preferenceManager", ["variableManager", "parameterParser"], function () {
 
     "use strict";
     var preferenceVariablePrefix = "xpref";
     var preferenceModules = {};
 
+    // This object will hold the settings for our project which are controlled by preference variables.
+    _extra.preferences = {
+
+    };
 
     _extra.preferenceManager = {
 
@@ -32,11 +36,18 @@ _extra.registerModule("preferenceManager", ["variableManager"], function () {
 
             function onPreferenceVariableChange () {
 
-                if (_extra.variableManager.getVariableValue(preferenceVariable)) {
+                var value = _extra.variableManager.getVariableValue(preferenceVariable);
+
+                if (_extra.variableManager.parse.boolean(value)) {
 
                     if (!preferenceInfo.enabled) {
-                        preferenceInfo.enable();
+                        preferenceInfo.enable(value);
                         preferenceInfo.enabled = true;
+                    }
+
+                    // If an update method has been provided, we'll call that with the value.
+                    if (preferenceInfo.update) {
+                        preferenceInfo.update(value);
                     }
 
                 } else {

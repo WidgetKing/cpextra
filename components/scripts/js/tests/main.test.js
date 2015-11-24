@@ -14,7 +14,9 @@
     describe("Test suit for main.js general setup", function() {
 
         /*beforeEach(function () {
-            window = {"test":2};
+            window = {
+                "alert":jasmine.createSpy("window.alert")
+            };
             initExtra();
         });*/
         afterEach(function () {
@@ -35,6 +37,34 @@
             initExtra();
             expect(_extra.log).toBeDefined();
             expect(_extra.error).toBeDefined();
+        });
+
+        it("should send logging to the debug manager", function () {
+
+            initExtra();
+
+            spyOn(_extra.console, "log");
+            spyOn(_extra.console, "error");
+
+            _extra.log("Hello");
+            expect(_extra.console.log).toHaveBeenCalledWith("Hello");
+
+            _extra.error("World");
+            expect(_extra.console.error).toHaveBeenCalledWith("World");
+
+            // Passing to the debugging manager
+            _extra.debugging = {
+                "on":true,
+                "log":jasmine.createSpy("_extra.debugging.log"),
+                "error":jasmine.createSpy("_extra.debugging.error")
+            };
+
+            _extra.log("Hello");
+            expect(_extra.debugging.log).toHaveBeenCalledWith("Hello");
+
+            _extra.error("World");
+            expect(_extra.debugging.error).toHaveBeenCalledWith("World");
+
         });
 
         it("should not define _extra if it has already been defined", function () {
@@ -200,6 +230,7 @@
             _extra.registerModule("foo", a.dummy, "cp");
             expect(a.dummy).toHaveBeenCalled();
         });
+
 
     });
 

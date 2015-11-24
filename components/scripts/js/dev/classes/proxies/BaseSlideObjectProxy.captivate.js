@@ -30,51 +30,59 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
         this._offsetY = 0;
 
 
-
         ///////////////////////////////////////////////////////////////////////
         /////////////// Private Variables
         ///////////////////////////////////////////////////////////////////////
-        var listeners = new _extra.classes.Callback(),
-            modelListener = new _extra.classes.ModelListener(this.name, this._model),
+        var modelListener = new _extra.classes.ModelListener(this.name, this._model),
             that = this,
+            eventMediator = _extra.eventManager.getEventMediator(this.name),
+            interruptedClickEventHanlder = new _extra.classes.InterruptedClickEventHandler(eventMediator),
             originalX = this._currentStateData.originalX,
             originalY = this._currentStateData.originalY;
+
+        eventMediator.swap(this._currentStateData);
+
 
         ///////////////////////////////////////////////////////////////////////
         /////////////// Public Methods
         ///////////////////////////////////////////////////////////////////////
         this.addEventListener = function (eventName, callback) {
-            listeners.addCallback(eventName, callback);
-            this._currentStateData.addEventListener(eventName, callback);
+            eventMediator.addEventListener(eventName, callback);
         };
 
         this.removeEventListener = function (eventName, callback) {
-            listeners.removeCallback(eventName, callback);
-            this._currentStateData.removeEventListener(eventName, callback);
+            eventMediator.removeEventListener(eventName, callback);
         };
 
         this.hasEventListener = function(eventName) {
-            return listeners.hasCallbackFor(eventName);
+            return eventMediator.hasEventListener(eventName);
+        };
+
+        this.dispatchEvent = function(event) {
+            eventMediator.dispatchEvent(event);
         };
 
         this.enableForMouse = function() {
-            listeners.model.write(this.name, ENABLE_FOR_MOUSE, true);
+            modelListener.model.write(this.name, ENABLE_FOR_MOUSE, true);
         };
 
         this.disableForMouse = function() {
-            listeners.model.write(this.name, ENABLE_FOR_MOUSE, false);
+            modelListener.model.write(this.name, ENABLE_FOR_MOUSE, false);
         };
 
         this.setHandCursor = function(cursorType) {
-            listeners.model.write(this.name, CURSOR, cursorType);
+            modelListener.model.write(this.name, CURSOR, cursorType);
         };
 
         this.unload = function () {
-            listeners.forEach(function (index, callback) {
-                that._currentStateData.removeEventListener(index,callback);
-            });
+            eventMediator.swap(null);
             modelListener.unload();
+            interruptedClickEventHanlder.unload();
+            _extra.eventManager.eventDispatcher.removeEventListener("slideloaded", addModelListeners);
+            _extra.slideObjects.states.changeCallback.removeCallback(that.name,onStateChange);
+            that._currentStateData.removeOnDrawCallback(addModelListeners);
         };
+
 
 
         ///////////////////////////////////////////////////////////////////////
@@ -82,14 +90,14 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
         ///////////////////////////////////////////////////////////////////////
         ////////////////////////////////
         ////////// Manage State Changing
-        _extra.slideObjects.states.changeCallback.addCallback(this.name, function (details) {
+
+        function onStateChange(details) {
 
             var futureStateData = data.getDataForState(details.stateName);
 
-            listeners.forEach(function (index, callback) {
-                that._currentStateData.removeEventListener(index,callback);
-                futureStateData.addEventListener(index,callback);
-            });
+            // Change the event listeners from the DOM elements of the previous state to the one of this state.
+            eventMediator.swap(futureStateData);
+            interruptedClickEventHanlder.stateHasChanged();
 
             // Update the offset
             that._offsetX = originalX - futureStateData.originalX;
@@ -101,7 +109,8 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
             // Update to model
             modelListener.model.update(that.name);
 
-        });
+        }
+        _extra.slideObjects.states.changeCallback.addCallback(this.name, onStateChange);
 
 
 
@@ -109,64 +118,104 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
         /////////////// MODEL LISTENER METHODS
         ///////////////////////////////////////////////////////////////////////
 
-        ////////////////////////////////
-        ////////// Enable For Mouse
-        modelListener.addProperty(ENABLE_FOR_MOUSE, function (previousValue, currentValue) {
+        function addModelListeners() {
 
-            if (currentValue) {
+            that._currentStateData.removeOnDrawCallback(addModelListeners);
 
-                // ENABLE
-                that._currentStateData.removeClass("extra-mouse-disabled");
+            ////////////////////////////////
+            ////////// Enable For Mouse
+            modelListener.addProperty(ENABLE_FOR_MOUSE, function (previousValue, currentValue) {
 
-            } else {
+                /*
+                 * Abandoned the idea of using DIV elements to block mouse events in Internet Explorer.
+                 * But just incase you needed that css again, it looked like this:
+                 *
+                 * background-color:#F00;
+                 * width: 100px;
+                 * height: 100px;
+                 * border: 3px solid #73AD21;
+                 * position:absolute;
+                 * top:100px;
+                 * left:100px;
+                 *
+                 */
 
-                // DISABLE
-                that._currentStateData.addClass("extra-mouse-disabled");
+                if (_extra.isIE) {
 
-            }
-
-        });
-
-        ////////////////////////////////
-        ////////// Hand Cursor
-        modelListener.addProperty(CURSOR, function (previousValue, currentValue) {
-
-            that._currentStateData.editCSS("cursor", currentValue);
-
-        });
-
-        ////////////////////////////////
-        ////////// X
-        modelListener.addProperty(X, function (previousValue, currentValue) {
-
-            that._currentStateData.x = currentValue - that._offsetX;
-
-        });
-
-        ////////////////////////////////
-        ////////// Y
-        modelListener.addProperty(Y, function (previousValue, currentValue) {
-
-            that._currentStateData.y = currentValue - that._offsetY;
-
-        });
-
-        ////////////////////////////////
-        ////////// Width
-        modelListener.addProperty(WIDTH, function (previousValue, currentValue) {
-
-            that._currentStateData.width = currentValue;
-
-        });
+                    if (currentValue) {
 
 
-        ////////////////////////////////
-        ////////// Height
-        modelListener.addProperty(HEIGHT, function (previousValue, currentValue) {
 
-            that._currentStateData.width = currentValue;
+                    } else {
 
-        });
+                        var resistor = new _extra.classes.MouseEventByPasser(that);
+
+                    }
+
+                } else {
+
+                    if (currentValue) {
+
+                        // ENABLE
+                        that._currentStateData.removeClass("extra-mouse-disabled");
+
+                    } else {
+
+                        // DISABLE
+                        that._currentStateData.addClass("extra-mouse-disabled");
+
+                    }
+
+                }
+
+
+            });
+
+            ////////////////////////////////
+            ////////// Hand Cursor
+            modelListener.addProperty(CURSOR, function (previousValue, currentValue) {
+
+                that._currentStateData.editCSS("cursor", currentValue);
+
+            });
+
+            ////////////////////////////////
+            ////////// X
+            modelListener.addProperty(X, function (previousValue, currentValue) {
+
+                that._currentStateData.x = currentValue - that._offsetX;
+
+            });
+
+            ////////////////////////////////
+            ////////// Y
+            modelListener.addProperty(Y, function (previousValue, currentValue) {
+
+                that._currentStateData.y = currentValue - that._offsetY;
+
+            });
+
+            ////////////////////////////////
+            ////////// Width
+            modelListener.addProperty(WIDTH, function (previousValue, currentValue) {
+
+                that._currentStateData.width = currentValue;
+
+            });
+
+
+            ////////////////////////////////
+            ////////// Height
+            modelListener.addProperty(HEIGHT, function (previousValue, currentValue) {
+
+                that._currentStateData.width = currentValue;
+
+            });
+
+        }
+
+        this._currentStateData.addOnDrawCallback(addModelListeners);
+
 
     }
 

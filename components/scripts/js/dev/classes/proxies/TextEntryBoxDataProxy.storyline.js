@@ -18,10 +18,10 @@ _extra.registerModule("TextEntryBoxDataProxy", ["BaseSlideObjectDataProxy"], fun
 
     _extra.registerClass("TextEntryBoxDataProxy", TextEntryBoxDataProxy,"BaseSlideObjectDataProxy", _extra.STORYLINE);
 
-    Object.defineProperty(TextEntryBoxDataProxy.prototype,"variable", {
-            get: function() {
-                _extra.error("TextEntryBoxDataProxy.variable has yet to be defined!");
-                return null;
-            }
-        });
+    _extra.w.Object.defineProperty(TextEntryBoxDataProxy.prototype,"variable", {
+        get: function() {
+            _extra.error("TextEntryBoxDataProxy.variable has yet to be defined!");
+            return null;
+        }
+    });
 }, _extra.STORYLINE);

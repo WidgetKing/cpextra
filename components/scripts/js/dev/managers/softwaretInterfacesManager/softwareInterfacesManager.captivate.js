@@ -9,7 +9,7 @@ _extra.registerModule("softwareInterfacesManager", function () {
 
     "use strict";
 
-    // Define a private object to hold the references to the different poitns in
+    // Define a private object to hold the references to the different points in
     // the Captivate API
     _extra.captivate = {
         "api":_extra.w.cp,
@@ -20,6 +20,10 @@ _extra.registerModule("softwareInterfacesManager", function () {
         "model":_extra.w.cp.model,
         "allSlideObjectsData":_extra.w.cp.model.data,
         "movie":_extra.w.cp.movie,
+        "playbar": new _extra.classes.PlaybarProxy(),
+        "getResponsiveProjectWidth": function () {
+            return _extra.captivate.api.ResponsiveProjWidth;
+        },
         "events":{
             /**
              * Event Data:

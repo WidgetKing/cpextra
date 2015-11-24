@@ -57,7 +57,7 @@ _extra.registerModule("variableManager", ["softwareInterfacesManager", "Callback
         }
 
         // Dispatch event to let the rest of the modules know the variables have been initialized.
-        _extra.eventDispatcher.dispatchEvent(new Event("variablesInitialized"));
+        _extra.eventManager.eventDispatcher.dispatchEvent(_extra.createEvent("variablesInitialized"));
 
     };
 

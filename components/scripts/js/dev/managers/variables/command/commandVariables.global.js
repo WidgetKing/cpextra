@@ -27,8 +27,8 @@ _extra.registerModule("commandVariables_global", ["commandVariableManager", "sli
 
     ////////////////////////////////
     ////////// Mouse Enable
-    register("EnableForMouse", _extra.slideObjects.enableForMouse);
-    register("DisableForMouse", _extra.slideObjects.disableForMouse);
+    register("EnableMouseEvents", _extra.slideObjects.enableForMouse);
+    register("DisableMouseEvents", _extra.slideObjects.disableForMouse);
 
     ///////////////////////////////////////////////////////////////////////
     /////////////// ADVANCED COMMAND VARIABLES
@@ -47,10 +47,7 @@ _extra.registerModule("commandVariables_global", ["commandVariableManager", "sli
     register("Width", _extra.slideObjects.width, handlers.sendParametersAsParameters);
     register("Height", _extra.slideObjects.height, handlers.sendParametersAsParameters);
 
-    ////////////////////////////////
-    ////////// Event Handler
-    register("AddEventListener", _extra.slideObjects.addEventListener, handlers.sendParametersAsParameters);
-    register("RemoveEventListener", _extra.slideObjects.removeEventListener, handlers.sendParametersAsParameters);
+
 
 
 

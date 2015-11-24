@@ -9,10 +9,7 @@ _extra.registerModule("commandVariableManager",["variableManager","stateManager_
 
     "use strict";
 
-    var COMMAND_VARIABLE_PREFIX = "xcmnd",
-        variableName,
-        commandVariables = {};
-
+    _extra.variableManager.commandVariables = {};
 
     ////////////////////////////////
     ////////// Parameter Handler Types
@@ -47,7 +44,7 @@ _extra.registerModule("commandVariableManager",["variableManager","stateManager_
     // There may be other parts of the program who wish to register their own command variables (perhaps individual ones for Captivate or Storyline)
     // So we expose function to allow them to register.
     _extra.variableManager.registerCommandVariable = function (variableSuffix, callback, parameterHandler) {
-        if (commandVariables[variableSuffix]) {
+        if (_extra.variableManager.commandVariables[variableSuffix]) {
             return;
         }
 
@@ -58,7 +55,7 @@ _extra.registerModule("commandVariableManager",["variableManager","stateManager_
 
         }
 
-        commandVariables[variableSuffix] = {
+        _extra.variableManager.commandVariables[variableSuffix] = {
             "callback":callback,
             "parameterHandler": parameterHandler
         };
@@ -71,9 +68,11 @@ _extra.registerModule("commandVariableManager",["variableManager","stateManager_
     ///////////////////////////////////////////////////////////////////////
     return function () {
 
-
+        var COMMAND_VARIABLE_PREFIX = "xcmnd",
+            variableName;
 
         function listenForCommandVariableChange(variableName,variableMetadata) {
+
 
 
             _extra.variableManager.listenForVariableChange(variableName, function () {
@@ -97,11 +96,10 @@ _extra.registerModule("commandVariableManager",["variableManager","stateManager_
         }
 
         // We will now go through all the command variables and set them up.
-        for (var variableSuffix in commandVariables) {
-            if (commandVariables.hasOwnProperty(variableSuffix)) {
+        for (var variableSuffix in _extra.variableManager.commandVariables) {
+            if (_extra.variableManager.commandVariables.hasOwnProperty(variableSuffix)) {
 
                 variableName = COMMAND_VARIABLE_PREFIX + variableSuffix;
-
 
                 // Check to find valid variable.
                 if (!_extra.variableManager.hasVariable(variableName)) {
@@ -119,14 +117,14 @@ _extra.registerModule("commandVariableManager",["variableManager","stateManager_
                 }
 
                 // Now set up the variable's behaviour
-                listenForCommandVariableChange(variableName, commandVariables[variableSuffix]);
+                listenForCommandVariableChange(variableName, _extra.variableManager.commandVariables[variableSuffix]);
 
             }
         }
 
 
         // Unload
-        commandVariables = null;
+        _extra.variableManager.commandVariables = null;
         _extra.variableManager.registerCommandVariable = null;
         _extra.variableManager.parameterHandlers = null;
 

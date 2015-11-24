@@ -19,18 +19,24 @@ _extra.registerModule("TextEntryBoxDataProxy", ["BaseSlideObjectDataProxy"], fun
 
     _extra.registerClass("TextEntryBoxDataProxy", TextEntryBoxDataProxy, "BaseSlideObjectDataProxy", _extra.CAPTIVATE);
 
-    Object.defineProperty(TextEntryBoxDataProxy.prototype,"variable", {
+    _extra.w.Object.defineProperty(TextEntryBoxDataProxy.prototype,"variable", {
         get: function() {
             return this._data.base.vn;
         }
     });
 
-    Object.defineProperty(TextEntryBoxDataProxy.prototype,"defaultText", {
+    _extra.w.Object.defineProperty(TextEntryBoxDataProxy.prototype,"focusLostAction", {
+        get: function() {
+            return this._data.base.ofla;
+        }
+    });
+
+    _extra.w.Object.defineProperty(TextEntryBoxDataProxy.prototype,"defaultText", {
         get: function() {
             if (this._isResponsive) {
-                // TODO: Implement a way to find out what current breakpoint is active so that we can return the appropriate information.
-                _extra.error("TextEntryBoxData.defaultText getter for Captivate responsive projects has yet to be implemented");
-                return null;
+                return this._data.container.txt[_extra.captivate.getResponsiveProjectWidth()];
+                //_extra.error("TextEntryBoxData.defaultText getter for Captivate responsive projects has yet to be implemented");
+                //return null;
             } else {
                 return this._data.container.txt;
             }

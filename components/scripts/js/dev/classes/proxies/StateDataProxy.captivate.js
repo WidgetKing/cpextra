@@ -18,7 +18,7 @@ _extra.registerModule("StateDataProxy",function () {
             value = value.substr(0,value.length - 2);
         }
 
-        return parseFloat(value);
+        return _extra.w.parseFloat(value);
     }
 
     function doCSSPropertySet(value, offsetProperty, cssProperty, that) {
@@ -48,8 +48,18 @@ _extra.registerModule("StateDataProxy",function () {
             this._data = data;
             this.slideObjects = [];
 
-            var tempData;
+            ///////////////////////////////////////////////////////////////////////
+            /////////////// PRIVATE VARIABLES
+            ///////////////////////////////////////////////////////////////////////
+            var tempData,
+                onDrawCallbacks = [],
+                rawDrawMethod,
+                that = this,
+                hasBeenDrawn = false;
 
+            ///////////////////////////////////////////////////////////////////////
+            /////////////// GET DATA
+            ///////////////////////////////////////////////////////////////////////
             for (var i = 0; i < data.stsi.length; i += 1) {
                 tempData = _extra.captivate.api.getDisplayObjByCP_UID(data.stsi[i]);
                 this.slideObjects.push({
@@ -60,11 +70,77 @@ _extra.registerModule("StateDataProxy",function () {
                     "originalY":tempData.bounds.minY,
                     "originalWidth":tempData.bounds.maxX - tempData.bounds.minX,
                     "originalHeight":tempData.bounds.maxY - tempData.bounds.minY,
+                    "canvasContext": (tempData.element.getContext) ? tempData.element.getContext("2d") : null,
+                    "name":tempData.divName || tempData.parentDivName,
+                    "drawMethodName": (tempData.hasOwnProperty("AutoShapeState")) ? "lineTo" : "drawImage",
                     "rawData":tempData
                 });
             }
 
             this.primaryObject = this.slideObjects[0];
+
+            ///////////////////////////////////////////////////////////////////////
+            /////////////// ON DRAW IMAGE CALLBACKS
+            ///////////////////////////////////////////////////////////////////////
+            ////////////////////////////////
+            ////////// Methods
+            this.addOnDrawCallback = function (method) {
+                onDrawCallbacks.push(method);
+                if (hasBeenDrawn) {
+                    method();
+                }
+            };
+            this.removeOnDrawCallback = function (method) {
+                for (var i = 0; i < onDrawCallbacks.length; i += 1) {
+
+                    if (onDrawCallbacks[i] === method) {
+
+                        onDrawCallbacks.splice(i,1);
+
+                    }
+
+                }
+            };
+
+            ////////////////////////////////
+            ////////// Setup
+
+            // If this object uses a canvas to display.
+            if (this.primaryObject.canvasContext) {
+
+
+                rawDrawMethod = this.primaryObject.canvasContext[this.primaryObject.drawMethodName];
+                // Hook into the function.
+                this.primaryObject.canvasContext[this.primaryObject.drawMethodName] = function () {
+
+                    var result = rawDrawMethod.apply(this, arguments);
+
+                    hasBeenDrawn = true;
+
+                    for (var i = 0; i < onDrawCallbacks.length; i += 1) {
+
+                        onDrawCallbacks[i]();
+
+                    }
+
+                    // Cease spying on the method, we only need to know once.
+                    that.primaryObject.canvasContext[that.primaryObject.drawMethodName] = rawDrawMethod;
+
+                    return result;
+
+                };
+
+                ////////////////////////////////
+                ////////// Detect if has already been drawn
+                if (this.primaryObject.rawData.canvas) {
+                    hasBeenDrawn = true;
+                }
+
+            } else {
+                // This object doesn't use a canvas to display (like a Button)
+                hasBeenDrawn = true;
+            }
+
 
         }
     }
