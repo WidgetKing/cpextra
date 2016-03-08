@@ -13,6 +13,8 @@ _extra.registerModule("eventManager", ["EventMediator", "EventDispatcher", "slid
 
     _extra.eventManager = {
 
+        "useTouchEvents": isMobile,
+
         "eventDispatcher": new _extra.classes.EventDispatcher(),
 
         "getEventMediator": function (slideObjectName) {
@@ -42,12 +44,14 @@ _extra.registerModule("eventManager", ["EventMediator", "EventDispatcher", "slid
             "MOUSE_UP": (isMobile) ? "touchend" : "mouseup",
             "MOUSE_MOVE": (isMobile) ? "touchmove" : "mousemove",
             "MOUSE_OVER": "mouseover",
-            "MOUSE_OUT": "mouseout",
+            "MOUSE_OUT": "mouseleave",
             "ROLLOVER": "mouseover",
             "ROLLOUT": "mouseout",
-            "RIGHT_CLICK": "rightclick",
+            "RIGHT_CLICK": "contextmenu", // rightclick
             "CLICK": "click",
-            "DOUBLE_CLICK": "dblclick"
+            "DOUBLE_CLICK": "dblclick",
+            "VIDEO_ENDED": "videoended",
+            "AUDIO_ENDED": "audioended"
         }
     };
 

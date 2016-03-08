@@ -44,6 +44,10 @@ _extra.registerModule("doubleClickDelayPreference", ["preferenceManager"], funct
         }
     };
 
-    _extra.preferenceManager.registerPreferenceModule("DoubleClickDelay", preferenceModuleInfo);
+    if (!_extra.preferenceManager.registerPreferenceModule("DoubleClickDelay", preferenceModuleInfo)) {
+
+        preferenceModuleInfo.update(0.5);
+
+    }
 
 });

@@ -22,24 +22,36 @@ _extra.registerModule("debuggingManager", function () {
         },
         "error":function (message) {
 
-            // If we have been given an error message, then we extra the error message from error bank.
+            var errorNumber;
+
+            // If we have been given an error message, then we extract the error message from error bank.
             if (_extra.debugging.errors && _extra.debugging.errors[message]) {
 
                 // Remove the message parameter from the arguments, so we can send the rest of it on to the error.
                 var args = Array.prototype.slice.call(arguments);
                 args.splice(0,1);
 
+                errorNumber = message;
+
                           // The error code
-                message = "CpExtra encountered error: " + message +
-                          // The error message
-                          "<br/>" + _extra.debugging.errors[message].apply(this,args);
+                message = _extra.debugging.errors[message].apply(this,args);
 
             }
 
 
             if (_extra.preferences && _extra.preferences.debugMode) {
 
-                _extra.w.alert("<div style='padding-right: 20px;'>" + message + "</div>");
+                message = "<div id='cpextra-alert-thinner' style='padding-right: 20px;'>" + message + "</div>";
+                // If this is an official error
+                if (errorNumber) {
+
+                    _extra.w.alert(message, "CpExtra encountered error: <b>" + errorNumber + "</b>");
+
+                } else {
+
+                    _extra.w.alert(message, "CpExtra says...");
+
+                }
 
             } else if (_extra.console) {
 

@@ -1,8 +1,8 @@
 {
   "name": "captivateextra",
-  "version": "0.0.2",
-  "buildNumber": 3864,
-  "description": "An extension for Adobe Captivate which adds extra features, streamlines day-to-day worflows and fixes certain bugs or unexpected behaviours inside of Captivate. ONLY WORKS FOR HTML EXPORT!",
+  "version": "1.2.0",
+  "buildNumber": 5961,
+  "description": "An extension for Adobe Captivate which adds extra features, streamlines day-to-day workflows and fixes certain bugs or unexpected behaviours inside of Captivate. ONLY WORKS FOR HTML EXPORT!",
   "main": "index.js",
   "repository": {
     "type": "git",
@@ -16,6 +16,7 @@
     "gulp-connect": "^2.2.0",
     "gulp-json-editor": "^2.2.1",
     "gulp-replace": "^0.5.4",
+    "gulp-uglify": "^1.5.1",
     "gulp-util": "^3.0.6",
     "gulp-zip": "^3.0.2",
     "jasmine-core": "^2.3.4",

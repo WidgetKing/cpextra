@@ -21,8 +21,34 @@ _extra.registerModule("softwareInterfacesManager", function () {
         "allSlideObjectsData":_extra.w.cp.model.data,
         "movie":_extra.w.cp.movie,
         "playbar": new _extra.classes.PlaybarProxy(),
+        "variableManager": _extra.w.cp.variablesManager,
+        "isResponsive": _extra.w.cp.responsive,
+        "projectDIV": _extra.w.cp.projectContainer,
+        "audioManager": _extra.w.cp.movie.am,
         "getResponsiveProjectWidth": function () {
             return _extra.captivate.api.ResponsiveProjWidth;
+        },
+        "getProjectWidth": function () {
+            if (_extra.captivate.projectDIV.style.width === "100%") {
+
+                return _extra.w.innerWidth;
+
+            } else {
+
+                return parseInt(_extra.captivate.projectDIV.style.width);
+
+            }
+        },
+        "getProjectHeight": function () {
+            if (_extra.captivate.projectDIV.style.height === "100%") {
+
+                return _extra.w.innerHeight;
+
+            } else {
+
+                return parseInt(_extra.captivate.projectDIV.style.height);
+
+            }
         },
         "events":{
             /**

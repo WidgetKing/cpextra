@@ -56,7 +56,6 @@ _extra.registerModule("Model", function () {
             }
         };
 
-
         this.retrieve = function (slideObjectName, property) {
             if (property && m[slideObjectName]) {
 
@@ -71,6 +70,28 @@ _extra.registerModule("Model", function () {
 
         this.hasDataFor = function (slideObjectName) {
             return m.hasOwnProperty(slideObjectName);
+        };
+
+        this.refresh = function (property) {
+
+            var data,
+                value;
+
+            for (var slideObjectName in m) {
+                if (m.hasOwnProperty(slideObjectName)) {
+
+                    data = m[slideObjectName];
+
+                    if (data.hasOwnProperty(property)) {
+
+                        value = data[property];
+
+                        notifyCallback(slideObjectName, property, value, value);
+
+                    }
+
+                }
+            }
         };
 
         this.update = function (slideObjectName) {

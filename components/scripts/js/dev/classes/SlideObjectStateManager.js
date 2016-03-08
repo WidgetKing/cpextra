@@ -18,6 +18,7 @@ _extra.registerModule("SlideObjectStateManager", function () {
 
         this.slideObject = slideObject;
         this.data = data;
+        this.mainDIV = _extra.captivate.projectDIV; // TODO: CHANGE THIS FOR STORYLINE!
 
 
 
@@ -50,20 +51,14 @@ _extra.registerModule("SlideObjectStateManager", function () {
             return false;
         }
 
-        function doVariableValueComparison(variableValue, intendedValue) {
-
-            // This means no destination value was given to the state. The state name would look something like: x_MyVar
-            // In this case we'll assume this should be true.
-            // We don't correct this further up, because it may yet be useful to know if the user did or didn't
-            // specify a value.
-            if (intendedValue === null) {
-                intendedValue = true;
-            }
-
-
+        function validateVariableValue(variableValue) {
             if (typeof variableValue !== "boolean" && !_extra.w.isNaN(variableValue)) {
 
-                variableValue = _extra.w.parseFloat(variableValue);
+                if (variableValue === "") {
+                    variableValue = false;
+                } else {
+                    variableValue = _extra.w.parseFloat(variableValue);
+                }
 
             } else if (typeof variableValue === "string") {
 
@@ -81,8 +76,54 @@ _extra.registerModule("SlideObjectStateManager", function () {
 
             }
 
-            // I know here I use '!=' instead of '!==' but that is intentional as I want false == 0
-            return variableValue == intendedValue;
+            return variableValue;
+        }
+
+        function doVariableValueComparison(variableValue, intendedValue) {
+
+            _extra.log("variableValue: " + variableValue);
+            _extra.log(intendedValue);
+            // This means no destination value was given to the state. The state name would look something like: x_MyVar
+            // In this case we'll assume this should be true.
+            // We don't correct this further up, because it may yet be useful to know if the user did or didn't
+            // specify a value.
+            if (intendedValue === null) {
+                intendedValue = true;
+            }
+
+            // First, make sure the variable value comes back as true number and boolean objects
+            variableValue = validateVariableValue(variableValue);
+
+
+            // If intendedValue is an object, then the
+            if (typeof intendedValue === "object") {
+
+                var intendedValueData = intendedValue;
+                intendedValue = intendedValueData.value;
+
+                switch (intendedValueData.modifier) {
+                    case "!" :
+                        return variableValue != intendedValue;
+
+                    case ">" :
+                        return variableValue > intendedValue;
+
+                    case "<" :
+                        return variableValue < intendedValue;
+
+                    case ">=" :
+                        return variableValue >= intendedValue;
+
+                    case "<=" :
+                        return variableValue <= intendedValue;
+                }
+
+            } else { // A normal comparison
+
+                // I know here I use '!=' instead of '!==' but that is intentional as I want false == 0
+                return variableValue == intendedValue;
+
+            }
         }
 
 
@@ -112,7 +153,6 @@ _extra.registerModule("SlideObjectStateManager", function () {
                         // Loop through { r: { x_rollover: { variableName ... } }
                         for (variableName in variableData) {
                             if (variableData.hasOwnProperty(variableName)) {
-
 
                                 if (!doVariableValueComparison(_extra.variableManager.getVariableValue(variableName),
                                                                variableData[variableName])) {
@@ -178,10 +218,13 @@ _extra.registerModule("SlideObjectStateManager", function () {
             evaluateState();
             // Listen for new mouse event
             slideObject.addEventListener(_extra.eventManager.events.MOUSE_OUT, that.onRollout);
+            // Added this because sometimes when the mouse is moving very fast, the above event listener doesn't trigger.
+            that.mainDIV.addEventListener(_extra.eventManager.events.MOUSE_OUT, that.onRollout);
         };
 
         this.onRollout = function () {
 
+            that.mainDIV.removeEventListener(_extra.eventManager.events.MOUSE_OUT, that.onRollout);
             slideObject.removeEventListener(_extra.eventManager.events.MOUSE_OUT, that.onRollout);
             isMouseOver = false;
             evaluateState();
@@ -295,15 +338,18 @@ _extra.registerModule("SlideObjectStateManager", function () {
     }
 
     SlideObjectStateManager.prototype.unload = function () {
+
         this.slideObject.removeEventListener(_extra.eventManager.events.MOUSE_OVER, this.onRollover);
         this.slideObject.removeEventListener(_extra.eventManager.events.MOUSE_OUT, this.onRollout);
         this.slideObject.removeEventListener(_extra.eventManager.events.MOUSE_DOWN, this.onMouseDown);
         _extra.w.document.removeEventListener(_extra.eventManager.events.MOUSE_UP, this.onMouseUp);
+        this.mainDIV.removeEventListener(_extra.eventManager.events.MOUSE_OUT, this.onRollout);
 
         _extra.slideObjects.states.changeCallback.removeCallback(this.slideObject.name, this.onStateChangeCallback);
 
         this.slideObject = null;
         this.data = null;
+        this.mainDIV = null;
     };
 
     _extra.registerClass("SlideObjectStateManager", SlideObjectStateManager);

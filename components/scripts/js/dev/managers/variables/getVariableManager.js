@@ -9,7 +9,20 @@ _extra.registerModule("getVariableManager", ["variableManager"] ,function () {
 
     "use strict";
 
+
     var getVariables;
+
+    function cleanVariablePrefix(variableName) {
+        if (variableName.substr(0,4).toLowerCase() === "get_"){
+
+            return "get_" + variableName.substr(4,variableName.length);
+
+        } else if (variableName.substr(0,5).toLowerCase() === "_get_") {
+
+            return "get_" + variableName.substr(5,variableName.length);
+
+        }
+    }
 
     // Tap into the variable manager's callbacks. This is how we are notified of variables.
     _extra.variableManager.prefixCallback.addCallback("get", function (variableName) {
@@ -52,12 +65,9 @@ _extra.registerModule("getVariableManager", ["variableManager"] ,function () {
         ///////////////////////////////////////////////////////////////////////
         /////////////// Assign GET variables to Captivate Variables
         ///////////////////////////////////////////////////////////////////////
-        var result = getVariables[variableName];
 
-        // If we have failed to get the result of the variable because it has an underscore at the start of its name.
-        if (!result && variableName.charAt(0) === "_") {
-            result = getVariables[variableName.substr(1,variableName.length)];
-        }
+        // Deal with capitilzation and the potential underscore '_' at the start of the name.
+        var result = getVariables[cleanVariablePrefix(variableName)];
 
         // If this variable has not been defined
         if (result === undefined) {
@@ -69,7 +79,9 @@ _extra.registerModule("getVariableManager", ["variableManager"] ,function () {
         }
 
         // Set variable value!
-        _extra.variableManager.setVariableValue(variableName, result);
+        if (result !== null) {
+            _extra.variableManager.setVariableValue(variableName, result);
+        }
 
 
         // TODO: Unload this after initialization.

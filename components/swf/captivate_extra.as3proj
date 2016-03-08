@@ -4,12 +4,12 @@
   <output>
     <movie outputType="Application" />
     <movie input="" />
-    <movie path="..\..\builds\development\wdgt_source\swf\Infosemantics_Captivate_Extra.swf" />
+    <movie path="..\..\builds\development\wdgt_source\swf\Infosemantics_CPExtra_AS3.swf" />
     <movie fps="30" />
-    <movie width="150" />
-    <movie height="50" />
-    <movie version="10" />
-    <movie minorVersion="1" />
+    <movie width="500" />
+    <movie height="400" />
+    <movie version="11" />
+    <movie minorVersion="0" />
     <movie platform="Flash Player" />
     <movie background="#FFFFFF" />
   </output>
@@ -17,6 +17,8 @@
   <classpaths>
     <class path="src" />
     <class path="..\..\..\..\01_WidgetFactory_6\content\src\as" />
+    <class path="..\..\..\..\06_Libraries\src" />
+    <class path="..\..\..\..\06_Libraries\Flexible Components\src" />
   </classpaths>
   <!-- Build options -->
   <build>

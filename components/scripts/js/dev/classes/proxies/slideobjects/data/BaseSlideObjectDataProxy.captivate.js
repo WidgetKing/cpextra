@@ -7,6 +7,8 @@
  */
 _extra.registerModule("BaseSlideObjectDataProxy", function () {
     "use strict";
+
+
     function BaseSlideObjectData(name, data, type) {
 
         // When registering this class it will be instantiated without any parameters which causes an error in
@@ -21,6 +23,7 @@ _extra.registerModule("BaseSlideObjectDataProxy", function () {
             this._initialStateData = _extra.captivate.api.getDisplayObjByKey(this._key);
 
         }
+
     }
 
     BaseSlideObjectData.prototype = {
@@ -35,6 +38,12 @@ _extra.registerModule("BaseSlideObjectDataProxy", function () {
         },
         get uid() {
             return this._data.container.uid;
+        },
+        get isBaseStateItem() {
+            return this._data.base.bstiid === -1;
+        },
+        get baseStateItemID() {
+            return this._data.base.bstiid;
         },
         get states() {
 
@@ -72,11 +81,30 @@ _extra.registerModule("BaseSlideObjectDataProxy", function () {
         },
         get failureAction() {
             return this._data.base.ofa;
+        },
+        get hasAudio() {
+            return this._data.base.ia !== undefined;
+        },
+        get audioID() {
+            return this._data.base.ia;
         }
     };
 
+    BaseSlideObjectData.prototype.getBaseStateItemData = function () {
+
+        if (!this.isBaseStateItem) {
+
+            return _extra.dataManager.getSlideObjectDataByID(this.baseStateItemID);
+
+        }
+
+        return null;
+    };
 
     BaseSlideObjectData.prototype.getDataForState = function (stateName) {
+
+        var that = this;
+
         // If this is the first time we've called this method for this instance.
         if (!this._stateDatas) {
 
@@ -90,18 +118,25 @@ _extra.registerModule("BaseSlideObjectDataProxy", function () {
 
                 // This object does not have any states.
                 // So we have to fake the data.
-                stateDatas[stateName] = new _extra.classes.StateDataProxy({
+                stateDatas[stateName] = _extra.factories.createStateDataProxy(this.type, {
                     "stsi":[this.uid],
                     "stn":"Normal"
                 });
+                /*stateDatas[stateName] = new _extra.classes.StateDataProxy({
+                    "stsi":[this.uid],
+                    "stn":"Normal"
+                });*/
 
             } else {
 
                 // Loop through the state information
                 this._initialStateData.states.forEach(function (rawStateData) {
-                    stateDataProxy = new _extra.classes.StateDataProxy(rawStateData);
+
+                    stateDataProxy = _extra.factories.createStateDataProxy(that.type, rawStateData);
+                    // stateDataProxy = new _extra.classes.StateDataProxy(rawStateData);
                     // Assign this data to the holder object.
                     stateDatas[stateDataProxy.name] = stateDataProxy;
+
                 });
 
             }

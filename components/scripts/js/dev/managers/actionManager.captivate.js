@@ -46,6 +46,9 @@ _extra.registerModule("actionManager",["softwareInterfacesManager"],function () 
                                 case "false" :
                                 case "fail":
                                 case "failure":
+                                case "lastattempt":
+                                case "last":
+                                case "last_attempt":
                                     criteria = FAILURE_CRITERIA;
                                     break;
 

@@ -19,7 +19,6 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
     function BaseSlideObjectProxy(element, data) {
 
 
-
         ///////////////////////////////////////////////////////////////////////
         /////////////// Private Variables that are public because we can't get around it
         ///////////////////////////////////////////////////////////////////////
@@ -28,61 +27,50 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
         this._currentStateData = data.getDataForState(this.state);
         this._offsetX = 0;
         this._offsetY = 0;
-
+        this._modelListener = new _extra.classes.ModelListener(this.name, this._model);
+        this._eventMediator = _extra.eventManager.getEventMediator(this.name);
+        this._interruptedClickEventHanlder = new _extra.classes.InterruptedClickEventHandler(this._eventMediator, this.name);
 
         ///////////////////////////////////////////////////////////////////////
         /////////////// Private Variables
         ///////////////////////////////////////////////////////////////////////
-        var modelListener = new _extra.classes.ModelListener(this.name, this._model),
-            that = this,
-            eventMediator = _extra.eventManager.getEventMediator(this.name),
-            interruptedClickEventHanlder = new _extra.classes.InterruptedClickEventHandler(eventMediator),
+        var that = this,
             originalX = this._currentStateData.originalX,
             originalY = this._currentStateData.originalY;
 
-        eventMediator.swap(this._currentStateData);
+        this._eventMediator.swap(this._currentStateData);
 
 
         ///////////////////////////////////////////////////////////////////////
         /////////////// Public Methods
         ///////////////////////////////////////////////////////////////////////
         this.addEventListener = function (eventName, callback) {
-            eventMediator.addEventListener(eventName, callback);
+            that._eventMediator.addEventListener(eventName, callback);
         };
 
         this.removeEventListener = function (eventName, callback) {
-            eventMediator.removeEventListener(eventName, callback);
+            that._eventMediator.removeEventListener(eventName, callback);
         };
 
         this.hasEventListener = function(eventName) {
-            return eventMediator.hasEventListener(eventName);
+            return that._eventMediator.hasEventListener(eventName);
         };
 
         this.dispatchEvent = function(event) {
-            eventMediator.dispatchEvent(event);
+            that._eventMediator.dispatchEvent(event);
         };
 
         this.enableForMouse = function() {
-            modelListener.model.write(this.name, ENABLE_FOR_MOUSE, true);
+            that._modelListener.model.write(this.name, ENABLE_FOR_MOUSE, true);
         };
 
         this.disableForMouse = function() {
-            modelListener.model.write(this.name, ENABLE_FOR_MOUSE, false);
+            that._modelListener.model.write(this.name, ENABLE_FOR_MOUSE, false);
         };
 
         this.setHandCursor = function(cursorType) {
-            modelListener.model.write(this.name, CURSOR, cursorType);
+            that._modelListener.model.write(this.name, CURSOR, cursorType);
         };
-
-        this.unload = function () {
-            eventMediator.swap(null);
-            modelListener.unload();
-            interruptedClickEventHanlder.unload();
-            _extra.eventManager.eventDispatcher.removeEventListener("slideloaded", addModelListeners);
-            _extra.slideObjects.states.changeCallback.removeCallback(that.name,onStateChange);
-            that._currentStateData.removeOnDrawCallback(addModelListeners);
-        };
-
 
 
         ///////////////////////////////////////////////////////////////////////
@@ -91,13 +79,13 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
         ////////////////////////////////
         ////////// Manage State Changing
 
-        function onStateChange(details) {
+        this._onStateChange = function(details) {
 
             var futureStateData = data.getDataForState(details.stateName);
 
             // Change the event listeners from the DOM elements of the previous state to the one of this state.
-            eventMediator.swap(futureStateData);
-            interruptedClickEventHanlder.stateHasChanged();
+            that._eventMediator.swap(futureStateData);
+            that._interruptedClickEventHanlder.stateHasChanged();
 
             // Update the offset
             that._offsetX = originalX - futureStateData.originalX;
@@ -107,24 +95,39 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
             that._currentStateData = futureStateData;
 
             // Update to model
-            modelListener.model.update(that.name);
+            that._modelListener.model.update(that.name);
 
-        }
-        _extra.slideObjects.states.changeCallback.addCallback(this.name, onStateChange);
+        };
+        _extra.slideObjects.states.changeCallback.addCallback(this.name, this._onStateChange);
 
-
+        this._onAudioEnded = function () {
+            that.dispatchEvent("audioended");
+        };
 
         ///////////////////////////////////////////////////////////////////////
         /////////////// MODEL LISTENER METHODS
         ///////////////////////////////////////////////////////////////////////
 
-        function addModelListeners() {
+        this._addModelListeners = function () {
 
-            that._currentStateData.removeOnDrawCallback(addModelListeners);
+            // At this point its possible the original X and Y positions have been updated.
+            originalX = that._currentStateData.originalX;
+            originalY = that._currentStateData.originalY;
+
+            that._currentStateData.removeOnDrawCallback(that._addModelListeners);
+
+             ////////////////////////////////
+             ////////// Audio
+             if (that._data.hasAudio) {
+
+                 that._audioData = _extra.captivate.audioManager.objectAudios[_extra.slideManager.currentInternalSlideId][that._data.audioID];
+                 that._audioTag = that._audioData.nativeAudio;
+                 that._audioTag.addEventListener("ended", that._onAudioEnded);
+             }
 
             ////////////////////////////////
             ////////// Enable For Mouse
-            modelListener.addProperty(ENABLE_FOR_MOUSE, function (previousValue, currentValue) {
+            that._modelListener.addProperty(ENABLE_FOR_MOUSE, function (previousValue, currentValue) {
 
                 /*
                  * Abandoned the idea of using DIV elements to block mouse events in Internet Explorer.
@@ -140,7 +143,7 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
                  *
                  */
 
-                if (_extra.isIE) {
+                /*if (_extra.isIE) {
 
                     if (currentValue) {
 
@@ -152,7 +155,7 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
 
                     }
 
-                } else {
+                } else {*/
 
                     if (currentValue) {
 
@@ -166,14 +169,14 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
 
                     }
 
-                }
+                //}
 
 
             });
 
             ////////////////////////////////
             ////////// Hand Cursor
-            modelListener.addProperty(CURSOR, function (previousValue, currentValue) {
+            that._modelListener.addProperty(CURSOR, function (previousValue, currentValue) {
 
                 that._currentStateData.editCSS("cursor", currentValue);
 
@@ -181,15 +184,53 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
 
             ////////////////////////////////
             ////////// X
-            modelListener.addProperty(X, function (previousValue, currentValue) {
+            function isDefault(currentValue) {
+
+                if (currentValue.toLowerCase) {
+
+                    currentValue = currentValue.toLowerCase();
+                    return currentValue === "default" || currentValue === "reset" || currentValue === "original";
+
+                }
+
+                return false;
+
+            }
+
+
+            that._modelListener.addProperty(X, function (previousValue, currentValue) {
+
+
+                if (isDefault(currentValue)) {
+                    currentValue = (that._currentStateData.originalX) + that._offsetX;
+                }
+
+                // Convert string to number
+                if (typeof currentValue !== "number") {
+
+                    currentValue = _extra.w.parseFloat(currentValue);
+
+                }
 
                 that._currentStateData.x = currentValue - that._offsetX;
+
 
             });
 
             ////////////////////////////////
             ////////// Y
-            modelListener.addProperty(Y, function (previousValue, currentValue) {
+            that._modelListener.addProperty(Y, function (previousValue, currentValue) {
+
+                if (isDefault(currentValue)) {
+                    currentValue = (that._currentStateData.originalY) + that._offsetY;
+                }
+
+                // Convert String to number
+                if (typeof currentValue !== "number") {
+
+                    currentValue = _extra.w.parseFloat(currentValue);
+
+                }
 
                 that._currentStateData.y = currentValue - that._offsetY;
 
@@ -197,7 +238,7 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
 
             ////////////////////////////////
             ////////// Width
-            modelListener.addProperty(WIDTH, function (previousValue, currentValue) {
+            that._modelListener.addProperty(WIDTH, function (previousValue, currentValue) {
 
                 that._currentStateData.width = currentValue;
 
@@ -206,15 +247,15 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
 
             ////////////////////////////////
             ////////// Height
-            modelListener.addProperty(HEIGHT, function (previousValue, currentValue) {
+            that._modelListener.addProperty(HEIGHT, function (previousValue, currentValue) {
 
                 that._currentStateData.width = currentValue;
 
             });
 
-        }
+        };
 
-        this._currentStateData.addOnDrawCallback(addModelListeners);
+        this._currentStateData.addOnDrawCallback(that._addModelListeners);
 
 
     }
@@ -258,6 +299,21 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
 
     BaseSlideObjectProxy.prototype.changeState = function (stateName) {
         _extra.slideObjects.states.change(this.name, stateName);
+    };
+
+    BaseSlideObjectProxy.prototype.unload = function () {
+
+        this.dispatchEvent("unload");
+        this._eventMediator.swap(null);
+        this._modelListener.unload();
+        this._interruptedClickEventHanlder.unload();
+        _extra.eventManager.eventDispatcher.removeEventListener("slideloaded", this._addModelListeners);
+        _extra.slideObjects.states.changeCallback.removeCallback(this.name, this._onStateChange);
+        this._currentStateData.removeOnDrawCallback(this._addModelListeners);
+
+        if (this._data.hasAudio && this._audioTag) {
+            this._audioTag.removeEventListener("ended", this._onAudioEnded);
+        }
     };
 
     _extra.registerClass("BaseSlideObjectProxy", BaseSlideObjectProxy, _extra.CAPTIVATE);

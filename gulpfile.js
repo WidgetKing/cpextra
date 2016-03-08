@@ -16,13 +16,15 @@
         gzip = require("gulp-zip"),
         gconnect = require("gulp-connect"),
         greplace = require("gulp-replace"),
+        uglify = require("gulp-uglify"),
         gjsoneditor = require("gulp-json-editor"),
         path = require("path"),
         karma = require("karma"),
         karmaParseConfig = require("karma/lib/config").parseConfig,
         jsonPackage = require("./package.json");
 
-    var jr = "components/scripts/js/dev/",
+    var env = process.env.NODE_ENV || 'development',
+        jr = "components/scripts/js/dev/",
         jsCaptivateSources = [jr + "main.js",
                      jr + "**/!(*.storyline.js)"],
                      /*jr + "classes/callback.js",
@@ -39,10 +41,13 @@
         swfSources = [sr + "bin/captivateextra.swf"],
 
 
+        versionJSONSource = "components/scripts/json/version.json",
+        versionJSONDestination = "builds/development/wdgt_source/swf",
         captivateExtraDevLocation = "builds/development/wdgt_source/html5/scripts",
         captivateExtraDevFileName = "captivate_extra.js",
         ctr = "tests/output/captivate/",
         cbtr = "tests/output/_BETA_TESTS/captivate/",
+        uir = "tests/output/_USER_ISSUES/",
         captivateTestSources = [ctr + "01_CE_Local_Storage_Variables/wr/w_5569/scripts",
                                ctr + "02_CE_Local_Storage_Variables_2/wr/w_5235/scripts",
                                ctr + "02_CE_Local_Storage_Variables_2/wr/w_5495/scripts",
@@ -55,18 +60,57 @@
                                ctr + "10_CE_Advanced_Actions/wr/w_5235/scripts",
                                ctr + "11_CE_SlideObjectProperties/wr/w_5235/scripts",
                                ctr + "12_CE_EventListener/wr/w_5235/scripts",
+                               ctr + "13_CE_AllObjects/wr/w_5259/scripts",
+                               uir + "03_module_3/wr/w_17041/scripts", // D:\01_PROJECTS\02_Infosemantics\00_CaptivateExtra\_dev\tests\output\_USER_ISSUES\03_module_3\wr
+                               uir + "04_cpextra_event_listeners/wr/w_5296/scripts", // D:\01_PROJECTS\02_Infosemantics\00_CaptivateExtra\_dev\tests\output\_USER_ISSUES\04_cpextra_event_listeners\wr\w_5296
+                               uir + "Autostate4/wr/w_2524/scripts",
+                               uir + "CPCONFIG_TEB-1/wr/w_5352/scripts",
+                               uir + "VideoEnded/wr/w_5414/scripts", //VideoEnded\wr\w_5414\scripts
+                               uir + "PERSISTVARS-1/wr/w_5442/scripts",
+                               uir + "xcmnd_evt-2-v2/wr/w_5306/scripts", // D:\01_PROJECTS\02_Infosemantics\00_CaptivateExtra\_dev\tests\output\_USER_ISSUES\xcmnd_evt-2-v2\wr\w_5306\scripts
+                               uir + "XCMND_SOP-2/wr/w_2410/scripts",
+                               uir + "PREFERENCES-1/wr/w_5247/scripts", // D:\01_PROJECTS\02_Infosemantics\00_CaptivateExtra\_dev\tests\output\_USER_ISSUES\PREFERENCES-1\wr\w_5247
+                               uir + "XCMND_SOP-1/wr/w_5258/scripts",
+                               uir + "KC/cpextra_test_responsive_persistvars_4049/wr/w_5750/scripts",
+                               uir + "KC/XCMND_SOP-2/wr/w_5282/scripts",
+                               uir + "local_vs_session/wr/w_15211/scripts", // D:\01_PROJECTS\02_Infosemantics\00_CaptivateExtra\_dev\tests\output\_USER_ISSUES\local_vs_session\wr\w_15211\scripts
+                               uir + "XCMND_SOP-1B/wr/w_5850/scripts",
+                               uir + "persistvars1-1thru1-3/wr/w_5664/scripts", // D:\01_PROJECTS\02_Infosemantics\00_CaptivateExtra\_dev\tests\output\_USER_ISSUES\persistvars1-1thru1-3\wr\w_5664\scripts
+                               uir + "KC/xcmnd_ca-1_1 through1_4test/wr/w_5768/scripts", // D:\01_PROJECTS\02_Infosemantics\00_CaptivateExtra\_dev\tests\output\_USER_ISSUES\KC\xcmnd_ca-1_1 through1_4test\wr\w_5768\scripts
                                cbtr + "01_COMMAND_VARIABLES/XCMND_AA/XCMND_AA-1/wr/w_5259/scripts",
+                               cbtr + "01_COMMAND_VARIABLES/XCMND_SOP/XCMND_SOP-1/wr/w_5259/scripts",
+                               cbtr + "01_COMMAND_VARIABLES/XCMND_SOP/XCMND_SOP-1-captions/wr/w_5259/scripts",
+                               cbtr + "01_COMMAND_VARIABLES/XCMND_SOP/XCMND_SOP-2/wr/w_5259/scripts",
+                               cbtr + "01_COMMAND_VARIABLES/XCMND_SOP/XCMND_SOP-3/wr/w_5259/scripts",
                                cbtr + "01_COMMAND_VARIABLES/XCMND_CA/XCMND_CA-1/wr/w_5261/scripts",
                                cbtr + "01_COMMAND_VARIABLES/XCMND_CA/XCMND_CA-2/wr/w_5261/scripts",
                                cbtr + "01_COMMAND_VARIABLES/XCMND_CA/XCMND_CA-3/wr/w_5247/scripts",
                                cbtr + "01_COMMAND_VARIABLES/XCMND_MR/XCMND_MR-1/wr/w_5980/scripts",
                                cbtr + "01_COMMAND_VARIABLES/XCMND_MR/XCMND_MR-2/wr/w_5268/scripts",
                                cbtr + "01_COMMAND_VARIABLES/XCMND_EVT/XCMND_EVT-1/wr/w_5259/scripts",
+                               cbtr + "01_COMMAND_VARIABLES/XCMND_EVT/XCMND_EVT-2/wr/w_5820/scripts",
+                               cbtr + "01_COMMAND_VARIABLES/XCMND_EVT/XCMND_EVT-3/wr/w_5820/scripts",
+                               cbtr + "01_COMMAND_VARIABLES/XCMND_EVT/XCMND_EVT-4/wr/w_5259/scripts",
+                               cbtr + "01_COMMAND_VARIABLES/XCMND_EVT/XCMND_EVT-5/wr/w_5259/scripts",
+                               cbtr + "01_COMMAND_VARIABLES/XCMND_MISC/XCMND_MISC-1/wr/w_5247/scripts",
+                               cbtr + "01_COMMAND_VARIABLES/XCMND_MISC/XCMND_MISC-2/wr/w_5270/scripts",
+                               cbtr + "02_PERSISTVARS/PERSISTVARS-1/wr/w_5259/scripts",
+                               cbtr + "02_PERSISTVARS/PERSISTVARS-2/wr/w_5247/scripts",
+                               cbtr + "02_PERSISTVARS/PERSISTVARS-2-NonResponsive/wr/w_5259/scripts",
                                cbtr + "03_AUTOMATED_STATE_MANAGEMENT/AUTOSTATE-1/wr/w_5247/scripts",
                                cbtr + "03_AUTOMATED_STATE_MANAGEMENT/AUTOSTATE-2/wr/w_5247/scripts",
                                cbtr + "03_AUTOMATED_STATE_MANAGEMENT/AUTOSTATE-3/wr/w_5247/scripts",
                                cbtr + "03_AUTOMATED_STATE_MANAGEMENT/AUTOSTATE-4/wr/w_5537/scripts",
-                               cbtr + "04_CAPTIVATE_CONFIG/CPCONFIG_PLAYBAR/CPCONFIG_PLAYBAR-1/wr/w_5259/scripts"], // D:\01_PROJECTS\02_Infosemantics\00_CaptivateExtra\_dev\tests\output\_BETA_TESTS\captivate\04_TEXT_ENTRY_BOX_BEHAVIOUR\TEB-1\wr\w_5247\scripts
+                               cbtr + "03_AUTOMATED_STATE_MANAGEMENT/AUTOSTATE-7/wr/w_5247/scripts",
+                               cbtr + "03_AUTOMATED_STATE_MANAGEMENT/AUTOSTATE-9/wr/w_5247/scripts",
+                               cbtr + "04_CAPTIVATE_CONFIG/CPCONFIG_QUIZ/QUIZCONFIG-1/wr/w_5270/scripts", // D:\01_PROJECTS\02_Infosemantics\00_CaptivateExtra\_dev\tests\output\_BETA_TESTS\captivate\04_CAPTIVATE_CONFIG\CPCONFIG_QUIZ\QUIZCONFIG-1\wr\w_5247
+                               cbtr + "04_CAPTIVATE_CONFIG/CPCONFIG_QUIZ/QUIZCONFIG-1-normal/wr/w_5533/scripts", //
+                               cbtr + "04_CAPTIVATE_CONFIG/CPCONFIG_PLAYBAR/CPCONFIG_PLAYBAR-1/wr/w_5259/scripts", // D:\01_PROJECTS\02_Infosemantics\00_CaptivateExtra\_dev\tests\output\_BETA_TESTS\captivate\04_TEXT_ENTRY_BOX_BEHAVIOUR\TEB-1\wr\w_5247\scripts
+                               cbtr + "04_CAPTIVATE_CONFIG/CPCONFIG_TEB/CPCONFIG_TEB-1/wr/w_5247/scripts",
+                               cbtr + "04_CAPTIVATE_CONFIG/CPCONFIG_TEB/CPCONFIG_TEB-2/wr/w_5247/scripts",
+                               cbtr + "07_INFO/INFO_MISC-1/wr/w_5247/scripts",
+                               cbtr + "08_DOC_SETUP/DOC_SETUP-1/wr/w_5279/scripts",
+                               cbtr + "08_DOC_SETUP/DOC_SETUP-2/wr/w_5279/scripts"],
 
         storylineExtraDevLocation = "builds/development/storyline_extra_web_object",
         storylineExtraDevFileName = "storyline_extra.js",
@@ -78,6 +122,7 @@
         karmaConfig = "karma.conf.js";
 
     var buildNumber = jsonPackage.buildNumber;
+
 
 
 
@@ -142,6 +187,7 @@
                         .pipe(gconcat(fileName))
                         .pipe(greplace("$$VERSION_NUMBER$$",jsonPackage.version))
                         .pipe(greplace("$$BUILD_NUMBER$$",buildNumber))
+                        .pipe(uglify())
                         .pipe(gulp.dest(destination));
     }
 
@@ -161,7 +207,14 @@
 
     });
 
-    gulp.task("moveSWFOutput", function () {
+    gulp.task("moveVersionJSON", function () {
+        return gulp.src(versionJSONSource)
+                .pipe(greplace("$$VERSION_NUMBER$$",jsonPackage.version))
+                .pipe(greplace("$$BUILD_NUMBER$$",buildNumber))
+                .pipe(gulp.dest(versionJSONDestination));
+    });
+
+    gulp.task("moveSWFOutput", ["moveVersionJSON"], function () {
 
         return gulp.src(swfSources)
                 .pipe(gulp.dest("builds/development/wdgt_source/swf"));
@@ -179,11 +232,33 @@
     gulp.task("compileWidget", ["compileWidgetDescription"], function () {
 
         return gulp.src("builds/development/wdgt_source/**")
-                .pipe(gzip("CaptivateExtra.wdgt"))
+                .pipe(gzip("Infosemantics_CpExtra.wdgt"))
                 .pipe(gulp.dest("builds/development"));
 
     });
 
+    gulp.task("moveFilesToProduction", function () {
+        return gulp.src("builds/development/wdgt_source/**")
+                        //.pipe(gzip("CpExtra.wdgt"))
+                        .pipe(gulp.dest("builds/production/wdgt_source"));
+    });
+
+    gulp.task("uglifyProductionCode", function () {
+
+        return gulp.src("builds/development/wdgt_source/html5/scripts/captivate_extra.js")
+                        .pipe(uglify())
+                        .pipe(gulp.dest("builds/production/wdgt_source/html5/scripts"));
+
+    });
+
+    gulp.task("compileWidgetForProduction", ["compileWidgetDescription", "moveFilesToProduction", "uglifyProductionCode"], function () {
+
+        return gulp.src("builds/production/wdgt_source/**")
+                        .pipe(gzip("Infosemantics_CpExtra.wdgt"))
+                        .pipe(gulp.dest("builds/production"));
+
+
+    });
 
 
 
@@ -253,7 +328,7 @@
 
 
     ////////// DEFAULT
-    gulp.task("default",["updateCaptivateTests","updateStorylineTests","moveSWFOutput","compileWidget","connect","watch","test-dev"]);
+    gulp.task("default",["updateCaptivateTests","updateStorylineTests","moveVersionJSON","compileWidget","connect","watch","test-dev"]);
 
 }());
 

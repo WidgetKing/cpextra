@@ -23,12 +23,26 @@ _extra.registerModule("Callback", function () {
             return this.data[index] !== undefined;
         };
         this.sendToCallback = function (index,parameter) {
+            var returnValue,
+                tempReturnValue;
+
             if (this.data[index]) {
+
                 var a = this.data[index];
+
                 for (var i = 0; i < a.length; i += 1) {
-                    a[i](parameter);
+
+                    // If the callback returns a value, then we'll return it at the end (assuming noting overrides it before then)
+                    tempReturnValue = a[i](parameter);
+
+                    if (tempReturnValue !== undefined) {
+                        returnValue = tempReturnValue;
+                    }
+
                 }
             }
+
+            return returnValue;
         };
         this.forEach = function (method) {
 

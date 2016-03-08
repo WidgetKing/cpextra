@@ -73,27 +73,51 @@ _extra.registerModule("EventMediator", function () {
             return false;
         }
 
-        function writeEventData(event, interactiveObject, criteria) {
-
+        function writeEventData(eventName, interactiveObject, criteria) {
 
             var data;
-
             // If we haven't created data for this event before, then we'll do that now.
-            if (!events[event]) {
+            if (!events[eventName]) {
 
                 // Create array for our data module
                 var eventHandlersArray = [],
                     primaryHandler;
-                events[event] = eventHandlersArray;
+                events[eventName] = eventHandlersArray;
 
                 // Create the single function that will be added as an event listener.
                 // This function will call all the others.
                 // It is handled in this manner to allow the double click manager to delay certain mouse events.
-                primaryHandler = function(event) {
+                primaryHandler = function(eventObject) {
 
-                    for (var i = 0; i < eventHandlersArray.length; i += 1) {
 
-                        eventHandlersArray[i].callback(event);
+                    // It's possible as we call these callbacks, they may cause event listeners to be removed.
+                    // Therefore we'll go through this backward.
+                    // However, because we use unshift() to add event listeners to the array, they are still
+                    // executed in the order they were added.
+                    var eventData;
+                    var start = eventHandlersArray.length;
+                    for (var i = eventHandlersArray.length - 1; i >= 0; i -= 1) {
+
+                        eventData = eventHandlersArray[i];
+
+                        // If more than one event listener is removed while executing this callback, then it's possible
+                        // we'll iterate over the same listener twice.
+                        // The 'called' parameter stops that from happening.
+                        if (!eventData.called) {
+
+                            eventData.callback(eventObject);
+                            eventData.called = true;
+
+                        }
+
+                    }
+
+
+
+                    for (i = eventHandlersArray.length - 1; i >= 0; i -= 1) {
+
+                        // Delete the called parameter so it won't interrupt behaviour of the next dispatched event.
+                        delete eventHandlersArray[i].called;
 
                     }
 
@@ -101,18 +125,18 @@ _extra.registerModule("EventMediator", function () {
 
                 // Let the double click handler check if this is an event it needs to manage.
                 // If it is it will wrap the primary handler in another callback.
-                primaryHandler = doubleClickHandler.addEventHandler(event, primaryHandler);
+                primaryHandler = doubleClickHandler.addEventHandler(eventName, primaryHandler);
 
-                primaryHandlers[event] = primaryHandler;
+                primaryHandlers[eventName] = primaryHandler;
 
                 // Add the event listener.
-                loopAdd(listeners, event, primaryHandler);
+                loopAdd(listeners, eventName, primaryHandler);
             }
 
 
 
 
-            if (hasMatchingEventData(event, interactiveObject, criteria)) {
+            if (hasMatchingEventData(eventName, interactiveObject, criteria)) {
 
                 // We already have a listener for this exact event with this exact callback. No need to add another.
                 return false;
@@ -123,6 +147,7 @@ _extra.registerModule("EventMediator", function () {
 
                 // This listener is to call a function
                 if (!criteria) {
+
                     data = {
                         "isInteractiveObjectCallback": false,
                         "callback":interactiveObject
@@ -130,7 +155,6 @@ _extra.registerModule("EventMediator", function () {
 
                 // This listener is to call an interactive object action.
                 } else {
-
                     data = {
                         "isInteractiveObjectCallback":true,
                         "interactiveObject":interactiveObject,
@@ -142,7 +166,9 @@ _extra.registerModule("EventMediator", function () {
                 }
 
                 // Add this data to the store.
-                events[event].push(data);
+                // We add it to the beginning of the array, because later we're going to be iterating backwards through
+                // the array, but we still want handlers to be called in the order they were added.
+                events[eventName].unshift(data);
 
                 return data;
 
@@ -184,6 +210,7 @@ _extra.registerModule("EventMediator", function () {
         }
 
         function loopAdd(a, event, callback) {
+
             for (var i = 0; i < a.length; i += 1) {
 
                 a[i].addEventListener(event, callback);
@@ -218,6 +245,7 @@ _extra.registerModule("EventMediator", function () {
                         loopRemove(listeners, eventName, eventHandler);
                     }
 
+
                     loopAdd(newListeners, eventName, eventHandler);
 
                 }
@@ -237,13 +265,13 @@ _extra.registerModule("EventMediator", function () {
 
             switch (event) {
                 case "doubleclick" :
-                    return "dblclick";
+                    return _extra.eventManager.events.DOUBLE_CLICK;
 
                 case "rollover" :
-                    return "mouseover";
+                    return _extra.eventManager.events.MOUSE_OVER;
 
                 case "rollout":
-                    return "mouseout";
+                    return _extra.eventManager.events.MOUSE_OUT;
 
                 default :
                     return event;

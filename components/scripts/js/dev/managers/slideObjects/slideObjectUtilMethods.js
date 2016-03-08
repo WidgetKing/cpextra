@@ -12,7 +12,21 @@ _extra.registerModule("slideObjectUtilMethods", ["slideObjectManager_global", "e
     ///////////////////////////////////////////////////////////////////////
     /////////////// PROPERTY COMMAND
     ///////////////////////////////////////////////////////////////////////
+    function isValidPropertyStringType(string) {
+        switch (string.toLowerCase()) {
+
+            case "default" :
+            case "reset" :
+            case "original" :
+                    return true;
+
+        }
+
+        return false;
+    }
+
     function handlePropertyCommand(p1, p2, modelProperty, onlyGetter) {
+
         // Here are the following possibilities of what's been passed in.
         ////// SET
         // slideObjectName, 100 (number)
@@ -25,16 +39,17 @@ _extra.registerModule("slideObjectUtilMethods", ["slideObjectManager_global", "e
         // variable, slideObjectName
         // variable, variable (slideObject)
         var p1Data = _extra.variableManager.parse.string(p1),
-            p2Data = _extra.variableManager.parse.string(p2);
+            p2Data = _extra.variableManager.parse.string(p2, isValidPropertyStringType);
 
 
         ////////////////////////////////
         ////////// GETTER
         function setVariable(slideObjectName) {
 
-
             var valueToSet,
                 slideObject = _extra.slideObjects.getSlideObjectByName(slideObjectName);
+
+            onlyGetter = true;
 
             if (slideObject) {
 
@@ -51,14 +66,22 @@ _extra.registerModule("slideObjectUtilMethods", ["slideObjectManager_global", "e
             _extra.variableManager.setVariableValue(p1, valueToSet);
         }
 
-        if (p2Data.isSlideObject && p1Data.isVariable) {
+        if (p1Data.isVariable && !p1Data.variable.isSlideObject && !p1Data.variable.isQuery) {
 
-            setVariable(p2);
+            if (p2Data.isVariable) {
+                p2Data = p2Data.variable;
+            }
 
+            if (p2Data.isSlideObject) {
 
-        } else if (p2Data.isVariable && p2Data.isValueSlideObject && p1Data.isVariable) {
+                setVariable(p2Data.value);
 
-            setVariable(p2Data.variableValue);
+            } else {
+
+                _extra.error("CV042", p1, p2Data.value, modelProperty);
+                return;
+
+            }
 
         }
 
@@ -66,6 +89,12 @@ _extra.registerModule("slideObjectUtilMethods", ["slideObjectManager_global", "e
         // For some of the properties, like width and height, we may not want to be able to change the value.
         // So we escape here.
         if (onlyGetter) {
+
+            // Check for an error here
+            if (!p1Data.isVariable && !p1Data.isSlideObject) {
+                _extra.error("CV040", p1, modelProperty);
+            }
+
             return;
         }
 
@@ -74,30 +103,54 @@ _extra.registerModule("slideObjectUtilMethods", ["slideObjectManager_global", "e
         ////////////////////////////////
         ////////// SETTER
         function setModel(slideObjectName) {
+
             if (p2Data.isVariable) {
-                p2 = p2Data.variableValue;
+
+                p2 = p2Data.variable.value;
+                p2Data = p2Data.variable;
+
             }
+
+            if (!p2Data.isNumber && !p2Data.isCustomType) {
+                _extra.error("CV041", slideObjectName, modelProperty, p2);
+                return; // Don't proceed and cause errors.
+            }
+
             _extra.slideObjects.model.write(slideObjectName, modelProperty, p2);
         }
 
 
-        if (p1Data.isSlideObject) {
+        function detectP1Type() {
 
-            setModel(p1);
+            if (p1Data.isSlideObject) {
 
-        } else if (p1Data.isVariable && p1Data.isValueSlideObject) {
+                setModel(p1);
 
-            setModel(p1Data.variableValue);
+            } else if (p1Data.isVariable) {
 
-        } else if (p1Data.isQuery) {
+                // This is better off restarting the whole process.
+                p1 = p1Data.variable.value;
+                p1Data = p1Data.variable;
+                return detectP1Type();
 
-            _extra.slideObjects.enactFunctionOnSlideObjects(p1, function (slideObjectName) {
+            } else if (p1Data.isQuery) {
 
-                setModel(slideObjectName);
+                _extra.slideObjects.enactFunctionOnSlideObjects(p1, function (slideObjectName) {
 
-            });
+                    setModel(slideObjectName);
+
+                });
+
+            } else {
+
+                // Not a valid type for the first parameter
+                _extra.error("CV040", p1, modelProperty);
+
+            }
 
         }
+
+        detectP1Type();
     }
 
 
@@ -108,6 +161,8 @@ _extra.registerModule("slideObjectUtilMethods", ["slideObjectManager_global", "e
     /////////////// EVENT TYPES
     ///////////////////////////////////////////////////////////////////////
     var MOUSE_EVENT = "mouseevent",
+        VIDEO_EVENT = "videoevent",
+        AUDIO_EVENT = "audioevent",
         cursorTypes = {
             "auto":true,
             "default":true,
@@ -147,65 +202,83 @@ _extra.registerModule("slideObjectUtilMethods", ["slideObjectManager_global", "e
             "grabbing":true
         },
         eventTypes = {
-        "mouseover":{
-            "type": MOUSE_EVENT,
-            "name": _extra.eventManager.events.MOUSE_OVER
-        },
-        "mouseout":{
-            "type": MOUSE_EVENT,
-            "name": _extra.eventManager.events.MOUSE_OUT
-        },
-        "rollover":{
-            "type": MOUSE_EVENT,
-            "name": _extra.eventManager.events.MOUSE_OVER
-        },
-        "rollout":{
-            "type": MOUSE_EVENT,
-            "name": _extra.eventManager.events.MOUSE_OUT
-        },
-        "mousedown":{
-            "type": MOUSE_EVENT,
-            "name": _extra.eventManager.events.MOUSE_DOWN
-        },
-        "mouseup":{
-            "type": MOUSE_EVENT,
-            "name": _extra.eventManager.events.MOUSE_UP
-        },
-        "mousemove":{
-            "type": MOUSE_EVENT,
-            "name": _extra.eventManager.events.MOUSE_MOVE
-        },
-        "click":{
-            "type": MOUSE_EVENT,
-            "name": _extra.eventManager.events.CLICK
-        },
-        "doubleclick":{
-            "type": MOUSE_EVENT,
-            "name": _extra.eventManager.events.DOUBLE_CLICK
-        },
-        "dblclick":{
-            "type": MOUSE_EVENT,
-            "name": _extra.eventManager.events.DOUBLE_CLICK
-        },
-        "rightclick":{
-            "type": MOUSE_EVENT,
-            "name": _extra.eventManager.events.RIGHT_CLICK
-        },
-        "touchstart":{
-            "type": MOUSE_EVENT,
-            "name": _extra.eventManager.events.MOUSE_DOWN
-        },
-        "touchend":{
-            "type": MOUSE_EVENT,
-            "name": _extra.eventManager.events.MOUSE_UP
-        },
-        "touchmove":{
-            "type": MOUSE_EVENT,
-            "name": _extra.eventManager.events.MOUSE_MOVE
-        }
-    };
+            "mouseover":{
+                "type": MOUSE_EVENT,
+                "name": _extra.eventManager.events.MOUSE_OVER
+            },
+            "mouseout":{
+                "type": MOUSE_EVENT,
+                "name": _extra.eventManager.events.MOUSE_OUT
+            },
+            "rollover":{
+                "type": MOUSE_EVENT,
+                "name": _extra.eventManager.events.MOUSE_OVER
+            },
+            "rollout":{
+                "type": MOUSE_EVENT,
+                "name": _extra.eventManager.events.MOUSE_OUT
+            },
+            "mousedown":{
+                "type": MOUSE_EVENT,
+                "name": _extra.eventManager.events.MOUSE_DOWN
+            },
+            "mouseup":{
+                "type": MOUSE_EVENT,
+                "name": _extra.eventManager.events.MOUSE_UP
+            },
+            "mousemove":{
+                "type": MOUSE_EVENT,
+                "name": _extra.eventManager.events.MOUSE_MOVE
+            },
+            "click":{
+                "type": MOUSE_EVENT,
+                "name": _extra.eventManager.events.CLICK
+            },
+            "doubleclick":{
+                "type": MOUSE_EVENT,
+                "name": _extra.eventManager.events.DOUBLE_CLICK
+            },
+            "dblclick":{
+                "type": MOUSE_EVENT,
+                "name": _extra.eventManager.events.DOUBLE_CLICK
+            },
+            "rightclick":{
+                "type": MOUSE_EVENT,
+                "name": _extra.eventManager.events.RIGHT_CLICK
+            },
+            "touchstart":{
+                "type": MOUSE_EVENT,
+                "name": _extra.eventManager.events.MOUSE_DOWN
+            },
+            "touchend":{
+                "type": MOUSE_EVENT,
+                "name": _extra.eventManager.events.MOUSE_UP
+            },
+            "touchmove":{
+                "type": MOUSE_EVENT,
+                "name": _extra.eventManager.events.MOUSE_MOVE
+            },
+            "videoended":{
+                "type": VIDEO_EVENT,
+                "name": _extra.eventManager.events.VIDEO_ENDED
+            },
+            "videoend":{
+                "type": VIDEO_EVENT,
+                "name": _extra.eventManager.events.VIDEO_ENDED
+            },
+            "audioended": {
+                "type": AUDIO_EVENT,
+                "name": _extra.eventManager.events.AUDIO_ENDED
+            },
+            "audioend": {
+                "type": AUDIO_EVENT,
+                "name": _extra.eventManager.events.AUDIO_ENDED
+            }
+        };
 
     function isEventType (string, data) {
+
+        string = string.toLowerCase();
 
         if (eventTypes[string]) {
             data.eventType = eventTypes[string];
@@ -230,22 +303,38 @@ _extra.registerModule("slideObjectUtilMethods", ["slideObjectManager_global", "e
             p4Data = _extra.variableManager.parse.string(p4);
 
 
+        ///////////////////////////////////////////////////////////////////////
+        /////////////// WRITE
+        ///////////////////////////////////////////////////////////////////////
         function addToMediator(mediator, eventData, interactiveObjectData, criteriaData){
 
-            if (eventData.isCustomType && interactiveObjectData.isSlideObject) {
+            if (eventData.isCustomType) {
 
+                if (interactiveObjectData.isSlideObject) {
 
-                var criteria;
+                    var criteria;
 
-                if (criteriaData.isBlank) {
-                    criteria = "success";
+                    if (criteriaData.isBlank) {
+                        criteria = "success";
+                    } else {
+                        criteria = criteriaData.value;
+                    }
+
+                    // Now we will add the event listener!
+                    // ... Or remove it as the case may be.
+                    mediator[type](eventData.eventType.name, interactiveObjectData.value, criteria);
+
                 } else {
-                    criteria = criteriaData.value;
+
+                    // The object passed in as an 'interactive object' is not a slide object at all.
+                    _extra.error("CV013", interactiveObjectData.value);
+
                 }
 
-                // Now we will add the event listener!
-                // ... Or remove it as the case may be.
-                mediator[type](eventData.eventType.name, interactiveObjectData.value, criteria);
+            } else {
+
+                // The event data is invalid
+                _extra.error("CV031", eventData.value, type);
 
             }
 
@@ -253,23 +342,52 @@ _extra.registerModule("slideObjectUtilMethods", ["slideObjectManager_global", "e
 
 
 
-        if (p1Data.isSlideObject) {
+        ///////////////////////////////////////////////////////////////////////
+        /////////////// READ
+        ///////////////////////////////////////////////////////////////////////
+        function detectP1Type() {
 
-            addToMediator(_extra.eventManager.getEventMediator(p1), p2Data, p3Data, p4Data);
+            if (p1Data.isSlideObject) {
 
-        } else if (p1Data.isVariable) {
+                addToMediator(_extra.eventManager.getEventMediator(p1), p2Data, p3Data, p4Data);
 
-            addToMediator(_extra.eventManager.getEventMediator(p1Data.variableValue), p2Data, p3Data, p4Data);
+            } else if (p1Data.isVariable) {
 
-        } else if (p1Data.isQuery) {
+                if (p1Data.variable.isQuery) {
 
-            _extra.slideObjects.enactFunctionOnSlideObjects(p1, function (slideObjectName) {
+                    // This is better off restarting the whole process.
+                    p1 = p1Data.variable.value;
+                    p1Data.isQuery = true;
+                    p1Data.isSlideObject = false;
+                    p1Data.isVariable = false;
+                    return detectP1Type();
 
-                addToMediator(_extra.eventManager.getEventMediator(slideObjectName), p2Data, p3Data, p4Data);
+                } else {
 
-            });
+                    addToMediator(_extra.eventManager.getEventMediator(p1Data.variable.value), p2Data, p3Data, p4Data);
+
+                }
+
+            } else if (p1Data.isQuery) {
+
+                _extra.slideObjects.enactFunctionOnSlideObjects(p1, function (slideObjectName) {
+
+                    addToMediator(_extra.eventManager.getEventMediator(slideObjectName), p2Data, p3Data, p4Data);
+
+                });
+
+            } else {
+
+                // Not a valid type for the first parameter
+                _extra.error("CV030", p1, type);
+
+            }
 
         }
+
+        // This is in a function because under certain circumstances we need to recurse it.
+        detectP1Type();
+
 
     }
 

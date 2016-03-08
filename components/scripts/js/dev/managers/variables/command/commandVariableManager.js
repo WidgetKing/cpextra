@@ -73,19 +73,33 @@ _extra.registerModule("commandVariableManager",["variableManager","stateManager_
 
         function listenForCommandVariableChange(variableName,variableMetadata) {
 
-
-
             _extra.variableManager.listenForVariableChange(variableName, function () {
 
                 var value = _extra.variableManager.getVariableValue(variableName);
+
+                if (typeof value === "object") {
+                    if (value.id !== undefined) {
+                        value = value.id;
+                    } else {
+                        return;
+                    }
+                }
+
 
                 // If we have been given nothing, then we will not bother informing the command variable.
                 // This likely comes from clearing the command variable after enacting its command.
                 if (value !== "") {
 
-                    // Remove spaces from value string
-                    value = value.replace(/\s+/g,'');
-                    var parameters = value.split(",");
+                    var parameters;
+
+                    if (typeof value === "string") {
+                        // Remove spaces from value string
+                        value = value.replace(/\s+/g,'');
+                        parameters = value.split(",");
+                    } else {
+                        parameters = [value];
+                    }
+
                     variableMetadata.parameterHandler(parameters, variableMetadata.callback);
                     _extra.variableManager.setVariableValue(variableName,"");
 

@@ -5,7 +5,7 @@
  * Time: 8:14 AM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("commandVariables_global", ["commandVariableManager", "slideObjectUtilMethods"], function () {
+_extra.registerModule("commandVariables_global", ["commandVariableManager", "slideObjectUtilMethods", "localStorageManager"], function () {
 
     "use strict";
 
@@ -29,6 +29,14 @@ _extra.registerModule("commandVariables_global", ["commandVariableManager", "sli
     ////////// Mouse Enable
     register("EnableMouseEvents", _extra.slideObjects.enableForMouse);
     register("DisableMouseEvents", _extra.slideObjects.disableForMouse);
+
+    ////////////////////////////////
+    ////////// Reset
+    register("Reset", _extra.variableManager.reset);
+
+    ////////////////////////////////
+    ////////// Flush
+    register("FlushStorage", _extra.variableManager.flushStorage);
 
     ///////////////////////////////////////////////////////////////////////
     /////////////// ADVANCED COMMAND VARIABLES

@@ -13,8 +13,6 @@ _extra.registerModule("createSlideObjectData", ["factoryManager"], function () {
 
     _extra.factories.createSlideObjectData = function (name, data, type) {
 
-
-
         switch (type) {
 
             case _extra.dataTypes.slideObjects.TEXT_ENTRY_BOX :

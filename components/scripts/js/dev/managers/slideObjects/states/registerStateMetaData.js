@@ -14,13 +14,34 @@ _extra.registerModule("registerStateMetaData",["slideObjectManager_global", "Sli
         MOUSEDOWN = "d",
         NORMAL = "n";
 
+    ///////////////////////////////////////////////////////////////////////
+    /////////////// UTIL MEHTODS
+    ///////////////////////////////////////////////////////////////////////
+    _extra.slideObjects.states.doesSlideObjectHaveDownState = function(name) {
 
+        var slideObjects = stateManagers[_extra.slideManager.currentSlideID],
+            slideObject;
+
+        if (slideObjects) {
+
+            slideObject = slideObjects[name];
+
+            if (slideObject) {
+
+                return slideObject.data.hasOwnProperty("d");
+
+            }
+
+        }
+
+        return false;
+
+    };
 
     ///////////////////////////////////////////////////////////////////////
     /////////////// Register States for Automatic Switching
     ///////////////////////////////////////////////////////////////////////
     _extra.slideObjects.states.registerStateMetaData = function (slideObjectName, data) {
-
 
         var slideObjectProxy,
             currentSlideID = _extra.slideManager.currentSlideID,
@@ -175,6 +196,7 @@ _extra.registerModule("registerStateMetaData",["slideObjectManager_global", "Sli
         function getVariablesData(splitName, fullName) {
             var variableData = {},
                 previousIndexVariable = false,
+                previousIndexKeyword = false,
                 potentialVariableName,
                 segment;
 
@@ -182,7 +204,7 @@ _extra.registerModule("registerStateMetaData",["slideObjectManager_global", "Sli
             // that functionality into a function.
             function registerVariable(variableName) {
 
-                // x_var_var
+                // x_var_var - (Illegally using the same variable name twice)
                 if (variableData.hasOwnProperty(variableName)) {
 
                     _extra.error("AS002", slideObjectName, fullName, variableName);
@@ -196,7 +218,15 @@ _extra.registerModule("registerStateMetaData",["slideObjectManager_global", "Sli
             }
 
             // Turn strings into Booleans
-            function validateVariableValue(value) {
+            function validateVariableValue(value, ignoreKeywords) {
+
+                // Check if number
+                if (!_extra.w.isNaN(value)) {
+                    return _extra.w.parseInt(value);
+                }
+
+
+                // Check if boolean
                 switch (value.toLowerCase()) {
                     case "true":
                         return true;
@@ -204,9 +234,52 @@ _extra.registerModule("registerStateMetaData",["slideObjectManager_global", "Sli
                     case "false":
                         return false;
 
-                    default :
-                        return value;
                 }
+
+                // Check if Keyword
+                if (!ignoreKeywords) {
+
+                    switch (value.toLowerCase()) {
+                        case "not":
+                            value =  {
+                                "modifier":"!"
+                            };
+                            break;
+
+                        case "gt":
+                            value =  {
+                                "modifier":">"
+                            };
+                            break;
+
+                        case "lt":
+                            value =  {
+                                "modifier":"<"
+                            };
+                            break;
+
+                        case "gte":
+                            value =  {
+                                "modifier":">="
+                            };
+                            break;
+
+                        case "lte":
+                            value =  {
+                                "modifier":"<="
+                            };
+                            break;
+
+                    }
+
+                    // Set up next loop to extra the variable's value;
+                    if (typeof value === "object") {
+                        previousIndexKeyword = previousIndexVariable;
+                    }
+
+                }
+
+                return value;
             }
 
 
@@ -220,9 +293,15 @@ _extra.registerModule("registerStateMetaData",["slideObjectManager_global", "Sli
 
                 segment = splitName[i];
 
-                if (previousIndexVariable) {
+                if (previousIndexKeyword) {
 
-                    if(_extra.w.isNaN(segment)) {
+                    variableData[previousIndexKeyword].value = validateVariableValue(segment, true);
+                    previousIndexKeyword = false;
+
+
+                } else if (previousIndexVariable) {
+
+                    //if(_extra.w.isNaN(segment)) {
 
                         // x_var1_var2
                         if (_extra.variableManager.hasVariable(segment)) {
@@ -231,19 +310,21 @@ _extra.registerModule("registerStateMetaData",["slideObjectManager_global", "Sli
 
                             previousIndexVariable = segment;
 
-                        // x_var1_value
+                        // x_var1_value OR
+                        // x_var_1 OR
+                        // x_var_KEYWORD (NOT, GT, LT, GTE, LTE)
                         } else {
                             variableData[previousIndexVariable] = validateVariableValue(segment);
                             previousIndexVariable = null;
                         }
 
                     // x_var_1
-                    } else {
+                    /*} else {
 
                         variableData[previousIndexVariable] = _extra.w.parseInt(segment);
                         previousIndexVariable = null;
 
-                    }
+                    }*/
 
                 } else {
 
@@ -285,6 +366,12 @@ _extra.registerModule("registerStateMetaData",["slideObjectManager_global", "Sli
 
             if (_extra.w.Object.keys(variableData).length <= 0) {
                 return null;
+            }
+
+            // This means: x_var_not
+            // Should cause an error, because a value shout be placed after: not
+            if (previousIndexKeyword) {
+                _extra.error("AS004", slideObjectName, fullName, segment);
             }
 
             return variableData;

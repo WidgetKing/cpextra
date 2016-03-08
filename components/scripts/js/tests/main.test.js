@@ -13,12 +13,18 @@
 
     describe("Test suit for main.js general setup", function() {
 
-        /*beforeEach(function () {
-            window = {
+        beforeEach(function () {
+            spyOn(window,"alert");
+            spyOn(window.parent,"alert");
+            delete window._extra;
+            delete window.X;
+            delete window.parent.X;
+            delete window.parent._extra;
+            /*window = {
                 "alert":jasmine.createSpy("window.alert")
             };
-            initExtra();
-        });*/
+            initExtra();*/
+        });
         afterEach(function () {
             delete window._extra;
         });
@@ -44,13 +50,12 @@
             initExtra();
 
             spyOn(_extra.console, "log");
-            spyOn(_extra.console, "error");
 
             _extra.log("Hello");
             expect(_extra.console.log).toHaveBeenCalledWith("Hello");
 
             _extra.error("World");
-            expect(_extra.console.error).toHaveBeenCalledWith("World");
+            expect(window.parent.alert).toHaveBeenCalledWith("World");
 
             // Passing to the debugging manager
             _extra.debugging = {
@@ -63,7 +68,7 @@
             expect(_extra.debugging.log).toHaveBeenCalledWith("Hello");
 
             _extra.error("World");
-            expect(_extra.debugging.error).toHaveBeenCalledWith("World");
+            expect(window.parent.alert).toHaveBeenCalledWith("World");
 
         });
 
@@ -90,6 +95,7 @@
         });
 
         it("should not instantiate any modules if Extra has been aborted", function () {
+
             window.top.X = true;
             initExtra();
 
@@ -117,15 +123,39 @@
             delete window.$;
         });
 
+        it("should send up an alert box if there is a user variable named X", function () {
+
+            window.X = "foobar";
+
+            initExtra({
+                "parent":window
+            });
+
+            expect(window.alert).toHaveBeenCalled();
+
+            delete window.top.x;
+
+        });
+
     });
 
-    describe("Test Suite for main.js module registering", function () {
+    xdescribe("Test Suite for main.js module registering", function () {
 
         var dummy = function () {};
         var a = {};
 
         beforeEach(function () {
+
+            delete window._extra;
+            delete window.X;
+            delete window.parent.X;
+            delete window.parent._extra;
+
             initExtra();
+            /*_extra.w = {
+                "eval": jasmine.createSpy("_extra.w.eval")
+            };*/
+
             a.dummy = dummy;
             spyOn(a, "dummy");
         });
@@ -138,7 +168,8 @@
 
             _extra.registerModule("moduleName", a.dummy);
 
-            expect(a.dummy).toHaveBeenCalled();
+            expect(_extra.w.eval).toHaveBeenCalled();
+            //expect(a.dummy).toHaveBeenCalled();
         });
 
         it("should throw an exception if we pass in a module that depends on itself", function () {
@@ -237,6 +268,10 @@
     describe("Test suite for main.js class repository and handling", function () {
 
         beforeEach(function () {
+            delete window._extra;
+            delete window.X;
+            delete window.parent.X;
+            delete window.parent._extra;
            initExtra();
         });
 

@@ -5,7 +5,7 @@
  * Time: 6:06 PM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("slideObjectManager_global", ["slideObjectManager_software"], function () {
+_extra.registerModule("slideObjectManager_global", ["slideObjectManager_software", "queryManager"], function () {
     "use strict";
 
 
@@ -14,8 +14,6 @@ _extra.registerModule("slideObjectManager_global", ["slideObjectManager_software
      * @type {{}}
      */
     var slideObjectProxies = {};
-
-    _extra.slideObjects.WILDCARD_CHARACTER = "@";
     /**
      * When entering a slide, the manager will look through all the slide objects on that slide and send the relevant
      * slide object names to this callback.
@@ -63,7 +61,7 @@ _extra.registerModule("slideObjectManager_global", ["slideObjectManager_software
 
     _extra.slideObjects.getSlideObjectByName = function (query) {
 
-        if (query.indexOf(_extra.slideObjects.WILDCARD_CHARACTER) > -1) {
+        if (_extra.isQuery(query)) {
 
             // There is a wildcard, so we'll return a list.
             return _extra.slideObjects.getSlideObjectNamesMatchingWildcardName(query, true);
@@ -97,6 +95,7 @@ _extra.registerModule("slideObjectManager_global", ["slideObjectManager_software
         var slideData = _extra.slideManager.getSlideData();
 
         for (var i = 0; i < slideData.slideObjects.length; i += 1) {
+
             slideObjectName = slideData.slideObjects[i];
 
             _extra.slideObjects.enteredSlideChildObjectsCallbacks.sendToCallback("*", slideObjectName);
@@ -106,6 +105,5 @@ _extra.registerModule("slideObjectManager_global", ["slideObjectManager_software
             //_extra.slideObjects.enteredSlideChildObjectsCallbacks.sendToCallback(_extra.slideManager.currentSlideNumber, slideObjectName);
 
         }
-
     });
 });

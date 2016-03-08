@@ -19,7 +19,8 @@ _extra.registerModule("DoubleClickHandler", function () {
         var activeTimeoutId,
             singleClickCount = 0,
             singleClickCallback,
-            doubleClickCallback;
+            doubleClickCallback,
+            rightClickCallback;
 
 
         ///////////////////////////////////////////////////////////////////////
@@ -44,7 +45,7 @@ _extra.registerModule("DoubleClickHandler", function () {
 
                         // We need to delay the callback to ensure this is a click and not the early
                         // signs of a double click
-                        activeTimeoutId = setTimeout(function () {
+                        activeTimeoutId = _extra.w.setTimeout(function () {
 
                             if (singleClickCount >= 2) {
 
@@ -84,7 +85,7 @@ _extra.registerModule("DoubleClickHandler", function () {
 
                 if (activeTimeoutId) {
 
-                    clearTimeout(activeTimeoutId);
+                    _extra.w.clearTimeout(activeTimeoutId);
                     activeTimeoutId = null;
                     singleClickCount = 0;
 
@@ -96,22 +97,32 @@ _extra.registerModule("DoubleClickHandler", function () {
 
         }
 
+        function rightClickHandler(event) {
+
+            rightClickCallback(event);
+            event.preventDefault();
+
+        }
+
         ///////////////////////////////////////////////////////////////////////
         /////////////// PUBLIC FUNCTIONS
         ///////////////////////////////////////////////////////////////////////
 
         this.addEventHandler = function(event, callback) {
 
-            if (event === "click") {
+            switch (event) {
 
-                singleClickCallback = callback;
-                return singleClickHandler;
+                case _extra.eventManager.events.CLICK :
+                    singleClickCallback = callback;
+                    return singleClickHandler;
 
-            } else if (event === "dblclick") {
+                case _extra.eventManager.events.DOUBLE_CLICK :
+                    doubleClickCallback = callback;
+                    return doubleClickHandler;
 
-                doubleClickCallback = callback;
-
-                return doubleClickHandler;
+                case _extra.eventManager.events.RIGHT_CLICK :
+                    rightClickCallback = callback;
+                    return rightClickHandler;
 
             }
 
@@ -123,11 +134,11 @@ _extra.registerModule("DoubleClickHandler", function () {
 
         this.removeEventHandler = function(event) {
 
-            if (event === "click") {
+            if (event === _extra.eventManager.events.CLICK) {
 
                 singleClickCallback = null;
 
-            } else if (event === "dblclick") {
+            } else if (event === _extra.eventManager.events.DOUBLE_CLICK) {
 
                 doubleClickCallback = null;
 

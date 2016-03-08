@@ -13,6 +13,18 @@ _extra.registerModule("errors", ["debuggingManager"], function () {
 
         ////////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////
+        //////////////////// LOCAL STORAGE ERRORS
+        ////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////
+        "PV001": function (storageType) {
+            return "This browser does not support <b>" + storageType + " storage variables.</b> " +
+                    "Please upgrade to the latest version of the browser." +
+                    "<br/>If this is not possible, either remove storage variables from this project <b>OR</b> set " +
+                    "the <b>xprefDebugMode</b> variable to <b>false</b> to stop this message appearing.";
+        },
+
+        ////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////
         //////////////////// AUTO STATE ERRORS
         ////////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////
@@ -31,6 +43,13 @@ _extra.registerModule("errors", ["debuggingManager"], function () {
         "AS003": function (slideObject) {
             return "At _extra.slideObjects.states.registerStateMetaData, tried to register data for <b>" + slideObject +
                     "</b> twice. Has unloading of this data from a previous slide been unsuccessful?";
+        },
+
+        "AS004": function (slideObject, state, keyword) {
+            return "<b>" + slideObject + "</b> has a state named <b>" + state + "</b>. " +
+                    "<br/>However, there is no value written after the keyword <b>" + keyword + "</b>. " +
+                    "Therefore CpExtra does not know how to evaluate the <b>" + state + "</b> state. " +
+                    "<br/>To correct this issue write a value after the <b>" + keyword + "</b> keyword.";
         },
 
         ////////////////////////////////////////////////////////////////////////////////
@@ -77,8 +96,97 @@ _extra.registerModule("errors", ["debuggingManager"], function () {
             return "Tried to use xcmndSetCursor to apply cursor named <b>" + cursorName + "</b> to <b>" + query + "</b>. " +
                    "<b>" + cursorName + "</b> is not a valid cursor name. " +
                     "<br/>Please check if you have misspelt the cursor name.";
-        }
+        },
 
+        ///////////////////////////////////////////////////////////////////////
+        /////////////// xcmndAddEventListener and xcmndRemoveEventListener
+        ///////////////////////////////////////////////////////////////////////
+        "CV030": function (slideObject, type) {
+
+            var verb;
+            if (type === "addEventListener") {
+                verb = "add";
+            } else if (type === "removeEventListener") {
+                verb = "remove";
+            }
+
+            return "Tried to " + verb + " an event listener on <b>" + slideObject +
+                   "</b> but could not find any slide objects with that name. " +
+                   "<br/>Please ensure there is a slide object with the name <b>" + slideObject + "</b>.";
+        },
+        "CV031": function (event, type) {
+
+            var verb;
+
+            if (type === "addEventListener") {
+                verb = "add";
+            } else if (type === "removeEventListener") {
+                verb = "remove";
+            }
+
+            return "Unable to " + verb + " the <b>" + event + "</b> event because <b>" +
+                    event + "</b> is not listed as a valid event. " +
+                    "<br/>Please check the spelling of <b>" + event + "</b>.";
+        },
+
+        ///////////////////////////////////////////////////////////////////////
+        /////////////// xcmndPosX, xcmndPosY, xcmndWidth, xcmndHeight
+        ///////////////////////////////////////////////////////////////////////
+        "CV040": function (slideObject, property) {
+            return "Tried alter the <b>" + property + "</b> property on <b>" + slideObject +
+                   "</b> but could not find any slide objects with that name. " +
+                   "<br/>Please ensure there is a slide object with the name <b>" + slideObject + "</b>.";
+        },
+        "CV041": function (slideObject, property, value) {
+            return "Tried to change the <b>" + property + "</b> property on <b>" + slideObject +
+                   "</b> to <b>" + value + "</b>, but that is not a valid value." +
+                   "<br/>Please check the spelling of <b>" + value + "</b>.";
+        },
+        "CV042": function (variableName, slideObject, property) {
+            return "Tried to set variable <b>" + variableName + "</b> with value of slide object <b>" + slideObject +
+                   "'s " + property + "</b> property. However, could not find any slide object with the object name <b>" +
+                    slideObject + "</b>." +
+                   "<br/>Please check the spelling of <b>" + slideObject + "</b>.";
+        },
+
+        ///////////////////////////////////////////////////////////////////////
+        /////////////// xcmndReset
+        ///////////////////////////////////////////////////////////////////////
+        "CV050": function (variableName) {
+            return "Tried to reset variable <b>" + variableName + "</b> to its default value, but could not find any " +
+                   "variables by the name of <b>" + variableName + "</b>." +
+                   "<br/>Please check the spelling of <b>" + variableName + "</b>.";
+        },
+
+        ///////////////////////////////////////////////////////////////////////
+        /////////////// xcmndFlushStorage
+        ///////////////////////////////////////////////////////////////////////
+        "CV060": function (variableName) {
+            return "Tried to flush <b>" + variableName + "</b> from storage, but <b>" + variableName + "</b> " +
+                    "is not registered as a storage variable. " +
+                    "<br/>Storage variables should have a prefix of <b>ls_</b> or <b>ss_</b>." +
+                    "<br/>Other keywords that can be passed to <b>xcmndFlushStorage</b> are <b>local, session,</b> " +
+                    "and <b>all</b>" +
+                    "<br/>Please check the spelling of <b>" + variableName + "</b>.";
+        },
+
+        ///////////////////////////////////////////////////////////////////////
+        /////////////// xcmndCompleteSlide
+        ///////////////////////////////////////////////////////////////////////
+        "CV070": function (value) {
+            return "Tried to assign <b>xcmndCompleteSlide</b> an improper range of slides. Could not indentify what <b>" + value + "</b> is " +
+                    "supposed to represent. " +
+                    "<br>Please check the spelling of <b>" + value + "</b>.";
+        },
+        "CV071": function (slideName) {
+            return "Tried to mark slide <b>" + slideName + "</b> as complete, but could not find any slide with the name <b>" + slideName + "</b>." +
+                    "<br/>Please check the spelling of <b>" + slideName + "</b>. Slide names are <b>case sensitive</b> and <b>cannot have spaces</b>.";
+        },
+        "CV072": function (slideNumber, slideCount) {
+            return "Tried to mark slide number <b>" + slideNumber + "</b> as complete, but there are only <b>" +
+                    slideCount + "</b> slides in the project." +
+                    "<br/>Perhaps you have deleted a few slides and this command needs updating.";
+        }
     };
 
 });

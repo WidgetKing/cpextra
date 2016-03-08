@@ -5,7 +5,7 @@
  * Time: 4:51 PM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("commandVariables_software", ["commandVariables_global", "actionManager"], function () {
+_extra.registerModule("commandVariables_software", ["commandVariables_global", "actionManager", "TOCManager"], function () {
 
     "use strict";
 
@@ -19,5 +19,9 @@ _extra.registerModule("commandVariables_software", ["commandVariables_global", "
     ////////// Event Handler
     register("AddEventListener", _extra.slideObjects.addEventListener, handlers.sendParametersAsParameters);
     register("RemoveEventListener", _extra.slideObjects.removeEventListener, handlers.sendParametersAsParameters);
+
+    ////////////////////////////////
+    ////////// TOC
+    register("CompleteSlide", _extra.TOCManager.completeSlide);
 
 }, _extra.CAPTIVATE);

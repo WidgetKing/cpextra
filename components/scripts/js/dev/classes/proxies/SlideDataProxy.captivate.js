@@ -38,6 +38,12 @@ _extra.registerModule("SlideDataProxy", function () {
         },
         get id() {
             return this._data.container.dn;
+        },
+        get complete() {
+            return this._data.base.v;
+        },
+        set complete(value) {
+            this._data.base.v = value;
         }
     };
 

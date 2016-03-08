@@ -14,6 +14,7 @@ _extra.registerModule("slideManager_global",["slideManager_software"],function()
     _extra.slideManager.currentSceneNumber = 0;
     _extra.slideManager.currentSlideNumber = 0;
     _extra.slideManager.currentSlideID = "0.0";
+    _extra.slideManager.numSlides = _extra.slideManager.slideNames.length;
 
     /**
      * Returns an object that formats the data for a particular slide.
@@ -66,7 +67,6 @@ _extra.registerModule("slideManager_global",["slideManager_software"],function()
         // In Internet Explorer, _extra will be deleted when we move out of its slide. So we'll add it back to the
         // window object.
         if (!_extra) {
-            console.log(window);
             window._extra = rawExtra;
             //rawExtra.w.X._ = rawExtra;
         }
@@ -96,8 +96,6 @@ _extra.registerModule("slideManager_global",["slideManager_software"],function()
 
         // Notify all callbacks registered to this specific scene and slide index (1.3)
         _extra.slideManager.enterSlideCallback.sendToCallback(currentSlideID, currentSlideID);
-
-
 
     }
 

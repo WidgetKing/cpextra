@@ -12,7 +12,14 @@ package
 	 */
 	public class CPExtra extends Widget 
 	{
+		public static const VERSION:String = "0.0.2";
+		public static const IS_TRAIL:Boolean = false;
 		
+		public function CPExtra():void {
+			
+			super();
+			//initiatePropertiesDialogMode();
+		}
 		/*public function CPExtra()
         {
             WidgetDebugger.debugger = new WidgetArthropodDebugger();

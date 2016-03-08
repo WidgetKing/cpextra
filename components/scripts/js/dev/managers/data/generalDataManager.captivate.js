@@ -12,7 +12,7 @@ _extra.registerModule("generalDataManager", ["softwareInterfacesManager", "dataT
 
             if (data.base) {
                 data.container = _extra.captivate.allSlideObjectsData[slideObjectName + "c"];
-                return _extra.factories.createSlideObjectData(slideObjectName, data, _extra.dataTypes.convertSlideObjectType(data.base.type));
+                return _extra.factories.createSlideObjectData(slideObjectName, data, _extra.dataTypes.convertSlideObjectType(data.base.type, slideObjectName));
             }
             return null;
         },
@@ -22,11 +22,15 @@ _extra.registerModule("generalDataManager", ["softwareInterfacesManager", "dataT
 
             if (data) {
 
-                return _extra.dataTypes.convertSlideObjectType(data.type);
+                return _extra.dataTypes.convertSlideObjectType(data.type, slideObjectName);
 
             }
 
-            return NaN;
+            return _extra.w.NaN;
+        },
+        "getSlideObjectDataByID": function (id) {
+            var data = _extra.captivate.api.getDisplayObjByCP_UID(id);
+            return _extra.dataManager.getSlideObjectDataByName(data.parentDivName);
         }
     };
 

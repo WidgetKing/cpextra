@@ -28,10 +28,12 @@ function initExtra(topWindow) {
     // the data for the different modules.
     if (window._extra === undefined) {
         window._extra = {};
-    } else {
+    // However, there is another possibility that a user variable was created named _extra. In that case we want to
+    // abort later.
+    // This next code should be able to detect if we're currently in the unit test scope.
+    } else if (window.unitTests) {
         return;
     }
-
     ///////////////////////////////////
     ///////// Private Methods
     ///////////////////////////////////
@@ -70,7 +72,8 @@ function initExtra(topWindow) {
 
             } else if (_extra.console) {
 
-                _extra.console.error(message);
+                _extra.w.alert(message);
+                //_extra.console.error(message);
 
             }
 
@@ -91,7 +94,8 @@ function initExtra(topWindow) {
     //////////////
     ///// Extra Pre-detection
     //////////////
-    if (_extra.w.X !== undefined) {
+
+    function abort(property) {
 
         _extra.aborted = true;
 
@@ -99,9 +103,36 @@ function initExtra(topWindow) {
             // Purposefully left blank as we don't want to do anything with the registered modules.
         };
 
-        _extra.log("Aborted initializing Extra for a second time, as we have detected the window.X property has already been defined.");
+        // Now to check whether this X is a User Variable
+        if (typeof _extra.w[property] === "object") {
+            // Okay, if it's an object then it must be CpExtra. User Variables can't be objects.
+            _extra.log("Aborted initializing Extra for a second time, as we have detected the window." + property +
+                       " property has already been defined.");
+
+        } else {
+            // If it's not an object, it's a good bet its a user variable.
+            _extra.error("CpExtra could not start because it encountered a User Variable named <b>" + property +
+                         "</b> in the project. CpExtra has reserved this User Variable name. <br/>Please delete the <b>" +
+                         property + "</b> User Variable.");
+
+        }
+
+    }
+
+
+
+    if (_extra.w.X !== undefined) {
+
+        abort("X");
 
         return;
+
+    } else if (_extra.w._extra !== undefined) {
+
+        abort("_extra");
+
+        return;
+
     } else {
         _extra.aborted = false;
     }
@@ -338,7 +369,7 @@ function initExtra(topWindow) {
     // Widgets are loaded in iFrames. Therefore their code is generally executed inside the iFrame.
     // When an iFrame is unloaded, internet explorer for security reasons, ensures that no code from that iFrame
     // can be executed now that it has been unloaded.
-    // For most widgets this is not an issue as they only opperate on a single slide. Captivate Extra on the other hand
+    // For most widgets this is not an issue as they only operate on a single slide. Captivate Extra on the other hand
     // is not one of those widgets. We need to make sure our code can be executed well into the future.
     // Therefore we sneak around this issue by converting the module code to a string, and then getting Captivate's
     // window object to run that string as javascript code. Internet Explorer will then see that code as originating
@@ -346,11 +377,15 @@ function initExtra(topWindow) {
     // Now of course performing this 'eval' is 'evil'. However, the evil is reduced by only doing this inside of
     // Internet Explorer. Other browsers do not have this issue.
     function safelyInvokeModule(method) {
-        if (_extra.isIE) {
+        // Initially we only did the Eval thing for IE, but then we found that variableManager.getVariableValue failed
+        // silently in many browsers. This was linked back to the 'can't execute freed script' error. Many mobile
+        // devices had this error, so now we just eval the whole thing to get around the many potential issues with
+        // executing code in the iFrame scope.
+        //if (_extra.isIE) {
             return _extra.w.eval("(" + method.toString() + "())");
-        } else {
+        /*} else {
             return method();
-        }
+        }*/
     }
 
     if (_extra.isIE) {

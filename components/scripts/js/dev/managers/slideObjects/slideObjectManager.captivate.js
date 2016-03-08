@@ -6,7 +6,7 @@
  * Time: 1:28 PM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("slideObjectManager_software", ["generalDataManager", "Callback", "slideManager_global"], function () {
+_extra.registerModule("slideObjectManager_software", ["generalDataManager", "Callback", "slideManager_global", "queryManager"], function () {
    "use strict";
 
 
@@ -18,7 +18,7 @@ _extra.registerModule("slideObjectManager_software", ["generalDataManager", "Cal
          * Useful for enhancing Captivate's own internal show, hide, and enable, disable functions.
          */
         "enactFunctionOnSlideObjects": function (query, method) {
-            if (query.indexOf(_extra.slideObjects.WILDCARD_CHARACTER) > -1) {
+            if (_extra.isQuery(query)) {
 
                 var list = _extra.slideObjects.getSlideObjectNamesMatchingWildcardName(query, false);
 
@@ -52,9 +52,70 @@ _extra.registerModule("slideObjectManager_software", ["generalDataManager", "Cal
         "disable":function (query) {
             _extra.slideObjects.enactFunctionOnSlideObjects(query, _extra.captivate.api.disable);
         },
+        "getSlideObjectNameFromStateName": function (stateName) {
+            var data = _extra.dataManager.getSlideObjectDataByName(stateName);
+            if (!data.isBaseStateItem) {
+                data = data.getBaseStateItemData();
+                stateName = data.name;
+            }
+            return stateName;
+        },
+        "getSlideObjectByDIV":function (div) {
+
+            var name = div.id,
+                TEB_SUFFIX = "_inputField",
+                returnValue = null;
+
+            // Remove the TEB_SUFFIX from the end of the div name.
+            if (name.substr(name.length - TEB_SUFFIX.length, name.length) === TEB_SUFFIX) {
+                name = name.substr(0, name.length - TEB_SUFFIX.length);
+            }
+
+            if (_extra.slideObjects.hasSlideObjectInProject(name)) {
+
+                // Just in case we clicked on the state of an object.
+                name = _extra.slideObjects.getSlideObjectNameFromStateName(name);
+                returnValue = _extra.slideObjects.getSlideObjectByName(name);
+            }
+
+            return returnValue;
+
+        },
         "getSlideObjectNamesMatchingWildcardName": function (query, returnProxies) {
 
-            var wildcardIndex = query.indexOf(_extra.slideObjects.WILDCARD_CHARACTER);
+            if (_extra.isQuery(query)) {
+
+                var slide = _extra.slideManager.currentSlideDOMElement,
+                    list = [];
+
+                for (var i = 0; i < slide.childNodes.length; i += 1) {
+                    list.push(slide.childNodes[i].id);
+                }
+
+                list = _extra.queryList(query, list);
+
+                // If a list of proxies was wanted, not a list of names
+                if (list && returnProxies) {
+
+                    var proxyList = [];
+
+                    for (i = 0; i < list.length; i += 1) {
+
+                        proxyList.push(_extra.slideObjects.getSlideObjectProxy(list[i]));
+
+                    }
+
+                    list = proxyList;
+
+                }
+
+                return list;
+
+            }
+
+            return null;
+            // Previously, before we externalized this code to _extra.queryList
+            /*var wildcardIndex = query.indexOf(_extra.slideObjects.WILDCARD_CHARACTER);
             if (wildcardIndex > -1) {
 
                 // There is a wildcard character in the query.
@@ -106,7 +167,7 @@ _extra.registerModule("slideObjectManager_software", ["generalDataManager", "Cal
             }
 
             // Endpoint if no wildcard was passed in.
-            return null;
+            return null;*/
 
         }
     };
@@ -129,7 +190,7 @@ _extra.registerModule("slideObjectManager_software", ["generalDataManager", "Cal
             if (projectData.hasOwnProperty(slideObjectName)) {
 
                 slideObjectData = projectData[slideObjectName];
-                slideObjectType = _extra.dataTypes.convertSlideObjectType(slideObjectData.type);
+                slideObjectType = _extra.dataTypes.convertSlideObjectType(slideObjectData.type, slideObjectName);
 
                 _extra.slideObjects.allObjectsOfTypeCallback.sendToCallback(slideObjectType, slideObjectName);
 

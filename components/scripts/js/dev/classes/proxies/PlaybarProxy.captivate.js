@@ -17,7 +17,8 @@ _extra.registerModule("PlaybarProxy", function () {
         var that = this,
             mainDIV = _extra.w.document.getElementById("playbar"),
             sliderDIV,
-            sliderThumbDIV;
+            sliderThumbDIV,
+            hasSlider;
 
         ///////////////////////////////////////////////////////////////////////
         /////////////// PUBLIC VARIABLES
@@ -33,15 +34,20 @@ _extra.registerModule("PlaybarProxy", function () {
             // If we've already loaded everything
             if (_extra.slideManager && _extra.cssManager) {
 
-                if (that._scrubbing) {
-                    _extra.cssManager.removeClassFrom(sliderDIV.parentNode, "extra-mouse-disabled");
-                    _extra.cssManager.removeClassFrom(sliderDIV, "extra-mouse-disabled");
-                    _extra.cssManager.removeClassFrom(sliderThumbDIV, "extra-mouse-disabled");
-                } else {
-                    _extra.cssManager.addClassTo(sliderDIV.parentNode, "extra-mouse-disabled");
-                    _extra.cssManager.addClassTo(sliderDIV, "extra-mouse-disabled");
-                    _extra.cssManager.addClassTo(sliderThumbDIV, "extra-mouse-disabled");
+                if (hasSlider) {
+
+                    if (that._scrubbing) {
+                        _extra.cssManager.removeClassFrom(sliderDIV.parentNode, "extra-mouse-disabled");
+                        _extra.cssManager.removeClassFrom(sliderDIV, "extra-mouse-disabled");
+                        _extra.cssManager.removeClassFrom(sliderThumbDIV, "extra-mouse-disabled");
+                    } else {
+                        _extra.cssManager.addClassTo(sliderDIV.parentNode, "extra-mouse-disabled");
+                        _extra.cssManager.addClassTo(sliderDIV, "extra-mouse-disabled");
+                        _extra.cssManager.addClassTo(sliderThumbDIV, "extra-mouse-disabled");
+                    }
+
                 }
+
 
             }
 
@@ -50,6 +56,7 @@ _extra.registerModule("PlaybarProxy", function () {
 
         this.addEnterSlideCallback = function() {
 
+            // These objects change on every slide, so we have to repeatedly grab these objects.
             _extra.slideManager.enterSlideCallback.addCallback("*", getPlaybarElements);
             getPlaybarElements();
 
@@ -63,9 +70,12 @@ _extra.registerModule("PlaybarProxy", function () {
 
         function getPlaybarElements() {
 
+
             sliderDIV = _extra.w.document.getElementById("playbarSlider");
+            hasSlider = sliderDIV !== null;
             sliderThumbDIV = _extra.w.document.getElementById("playbarSliderThumb");
             that.update();
+
 
         }
 

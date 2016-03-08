@@ -16,7 +16,7 @@ _extra.registerModule("slideManager_software", ["softwareInterfacesManager", "Ca
     _extra.slideManager = {
         "_slideDatas": [],
         "slideNames": [],
-        "currentSlideId":null,
+        "currentInternalSlideId":null,
         "currentSlideDOMElement":_extra.w.document.getElementById("div_Slide"),
         "isSlideLoaded":false,
         "gotoSlide":function (index) {
@@ -45,7 +45,7 @@ _extra.registerModule("slideManager_software", ["softwareInterfacesManager", "Ca
         },
         "software_onSlideEnter":function() {
 
-            this.currentSlideId = slideIds[_extra.slideManager.currentSlideNumber];
+            this.currentInternalSlideId = slideIds[_extra.slideManager.currentSlideNumber];
 
         }
     };

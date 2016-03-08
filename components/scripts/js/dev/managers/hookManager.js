@@ -16,13 +16,44 @@ _extra.registerModule("hookManager", ["slideManager_global"], function () {
     ///////////////////////////////////////////////////////////////////////
 
 
-    function createHook(data) {
+    function createHook(location, methodName, hookMethod) {
+
+        var data = {
+            "location": location,
+            "methodName": methodName,
+            "hookMethod": hookMethod,
+            "originalMethod": location[methodName]
+        };
+
         data.location[data.methodName] = function () {
 
-            data.hookMethod.apply(this, arguments);
-            data.originalMethod.apply(this, arguments);
+
+            var returnValue;
+
+            if (data.callHookBeforeOriginal) {
+
+                returnValue = data.hookMethod.apply(this, arguments);
+
+                if (returnValue !== undefined) {
+                    return returnValue;
+                }
+
+                return data.originalMethod.apply(this, arguments);
+
+            } else {
+
+                returnValue = data.originalMethod.apply(this, arguments);
+                data.hookMethod.apply(this, arguments);
+                return returnValue;
+
+            }
+
 
         };
+
+        hooks.push(data);
+
+        return data;
     }
 
     function destroyHook(data) {
@@ -33,19 +64,28 @@ _extra.registerModule("hookManager", ["slideManager_global"], function () {
     /////////////// PUBLIC FUNCTIONS
     ///////////////////////////////////////////////////////////////////////
 
-    _extra.addHook = function (location, methodName, hookMethod) {
 
-        var data = {
-            "location": location,
-            "methodName": methodName,
-            "hookMethod": hookMethod,
-            "originalMethod": location[methodName]
-        };
 
-        createHook(data);
-        hooks.push(data);
+    _extra.addHookAfter = function (location, methodName, hookMethod) {
+
+
+        var data = createHook(location, methodName, hookMethod);
+
+        data.callHookBeforeOriginal = false;
+
 
     };
+
+    _extra.addHookBefore = function (location, methodName, hookMethod) {
+
+        var data = createHook(location, methodName, hookMethod);
+
+        data.callHookBeforeOriginal = true;
+
+    };
+
+    // Same behaviour as after.
+    _extra.addHook = _extra.addHookAfter;
 
     _extra.removeHook = function (location, methodName, hookMethod) {
 

@@ -5,7 +5,7 @@
  * Time: 8:10 AM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("variableManager", ["softwareInterfacesManager", "Callback"], function () {
+_extra.registerModule("variableManager_software", ["softwareInterfacesManager", "Callback"], function () {
 
     "use strict";
     //var variables = _extra.storyline
@@ -22,11 +22,52 @@ _extra.registerModule("variableManager", ["softwareInterfacesManager", "Callback
             return _extra.storyline.variables.hasOwnProperty(variableName);
         },
         "listenForVariableChange": function (variableName, callback) {
-            _extra.error("_extra.variableManager.listenForVariableChange logic has yet to be implemented");
+            _extra.storyline.api.registerVariableEventSubscriber({
+                "handleEvent":function() {
+                    callback();
+                }
+            }, variableName);
         },
         "stopListeningForVariableChange": function(variableName, callback) {
             _extra.error("_extra.variableManager.stopListeningForVariableChange logic has yet to be implemented");
-        }
+        },
+        "enactFunctionOnVariables": function (query, method) {
+            if (_extra.isQuery(query)) {
+
+                var list = _extra.queryList(query, _extra.variableManager.variableData);
+
+                for (var i = 0; i < list.length; i += 1) {
+
+                    method(list[i]);
+
+                }
+
+            } else {
+
+                method(query);
+
+            }
+        },
+        "reset": function (variableName) {
+
+            if (_extra.variableManager.variableData) {
+                _extra.variableManager.enactFunctionOnVariables(variableName, function (variableName) {
+
+                    var defaultValue = _extra.variableManager.variableData[variableName];
+
+                    if (defaultValue === undefined) {
+                        _extra.error("CV050", variableName);
+                    } else {
+                        _extra.variableManager.setVariableValue(variableName, defaultValue);
+                    }
+
+                });
+            }
+        },
+        // This can't be a private variable, because it must be shared with the onload callback,
+        // and seeing as we are using eval to run all this code, the onload callback is unlinked.
+        "variableData":null,
+        "hasParsedVariables":false
     };
 
     return function () {
@@ -34,9 +75,13 @@ _extra.registerModule("variableManager", ["softwareInterfacesManager", "Callback
         var splitName,
             prefix;
 
+        _extra.variableManager.variableData = {};
+
         for (var name in _extra.storyline.variables) {
             // TODO: Find a way to extract this so that the Captivate and Storyline versions aren't duplicating the same code.
             if (_extra.storyline.variables.hasOwnProperty(name)) {
+
+                _extra.variableManager.variableData[name] = _extra.variableManager.getVariableValue(name);
 
                 splitName = name.split("_");
                 prefix = splitName[0];
@@ -56,6 +101,7 @@ _extra.registerModule("variableManager", ["softwareInterfacesManager", "Callback
             }
         }
 
+        _extra.variableManager.hasParsedVariables = true;
         // Dispatch event to let the rest of the modules know the variables have been initialized.
         _extra.eventManager.eventDispatcher.dispatchEvent(_extra.createEvent("variablesInitialized"));
 
