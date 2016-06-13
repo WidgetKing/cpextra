@@ -81,8 +81,6 @@ _extra.registerModule("SlideObjectStateManager", function () {
 
         function doVariableValueComparison(variableValue, intendedValue) {
 
-            _extra.log("variableValue: " + variableValue);
-            _extra.log(intendedValue);
             // This means no destination value was given to the state. The state name would look something like: x_MyVar
             // In this case we'll assume this should be true.
             // We don't correct this further up, because it may yet be useful to know if the user did or didn't

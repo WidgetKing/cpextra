@@ -161,6 +161,7 @@ _extra.registerModule("slideObjectUtilMethods", ["slideObjectManager_global", "e
     /////////////// EVENT TYPES
     ///////////////////////////////////////////////////////////////////////
     var MOUSE_EVENT = "mouseevent",
+        SLIDE_OBJECT_EVENT = "slideobject",
         VIDEO_EVENT = "videoevent",
         AUDIO_EVENT = "audioevent",
         cursorTypes = {
@@ -202,6 +203,14 @@ _extra.registerModule("slideObjectUtilMethods", ["slideObjectManager_global", "e
             "grabbing":true
         },
         eventTypes = {
+            "enter":{
+                "type":SLIDE_OBJECT_EVENT,
+                "name": _extra.eventManager.events.ENTER
+            },
+            "exit":{
+                "type":SLIDE_OBJECT_EVENT,
+                "name": _extra.eventManager.events.EXIT
+            },
             "mouseover":{
                 "type": MOUSE_EVENT,
                 "name": _extra.eventManager.events.MOUSE_OVER

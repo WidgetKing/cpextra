@@ -28,21 +28,24 @@ _extra.registerModule("hookManager", ["slideManager_global"], function () {
         data.location[data.methodName] = function () {
 
 
-            var returnValue;
+            var returnValue,
+                applyObject = arguments;
 
             if (data.callHookBeforeOriginal) {
 
                 returnValue = data.hookMethod.apply(this, arguments);
 
-                if (returnValue !== undefined) {
+                if (_extra.w.Object.prototype.toString.call( returnValue ) === '[object Arguments]') {
+                    applyObject = returnValue;
+                } else if (returnValue !== undefined) {
                     return returnValue;
                 }
 
-                return data.originalMethod.apply(this, arguments);
+                return data.originalMethod.apply(this, applyObject);
 
             } else {
 
-                returnValue = data.originalMethod.apply(this, arguments);
+                returnValue = data.originalMethod.apply(this, applyObject);
                 data.hookMethod.apply(this, arguments);
                 return returnValue;
 

@@ -10,10 +10,15 @@ _extra.registerModule("queryManager", function () {
     "use strict";
 
     _extra.WILDCARD_CHARACTER = "@";
+    _extra.GLOBAL_WILDCARD_CHARACTER = "#";
 
-    _extra.queryList = function(query, list) {
+    _extra.queryList = function(query, list, wildcard) {
 
-        var wildcardIndex = query.indexOf(_extra.WILDCARD_CHARACTER);
+        if (!wildcard) {
+            wildcard = _extra.getQueryType(query);
+        }
+
+        var wildcardIndex = query.indexOf(wildcard);
         if (wildcardIndex > -1) {
 
             // There is a wildcard character in the query.
@@ -72,8 +77,28 @@ _extra.registerModule("queryManager", function () {
         return null;
     };
 
-    _extra.isQuery = function (query) {
+    _extra.isLocalQuery = function (query) {
         return query.indexOf(_extra.WILDCARD_CHARACTER) > -1;
     };
+
+    _extra.isGlobalQuery = function (query) {
+        return query.indexOf(_extra.GLOBAL_WILDCARD_CHARACTER) > -1;
+    };
+
+    _extra.isQuery = function (query) {
+        return _extra.isLocalQuery(query) || _extra.isGlobalQuery(query);
+    };
+
+    _extra.getQueryType = function (query) {
+
+        if (_extra.isLocalQuery(query)) {
+            return _extra.WILDCARD_CHARACTER;
+        } else if (_extra.isGlobalQuery(query)) {
+            return _extra.GLOBAL_WILDCARD_CHARACTER;
+        }
+
+        return false;
+    };
+
 
 });

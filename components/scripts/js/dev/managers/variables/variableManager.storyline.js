@@ -11,7 +11,7 @@ _extra.registerModule("variableManager_software", ["softwareInterfacesManager", 
     //var variables = _extra.storyline
 
     _extra.variableManager = {
-        "prefixCallback": new _extra.classes.Callback(),
+        //"prefixCallback": new _extra.classes.Callback(),
         "getVariableValue": function (variableName) {
             return _extra.storyline.player.GetVar(variableName);
         },
@@ -21,17 +21,26 @@ _extra.registerModule("variableManager_software", ["softwareInterfacesManager", 
         "hasVariable": function (variableName) {
             return _extra.storyline.variables.hasOwnProperty(variableName);
         },
-        "listenForVariableChange": function (variableName, callback) {
+        "internalListenForVariableChange": function (variableName, callback) {
             _extra.storyline.api.registerVariableEventSubscriber({
-                "handleEvent":function() {
-                    callback();
-                }
-            }, variableName);
+                "handleEvent":callback
+            }, variableName, 0);
         },
-        "stopListeningForVariableChange": function(variableName, callback) {
+        "internalStopListeningForVariableChange": function(variableName, callback) {
+            var storylineEventSubscribers = _extra.storyline.api.eventSubscribers;
+
+            for (var i = 0; i < storylineEventSubscribers.length; i += 1) {
+                var subscriptionData = storylineEventSubscribers[i];
+
+                if (subscriptionData.item.handleEvent === callback && subscriptionData.varname === variableName) {
+                    storylineEventSubscribers.splice(i,1);
+                    return;
+                }
+
+            }
             _extra.error("_extra.variableManager.stopListeningForVariableChange logic has yet to be implemented");
         },
-        "enactFunctionOnVariables": function (query, method) {
+        /*"enactFunctionOnVariables": function (query, method) {
             if (_extra.isQuery(query)) {
 
                 var list = _extra.queryList(query, _extra.variableManager.variableData);
@@ -63,14 +72,26 @@ _extra.registerModule("variableManager_software", ["softwareInterfacesManager", 
 
                 });
             }
-        },
+        },*/
+        "forEachVariable":function (method) {
+            for (var name in _extra.storyline.variables) {
+                if (_extra.storyline.variables.hasOwnProperty(name)) {
+
+                    method({
+                        "name":name,
+                        "isSystemVariable": false
+                    });
+
+                }
+            }
+        }/*,
         // This can't be a private variable, because it must be shared with the onload callback,
         // and seeing as we are using eval to run all this code, the onload callback is unlinked.
         "variableData":null,
-        "hasParsedVariables":false
+        "hasParsedVariables":false*/
     };
 
-    return function () {
+    /*return function () {
 
         var splitName,
             prefix;
@@ -78,7 +99,6 @@ _extra.registerModule("variableManager_software", ["softwareInterfacesManager", 
         _extra.variableManager.variableData = {};
 
         for (var name in _extra.storyline.variables) {
-            // TODO: Find a way to extract this so that the Captivate and Storyline versions aren't duplicating the same code.
             if (_extra.storyline.variables.hasOwnProperty(name)) {
 
                 _extra.variableManager.variableData[name] = _extra.variableManager.getVariableValue(name);
@@ -105,6 +125,6 @@ _extra.registerModule("variableManager_software", ["softwareInterfacesManager", 
         // Dispatch event to let the rest of the modules know the variables have been initialized.
         _extra.eventManager.eventDispatcher.dispatchEvent(_extra.createEvent("variablesInitialized"));
 
-    };
+    };*/
 
 }, _extra.STORYLINE);

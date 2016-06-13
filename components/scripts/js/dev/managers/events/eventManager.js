@@ -15,6 +15,8 @@ _extra.registerModule("eventManager", ["EventMediator", "EventDispatcher", "slid
 
         "useTouchEvents": isMobile,
 
+        "lastEventTarget":undefined,
+
         "eventDispatcher": new _extra.classes.EventDispatcher(),
 
         "getEventMediator": function (slideObjectName) {
@@ -22,6 +24,7 @@ _extra.registerModule("eventManager", ["EventMediator", "EventDispatcher", "slid
             if (!eventMediators[slideObjectName]) {
 
                 var mediator = new _extra.classes.EventMediator();
+                mediator.setId(slideObjectName);
 
                 // Unload event mediator when it runs out of listeners
                 mediator.registerOnEmptyCallback(function () {
@@ -39,6 +42,9 @@ _extra.registerModule("eventManager", ["EventMediator", "EventDispatcher", "slid
         "hasEventMediatorFor":function (slideObjectName) {
             return eventMediators.hasOwnProperty(slideObjectName);
         },
+        "setEventTarget":function(targetName) {
+            _extra.eventManager.lastEventTarget = targetName;
+        },
         "events": {
             "MOUSE_DOWN": (isMobile) ? "touchstart" : "mousedown",
             "MOUSE_UP": (isMobile) ? "touchend" : "mouseup",
@@ -50,6 +56,8 @@ _extra.registerModule("eventManager", ["EventMediator", "EventDispatcher", "slid
             "RIGHT_CLICK": "contextmenu", // rightclick
             "CLICK": "click",
             "DOUBLE_CLICK": "dblclick",
+            "ENTER":"enter",
+            "EXIT":"exit",
             "VIDEO_ENDED": "videoended",
             "AUDIO_ENDED": "audioended"
         }

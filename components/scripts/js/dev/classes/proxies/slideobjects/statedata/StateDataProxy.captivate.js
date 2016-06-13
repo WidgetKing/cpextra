@@ -49,17 +49,24 @@ _extra.registerModule("StateDataProxy", ["softwareInterfacesManager"], function 
 
 
 
-    function writeToCaptivateCSSRecord (minifiedProperty, cssProperty, value, that) {
+    function writeToCaptivateCSSRecord (minifiedProperty, cssProperty, value, that, offsetProperty) {
 
-        var responsiveCSS;
+        var responsiveCSS,
+            valueForSlideObject,
+            offset = that.primaryObject[offsetProperty];
 
         that.slideObjects.forEach(function (data) {
 
+            valueForSlideObject = value;
+            valueForSlideObject -= offset - data[offsetProperty];
+
             responsiveCSS = _extra.captivate.api.getResponsiveCSS(data.rawData.responsiveCSS);
             if (data.isPositionedByPercentage) {
-                responsiveCSS[minifiedProperty] = convertPixelToPercentage(value, cssProperty) + "%";
+                //responsiveCSS[minifiedProperty] = convertPixelToPercentage(value, cssProperty) + "%";
+                responsiveCSS[minifiedProperty] = convertPixelToPercentage(valueForSlideObject, cssProperty) + "%";
             } else {
-                responsiveCSS[minifiedProperty] = value + "px";
+                //responsiveCSS[minifiedProperty] = value + "px";
+                responsiveCSS[minifiedProperty] = valueForSlideObject + "px";
             }
 
         });
@@ -109,13 +116,13 @@ _extra.registerModule("StateDataProxy", ["softwareInterfacesManager"], function 
     /////////////// CONSTRUCTOR
     ///////////////////////////////////////////////////////////////////////
 
-    function StateDataProxy(data, setDrawMethod, hasBeenDrawn) {
+    function StateDataProxy(data, editDataForSlideObjectType, hasBeenDrawn) {
 
         this.pixelOffset = 0;
 
-        if (!setDrawMethod) {
+        /*if (!editDataForSlideObjectType) {
 
-            setDrawMethod = function (data) {
+            editDataForSlideObjectType = function (data) {
 
                 if (_extra.captivate.isResponsive) {
 
@@ -130,25 +137,13 @@ _extra.registerModule("StateDataProxy", ["softwareInterfacesManager"], function 
 
                 }
 
-                /*
-                // This is in case of a test entry box. (Note to self, this whole place needs a lot of cleaning up)
-                if (!formattedData.upperDIV) {
-                    formattedData.upperDIV = _extra.w.document.getElementById(formattedData.name + "c");
-                    formattedData.drawMethodObject = tempData;
-                    formattedData.drawMethodName = "addIfNeeded";
-                // Mostly for shapes.
-                } else {
-
-                    // TODO: Fix issue I002 - See XCMND_SOP-1.2 for details.
-                    // Closely related should be I001. See same document.
-                    formattedData.drawMethodObject = formattedData.canvasContext;
-                }*/
-
 
             };
 
-        }
+        }*/
 
+
+        //////// HAS BEEN DRAWN METHOD
         if (!hasBeenDrawn) {
 
             hasBeenDrawn = function (data) {
@@ -156,6 +151,9 @@ _extra.registerModule("StateDataProxy", ["softwareInterfacesManager"], function 
             };
 
         }
+
+        // Assign it to the instance so this.isInitialized can work
+        this._hasBeenDrawn = hasBeenDrawn;
 
         if (data) {
 
@@ -167,9 +165,7 @@ _extra.registerModule("StateDataProxy", ["softwareInterfacesManager"], function 
             ///////////////////////////////////////////////////////////////////////
             var tempData,
                 formattedData,
-                onDrawCallbacks = [],
-                that = this,
-                safeToExecuteCallbacks = false;
+                that = this;
 
             ///////////////////////////////////////////////////////////////////////
             /////////////// GET DATA
@@ -200,8 +196,13 @@ _extra.registerModule("StateDataProxy", ["softwareInterfacesManager"], function 
                     formattedData.isPositionedByPercentage = false;
                 }
 
+                formattedData.enterMethodName = "drawComplete";
+                formattedData.exitMethodName = "reset";
+
                 // Find the draw method (this may be changed by child classes)
-                setDrawMethod(formattedData);
+                if (editDataForSlideObjectType) {
+                    editDataForSlideObjectType(formattedData);
+                }
 
                 this.slideObjects.push(formattedData);
 
@@ -212,31 +213,47 @@ _extra.registerModule("StateDataProxy", ["softwareInterfacesManager"], function 
 
 
 
-            ///////////////////////////////////////////////////////////////////////
-            /////////////// ON DRAW IMAGE CALLBACKS
-            ///////////////////////////////////////////////////////////////////////
-            ////////////////////////////////
-            ////////// Methods
-            this.addOnDrawCallback = function (method) {
-                onDrawCallbacks.push(method);
-                if (safeToExecuteCallbacks) {
-                    method();
-                }
+            /*var addHook = function (location, name) {
+
+                _extra.addHookBefore(location, name, function () {
+                    _extra.log(name);
+                });
+
             };
-            this.removeOnDrawCallback = function (method) {
-                for (var i = 0; i < onDrawCallbacks.length; i += 1) {
 
-                    if (onDrawCallbacks[i] === method) {
 
-                        onDrawCallbacks.splice(i,1);
+            var target;
+            for (var propertyName in this.primaryObject.rawData) {
+                target = this.primaryObject.rawData[propertyName];
+                if (typeof target === "function") {
 
-                    }
+                    addHook(this.primaryObject.rawData, propertyName);
 
                 }
+            }*/
+
+            this.enterHandler = function () {
+                if (getOriginalPosition) {
+                    getOriginalPosition();
+                }
+                that.dispatchEvent("internalinitialization");
             };
+
+            this.exitHandler = function () {
+                that.dispatchEvent("internalunload");
+            };
+
+            // To trigger the ENTER event for slide objects.
+            _extra.addHook(this.primaryObject.rawData, this.primaryObject.enterMethodName, this.enterHandler);
+
+            // To trigger the EXIT event for slide objects.
+            _extra.addHook(this.primaryObject.rawData, this.primaryObject.exitMethodName, this.exitHandler);
 
 
             var getOriginalPosition = function () {
+
+                // Prevent this from being called twice;
+                getOriginalPosition = null;
 
                 var primaryX = that.x,
                     primaryY = that.y,
@@ -252,83 +269,24 @@ _extra.registerModule("StateDataProxy", ["softwareInterfacesManager"], function 
 
             };
 
-            ////////////////////////////////
-            ////////// Setup
-
-            // If this object uses an object to display.
-            if (this.primaryObject.drawMethodObject) {
-
-                ////////////////////////////////
-                ////////// Execute callbacks
-                var onSlideObjectDrawn = function () {
-
-                    getOriginalPosition();
-
-                    safeToExecuteCallbacks = true;
-
-                    // We reverse through this, because many of these handlers will probably remove themselves.
-                    for (var i = onDrawCallbacks.length - 1; i >= 0; i -= 1) {
-
-                        onDrawCallbacks[i]();
-
-                    }
-
-
-                };
-
-
-                ////////////////////////////////
-                ////////// Detect if has already been drawn
-                if (hasBeenDrawn(this.primaryObject)) {
-
-                    // Object has already been drawn. Execute all callbacks
-                    onSlideObjectDrawn();
-
-                } else {
-
-                    var drawHook = function () {
-
-                        // Object hasn't been drawn. Detect when it is drawn and then execute callbacks
-                        if (that.primaryObject.timeout) {
-
-                            _extra.w.setTimeout(onSlideObjectDrawn, that.primaryObject.timeout);
-
-                        } else {
-
-                            onSlideObjectDrawn();
-
-                        }
-
-                        _extra.removeHook(that.primaryObject.drawMethodObject, that.primaryObject.drawMethodName, drawHook);
-
-                    };
-
-                    _extra.addHook(this.primaryObject.drawMethodObject, this.primaryObject.drawMethodName, drawHook);
-
-                }
-
-            } else {
-
-                // This object doesn't use a canvas to display (like a Button)
-                safeToExecuteCallbacks = true;
+            if (this.isInitialized) {
                 getOriginalPosition();
-
             }
-
 
         }
 
     }
 
     StateDataProxy.prototype = {
+
+
         get name() {
             return this._data.stn;
         },
 
 
-
-
         get x () {
+
             var value = _extra.w.parseFloat(this.primaryObject.upperDIV.style.left);
 
             if (this.primaryObject.isPositionedByPercentage) {
@@ -343,8 +301,8 @@ _extra.registerModule("StateDataProxy", ["softwareInterfacesManager"], function 
 
             if (_extra.captivate.isResponsive) {
 
-                writeToCaptivateCSSRecord("l", "left", value, this);
-                writeToCaptivateCSSRecord("lhV", "left", value, this);
+                writeToCaptivateCSSRecord("l", "left", value, this, "originalX");
+                writeToCaptivateCSSRecord("lhV", "left", value, this, "originalX");
 
             }
 
@@ -371,8 +329,8 @@ _extra.registerModule("StateDataProxy", ["softwareInterfacesManager"], function 
 
             if (_extra.captivate.isResponsive) {
 
-                writeToCaptivateCSSRecord("t", "top", value, this);
-                writeToCaptivateCSSRecord("lvV", "top", value, this);
+                writeToCaptivateCSSRecord("t", "top", value, this, "originalY");
+                writeToCaptivateCSSRecord("lvV", "top", value, this, "originalY");
 
             }
 
@@ -407,6 +365,14 @@ _extra.registerModule("StateDataProxy", ["softwareInterfacesManager"], function 
         },
         get originalY() {
             return this.primaryObject.originalY;
+        },
+
+        get internalIndex() {
+            return this._data.stt;
+        },
+
+        get isInitialized() {
+            return this._hasBeenDrawn(this.primaryObject);
         }
     };
 
@@ -420,6 +386,10 @@ _extra.registerModule("StateDataProxy", ["softwareInterfacesManager"], function 
         this.slideObjects.forEach(function (data) {
             data.upperDIV.removeEventListener(eventName, callback);
         });
+    };
+
+    StateDataProxy.prototype.dispatchEvent = function (eventName) {
+        this.primaryObject.upperDIV.dispatchEvent(_extra.createEvent(eventName));
     };
 
     StateDataProxy.prototype.setAttribute = function (property, value) {
@@ -449,6 +419,29 @@ _extra.registerModule("StateDataProxy", ["softwareInterfacesManager"], function 
             _extra.cssManager.editCSSOn(data.upperDIV, property, value);
             _extra.cssManager.editCSSOn(data.contentDIV, property, value);
         });
+    };
+
+    StateDataProxy.prototype.unload = function() {
+
+        if (this.enterHandler && this.exitHandler) {
+            // To trigger the ENTER event for slide objects.
+            _extra.removeHook(this.primaryObject.rawData, this.primaryObject.enterMethodName, this.enterHandler);
+
+            // To trigger the EXIT event for slide objects.
+            _extra.removeHook(this.primaryObject.rawData, this.primaryObject.exitMethodName, this.exitHandler);
+        }
+
+        // If we've been writing to the responsive project data while using this state then now that we're unloading the state
+        // we should apply the original data so that it doesn't mess up the originalX the next time we return.
+        if (_extra.captivate.isResponsive) {
+
+            writeToCaptivateCSSRecord("l", "left", this.originalX, this, "originalX");
+            writeToCaptivateCSSRecord("lhV", "left", this.originalX, this, "originalX");
+
+            writeToCaptivateCSSRecord("t", "top", this.originalY, this, "originalY");
+            writeToCaptivateCSSRecord("lvV", "top", this.originalY, this, "originalY");
+
+        }
     };
 
     _extra.registerClass("StateDataProxy", StateDataProxy);

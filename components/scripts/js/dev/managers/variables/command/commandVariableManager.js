@@ -95,6 +95,34 @@ _extra.registerModule("commandVariableManager",["variableManager","stateManager_
                     if (typeof value === "string") {
                         // Remove spaces from value string
                         value = value.replace(/\s+/g,'');
+
+                        /*
+                         * // Regular expression for removing spaces except inside of quotation marks.
+                         *
+                         * value = value.replace(/([^"]+)|("[^"]+")/g, function($0, $1, $2) {
+                         *    if ($1) {
+                         *        return $1.replace(/\s/g, '');
+                         *    } else {
+                         *        return $2;
+                         *    }
+                         *});
+                         *
+                         *
+                         *  // Regular expression for replacing the , outside of quotation marks with the unicode character
+                         *  // \u0000, which can't be typed, which therefore allows us to use split safely without splitting on commas
+                         *  // inside of quotation marks
+                         *
+                         * value = value.replace(/([^"]+)|("[^"]+")/g, function($0, $1, $2) {
+                         *    if ($1) {
+                         *        return $1.replace(/\,/g, '\u0000');
+                         *    } else {
+                         *        return $2;
+                         *    }
+                         *});
+                         *
+                         * parameters = value.split("\u0000");
+                         */
+
                         parameters = value.split(",");
                     } else {
                         parameters = [value];
@@ -104,7 +132,6 @@ _extra.registerModule("commandVariableManager",["variableManager","stateManager_
                     _extra.variableManager.setVariableValue(variableName,"");
 
                 }
-
 
             });
         }

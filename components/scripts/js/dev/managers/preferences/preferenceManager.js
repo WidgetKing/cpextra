@@ -29,7 +29,7 @@ _extra.registerModule("preferenceManager", ["variableManager", "parameterParser"
          * @param preferenceInfo
          * @returns {boolean}
          */
-            "registerPreferenceModule": function (preferenceVariableSuffix, preferenceInfo) {
+        "registerPreferenceModule": function (preferenceVariableSuffix, preferenceInfo) {
 
             // What the name for the variable that manages this behaviour should look like.
             var preferenceVariable = preferenceVariablePrefix + preferenceVariableSuffix;

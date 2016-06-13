@@ -37,9 +37,9 @@ _extra.registerModule("TOCManager", ["softwareInterfacesManager","slideManager_s
                 // If it's not a number, it's likely a slide name.
                 if (_extra.w.isNaN(slide)) {
                     var index = _extra.slideManager.getSlideIndexFromName(slide);
-                    if (index > -1) {
+                    if (index) {
                         // No need to subtract anything, the getSlideIndexFromName method is zero based.
-                        return index;
+                        return index.slide;
                     } else {
                         _extra.error("CV071", slide);
                         return null;

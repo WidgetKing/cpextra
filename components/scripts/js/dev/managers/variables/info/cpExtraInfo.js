@@ -5,7 +5,7 @@
  * Time: 8:21 PM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("cpExtraInfo", ["infoManager"], function () {
+_extra.registerModule("cpExtraInfo", ["infoVariableManager"], function () {
 
     "use strict";
 

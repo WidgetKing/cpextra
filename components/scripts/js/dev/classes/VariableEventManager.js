@@ -64,8 +64,9 @@ _extra.registerModule("VariableEventManager", ["VariableEventProxy"], function (
         // Create variable Data
         var listenerData = {
             "rawFunction": callback,
-            "wrappedFunction": function (data) {
-                listenerData.rawFunction(new _extra.classes.VariableEventProxy(data));
+            "wrappedFunction": function () {
+                // TODO: We need to find a way to pass in the value of the variable here WITHOUT calling getVariableValue (See InfoManager.js for more information)
+                listenerData.rawFunction(new _extra.classes.VariableEventProxy(arguments));
             }
         };
 

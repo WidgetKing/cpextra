@@ -19,38 +19,25 @@ _extra.registerModule("TextEntryBoxProxy", ["BaseSlideObjectProxy"], function ()
         ///////////////////////////////////////////////////////////////////////
         var that = this;
         this._updateToVariable = false;
-
-        ///////////////////////////////////////////////////////////////////////
-        /////////////// Initialize
-        ///////////////////////////////////////////////////////////////////////
-        function initialize() {
-
-            that._inputField = _extra.w.document.getElementById(that.name + "_inputField");
-
-            if (!that._inputField) {
-                // It is too early, we need to wait for draw
-                return false;
-            }
-
-            // Check to see if the value of the text box was set before the input existed.
-            if (that.hasOwnProperty("_tempValue")) {
-                that.value = that._tempValue;
-                delete that._tempValue;
-            }
-
-
-            return true;
-        }
-
-        if (!initialize()) {
-            this._currentStateData.addOnDrawCallback(initialize);
-        }
+        this._ignoreNextDefaultText = false;
 
         ///////////////////////////////////////////////////////////////////////
         /////////////// Private Methods (sorta)
         ///////////////////////////////////////////////////////////////////////
         this._onVariableChangeUpdate = function () {
             var value = _extra.variableManager.getVariableValue(that.data.variable);
+
+            if (that._ignoreNextDefaultText) {
+
+                that._ignoreNextDefaultText = false;
+
+                if (value === that.data.defaultText) {
+                    return;
+                }
+
+            }
+
+
             // Only change the value if there's a different one in the field. Otherwise we're going to create an
             // infinite loop.
             if (that.value !== value) {
@@ -97,6 +84,23 @@ _extra.registerModule("TextEntryBoxProxy", ["BaseSlideObjectProxy"], function ()
             }
         }
     });
+
+    TextEntryBoxProxy.prototype.onSlideObjectInitialized = function () {
+        // Super!
+        TextEntryBoxProxy.superClass.onSlideObjectInitialized.call(this);
+
+        this._inputField = _extra.w.document.getElementById(this.name + "_inputField");
+
+        if (!this._inputField) {
+            _extra.log("Error: Was unable to locate the TEB input field");
+        }
+
+        // Check to see if the value of the text box was set before the input existed.
+        if (this.hasOwnProperty("_tempValue")) {
+            this.value = this._tempValue;
+            delete this._tempValue;
+        }
+    };
 
     TextEntryBoxProxy.prototype.unload = function() {
 

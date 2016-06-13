@@ -14,8 +14,9 @@ _extra.registerModule("WidgetStateDataProxy", ["StateDataProxy"], function () {
         _extra.classes.StateDataProxy.call(this, data, function (data) {
 
             data.upperDIV = data.contentDIV;
+            data.enterMethodName = "doActualWidgetLoad";
 
-            if (_extra.captivate.isResponsive) {
+            /*if (_extra.captivate.isResponsive) {
 
                 data.drawMethodObject = data.rawData;
                 data.drawMethodName = "drawForResponsive";
@@ -26,7 +27,7 @@ _extra.registerModule("WidgetStateDataProxy", ["StateDataProxy"], function () {
                 data.drawMethodObject = data.canvasContext;
                 data.drawMethodName = "drawImage";
 
-            }
+            }*/
 
         });
 

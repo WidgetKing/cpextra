@@ -11,6 +11,7 @@ _extra.registerModule("localStorageManager", ["variableManager", "queryManager"]
     "use strict";
 
 
+
     ///////////////////////////////////////////////////////////////////////
     /////////////// PRIVATE VARS
     ///////////////////////////////////////////////////////////////////////
@@ -36,7 +37,6 @@ _extra.registerModule("localStorageManager", ["variableManager", "queryManager"]
     _extra.variableManager.saveStorageVariables = function () {
 
         var variableName;
-
 
         for (variableName in storageVariables) {
 

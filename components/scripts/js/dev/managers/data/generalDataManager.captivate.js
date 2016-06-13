@@ -6,13 +6,17 @@ _extra.registerModule("generalDataManager", ["softwareInterfacesManager", "dataT
     _extra.dataManager = {
 
         "getSlideObjectDataByName": function (slideObjectName) {
+
+            // TODO: Slide object datas are accessed constantly. It may be more efficient to maintain a list of data proxies than createa new one each time.
+
             var data = {
                 "base": _extra.captivate.allSlideObjectsData[slideObjectName]
             };
 
             if (data.base) {
                 data.container = _extra.captivate.allSlideObjectsData[slideObjectName + "c"];
-                return _extra.factories.createSlideObjectData(slideObjectName, data, _extra.dataTypes.convertSlideObjectType(data.base.type, slideObjectName));
+                return _extra.factories.createSlideObjectData(slideObjectName, data,
+                                                              _extra.dataTypes.convertSlideObjectType(data.base.type, slideObjectName));
             }
             return null;
         },

@@ -13,6 +13,8 @@ _extra.registerModule("softwareInterfacesManager", function () {
     // the Captivate API
     _extra.captivate = {
         "api":_extra.w.cp,
+        "FPS": _extra.w.cp.movie.fps,
+        "totalFrames": _extra.w.cp.D.project_main.to,
         "version":_extra.w.CaptivateVersion,
         "variables":_extra.w,
         "interface":_extra.w.cpAPIInterface,
@@ -25,6 +27,9 @@ _extra.registerModule("softwareInterfacesManager", function () {
         "isResponsive": _extra.w.cp.responsive,
         "projectDIV": _extra.w.cp.projectContainer,
         "audioManager": _extra.w.cp.movie.am,
+        "numSlides":_extra.w.cpInfoSlideCount,
+        "openURLLocation":_extra.w.cp,
+        "openURLMethodName":"openURL",
         "getResponsiveProjectWidth": function () {
             return _extra.captivate.api.ResponsiveProjWidth;
         },

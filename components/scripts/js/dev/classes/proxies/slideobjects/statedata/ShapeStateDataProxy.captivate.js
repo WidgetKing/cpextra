@@ -13,7 +13,7 @@ _extra.registerModule("ShapeStateDataProxy", ["StateDataProxy"], function () {
 
         _extra.classes.StateDataProxy.call(this, data, function (data) {
 
-            if (_extra.captivate.isResponsive) {
+            /*if (_extra.captivate.isResponsive) {
 
                 data.drawMethodObject = data.rawData;
                 data.drawMethodName = "drawForResponsive";
@@ -24,8 +24,9 @@ _extra.registerModule("ShapeStateDataProxy", ["StateDataProxy"], function () {
                 data.drawMethodObject = data.canvasContext;
                 data.drawMethodName = "lineTo";
 
-            }
+            }*/
 
+            _extra.slideObjects.states.fixMissingMouseOutIssue(data.rawData, "parentId");
 
 
             /*if (data.rawData.canvasObj) {

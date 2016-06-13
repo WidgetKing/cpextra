@@ -27,6 +27,7 @@ _extra.registerModule("ModelListener", function () {
         ///////////////////////////////////////////////////////////////////////
         this.addProperty = function (propertyName, onChangeCallback, defaultValue) {
 
+
             var dataBaseValue = model.retrieve(name,propertyName);
 
 

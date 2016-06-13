@@ -23,7 +23,9 @@ _extra.registerModule("globalSlideObjectTypes",function () {
             "ANIMATION":      10,
             "IMAGE":          11,
             "VIDEO":          12,
-            "MOUSE_CLICK":    13
+            "MOUSE_CLICK":    13,
+            "CLICK_BOX":      14,
+            "REVIEW_AREA":    15
         }
     };
     /*_extra.slideObjectsTypes = {

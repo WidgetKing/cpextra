@@ -15,11 +15,12 @@
 
         beforeEach(function () {
             spyOn(window,"alert");
-            spyOn(window.parent,"alert");
+            spyOn(window.top,"alert");
             delete window._extra;
             delete window.X;
             delete window.parent.X;
             delete window.parent._extra;
+            window.cp = {};
             /*window = {
                 "alert":jasmine.createSpy("window.alert")
             };
@@ -55,7 +56,7 @@
             expect(_extra.console.log).toHaveBeenCalledWith("Hello");
 
             _extra.error("World");
-            expect(window.parent.alert).toHaveBeenCalledWith("World");
+            expect(window.alert).toHaveBeenCalledWith("World");
 
             // Passing to the debugging manager
             _extra.debugging = {
@@ -68,7 +69,7 @@
             expect(_extra.debugging.log).toHaveBeenCalledWith("Hello");
 
             _extra.error("World");
-            expect(window.parent.alert).toHaveBeenCalledWith("World");
+            expect(window.alert).toHaveBeenCalledWith("World");
 
         });
 
@@ -88,14 +89,16 @@
         });
 
         it("should abort if the global variable 'X' has already been defined", function () {
-            window.top.X = true;
+            window.X = true;
             initExtra();
-            expect(_extra.aborted).toBe(true);
-            delete window.top.X;
+            expect(window._extra).not.toBeDefined();
+            delete window.X;
         });
 
         it("should not instantiate any modules if Extra has been aborted", function () {
 
+            delete window.cp;
+            window.top.cp = {};
             window.top.X = true;
             initExtra();
 
@@ -115,7 +118,7 @@
         });
 
         it("should get a reference to the jQuery library", function () {
-            window.top.$ = "foobar";
+            window.$ = "foobar";
 
             initExtra();
             expect(_extra.$).toBe("foobar");

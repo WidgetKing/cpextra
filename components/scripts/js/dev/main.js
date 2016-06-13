@@ -19,6 +19,12 @@ function initExtra(topWindow) {
 
     "use strict";
 
+    // We initially create the _extra interface as a variable. We do not immediately add it to the window as
+    // the window object could either be a widget iframe window, OR it could be the Captivate window if CpExtra
+    // is loaded headlessly. Once we have worked out which it is, we will add _extra to the window.
+    var _extra = {},
+        isHeadless = false;
+
     if (!topWindow) {
         topWindow = window;
     }
@@ -26,21 +32,31 @@ function initExtra(topWindow) {
     // We do not automatically initiate Extra, because we might be running unit tests.
     // If the unit tests already define '_extra' then we'll skip over defining it to allow the unit tests to collect all
     // the data for the different modules.
-    if (window._extra === undefined) {
+    /*if (window._extra === undefined) {
         window._extra = {};
     // However, there is another possibility that a user variable was created named _extra. In that case we want to
     // abort later.
     // This next code should be able to detect if we're currently in the unit test scope.
     } else if (window.unitTests) {
+
+        return;
+    }*/
+    if (window._extra && window.unitTests) {
         return;
     }
     ///////////////////////////////////
     ///////// Private Methods
     ///////////////////////////////////
 
+    // Checks if the window object we pass it is the main window of the Captivate or Storyline project.
+    function isProjectWindow(win) {
+        return win.hasOwnProperty("cp");
+    }
+
     // This is wrapped in a function because it will need to be reinvoked later if this is IE
     // See the IE SAFETY section for more details.
-    function createLoggingMethods() {
+    function createLoggingMethods(_extra) {
+
         /**
          * Sends a message to the debug console of the browser, assuming the console is available.
          * @param message
@@ -78,22 +94,8 @@ function initExtra(topWindow) {
             }
 
         };
+
     }
-    createLoggingMethods();
-
-
-    // The highest window, where we should be able to find the internal functions of the output
-    _extra.w = topWindow.parent;
-    _extra.console = _extra.w.console;
-
-    // Constants used to identify modules that are specialized for Captivate or Storyline
-    _extra.CAPTIVATE = "captivate";
-    _extra.STORYLINE = "storyline";
-
-
-    //////////////
-    ///// Extra Pre-detection
-    //////////////
 
     function abort(property) {
 
@@ -118,6 +120,49 @@ function initExtra(topWindow) {
         }
 
     }
+
+
+
+
+    try {
+    createLoggingMethods(_extra);
+
+    } catch (e) {
+
+    console.log("HERE");
+    }
+
+    if (isProjectWindow(topWindow)) {
+        // If the window we get right at the start is the project window, then this is most likely a headless project.
+        isHeadless = true;
+
+    } else {
+        // If we are here then we are in a widget and we want _extra to be defined on its window scope
+        // So that the modules can be added.
+        topWindow._extra = _extra;
+        topWindow = topWindow.parent;
+        if (!isProjectWindow(topWindow)) {
+            // TODO: Change the abort function so it can abort in the case we can't find the proper window.
+
+            abort("X");
+            return;
+        }
+    }
+
+    // The highest window, where we should be able to find the internal functions of the output
+    _extra.w = topWindow;
+    _extra.console = _extra.w.console;
+
+    // Constants used to identify modules that are specialized for Captivate or Storyline
+    _extra.CAPTIVATE = "captivate";
+    _extra.STORYLINE = "storyline";
+
+
+    //////////////
+    ///// Extra Pre-detection
+    //////////////
+
+
 
 
 
@@ -210,7 +255,10 @@ function initExtra(topWindow) {
     //////////////
     ///// Module Registry
     //////////////
-    var moduleRegistry = {};
+    var moduleRegistry = {},
+        // This is only used in headless export where we might need to wait before initializing certain modules
+        // because Captivate is still in the process of setting up.
+        moduleInitializationQueue = [];
 
     _extra.registerModule = function (moduleName, moduleDependencies, moduleConstructor) {
 
@@ -289,10 +337,31 @@ function initExtra(topWindow) {
 
         if (areDependenciesSetUp) {
 
-            initializeModule(moduleName);
+            initializeModuleIfReady(moduleName);
         }
 
     };
+
+    function initializeModuleIfReady(moduleName) {
+        if (isReadyToInitializeModules()) {
+            initializeModule(moduleName);
+        } else {
+            moduleInitializationQueue.push(moduleName);
+        }
+    }
+
+    function initializeModulesInQueue() {
+        for (var i = 0; i < moduleInitializationQueue.length; i += 1) {
+            initializeModule(moduleInitializationQueue[i]);
+        }
+
+        // Clear queue.
+        moduleInitializationQueue = [];
+    }
+
+    function isReadyToInitializeModules() {
+        return !isHeadless || _extra.w.cp.movie;
+    }
 
     function initializeModule(moduleName) {
         var registry = moduleRegistry[moduleName],
@@ -388,9 +457,10 @@ function initExtra(topWindow) {
         }*/
     }
 
-    if (_extra.isIE) {
+    // This is probably not needed anymore?
+    /*if (_extra.isIE) {
         safelyInvokeModule(createLoggingMethods);
-    }
+    }*/
 
 
     ///////////////////////////////////////////////////////////////////////
@@ -440,7 +510,6 @@ function initExtra(topWindow) {
 
     };
 
-
     window.addEventListener("load", onStorylineLoaded);
 
     //////////////
@@ -454,6 +523,28 @@ function initExtra(topWindow) {
             callOnLoadCallbacks();
         }
     };
+
+    ////////////////////////////////
+    ////////// Listen for Headless init
+    if (!isReadyToInitializeModules()) {
+
+        var internalComplete = _extra.w.cp.complete;
+        _extra.w.cp.complete = function () {
+
+            if (isReadyToInitializeModules()) {
+
+                window.removeEventListener("load", onStorylineLoaded);
+                initializeModulesInQueue();
+                callOnLoadCallbacks();
+                _extra.w.cp.complete = internalComplete;
+
+            }
+
+            internalComplete();
+        };
+
+    }
+
 }
 
 initExtra();

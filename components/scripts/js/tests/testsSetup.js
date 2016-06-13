@@ -28,6 +28,11 @@
                 "classes":unitTests.classes,
                 "w": {
                     "cp": {
+                        "D":{
+                            "project_main":{
+
+                            }
+                        },
                         "model": {
 
                         },

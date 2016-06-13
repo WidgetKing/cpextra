@@ -19,6 +19,7 @@ _extra.registerModule("EventMediator", function () {
             listeners = Array.prototype.slice.call(arguments),
             primaryHandlers = {},
             onEmptyCallback,
+            that = this,
             doubleClickHandler = new _extra.classes.DoubleClickHandler();
 
 
@@ -89,13 +90,11 @@ _extra.registerModule("EventMediator", function () {
                 // It is handled in this manner to allow the double click manager to delay certain mouse events.
                 primaryHandler = function(eventObject) {
 
-
                     // It's possible as we call these callbacks, they may cause event listeners to be removed.
                     // Therefore we'll go through this backward.
                     // However, because we use unshift() to add event listeners to the array, they are still
                     // executed in the order they were added.
                     var eventData;
-                    var start = eventHandlersArray.length;
                     for (var i = eventHandlersArray.length - 1; i >= 0; i -= 1) {
 
                         eventData = eventHandlersArray[i];
@@ -104,6 +103,11 @@ _extra.registerModule("EventMediator", function () {
                         // we'll iterate over the same listener twice.
                         // The 'called' parameter stops that from happening.
                         if (!eventData.called) {
+
+                            // If we have an id, then we want to set the xinfoEventTarget variable
+                            if (that.id) {
+                                _extra.eventManager.setEventTarget(that.id);
+                            }
 
                             eventData.callback(eventObject);
                             eventData.called = true;
@@ -231,7 +235,7 @@ _extra.registerModule("EventMediator", function () {
                 newListeners = Array.prototype.slice.call(args);
 
             // Check if we were passed 'null'. If so, we should change it to an empty array.
-            if (newListeners.length === 1 && newListeners[0] === null) {
+            if (newListeners.length === 1 && (newListeners[0] === null || newListeners[0] === undefined)) {
                 newListeners = [];
             }
 
@@ -244,7 +248,6 @@ _extra.registerModule("EventMediator", function () {
                     if (removePrevious) {
                         loopRemove(listeners, eventName, eventHandler);
                     }
-
 
                     loopAdd(newListeners, eventName, eventHandler);
 
@@ -283,6 +286,10 @@ _extra.registerModule("EventMediator", function () {
         ///////////////////////////////////////////////////////////////////////
         /////////////// PUBLIC METHODS
         ///////////////////////////////////////////////////////////////////////
+
+        this.setId = function (id) {
+            this._id = id;
+        };
 
         this.addEventListener = function (event, interactiveObject, criteria) {
 
@@ -354,6 +361,12 @@ _extra.registerModule("EventMediator", function () {
         };
 
     }
+
+    EventMediator.prototype = {
+        get id(){
+            return this._id;
+        }
+    };
 
     _extra.registerClass("EventMediator", EventMediator);
 

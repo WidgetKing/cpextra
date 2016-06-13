@@ -15,14 +15,8 @@ _extra.registerModule("commandVariables_global", ["commandVariableManager", "sli
     ///////////////////////////////////////////////////////////////////////
     /////////////// BASIC COMMAND VARIABLES
     ///////////////////////////////////////////////////////////////////////
-    ////////////////////////////////
-    ////////// Extend Captivate Functions
-    register("Hide", _extra.slideObjects.hide);
-    register("Show", _extra.slideObjects.show);
-    register("Enable", _extra.slideObjects.enable);
-    register("Disable", _extra.slideObjects.disable);
 
-    register("ChangeState", _extra.slideObjects.states.change, handlers.sendParametersAsParameters);
+    // Have been moved to existingActionCommandVariables
 
 
     ////////////////////////////////

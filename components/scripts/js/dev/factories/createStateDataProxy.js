@@ -19,14 +19,17 @@ _extra.registerModule("createStateDataProxy",["factoryManager"], function () {
             case _extra.dataTypes.slideObjects.TEXT_ENTRY_BOX :
                 return new _extra.classes.TextEntryBoxStateDataProxy(data);
 
-            /*case _extra.dataTypes.slideObjects.HIGHLIGHT_BOX :
+            /*case _extra.dataTypes.slideObjects.CLICK_BOX:
+                return new _extra.classes.ClickBoxStateDataProxy(data);
+
+            case _extra.dataTypes.slideObjects.HIGHLIGHT_BOX :
                 return new _extra.classes.HighlightBoxStateDataProxy(data);*/
 
             /*case _extra.dataTypes.slideObjects.CAPTION :
                 return new _extra.classes.CaptionStateDataProxy(data);*/
 
-            /*case _extra.dataTypes.slideObjects.BUTTON :
-                return new _extra.classes.ButtonStateDataProxy(data);*/
+            case _extra.dataTypes.slideObjects.BUTTON :
+                return new _extra.classes.ButtonStateDataProxy(data);
 
             case _extra.dataTypes.slideObjects.VIDEO :
                 return new _extra.classes.VideoStateDataProxy(data);

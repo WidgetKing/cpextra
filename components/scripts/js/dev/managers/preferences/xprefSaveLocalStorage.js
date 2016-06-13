@@ -9,7 +9,6 @@ _extra.registerModule("saveLocalStoragePreference", ["preferenceManager", "event
 
     "use strict";
 
-
     var info = {
         "enable": function () {
 
@@ -103,8 +102,7 @@ _extra.registerModule("saveLocalStoragePreference", ["preferenceManager", "event
         },
         "onVariableChange": function (event) {
 
-            // TODO: Abstract the event object into a proxy so this code can also work in Storyline.
-            _extra.variableManager.saveStorageVariable(event.Data.varName);
+            _extra.variableManager.saveStorageVariable(event.variableName);
 
         }
     };

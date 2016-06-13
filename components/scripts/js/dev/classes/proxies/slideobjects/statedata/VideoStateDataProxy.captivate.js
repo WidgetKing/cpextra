@@ -13,9 +13,9 @@ _extra.registerModule("VideoStateDataProxy", ["StateDataProxy"], function () {
 
         _extra.classes.StateDataProxy.call(this, data, function (data) {
 
-            _extra.test = data.rawData;
+            data.enterMethodName = "addNativeVideoIfNeeded";
 
-            if (_extra.captivate.isResponsive) {
+            /*if (_extra.captivate.isResponsive) {
 
                 data.drawMethodObject = data.rawData;
                 data.drawMethodName = "drawForResponsive";
@@ -26,7 +26,7 @@ _extra.registerModule("VideoStateDataProxy", ["StateDataProxy"], function () {
                 data.drawMethodObject = data.rawData;
                 data.drawMethodName = "addNativeVideoIfNeeded";//"showControls";
 
-            }
+            }*/
 
         });
 

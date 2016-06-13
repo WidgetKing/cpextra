@@ -24,10 +24,14 @@ _extra.registerModule("VideoProxy", ["BaseSlideObjectProxy"], function () {
             that.dispatchEvent("videoended");
         };
 
+        /*
         ///////////////////////////////////////////////////////////////////////
         /////////////// AFTER DRAW
         ///////////////////////////////////////////////////////////////////////
         this._getVideoTag = function () {
+
+            _extra.log("GETTING TAG!");
+            that._currentStateData.addEventListener("internalinitialization", that._getVideoTag);
 
             that._videoTag = that._currentStateData.primaryObject.contentDIV.firstChild.firstChild;
 
@@ -35,16 +39,37 @@ _extra.registerModule("VideoProxy", ["BaseSlideObjectProxy"], function () {
 
         };
 
-        this._currentStateData.addOnDrawCallback(this._getVideoTag);
+        if (this._currentStateData.isInitialized) {
+            this._getVideoTag();
+        } else {
+            this._currentStateData.addEventListener("internalinitialization", this._getVideoTag);
+        }
+        //this._currentStateData.addOnDrawCallback(this._getVideoTag);*/
+
 
 
     }
 
     _extra.registerClass("VideoProxy", VideoProxy, "BaseSlideObjectProxy", _extra.CAPTIVATE);
 
-    VideoProxy.prototype.unload = function() {
+    VideoProxy.prototype.onSlideObjectInitialized = function () {
+
+        // Super!
+        VideoProxy.superClass.onSlideObjectInitialized.call(this);
+
+        this._currentStateData.addEventListener("internalinitialization", this._getVideoTag);
+
+        this._videoTag = this._currentStateData.primaryObject.contentDIV.firstChild.firstChild;
 
         this._videoTag.addEventListener("ended", this._endVideoListener);
+
+    };
+
+    VideoProxy.prototype.unload = function() {
+
+        if (this._videoTag) {
+            this._videoTag.addEventListener("ended", this._endVideoListener);
+        }
         // Super!
         VideoProxy.superClass.unload.call(this);
 

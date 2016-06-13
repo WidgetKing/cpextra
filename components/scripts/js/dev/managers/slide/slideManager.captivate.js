@@ -14,33 +14,37 @@ _extra.registerModule("slideManager_software", ["softwareInterfacesManager", "Ca
         tempContainerData;
 
     _extra.slideManager = {
-        "_slideDatas": [],
-        "slideNames": [],
+        "_slideDatas": [[], []],
+        "slideNames": [[], []],
+        "numSlides": _extra.captivate.numSlides,
         "currentInternalSlideId":null,
         "currentSlideDOMElement":_extra.w.document.getElementById("div_Slide"),
         "isSlideLoaded":false,
-        "gotoSlide":function (index) {
-            if (typeof index === "string") {
-                index = _extra.slideManager.getSlideIndexFromName(index);
-            }
-
-            _extra.captivate.interface.gotoSlide(index);
+        "internalGotoSlide":function (sceneIndex, slideIndex) {
+            _extra.captivate.interface.gotoSlide(slideIndex);
         },
         "getCurrentSlideNumber": function() {
             return _extra.captivate.variables.cpInfoCurrentSlideIndex;
         },
-        "getCurrentSceneNumber": function () {
-            return 0;
+        "getCurrentSceneSlideNumber": function() {
+            return _extra.captivate.variables.cpInfoCurrentSlideIndex;
         },
-        "hasSlideObjectOnSlide": function (slideObjectName, slideIndex) {
+        "getCurrentSceneNumber": function () {
+            return 1;
+        },
+        "hasSlideObjectOnSlide": function (slideObjectName, sceneIndex, slideIndex) {
 
-            if (!slideIndex) {
-                slideIndex = _extra.slideManager.currentSlideNumber;
+            slideIndex = _extra.slideManager.parseSlideNumber(sceneIndex, slideIndex);
+
+            if (slideIndex) {
+
+                var details = _extra.captivate.model.data[slideObjectName];
+
+                return details && details.apsn === slideIds[slideIndex.slide];
+
             }
 
-            var details = _extra.captivate.model.data[slideObjectName];
-
-            return details && details.apsn === slideIds[slideIndex];
+            return null;
 
         },
         "software_onSlideEnter":function() {
@@ -57,11 +61,17 @@ _extra.registerModule("slideManager_software", ["softwareInterfacesManager", "Ca
     slideIds.forEach(function(slideID){
         tempBaseData = _extra.captivate.model.data[slideID];
         tempContainerData = _extra.captivate.model.data[slideID + "c"];
-        _extra.slideManager._slideDatas.push({
+        // We're putting the slide data into the second index of the _slideDatas array to 'pretend' that all these slides
+        // are inside a single 'scene'. This allows us to use the same code in the GLOBAL section to work with storyline
+        // which nests slides inside of scenes.
+        // We use the second index because in Storyline the first index is reserved for certain hidden slides, and the
+        // 'first' scene where you can place content is saved into the second index.
+        _extra.slideManager._slideDatas[1].push({
             "base":tempBaseData,
             "container":tempContainerData
         });
-        _extra.slideManager.slideNames.push(tempBaseData.lb);
+        // Same goes for down here
+        _extra.slideManager.slideNames[1].push(tempBaseData.lb);
     });
 
 

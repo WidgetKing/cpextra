@@ -29,17 +29,18 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
         this._offsetY = 0;
         this._modelListener = new _extra.classes.ModelListener(this.name, this._model);
         this._eventMediator = _extra.eventManager.getEventMediator(this.name);
+        this._stateEndManager = new _extra.classes.SlideObjectEnterExitEventManager(this);
+        this._stateEndManager.setCurrentDispatcher(this._currentStateData);
         this._interruptedClickEventHanlder = new _extra.classes.InterruptedClickEventHandler(this._eventMediator, this.name);
+        this._originalX = this._currentStateData.originalX;
+        this._originalY = this._currentStateData.originalY;
 
         ///////////////////////////////////////////////////////////////////////
         /////////////// Private Variables
         ///////////////////////////////////////////////////////////////////////
-        var that = this,
-            originalX = this._currentStateData.originalX,
-            originalY = this._currentStateData.originalY;
+        var that = this;
 
         this._eventMediator.swap(this._currentStateData);
-
 
         ///////////////////////////////////////////////////////////////////////
         /////////////// Public Methods
@@ -85,11 +86,12 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
 
             // Change the event listeners from the DOM elements of the previous state to the one of this state.
             that._eventMediator.swap(futureStateData);
+            that._stateEndManager.setCurrentDispatcher(futureStateData);
             that._interruptedClickEventHanlder.stateHasChanged();
 
             // Update the offset
-            that._offsetX = originalX - futureStateData.originalX;
-            that._offsetY = originalY - futureStateData.originalY;
+            that._offsetX = that._originalX - futureStateData.originalX;
+            that._offsetY = that._originalY - futureStateData.originalY;
 
             // Complete the transition
             that._currentStateData = futureStateData;
@@ -105,157 +107,19 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
         };
 
         ///////////////////////////////////////////////////////////////////////
-        /////////////// MODEL LISTENER METHODS
+        /////////////// STATE INITIALIZED
         ///////////////////////////////////////////////////////////////////////
 
-        this._addModelListeners = function () {
-
-            // At this point its possible the original X and Y positions have been updated.
-            originalX = that._currentStateData.originalX;
-            originalY = that._currentStateData.originalY;
-
-            that._currentStateData.removeOnDrawCallback(that._addModelListeners);
-
-             ////////////////////////////////
-             ////////// Audio
-             if (that._data.hasAudio) {
-
-                 that._audioData = _extra.captivate.audioManager.objectAudios[_extra.slideManager.currentInternalSlideId][that._data.audioID];
-                 that._audioTag = that._audioData.nativeAudio;
-                 that._audioTag.addEventListener("ended", that._onAudioEnded);
-             }
-
-            ////////////////////////////////
-            ////////// Enable For Mouse
-            that._modelListener.addProperty(ENABLE_FOR_MOUSE, function (previousValue, currentValue) {
-
-                /*
-                 * Abandoned the idea of using DIV elements to block mouse events in Internet Explorer.
-                 * But just incase you needed that css again, it looked like this:
-                 *
-                 * background-color:#F00;
-                 * width: 100px;
-                 * height: 100px;
-                 * border: 3px solid #73AD21;
-                 * position:absolute;
-                 * top:100px;
-                 * left:100px;
-                 *
-                 */
-
-                /*if (_extra.isIE) {
-
-                    if (currentValue) {
-
-
-
-                    } else {
-
-                        var resistor = new _extra.classes.MouseEventByPasser(that);
-
-                    }
-
-                } else {*/
-
-                    if (currentValue) {
-
-                        // ENABLE
-                        that._currentStateData.removeClass("extra-mouse-disabled");
-
-                    } else {
-
-                        // DISABLE
-                        that._currentStateData.addClass("extra-mouse-disabled");
-
-                    }
-
-                //}
-
-
-            });
-
-            ////////////////////////////////
-            ////////// Hand Cursor
-            that._modelListener.addProperty(CURSOR, function (previousValue, currentValue) {
-
-                that._currentStateData.editCSS("cursor", currentValue);
-
-            });
-
-            ////////////////////////////////
-            ////////// X
-            function isDefault(currentValue) {
-
-                if (currentValue.toLowerCase) {
-
-                    currentValue = currentValue.toLowerCase();
-                    return currentValue === "default" || currentValue === "reset" || currentValue === "original";
-
-                }
-
-                return false;
-
-            }
-
-
-            that._modelListener.addProperty(X, function (previousValue, currentValue) {
-
-
-                if (isDefault(currentValue)) {
-                    currentValue = (that._currentStateData.originalX) + that._offsetX;
-                }
-
-                // Convert string to number
-                if (typeof currentValue !== "number") {
-
-                    currentValue = _extra.w.parseFloat(currentValue);
-
-                }
-
-                that._currentStateData.x = currentValue - that._offsetX;
-
-
-            });
-
-            ////////////////////////////////
-            ////////// Y
-            that._modelListener.addProperty(Y, function (previousValue, currentValue) {
-
-                if (isDefault(currentValue)) {
-                    currentValue = (that._currentStateData.originalY) + that._offsetY;
-                }
-
-                // Convert String to number
-                if (typeof currentValue !== "number") {
-
-                    currentValue = _extra.w.parseFloat(currentValue);
-
-                }
-
-                that._currentStateData.y = currentValue - that._offsetY;
-
-            });
-
-            ////////////////////////////////
-            ////////// Width
-            that._modelListener.addProperty(WIDTH, function (previousValue, currentValue) {
-
-                that._currentStateData.width = currentValue;
-
-            });
-
-
-            ////////////////////////////////
-            ////////// Height
-            that._modelListener.addProperty(HEIGHT, function (previousValue, currentValue) {
-
-                that._currentStateData.width = currentValue;
-
-            });
-
-        };
-
-        this._currentStateData.addOnDrawCallback(that._addModelListeners);
+        // If all the visual elements of the slide object have been set up, then we can do things such as add listeners now,
+        if (this._currentStateData.isInitialized) {
+            this.onSlideObjectInitialized();
+        // If not then we'll have to wait for the state tot ell us when it's ready.
+        } else {
+            this._internalInitializationHandler = function () {
+                that.onSlideObjectInitialized.call(that);
+            };
+            this._currentStateData.addEventListener("internalinitialization", that._internalInitializationHandler);
+        }
 
 
     }
@@ -301,19 +165,186 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
         _extra.slideObjects.states.change(this.name, stateName);
     };
 
+    BaseSlideObjectProxy.prototype.onSlideObjectInitialized = function () {
+
+        if (this._internalInitializationHandler) {
+            this._currentStateData.removeEventListener("internalinitialization", this._internalInitializationHandler);
+            delete this._internalInitializationHandler;
+        }
+
+        var that = this;
+
+        // At this point its possible the original X and Y positions have been updated.
+        this._originalX = this._currentStateData.originalX;
+        this._originalY = this._currentStateData.originalY;
+
+
+         ////////////////////////////////
+         ////////// Audio
+         if (this._data.hasAudio) {
+
+             this._audioData = _extra.captivate.audioManager.objectAudios[_extra.slideManager.currentInternalSlideId][this._data.audioID];
+             this._audioTag = this._audioData.nativeAudio;
+             this._audioTag.addEventListener("ended", this._onAudioEnded);
+         }
+
+        ////////////////////////////////
+        ////////// Enable For Mouse
+        this._modelListener.addProperty(ENABLE_FOR_MOUSE, function (previousValue, currentValue) {
+
+            /*
+             * Abandoned the idea of using DIV elements to block mouse events in Internet Explorer.
+             * But just incase you needed that css again, it looked like this:
+             *
+             * background-color:#F00;
+             * width: 100px;
+             * height: 100px;
+             * border: 3px solid #73AD21;
+             * position:absolute;
+             * top:100px;
+             * left:100px;
+             *
+             */
+
+            /*if (_extra.isIE) {
+
+                if (currentValue) {
+
+
+
+                } else {
+
+                    var resistor = new _extra.classes.MouseEventByPasser(that);
+
+                }
+
+            } else {*/
+
+                if (currentValue) {
+
+                    // ENABLE
+                    that._currentStateData.removeClass("extra-mouse-disabled");
+
+                } else {
+
+                    // DISABLE
+                    that._currentStateData.addClass("extra-mouse-disabled");
+
+                }
+
+            //}
+
+
+        });
+
+        ////////////////////////////////
+        ////////// Hand Cursor
+        this._modelListener.addProperty(CURSOR, function (previousValue, currentValue) {
+
+            that._currentStateData.editCSS("cursor", currentValue);
+
+        });
+
+        ////////////////////////////////
+        ////////// X
+        function isDefault(currentValue) {
+
+            if (currentValue.toLowerCase) {
+
+                currentValue = currentValue.toLowerCase();
+                return currentValue === "default" || currentValue === "reset" || currentValue === "original";
+
+            }
+
+            return false;
+
+        }
+
+
+        this._modelListener.addProperty(X, function (previousValue, currentValue) {
+
+            if (isDefault(currentValue)) {
+                currentValue = (that._currentStateData.originalX) + that._offsetX;
+            }
+
+            // Convert string to number
+            if (typeof currentValue !== "number") {
+
+                currentValue = _extra.w.parseFloat(currentValue);
+
+            }
+
+            that._currentStateData.x = currentValue - that._offsetX;
+
+
+        });
+
+        ////////////////////////////////
+        ////////// Y
+        this._modelListener.addProperty(Y, function (previousValue, currentValue) {
+
+            if (isDefault(currentValue)) {
+                currentValue = (that._currentStateData.originalY) + that._offsetY;
+            }
+
+            // Convert String to number
+            if (typeof currentValue !== "number") {
+
+                currentValue = _extra.w.parseFloat(currentValue);
+
+            }
+
+            that._currentStateData.y = currentValue - that._offsetY;
+
+        });
+
+        ////////////////////////////////
+        ////////// Width
+        this._modelListener.addProperty(WIDTH, function (previousValue, currentValue) {
+
+            that._currentStateData.width = currentValue;
+
+        });
+
+
+        ////////////////////////////////
+        ////////// Height
+        this._modelListener.addProperty(HEIGHT, function (previousValue, currentValue) {
+
+            that._currentStateData.width = currentValue;
+
+        });
+    };
+
     BaseSlideObjectProxy.prototype.unload = function () {
 
         this.dispatchEvent("unload");
         this._eventMediator.swap(null);
+        this._stateEndManager.setCurrentDispatcher(null);
         this._modelListener.unload();
         this._interruptedClickEventHanlder.unload();
-        _extra.eventManager.eventDispatcher.removeEventListener("slideloaded", this._addModelListeners);
+        if (this._internalInitializationHandler) {
+            this._currentStateData.removeEventListener("internalinitialization", this._internalInitializationHandler);
+        }
         _extra.slideObjects.states.changeCallback.removeCallback(this.name, this._onStateChange);
-        this._currentStateData.removeOnDrawCallback(this._addModelListeners);
 
         if (this._data.hasAudio && this._audioTag) {
             this._audioTag.removeEventListener("ended", this._onAudioEnded);
         }
+
+        // Write States current location to Captivate data
+        var stateData;
+        for (var stateName in this._data.stateDatas) {
+            if (this._data._stateDatas.hasOwnProperty(stateName)) {
+
+                stateData = this._data.stateDatas[stateName];
+                //stateData.x = this.x;
+                //stateData.y = this.y;
+                stateData.unload();
+
+            }
+        }
+
     };
 
     _extra.registerClass("BaseSlideObjectProxy", BaseSlideObjectProxy, _extra.CAPTIVATE);

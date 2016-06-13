@@ -14,27 +14,39 @@ _extra.registerModule("slideManager_software", ["softwareInterfacesManager","Cal
     _extra.slideManager = {
         "_slideDatas":[],
         "slideNames":[],
-        "gotoSlide":function (index) {
-            if (typeof index === "string") {
-                index = _extra.slideManager.getSlideIndexFromName(index);
-            }
-
-            _extra.error("Not defined for Storyline");
+        // TODO: Find slide count
+        "slideCount":NaN,
+        "internalGotoSlide":function (sceneIndex, slideIndex) {
+            _extra.error("internalGotoSlide not defined for Storyline");
         },
         "getCurrentSceneNumber": function() {
             return _extra.storyline.player.currentSlide().sceneIndex;
         },
         "getCurrentSlideNumber": function() {
+            return _extra.storyline.player.currentSlide().slideIndex;
+        },
+        "getCurrentSceneSlideNumber": function() {
             return _extra.storyline.player.currentSlide().sceneSlideIndex;
         }
     };
 
-    //_extra.log(_extra.storyline.player.currentSlide());
+    var sceneIndex;
 
     for (var i = 0; i < _extra.storyline.slidesData.length; i += 1) {
         tempData = _extra.storyline.slidesData[i];
-        _extra.slideManager._slideDatas.push(tempData);
-        _extra.slideManager.slideNames.push(tempData.title);
+        sceneIndex = tempData.sceneIndex;
+
+        if (_extra.slideManager._slideDatas.length <= sceneIndex) {
+            // Create a new array for this new scene.
+            _extra.slideManager._slideDatas.push([]);
+            _extra.slideManager.slideNames.push([]);
+        }
+
+
+
+        _extra.slideManager._slideDatas[sceneIndex].push(tempData);
+        // TODO: Slide names also need to be 'scene' ised.
+        _extra.slideManager.slideNames[sceneIndex].push(tempData.title);
     }
 
 

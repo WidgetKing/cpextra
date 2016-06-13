@@ -12,6 +12,14 @@ _extra.registerModule("slideObjectManager_software", ["generalDataManager", "Cal
 
     _extra.slideObjects = {
         "allObjectsOfTypeCallback": new _extra.classes.Callback(),
+        "_internalShowSlideObjectDetails": {
+            "location": _extra.captivate.api,
+            "name":"show"
+        },
+        "_internalHideSlideObjectDetails": {
+            "location": _extra.captivate.api,
+            "name":"hide"
+        },
         /**
          * This function takes a query, converts it into a list of slide objects, then applies a function to those slide objects.
          *
@@ -22,9 +30,13 @@ _extra.registerModule("slideObjectManager_software", ["generalDataManager", "Cal
 
                 var list = _extra.slideObjects.getSlideObjectNamesMatchingWildcardName(query, false);
 
-                for (var i = 0; i < list.length; i += 1) {
+                if (list) {
 
-                    method(list[i]);
+                    for (var i = 0; i < list.length; i += 1) {
+
+                        method(list[i]);
+
+                    }
 
                 }
 
@@ -83,16 +95,35 @@ _extra.registerModule("slideObjectManager_software", ["generalDataManager", "Cal
         },
         "getSlideObjectNamesMatchingWildcardName": function (query, returnProxies) {
 
-            if (_extra.isQuery(query)) {
+            var queryType = _extra.getQueryType(query);
 
-                var slide = _extra.slideManager.currentSlideDOMElement,
-                    list = [];
+            if (queryType) {
 
-                for (var i = 0; i < slide.childNodes.length; i += 1) {
-                    list.push(slide.childNodes[i].id);
+                var list = [],
+                    i;
+
+                // Local slide
+                if (queryType === _extra.WILDCARD_CHARACTER) {
+
+                    var slide = _extra.slideManager.currentSlideDOMElement;
+
+                    for (i = 0; i < slide.childNodes.length; i += 1) {
+                        list.push(slide.childNodes[i].id);
+                    }
+
+                // Whole project
+                } else if (queryType === _extra.GLOBAL_WILDCARD_CHARACTER) {
+
+                    list = _extra.slideObjects.projectSlideObjectNames;
+
+                // Unknown
+                } else {
+                    return null;
                 }
 
-                list = _extra.queryList(query, list);
+
+                /// Found the list, make the query.
+                list = _extra.queryList(query, list, queryType);
 
                 // If a list of proxies was wanted, not a list of names
                 if (list && returnProxies) {
@@ -114,6 +145,7 @@ _extra.registerModule("slideObjectManager_software", ["generalDataManager", "Cal
             }
 
             return null;
+
             // Previously, before we externalized this code to _extra.queryList
             /*var wildcardIndex = query.indexOf(_extra.slideObjects.WILDCARD_CHARACTER);
             if (wildcardIndex > -1) {
@@ -169,14 +201,14 @@ _extra.registerModule("slideObjectManager_software", ["generalDataManager", "Cal
             // Endpoint if no wildcard was passed in.
             return null;*/
 
-        }
+        },
+        "projectSlideObjectNames":{}
     };
 
+    ///////////////////////////////////////////////////////////////////////
+    /////////////// ON LOAD CALLBACK
+    ///////////////////////////////////////////////////////////////////////
 
-
-    ////////////////////
-    ///// ON LOAD CALLBACK
-    ////////////////////
     return function () {
 
         // Go through the data for all objects in the project in order to find all of a certain type.

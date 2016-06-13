@@ -13,6 +13,12 @@ _extra.registerModule("VariableEventProxy", function () {
         this._data = data;
     }
 
+    VariableEventProxy.prototype = {
+        get variableName(){
+            return this._data[1];
+        }
+    };
+
     _extra.registerClass("VariableEventProxy", VariableEventProxy, _extra.STORYLINE);
 
 }, _extra.STORYLINE);

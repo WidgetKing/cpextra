@@ -12,7 +12,7 @@ _extra.registerModule("variableManager_software", ["softwareInterfacesManager", 
     ////// Variable Manager Object Setup
     //////////////////////////
     _extra.variableManager = {
-        "prefixCallback":new _extra.classes.Callback(),
+        //"prefixCallback":new _extra.classes.Callback(),
         "getVariableValue": function (variableName) {
 
             // If we're trying to access system variables, some system variables return inaccurate values through
@@ -39,20 +39,20 @@ _extra.registerModule("variableManager_software", ["softwareInterfacesManager", 
                 return _extra.captivate.variables.hasOwnProperty(variableName);
             }
         },
-        "isSystemVariable": function (variableName) {
+        /*"isSystemVariable": function (variableName) {
             if (_extra.variableManager.variableData && _extra.variableManager.variableData[variableName] !== undefined) {
                 return _extra.variableManager.variableData[variableName].isSystemVariable;
             } else {
                 return false;
             }
-        },
-        "listenForVariableChange": function (variableName, callback) {
+        },*/
+        "internalListenForVariableChange": function (variableName, callback) {
             _extra.captivate.eventDispatcher.addEventListener("CPAPI_VARIABLEVALUECHANGED",callback,variableName);
         },
-        "stopListeningForVariableChange": function(variableName, callback) {
+        "internalStopListeningForVariableChange": function(variableName, callback) {
             _extra.captivate.eventDispatcher.removeEventListener("CPAPI_VARIABLEVALUECHANGED",callback,variableName);
         },
-        "enactFunctionOnVariables": function (query, method) {
+        /*"enactFunctionOnVariables": function (query, method) {
             if (_extra.isQuery(query)) {
 
                 var list = _extra.queryList(query, _extra.variableManager.variableData);
@@ -84,15 +84,30 @@ _extra.registerModule("variableManager_software", ["softwareInterfacesManager", 
 
                 });
             }
-        },
+        },*/
+        "forEachVariable":function(method) {
+            var varData,
+                variableInfo = _extra.captivate.api.variablesManager.varInfos;
+
+            for (var i = 0; i < variableInfo.length; i+=1) {
+
+                varData = variableInfo[i];
+                method({
+                    "name":varData.name,
+                    "isSystemVariable": varData.systemDefined
+                });
+
+            }
+
+        }/*,
         // This can't be a private variable, because it must be shared with the onload callback,
         // and seeing as we are using eval to run all this code, the onload callback is unlinked.
         "variableData":null,
-        "hasParsedVariables":false
+        "hasParsedVariables":false*/
     };
 
 
-    return function () {
+    /*return function () {
 
         var name,
             splitName,
@@ -136,6 +151,6 @@ _extra.registerModule("variableManager_software", ["softwareInterfacesManager", 
         _extra.variableManager.hasParsedVariables = true;
         // Dispatch event to let the rest of the modules know the variables have been initialized.
         _extra.eventManager.eventDispatcher.dispatchEvent(_extra.createEvent("variablesInitialized"));
-    };
+    };*/
 
 }, _extra.CAPTIVATE);

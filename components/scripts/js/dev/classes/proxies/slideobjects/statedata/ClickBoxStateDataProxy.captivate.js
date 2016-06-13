@@ -2,18 +2,16 @@
  * Created with IntelliJ IDEA.
  * User: Tristan
  * Date: 8/12/15
- * Time: 1:56 PM
+ * Time: 2:05 PM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("TextEntryBoxStateDataProxy", ["StateDataProxy"], function () {
+_extra.registerModule("ClickBoxStateDataProxy", ["StateDataProxy"], function () {
 
     "use strict";
 
-    function TextEntryBoxStateDataProxy(data) {
+    function ClickBoxStateDataProxy(data) {
 
         _extra.classes.StateDataProxy.call(this, data, function (data) {
-
-            data.upperDIV = _extra.w.document.getElementById(data.name + "c");
 
             /*if (_extra.captivate.isResponsive) {
 
@@ -24,7 +22,7 @@ _extra.registerModule("TextEntryBoxStateDataProxy", ["StateDataProxy"], function
             } else {
 
                 data.drawMethodObject = data.rawData;
-                data.drawMethodName = "addIfNeeded";
+                data.drawMethodName = "drawIfNeeded";
 
             }*/
 
@@ -32,6 +30,6 @@ _extra.registerModule("TextEntryBoxStateDataProxy", ["StateDataProxy"], function
 
     }
 
-    _extra.registerClass("TextEntryBoxStateDataProxy", TextEntryBoxStateDataProxy, "StateDataProxy", _extra.CAPTIVATE);
+    _extra.registerClass("ClickBoxStateDataProxy", ClickBoxStateDataProxy, "StateDataProxy", _extra.CAPTIVATE);
 
 }, _extra.CAPTIVATE);

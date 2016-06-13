@@ -16,7 +16,8 @@ _extra.registerModule("preventTextEntryBoxOverwrite", ["slideObjectManager_globa
             slideObject = _extra.slideObjects.getSlideObjectByName(slideObjectName),
             variableValue = _extra.captivate.variableManager.getVariableValue(data.variable);
 
-        data.defaultText = variableValue;
+        //data.defaultText = variableValue;
+        slideObject._ignoreNextDefaultText = true;
         slideObject.value = variableValue;
 
     }

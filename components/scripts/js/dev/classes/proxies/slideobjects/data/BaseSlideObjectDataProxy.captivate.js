@@ -87,7 +87,56 @@ _extra.registerModule("BaseSlideObjectDataProxy", function () {
         },
         get audioID() {
             return this._data.base.ia;
+        },
+        get stateDatas () {
+
+            // If this is the first time we've called this method for this instance.
+            if (!this._stateDatas) {
+
+                var that = this;
+                // Define variables
+                var stateDataProxy,
+                    stateDatas = {};
+                // Set public variable so we can keep track of whether this is the first time or not.
+                this._stateDatas = stateDatas;
+
+                if (this._initialStateData.states.length <= 1) {
+
+                    // This object does not have any states.
+                    // So we have to fake the data.
+                    // Previous version of this line when it was in the getStateData section
+                    // stateDatas[stateName] = _extra.factories.createStateDataProxy(this.type, {
+                    stateDatas.Normal = _extra.factories.createStateDataProxy(this.type, {
+                        "stsi":[this.uid],
+                        "stn":"Normal",
+                        "stt":0
+                    });
+                    /*stateDatas[stateName] = new _extra.classes.StateDataProxy({
+                        "stsi":[this.uid],
+                        "stn":"Normal"
+                    });*/
+
+                } else {
+
+                    // Loop through the state information
+                    this._initialStateData.states.forEach(function (rawStateData) {
+
+                        stateDataProxy = _extra.factories.createStateDataProxy(that.type, rawStateData);
+                        // stateDataProxy = new _extra.classes.StateDataProxy(rawStateData);
+                        // Assign this data to the holder object.
+                        stateDatas[stateDataProxy.name] = stateDataProxy;
+
+                    });
+
+                }
+            }
+
+            return this._stateDatas;
         }
+    };
+
+    BaseSlideObjectData.prototype.hasState = function (stateName) {
+        return this.states.indexOf(stateName) > -1;
     };
 
     BaseSlideObjectData.prototype.getBaseStateItemData = function () {
@@ -101,48 +150,28 @@ _extra.registerModule("BaseSlideObjectDataProxy", function () {
         return null;
     };
 
-    BaseSlideObjectData.prototype.getDataForState = function (stateName) {
 
-        var that = this;
+    BaseSlideObjectData.prototype.getStateDataByInternalIndex = function (index) {
 
-        // If this is the first time we've called this method for this instance.
-        if (!this._stateDatas) {
+        var data;
 
-            // Define variables
-            var stateDataProxy,
-                stateDatas = {};
-            // Set public variable so we can keep track of whether this is the first time or not.
-            this._stateDatas = stateDatas;
+        for (var stateName in this.stateDatas) {
+            if (this.stateDatas.hasOwnProperty(stateName)) {
 
-            if (this._initialStateData.states.length <= 1) {
+                data = this.stateDatas[stateName];
 
-                // This object does not have any states.
-                // So we have to fake the data.
-                stateDatas[stateName] = _extra.factories.createStateDataProxy(this.type, {
-                    "stsi":[this.uid],
-                    "stn":"Normal"
-                });
-                /*stateDatas[stateName] = new _extra.classes.StateDataProxy({
-                    "stsi":[this.uid],
-                    "stn":"Normal"
-                });*/
-
-            } else {
-
-                // Loop through the state information
-                this._initialStateData.states.forEach(function (rawStateData) {
-
-                    stateDataProxy = _extra.factories.createStateDataProxy(that.type, rawStateData);
-                    // stateDataProxy = new _extra.classes.StateDataProxy(rawStateData);
-                    // Assign this data to the holder object.
-                    stateDatas[stateDataProxy.name] = stateDataProxy;
-
-                });
+                if (data.internalIndex === index) {
+                    return data;
+                }
 
             }
         }
 
-        return this._stateDatas[stateName];
+        return null;
+    };
+
+    BaseSlideObjectData.prototype.getDataForState = function (stateName) {
+        return this.stateDatas[stateName];
     };
 
     _extra.registerClass("BaseSlideObjectDataProxy", BaseSlideObjectData);

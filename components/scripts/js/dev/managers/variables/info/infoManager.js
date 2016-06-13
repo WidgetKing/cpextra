@@ -5,7 +5,7 @@
  * Time: 4:10 PM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("infoManager", ["variableManager"], function () {
+_extra.registerModule("infoVariableManager", ["variableManager"], function () {
 
     "use strict";
 
@@ -19,17 +19,28 @@ _extra.registerModule("infoManager", ["variableManager"], function () {
 
         "registerInfoVariable": function (data) {
 
-            data.name = PREFIX + data.suffix;
+            function initVariable(name) {
 
-            if (_extra.variableManager.hasVariable(data.name)) {
+                data.name = name;
 
-                _extra.infoManager.infoVariables[data.name] = data;
+                if (_extra.variableManager.hasVariable(data.name)) {
 
-                return true;
+                    _extra.infoManager.infoVariables[data.name] = data;
 
+                    return true;
+
+                }
+
+                return false;
             }
 
-            return false;
+            if (initVariable(PREFIX + data.suffix)) {
+                return true;
+
+                // If the variable did not exist, check to see if there is one with an underscore at the front of its name.
+            } else {
+                return initVariable("_" + data.name);
+            }
 
         }
 
@@ -39,11 +50,15 @@ _extra.registerModule("infoManager", ["variableManager"], function () {
 
         var data,
             onSet = function(event) {
-                // TODO: Abstract this so it's different in storyline (Probably best to proxy the event in the variable manager somehow)
-                _extra.infoManager.infoVariables[event.Data.varName].setter(event.Data.newVal);
+
+                var infoVariableData = _extra.infoManager.infoVariables[event.variableName],
+                    variableValue = event.newValue;
+
+                infoVariableData.setter(variableValue);
             },
             onGet = function(event) {
-                return _extra.infoManager.infoVariables[event.variableName].getter();
+                var infoVariableData = _extra.infoManager.infoVariables[event.variableName];
+                return infoVariableData.getter();
             };
 
         for (var variableName in _extra.infoManager.infoVariables) {
