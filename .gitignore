@@ -4,4 +4,7 @@ node_modules
 tests
 .jshintrc
 components/library
+components/website
+components/_dump
+components/legacy
 coverage

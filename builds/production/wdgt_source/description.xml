@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?> 
+<!-- widget header 
+      spec - compulsorily required. if not present will be treated as spec 1 which doesnt support html5 etc 
+      version - widget version number 
+      type - widget type 
+-->         
+<widget spec="2" name="Captivate Extra" description="Steroids for Captivate" uri="www.infosemantics.com.au" version="1.3.2" type="static">
+    <!-- Authors header - Can contain multiple authors      
+    --> 
+    <authors> 
+    <!-- Author header - author info 
+        about is to show off some skills like i am cool widget developer. contact me for custom widgets 
+    --> 
+        <author name="Tristan Ward" email="tristan.ward@infosemantics.com.au" organization="Infosemantics" uri="www.infosemantics.com.au"> 
+            <about>Original developer of the Widget Factory API for Captivate SWF, for which he earned the nickname 'Widget King'.</about> 
+        </author> 
+    </authors> 
+    <!-- license info - author info 
+    
+    <license name="CC" description="Creative Commons License" text="Feel free to use this" uri="http://creativecommons.org/licenses/by/3.0/"/> --> 
+      
+    <!-- different output formats supported 
+        each format has one directory in the wgt file 
+        paths can refer to other formats by using .. notation 
+    --> 
+    <formats>
+        <resources>
+            <resource source="swf/version.json"/>
+        </resources>
+        <!-- for the output format swf 
+        --> 
+        <format type="swf"> 
+            <content source="Infosemantics_CPExtra_AS3.swf"/>
+        </format> 
+        <!-- for the html5 output --> 
+        <format type="html5"> 
+            <!-- reference to the oam file --> 
+            <content source="captivate_extra_oam.xml"/>
+        </format> 
+    </formats> 
+</widget>

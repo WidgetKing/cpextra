@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<script:Container xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:script="com.infosemantics.components.script.*" align="center" width="{CPExtraWidgetPropertiesDialog.PROPERTIES_DIALOG_WIDTH - (BUFFER * 2)}" x="{BUFFER}" y="{BUFFER}">
+	<script:Container id="animationContainer" width="{CPExtraWidgetPropertiesDialog.PROPERTIES_DIALOG_WIDTH}"></script:Container>
+	<script:VBox id="info" align="center" spacing="{BUFFER}">
+		<script:Button id="helpButton" text="Online Help" width="300" height="50"></script:Button>
+		<script:HBox id="versionInfo" autoResizeWidth="true">
+			<script:Label id="versionLabel" text="Version: {version}"/>
+			<script:Label id="buildLabel" text="Build: {build}"/>
+		</script:HBox>
+	</script:VBox>
+	<fx:Script><![CDATA[
+import flash.display.DisplayObject;
+import flash.events.MouseEvent;
+import flash.net.navigateToURL;
+import flash.net.URLRequest;
+import flash.external.ExternalInterface;
+
+		private const BUFFER:int = 20;
+        [Bindable]
+        private var version:String = "0.0.0";
+		[Bindable]
+		private var build:int = 5000;
+		
+		public function init():void {
+			setVersionInfoLocation();
+			helpButton.addEventListener(MouseEvent.CLICK, onHelpButtonClick);
+			helpButton.buttonStyle.background.hasLine = false;
+			helpButton.buttonStyle.background.fillColor = 0xc0392b;
+			helpButton.buttonStyle.label.fontColor = 0xecf0f1;
+			helpButton.buttonStyle.getState("over").background.fillColor = 0xe74c3c;
+			helpButton.buttonStyle.getState("down").background.fillColor = 0xc0392b;
+		}
+		
+		private function onHelpButtonClick(event:MouseEvent):void {
+			navigateToURL(new URLRequest("http://www.infosemantics.com.au/adobe-captivate-widgets/cpextra/help"), "_blank");
+		}
+		
+		private function setVersionInfoLocation():void {
+			//versionInfo.draw();
+			info.y = CPExtraWidgetPropertiesDialog.PROPERTIES_DIALOG_HEIGHT - info.height - BUFFER;
+			//versionInfo.x = 300;//CPExtraWidgetPropertiesDialog.PROPERTIES_DIALOG_WIDTH / 2 ;
+		}
+		
+		public function setVersionData(data:Object):void
+		{
+			version = data.version;
+			build = data.build;
+			setVersionInfoLocation();
+		}
+		
+		public function setAnimation(animation:DisplayObject):void 
+		{
+			var dif:Number = CPExtraWidgetPropertiesDialog.PROPERTIES_DIALOG_WIDTH / animation.width;
+			animation.scaleX = dif;
+			animation.scaleY = dif;
+			animationContainer.addChild(animation);
+			animationContainer.y = 100;
+		}
+      
+        ]]></fx:Script>
+</script:Container>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<widgetUpdate>
+
+	<latestVersion versionNumber="1.3.0">
+		<description>A major update is available</description>
+		<feature type="major">Headless loading - Install CpExtra directly into Captivate</feature>
+        <feature type="major">#syntax - @sytnax for the whole project</feature>
+        <feature type="major">xinfoEventTarget - Tells you which slide object dispatched an event</feature>
+        <feature type="major">ENTER and EXIT events - Call actions when a slide object enters/exits the timeline</feature>
+        <feature type="major">Use variables with Open URL or File action</feature>
+        <!--<feature type="minor">videoended and audioended events</feature>
+		<feature type="minor">xprefMultichoiceRolloverColor</feature>-->
+		<feature type="bugfix">Various bug fixes</feature>
+	</latestVersion>
+	
+	<lastMajorVersion versionNumber="1.3.0">
+        <description>A major update is available</description>
+        <feature type="major">Headless loading - Install CpExtra directly into Captivate</feature>
+        <feature type="major">#syntax - @sytnax for the whole project</feature>
+        <feature type="major">xinfoEventTarget - Tells you which slide object dispatched an event</feature>
+        <feature type="major">ENTER and EXIT events - Call actions when a slide object enters/exits the timeline</feature>
+        <feature type="major">Use variables with Open URL or File action</feature>
+        <!--<feature type="minor">videoended and audioended events</feature>
+        <feature type="minor">xprefMultichoiceRolloverColor</feature>-->
+        <feature type="bugfix">Various bug fixes</feature>
+    </lastMajorVersion>
+	
+	<lastCriticalVersion versionNumber="1.0.0">
+		<description>A critical update is available</description>
+        <feature type="major">Full CpExtra Version 1 Release!</feature>
+        <feature type="minor"></feature>
+        <feature type="bugfix"></feature>
+        <feature type="bugfix"></feature>
+	</lastCriticalVersion>
+	
+	<updateURL>http://www.infosemantics.com.au/adobe-captivate-widgets/widget-updates</updateURL>
+	
+</widgetUpdate>

@@ -1,0 +1,7 @@
+{
+
+	"version": "$$VERSION_NUMBER$$",
+
+	"build": $$BUILD_NUMBER$$
+
+}
