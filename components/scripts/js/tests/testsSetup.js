@@ -15,6 +15,22 @@
     window.unitTests = {
         "CAPTIVATE":"captivate",
         "STORYLINE":"storyline",
+        "createVariableGetterSetter":function (root, variableObject) {
+
+            root.getVariableValue = jasmine.createSpy("variableManager.getVariableValue", function (name) {
+                return variableObject[name];
+            }).and.callThrough();
+
+            root.setVariableValue = jasmine.createSpy("variableManager.setVariableValue", function (name, value) {
+                variableObject[name] = value;
+            }).and.callThrough();
+
+            root.hasVariable = jasmine.createSpy("variableManager.hasVariable", function (name) {
+                return variableObject.hasOwnProperty(name);
+            }).and.callThrough();
+
+        },
+
         "getModule": function (name, software) {
             if (software) {
                 return unitTests.modules[name + "_" + software];

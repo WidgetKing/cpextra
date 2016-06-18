@@ -5,7 +5,8 @@
  * Time: 4:21 PM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("existingActionCommandVariables", ["queryManager", "slideObjectManager_global", "variableManager", "commandVariableManager"], function () {
+_extra.registerModule("existingActionCommandVariables", ["queryManager", "slideObjectManager_global",
+                                                         "variableManager", "commandVariableManager"], function () {
 
     "use strict";
 

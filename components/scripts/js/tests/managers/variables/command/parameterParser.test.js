@@ -5,12 +5,13 @@
  * Time: 7:57 AM
  * To change this template use File | Settings | File Templates.
  */
-describe("A test suite for _extra.variableManager.parser", function () {
+fdescribe("A test suite for _extra.variableManager.parser", function () {
 
     "use strict";
 
     var module = unitTests.getModule("parameterParser"),
-        queryEngine = unitTests.getModule("queryManager");
+        queryEngine = unitTests.getModule("queryManager"),
+        whiteSpaceManager = unitTests.getModule("whiteSpaceManager");
 
     beforeEach(function () {
 
@@ -51,6 +52,7 @@ describe("A test suite for _extra.variableManager.parser", function () {
         };
 
         queryEngine();
+        whiteSpaceManager();
         module();
     });
 

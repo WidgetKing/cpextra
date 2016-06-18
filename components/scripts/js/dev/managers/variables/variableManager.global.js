@@ -17,6 +17,9 @@ _extra.registerModule("variableManager", ["variableManager_software", "VariableE
     _extra.variableManager.hasParsedVariables = false;
     _extra.variableManager.prefixCallback = new _extra.classes.Callback();
 
+    ///////////////////////////////////////////////////////////////////////
+    /////////////// Variable Event Listeners
+    ///////////////////////////////////////////////////////////////////////
     _extra.variableManager.listenForVariableChange = function (variableName, callback) {
         variableEventManager.addListener(variableName, callback);
     };
@@ -25,14 +28,9 @@ _extra.registerModule("variableManager", ["variableManager_software", "VariableE
         variableEventManager.removeListener(variableName, callback);
     };
 
-    _extra.variableManager.isSystemVariable = function (variableName) {
-        if (_extra.variableManager.variableData && _extra.variableManager.variableData[variableName] !== undefined) {
-            return _extra.variableManager.variableData[variableName].isSystemVariable;
-        } else {
-            return false;
-        }
-    };
-
+    ///////////////////////////////////////////////////////////////////////
+    /////////////// @Syntax
+    ///////////////////////////////////////////////////////////////////////
     _extra.variableManager.enactFunctionOnVariables = function (query, method) {
         if (_extra.isQuery(query)) {
 
@@ -51,6 +49,18 @@ _extra.registerModule("variableManager", ["variableManager_software", "VariableE
         }
     };
 
+    ///////////////////////////////////////////////////////////////////////
+    /////////////// Utils
+    ///////////////////////////////////////////////////////////////////////
+    _extra.variableManager.isSystemVariable = function (variableName) {
+        if (_extra.variableManager.variableData && _extra.variableManager.variableData[variableName] !== undefined) {
+            return _extra.variableManager.variableData[variableName].isSystemVariable;
+        } else {
+            return false;
+        }
+    };
+
+
     _extra.variableManager.reset = function (variableName) {
 
         if (_extra.variableManager.variableData) {
@@ -68,6 +78,16 @@ _extra.registerModule("variableManager", ["variableManager_software", "VariableE
         }
     };
 
+
+
+
+
+
+    ////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
+    //////////////////// On load callback
+    ////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
     return function () {
 
         _extra.variableManager.variableData = {};

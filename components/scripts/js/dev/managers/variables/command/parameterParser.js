@@ -5,17 +5,13 @@
  * Time: 7:51 AM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("parameterParser", ["variableManager", "queryManager"], function () {
+_extra.registerModule("parameterParser", ["variableManager", "queryManager", "whiteSpaceManager"], function () {
 
     "use strict";
 
     _extra.variableManager.parse = {
-        "string":function (string, customType, preventRecursion) {
 
-            // Remove spaces from value string
-            if (string !== undefined && string.replace) {
-                string = string.replace(/\s+/g,'');
-            }
+        "string":function (string, customType, preventRecursion) {
 
             var data = {
                 "value": string,
@@ -57,8 +53,15 @@ _extra.registerModule("parameterParser", ["variableManager", "queryManager"], fu
             // Check variable data
             if (data.isVariable && !preventRecursion) {
 
-                data.variable = _extra.variableManager.parse.string(_extra.variableManager.getVariableValue(string),
-                                                                    customType, true);
+                var variableValue = _extra.variableManager.getVariableValue(string);
+
+                // Remove spaces from value string
+                if (variableValue !== undefined && variableValue.replace) {
+                    // Remove spaces and tabs and such
+                    variableValue = _extra.variableManager.safelyRemoveWhiteSpace(variableValue);
+                }
+
+                data.variable = _extra.variableManager.parse.string(variableValue, customType, true);
                 /*var value = _extra.variableManager.getVariableValue(string);
                 data.isValueNumber = !_extra.w.isNaN(value);
 
@@ -78,6 +81,9 @@ _extra.registerModule("parameterParser", ["variableManager", "queryManager"], fu
 
             return data;
         },
+
+
+
         "boolean": function (value) {
 
             function parseNumber(value) {
