@@ -59,6 +59,7 @@
         cbtr = "tests/output/_BETA_TESTS/captivate/",
         uir = "tests/output/_USER_ISSUES/",
         headlessCaptivateTestSources = [ctr + "15_Headless_Regular/assets/libraries", // D:\01_PROJECTS\02_Infosemantics\00_CaptivateExtra\_dev\tests\output\captivate\15_Headless_Regular\assets\libraries
+                                        uir + "Spectrav9/assets/libraries" //D:\01_PROJECTS\02_Infosemantics\00_CaptivateExtra\_dev\tests\output\_USER_ISSUES\Spectrav9\assets\libraries
         ],
         captivateTestSources = [ctr + "01_CE_Local_Storage_Variables/wr/w_5569/scripts",
                                ctr + "02_CE_Local_Storage_Variables_2/wr/w_5235/scripts",

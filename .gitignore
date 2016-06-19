@@ -2,6 +2,7 @@
 node_modules
 .tmp
 .idea
+workspace.xml
 .jshintrc
 tests/output
 tests/sources

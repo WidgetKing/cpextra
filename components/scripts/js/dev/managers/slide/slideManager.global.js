@@ -189,23 +189,26 @@ _extra.registerModule("slideManager_global",["slideManager_software"],function()
         _extra.slideManager.currentSceneSlideNumber = _extra.slideManager.getCurrentSceneSlideNumber();
         _extra.slideManager.currentSlideID = currentSlideID;
 
-        // Notify all callbacks registered as universal (or "*")
-        _extra.slideManager.enterSlideCallback.sendToCallback("*", currentSlideID);
+        if (_extra.slideManager.currentSceneSlideNumber !== -1) {
+            // Notify all callbacks registered as universal (or "*")
+            _extra.slideManager.enterSlideCallback.sendToCallback("*", currentSlideID);
 
-        // Manage any special things that should be done for the software.
-        if (_extra.slideManager.hasOwnProperty("software_onSlideEnter")) {
-            _extra.slideManager.software_onSlideEnter();
+            // Manage any special things that should be done for the software.
+            if (_extra.slideManager.hasOwnProperty("software_onSlideEnter")) {
+                _extra.slideManager.software_onSlideEnter();
+            }
+
+            // If we are on the first scene of the project, then we'll allow callbacks that don't define scene number.
+            // Such as: 3
+            if (currentScene === 0) {
+                _extra.slideManager.enterSlideCallback.sendToCallback(currentSlide, currentSlideID);
+            }
+
+
+            // Notify all callbacks registered to this specific scene and slide index (1.3)
+            _extra.slideManager.enterSlideCallback.sendToCallback(currentSlideID, currentSlideID);
         }
 
-        // If we are on the first scene of the project, then we'll allow callbacks that don't define scene number.
-        // Such as: 3
-        if (currentScene === 0) {
-            _extra.slideManager.enterSlideCallback.sendToCallback(currentSlide, currentSlideID);
-        }
-
-
-        // Notify all callbacks registered to this specific scene and slide index (1.3)
-        _extra.slideManager.enterSlideCallback.sendToCallback(currentSlideID, currentSlideID);
 
     }
 
