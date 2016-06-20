@@ -33,6 +33,12 @@ _extra.registerModule("BaseSlideObjectDataProxy", function () {
         get data() {
             return this._data;
         },
+        get startFrame() {
+            return this._data.base.from;
+        },
+        get endFrame() {
+            return this._data.base.to;
+        },
         get type() {
             return this._type;
         },
