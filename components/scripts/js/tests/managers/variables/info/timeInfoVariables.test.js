@@ -64,9 +64,11 @@ describe("A test suite for timeInfoVariables.js", function () {
                     "ProjectTotalHours":false
                 }
             },
-            "FPS":30,
-            "totalFrames":300,
-            "currentFrame":150,
+            "movieStatus":{
+                "FPS":30,
+                "totalFrames":300,
+                "currentFrame":150
+            },
             "w":{
                 "Math":Math,
                 "Event":Event,
@@ -123,8 +125,8 @@ describe("A test suite for timeInfoVariables.js", function () {
 
     it("should accurate calculate the correct total time", function () {
 
-        _extra.FPS = 30;
-        _extra.totalFrames = 117060;
+        _extra.movieStatus.FPS = 30;
+        _extra.movieStatus.totalFrames = 117060;
 
         module();
 
@@ -136,8 +138,8 @@ describe("A test suite for timeInfoVariables.js", function () {
 
     it("should accurately calculate the current elapsed time", function () {
 
-        _extra.FPS = 30;
-        _extra.currentFrame = 117060;
+        _extra.movieStatus.FPS = 30;
+        _extra.movieStatus.currentFrame = 117060;
 
         module();
 
@@ -157,9 +159,9 @@ describe("A test suite for timeInfoVariables.js", function () {
 
         _extra.preferences.doubleDidgits.ProjectElapsedSeconds = true;
 
-        _extra.FPS = 30;
-        _extra.totalFrames = 117060;
-        _extra.currentFrame = 135060;
+        _extra.movieStatus.FPS = 30;
+        _extra.movieStatus.totalFrames = 117060;
+        _extra.movieStatus.currentFrame = 135060;
 
         module();
 

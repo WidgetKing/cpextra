@@ -106,7 +106,6 @@
 
                 var result = _extra.slideObjects.getSlideObjectNamesMatchingWildcardName("me#");
                 expect(result.length).toBe(2);
-                console.log(result);
 
             });
 

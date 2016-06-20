@@ -171,8 +171,8 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
             if (_extra.movieStatus.isPlaying()) {
 
                 // Make sure we are still inside the timeline for the slide object
-                if (_extra.currentFrame < that.data.endFrame &&
-                    _extra.currentFrame >= that.data.startFrame) {
+                if (_extra.movieStatus.currentFrame < that.data.endFrame &&
+                    _extra.movieStatus.currentFrame >= that.data.startFrame) {
 
                     // Avoid the Promise Error in Google Chrome by waiting 150 milliseconds
                     _extra.w.setTimeout(function () {
