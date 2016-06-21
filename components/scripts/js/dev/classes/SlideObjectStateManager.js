@@ -18,7 +18,7 @@ _extra.registerModule("SlideObjectStateManager", function () {
 
         this.slideObject = slideObject;
         this.data = data;
-        this.mainDIV = _extra.captivate.projectDIV; // TODO: CHANGE THIS FOR STORYLINE!
+        this.mainDIV = _extra.captivate.projectContainer; // TODO: CHANGE THIS FOR STORYLINE!
 
 
 

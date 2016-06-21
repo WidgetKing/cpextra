@@ -151,7 +151,7 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
             that.dispatchEvent("audioended");
         };
 
-        this._onAudioPaused = function (e) {
+        this._onAudioPaused = function () {
 
             // For your reference, the content fo the Captivate Audio Pause method
             /*

@@ -18,6 +18,9 @@ _extra.registerModule("createSlideObjectData", ["factoryManager"], function () {
             case _extra.dataTypes.slideObjects.TEXT_ENTRY_BOX :
                 return new _extra.classes.TextEntryBoxDataProxy(name, data, type);
 
+            case _extra.dataTypes.slideObjects.SHAPE :
+                return new _extra.classes.ShapeDataProxy(name, data, type);
+
             default :
                 return new _extra.classes.BaseSlideObjectDataProxy(name, data, type);
 

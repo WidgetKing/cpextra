@@ -48,4 +48,56 @@ _extra.registerModule("ShapeStateDataProxy", ["StateDataProxy"], function () {
 
     _extra.registerClass("ShapeStateDataProxy", ShapeStateDataProxy, "StateDataProxy", _extra.CAPTIVATE);
 
+    /*var strokeCContainerDifference = {
+        "1":-2,
+        "2":1,
+        "3":4,
+        "4":7,
+        "5":10,
+        "6":13,
+        "7":16,
+        "8":19,
+        "9":22,
+        "10":25
+    };
+
+    var originalLocationStrokeDifferences = {
+        "0":0,
+        "1":0.5,
+        "2":1,
+        "3":1.5,
+        "4":2,
+        "5":2.5,
+        "6":3,
+        "7":3.5,
+        "8":4,
+        "9":4.5,
+        "10":5
+    }; */
+
+    ShapeStateDataProxy.prototype.calculateOffsetWithOriginal = function(strokeWidth) {
+        return strokeWidth * 0.5;
+    };
+
+    ShapeStateDataProxy.prototype.calculateCContainerOffset = function(strokeWidth) {
+        return _extra.w.Math.max((strokeWidth * 3) - 5,
+                                 0);
+    };
+
+    ShapeStateDataProxy.prototype.getStateItemData = function(rawStateData) {
+
+        // Super!
+        var stateItemData = ShapeStateDataProxy.superClass.getStateItemData.call(this, rawStateData),
+            pixelOffset,
+            slideObjectData = _extra.dataManager.getSlideObjectDataByName(stateItemData.name);
+
+        pixelOffset = stateItemData.originalX - slideObjectData.originalX;
+        pixelOffset += this.calculateOffsetWithOriginal(slideObjectData.strokeThickness);
+
+        stateItemData.offsetX = pixelOffset;
+        stateItemData.offsetY = pixelOffset;
+
+        return stateItemData;
+    };
+
 }, _extra.CAPTIVATE);
