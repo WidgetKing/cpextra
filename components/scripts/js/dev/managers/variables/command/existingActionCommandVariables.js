@@ -12,54 +12,41 @@ _extra.registerModule("existingActionCommandVariables", ["queryManager", "slideO
 
     var register = _extra.variableManager.registerCommandVariable,
         handlers = _extra.variableManager.parameterHandlers;
-    ////////////////////////////////
-    ////////// Extend Captivate Functions
-
-    function checkForVariable(parameter, finalMethod) {
-
-        // Replacing variables with their actual values.
-        if (_extra.variableManager.hasVariable(parameter)) {
-            parameter = _extra.variableManager.getVariableValue(parameter);
-        }
-
-        // If this isn't a query then we want to make sure it's a valid slide object.
-        if (!_extra.isQuery(parameter) && !_extra.slideObjects.hasSlideObjectInProject(parameter)) {
-            _extra.error("CV001", parameter);
-            return;
-        }
-
-        finalMethod(parameter);
-    }
 
     ////////////////////////////////
     ////////// Hide
-    register("Hide", function (parameter) {
-        checkForVariable(parameter, _extra.slideObjects.hide);
-    });
-    ////////////////////////////////
-    ////////// Show
-    register("Show", function (parameter) {
-        checkForVariable(parameter, _extra.slideObjects.show);
-    });
 
-    ////////////////////////////////
-    ////////// Enable
-    register("Enable", function (parameter) {
-        checkForVariable(parameter, _extra.slideObjects.enable);
-    });
-    ////////////////////////////////
-    ////////// Disable
-    register("Disable", function (parameter) {
-        checkForVariable(parameter, _extra.slideObjects.disable);
-    });
+    _extra.variableManager.commands.hide = function (query) {
+        _extra.variableManager.parseSets.SP.CD.SOR(query, _extra.slideObjects.hide);
+    };
 
-    //register("ChangeState", _extra.slideObjects.states.change, handlers.sendParametersAsParameters);
-    register("ChangeState", function (slideObjectName, stateName) {
+    _extra.variableManager.commands.show = function (query) {
+        _extra.variableManager.parseSets.SP.CD.SOR(query, _extra.slideObjects.show);
+    };
 
-        checkForVariable(slideObjectName, function (result) {
-            _extra.slideObjects.states.change(result, stateName);
+    _extra.variableManager.commands.enable = function (query) {
+        _extra.variableManager.parseSets.SP.CD.SOR(query, _extra.slideObjects.enable);
+    };
+
+    _extra.variableManager.commands.disable = function (query) {
+        _extra.variableManager.parseSets.SP.CD.SOR(query, _extra.slideObjects.disable);
+    };
+
+    _extra.variableManager.commands.changeState = function (query, stateName) {
+
+        _extra.variableManager.parseSets.MP.SOR_STR(query, stateName, function (slideObjectName, stateName) {
+            _extra.slideObjects.states.change(slideObjectName, stateName);
         });
 
-    }, handlers.sendParametersAsParameters);
+    };
+
+
+    register("Hide", _extra.variableManager.commands.hide);
+    register("Show", _extra.variableManager.commands.show);
+    register("Enable", _extra.variableManager.commands.enable);
+    register("Disable", _extra.variableManager.commands.disable);
+
+    register("ChangeState", _extra.variableManager.commands.changeState, handlers.sendParametersAsParameters);
+
 
 });

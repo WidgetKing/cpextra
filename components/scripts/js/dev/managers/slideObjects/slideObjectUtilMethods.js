@@ -406,17 +406,20 @@ _extra.registerModule("slideObjectUtilMethods", ["slideObjectManager_global", "e
     ///////////////////////////////////////////////////////////////////////
     _extra.slideObjects.enableForMouse = function (query) {
 
-        _extra.slideObjects.enactFunctionOnSlideObjects(query, function (slideObjectName) {
+        _extra.variableManager.commands.enableForMouse(query);
+
+        /*_extra.slideObjects.enactFunctionOnSlideObjects(query, function (slideObjectName) {
             _extra.slideObjects.model.write(slideObjectName, "enableForMouse", true);
-        });
+        });*/
 
     };
     _extra.slideObjects.disableForMouse = function (query) {
 
+        _extra.variableManager.commands.disableForMouse(query);
 
-        _extra.slideObjects.enactFunctionOnSlideObjects(query, function (slideObjectName) {
+        /*_extra.slideObjects.enactFunctionOnSlideObjects(query, function (slideObjectName) {
             _extra.slideObjects.model.write(slideObjectName, "enableForMouse", false);
-        });
+        });*/
 
     };
     _extra.slideObjects.setCursor = function (query, cursorType) {

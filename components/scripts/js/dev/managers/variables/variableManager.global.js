@@ -17,6 +17,8 @@ _extra.registerModule("variableManager", ["variableManager_software", "VariableE
     _extra.variableManager.hasParsedVariables = false;
     _extra.variableManager.prefixCallback = new _extra.classes.Callback();
 
+    _extra.variableManager.commands = {};
+
     ///////////////////////////////////////////////////////////////////////
     /////////////// Variable Event Listeners
     ///////////////////////////////////////////////////////////////////////
@@ -64,17 +66,13 @@ _extra.registerModule("variableManager", ["variableManager_software", "VariableE
     _extra.variableManager.reset = function (variableName) {
 
         if (_extra.variableManager.variableData) {
-            _extra.variableManager.enactFunctionOnVariables(variableName, function (variableName) {
 
-                var variableData = _extra.variableManager.variableData[variableName];
+            var variableData = _extra.variableManager.variableData[variableName];
 
-                if (variableData === undefined) {
-                    _extra.error("CV050", variableName);
-                } else {
-                    _extra.variableManager.setVariableValue(variableName, variableData.defaultValue);
-                }
+            if (variableData) {
+                _extra.variableManager.setVariableValue(variableName, variableData.defaultValue);
+            }
 
-            });
         }
     };
 

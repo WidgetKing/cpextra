@@ -95,17 +95,22 @@ _extra.registerModule("slideObjectManager_global", ["slideObjectManager_software
 
         var slideData = _extra.slideManager.getSlideData();
 
-        for (var i = 0; i < slideData.slideObjects.length; i += 1) {
+        if (slideData) {
 
-            slideObjectName = slideData.slideObjects[i];
+            for (var i = 0; i < slideData.slideObjects.length; i += 1) {
 
-            _extra.slideObjects.enteredSlideChildObjectsCallbacks.sendToCallback("*", slideObjectName);
-            _extra.slideObjects.enteredSlideChildObjectsCallbacks.sendToCallback(
-                    _extra.dataManager.getSlideObjectTypeByName(slideObjectName), slideObjectName);
+                slideObjectName = slideData.slideObjects[i];
 
-            // Commented out until a time where we will tie this callback into scene/slide numbers
-            //_extra.slideObjects.enteredSlideChildObjectsCallbacks.sendToCallback(_extra.slideManager.currentSlideNumber, slideObjectName);
+                _extra.slideObjects.enteredSlideChildObjectsCallbacks.sendToCallback("*", slideObjectName);
+                _extra.slideObjects.enteredSlideChildObjectsCallbacks.sendToCallback(
+                        _extra.dataManager.getSlideObjectTypeByName(slideObjectName), slideObjectName);
 
+                // Commented out until a time where we will tie this callback into scene/slide numbers
+                //_extra.slideObjects.enteredSlideChildObjectsCallbacks.sendToCallback(_extra.slideManager.currentSlideNumber, slideObjectName);
+            }
+
+        } else {
+           _extra.error("Could not find slide data in slideObjectManager.global");
         }
     });
 });
