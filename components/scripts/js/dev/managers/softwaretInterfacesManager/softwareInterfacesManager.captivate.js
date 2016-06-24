@@ -43,6 +43,9 @@ _extra.registerModule("softwareInterfacesManager", function () {
         "numSlides":_extra.w.cpInfoSlideCount,
         "openURLLocation":_extra.w.cp,
         "openURLMethodName":"openURL",
+        "isInitated": function () {
+            return _extra.w.cp.initiated;
+        },
         "getResponsiveProjectWidth": function () {
             return _extra.captivate.api.ResponsiveProjWidth;
         },

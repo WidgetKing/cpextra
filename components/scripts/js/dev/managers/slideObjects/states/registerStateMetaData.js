@@ -61,7 +61,12 @@ _extra.registerModule("registerStateMetaData",["slideObjectManager_global", "Sli
         }
 
         slideObjectProxy = _extra.slideObjects.getSlideObjectByName(slideObjectName);
-        currentSlideStateManagers[slideObjectName] = new _extra.classes.SlideObjectStateManager(slideObjectProxy, data);
+
+        if (slideObjectProxy) {
+            currentSlideStateManagers[slideObjectName] = new _extra.classes.SlideObjectStateManager(slideObjectProxy, data);
+        } else {
+            _extra.error("Could not find slideObjectProxy for '" + slideObjectName + "' in the registerStateMetaData module.")
+        }
 
 
     };
@@ -404,7 +409,6 @@ _extra.registerModule("registerStateMetaData",["slideObjectManager_global", "Sli
 
             }
         }
-
 
         if (_extra.w.Object.keys(slideObjectMetaData).length > 0) {
             // If this variable has a value, it means we must have run across a valid method at some point.

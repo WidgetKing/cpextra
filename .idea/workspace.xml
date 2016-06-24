@@ -2,24 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" name="Default" comment="Merged timeManager with movieStatusManager">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/components/scripts/js/dev/classes/proxies/slideobjects/data/ShapeDataProxy.captivate.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/builds/development/Infosemantics_CpExtra.wdgt" afterPath="$PROJECT_DIR$/builds/development/Infosemantics_CpExtra.wdgt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/builds/production/Infosemantics_CpExtra.wdgt" afterPath="$PROJECT_DIR$/builds/production/Infosemantics_CpExtra.wdgt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/components/scripts/js/dev/classes/proxies/slideobjects/data/BaseSlideObjectDataProxy.captivate.js" afterPath="$PROJECT_DIR$/components/scripts/js/dev/classes/proxies/slideobjects/data/BaseSlideObjectDataProxy.captivate.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/components/scripts/js/dev/classes/proxies/slideobjects/BaseSlideObjectProxy.captivate.js" afterPath="$PROJECT_DIR$/components/scripts/js/dev/classes/proxies/slideobjects/BaseSlideObjectProxy.captivate.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/builds/production/Infosemantics_CpExtra.js" afterPath="$PROJECT_DIR$/builds/production/Infosemantics_CpExtra.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/components/scripts/js/dev/classes/proxies/slideobjects/statedata/ShapeStateDataProxy.captivate.js" afterPath="$PROJECT_DIR$/components/scripts/js/dev/classes/proxies/slideobjects/statedata/ShapeStateDataProxy.captivate.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/components/scripts/js/dev/classes/SlideObjectStateManager.js" afterPath="$PROJECT_DIR$/components/scripts/js/dev/classes/SlideObjectStateManager.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/components/scripts/js/tests/classes/SlideObjectStateManager.test.js" afterPath="$PROJECT_DIR$/components/scripts/js/tests/classes/SlideObjectStateManager.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/components/scripts/js/dev/classes/proxies/slideobjects/statedata/StateDataProxy.captivate.js" afterPath="$PROJECT_DIR$/components/scripts/js/dev/classes/proxies/slideobjects/statedata/StateDataProxy.captivate.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/builds/production/wdgt_source/html5/scripts/captivate_extra.js" afterPath="$PROJECT_DIR$/builds/production/wdgt_source/html5/scripts/captivate_extra.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/components/scripts/js/dev/factories/createSlideObjectData.js" afterPath="$PROJECT_DIR$/components/scripts/js/dev/factories/createSlideObjectData.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gulpfile.js" afterPath="$PROJECT_DIR$/gulpfile.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/package.json" afterPath="$PROJECT_DIR$/package.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/components/scripts/js/tests/managers/slideObjects/states/registerStateMetaData.test.js" afterPath="$PROJECT_DIR$/components/scripts/js/tests/managers/slideObjects/states/registerStateMetaData.test.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/components/scripts/js/dev/managers/slideObjects/states/registerStateMetaData.js" afterPath="$PROJECT_DIR$/components/scripts/js/dev/managers/slideObjects/states/registerStateMetaData.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/components/scripts/js/dev/managers/slide/slideManager.captivate.js" afterPath="$PROJECT_DIR$/components/scripts/js/dev/managers/slide/slideManager.captivate.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/components/scripts/js/dev/managers/slide/slideManager.global.js" afterPath="$PROJECT_DIR$/components/scripts/js/dev/managers/slide/slideManager.global.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/components/scripts/js/dev/managers/softwaretInterfacesManager/softwareInterfacesManager.captivate.js" afterPath="$PROJECT_DIR$/components/scripts/js/dev/managers/softwaretInterfacesManager/softwareInterfacesManager.captivate.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/builds/development/storyline_extra_web_object/storyline_extra.js" afterPath="$PROJECT_DIR$/builds/development/storyline_extra_web_object/storyline_extra.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/builds/development/wdgt_source/swf/version.json" afterPath="$PROJECT_DIR$/builds/development/wdgt_source/swf/version.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/builds/production/wdgt_source/swf/version.json" afterPath="$PROJECT_DIR$/builds/production/wdgt_source/swf/version.json" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <list id="0cca2f7a-650a-4782-9a3a-8709b0af6116" name="New changelist" comment="" />
@@ -27,7 +18,7 @@
     <ignored path=".idea/workspace.xml" />
     <file path="/package.json" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1443058117170" ignored="false" />
     <file path="/gulpfile.js" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1466258794551" ignored="false" />
-    <file path="/Dummy.txt" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1466474285214" ignored="false" />
+    <file path="/Dummy.txt" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1466756337061" ignored="false" />
     <file path="/main.js" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1465783937626" ignored="false" />
     <file path="/variableManager.js" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1443068637064" ignored="false" />
     <file path="/description.xml" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1452149500192" ignored="false" />
@@ -43,7 +34,7 @@
     <file path="/main_test.js" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1443190430512" ignored="false" />
     <file path="/.jshintrc" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1443187979557" ignored="false" />
     <file path="/callback_test.js" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1445903569571" ignored="false" />
-    <file path="/a.dummy" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1466476598919" ignored="false" />
+    <file path="/a.dummy" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1466689014045" ignored="false" />
     <file path="/testsSetup.js" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1465781588035" ignored="false" />
     <file path="/index.html" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1443312491335" ignored="false" />
     <file path="/generalVariableManager.storyline.js" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1445294878923" ignored="false" />
@@ -53,7 +44,7 @@
     <file path="/testsTeardown.js" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1459127978020" ignored="false" />
     <file path="/generalVariableManager.captivate.js" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1445294865883" ignored="false" />
     <file path="/outputInterfacesManager.storyline.js" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1443362714517" ignored="false" />
-    <file path="/softwareInterfacesManager.captivate.js" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1466477395075" ignored="false" />
+    <file path="/softwareInterfacesManager.captivate.js" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1466689090018" ignored="false" />
     <file path="$PROJECT_DIR$/coverage/Chrome 45.0.2454 (Windows 7 0.0.0)/dev/main.js.html" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1443411938545" ignored="false" />
     <file path="$PROJECT_DIR$/coverage/Chrome 45.0.2454 (Windows 7 0.0.0)/dev/index.html" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1443411938545" ignored="false" />
     <file path="/softwareInterfacesManager.test.captivate.js" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1448246879010" ignored="false" />
@@ -92,14 +83,14 @@
     <file path="/eventManager.js" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1459130464322" ignored="false" />
     <file path="/eventManager.test.js" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1458631886643" ignored="false" />
     <file path="/slideManager.storyline.js" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1457490238974" ignored="false" />
-    <file path="/slideManager.captivate.js" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1457490925623" ignored="false" />
+    <file path="/slideManager.captivate.js" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1466689721560" ignored="false" />
     <file path="/slideManager.test.js" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1457496834296" ignored="false" />
     <file path="/SlideDataProxy.captivate.js" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1456100525879" ignored="false" />
     <file path="/SlideDataProxy.storyline.js" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1457494235318" ignored="false" />
     <file path="/publicAPIManager.js" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1446195804370" ignored="false" />
     <file path="/publicAPIManager.test.js" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1445906602734" ignored="false" />
-    <file path="/slideManager.global.js" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1466336299380" ignored="false" />
-    <file path="/slideObjectManager.global.js" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1466335957878" ignored="false" />
+    <file path="/slideManager.global.js" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1466689578120" ignored="false" />
+    <file path="/slideObjectManager.global.js" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1466688806078" ignored="false" />
     <file path="/slideObjectManager.captivate.js" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1459135212610" ignored="false" />
     <file path="/slideObjectManager.test.js" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1458899871209" ignored="false" />
     <file path="/createSlideObjectProxy.js" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1455010059282" ignored="false" />
@@ -114,13 +105,13 @@
     <file path="/slideObjectStateManager.test.js" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1445864860513" ignored="false" />
     <file path="/BaseSlideObjectDataProxy.storyline.js" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1445320621517" ignored="false" />
     <file path="/BaseSlideObjectDataProxy.captivate.js" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1466408230158" ignored="false" />
-    <file path="/SlideObjectStateManager.js" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1456119626253" ignored="false" />
+    <file path="/SlideObjectStateManager.js" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1466688220923" ignored="false" />
     <file path="/SlideObjectStateManager.test.js" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1454991636844" ignored="false" />
     <file path="/stateManager.captivate.js" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1462606170282" ignored="false" />
     <file path="/stateManager.storyline.js" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1445901859117" ignored="false" />
     <file path="/stateManager.test.js" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1457574435142" ignored="false" />
     <file path="/registerStateMetaData.test.js" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1466477645470" ignored="false" />
-    <file path="/registerStateMetaData.js" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1457424214417" ignored="false" />
+    <file path="/registerStateMetaData.js" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1466688279299" ignored="false" />
     <file path="/Callback.js" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1450774762335" ignored="false" />
     <file path="/stateManager.global.js" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1445904412623" ignored="false" />
     <file path="/Callback_test.js" changelist="a63dfb0a-3bdb-4fdf-8e55-d6f3dfdefc46" time="1445925107699" ignored="false" />
@@ -318,28 +309,46 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="SlideObjectStateManager.test.js" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/components/scripts/js/tests/classes/SlideObjectStateManager.test.js">
+      <file leaf-file-name="slideManager.global.js" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/components/scripts/js/dev/managers/slide/slideManager.global.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="111" column="60" selection-start="4099" selection-end="4099" vertical-scroll-proportion="0.48082596">
+            <state line="220" column="16" selection-start="6929" selection-end="6929" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="registerStateMetaData.test.js" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/components/scripts/js/tests/managers/slideObjects/states/registerStateMetaData.test.js">
+      <file leaf-file-name="slideManager.captivate.js" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/components/scripts/js/dev/managers/slide/slideManager.captivate.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="409" column="4" selection-start="11689" selection-end="11689" vertical-scroll-proportion="-8.84">
+            <state line="65" column="43" selection-start="2197" selection-end="2197" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SlideObjectStateManager.js" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/components/scripts/js/dev/classes/SlideObjectStateManager.js">
+      <file leaf-file-name="slideManager.test.js" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/components/scripts/js/tests/managers/slide/slideManager.test.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="20" column="56" selection-start="550" selection-end="566" vertical-scroll-proportion="-20.0">
+            <state line="32" column="2" selection-start="946" selection-end="946" vertical-scroll-proportion="0.9039548">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="softwareInterfacesManager.captivate.js" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/components/scripts/js/dev/managers/softwaretInterfacesManager/softwareInterfacesManager.captivate.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="46" column="41" selection-start="1598" selection-end="1598" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CaptivateBeautified_scorm_2004" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/components/legacy/CaptivateBeautified_scorm_2004">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="24028" column="11" selection-start="1170016" selection-end="1170024" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -364,22 +373,22 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/components/scripts/js/dev/managers/variables/info/timeInfoVariables.js" />
-        <option value="$PROJECT_DIR$/components/scripts/js/tests/managers/movieStatusManager.test.js" />
-        <option value="$PROJECT_DIR$/components/scripts/js/tests/managers/variables/info/timeInfoVariables.test.js" />
-        <option value="$PROJECT_DIR$/components/scripts/js/dev/factories/createSlideObjectData.js" />
-        <option value="$PROJECT_DIR$/components/scripts/js/dev/classes/proxies/slideobjects/data/ShapeDataProxy.js" />
-        <option value="$PROJECT_DIR$/components/scripts/js/dev/classes/proxies/slideobjects/data/ShapeDataProxy.captivate.js" />
         <option value="$PROJECT_DIR$/components/scripts/js/dev/factories/createStateDataProxy.js" />
         <option value="$PROJECT_DIR$/components/scripts/js/dev/classes/proxies/slideobjects/data/BaseSlideObjectDataProxy.captivate.js" />
         <option value="$PROJECT_DIR$/components/scripts/js/dev/classes/EventMediator.js" />
         <option value="$PROJECT_DIR$/components/scripts/js/dev/classes/proxies/slideobjects/BaseSlideObjectProxy.captivate.js" />
         <option value="$PROJECT_DIR$/components/scripts/js/dev/classes/proxies/slideobjects/statedata/ShapeStateDataProxy.captivate.js" />
-        <option value="$PROJECT_DIR$/components/scripts/js/dev/classes/SlideObjectStateManager.js" />
-        <option value="$PROJECT_DIR$/components/scripts/js/dev/managers/softwaretInterfacesManager/softwareInterfacesManager.captivate.js" />
         <option value="$PROJECT_DIR$/components/scripts/js/dev/classes/proxies/slideobjects/statedata/StateDataProxy.captivate.js" />
-        <option value="$PROJECT_DIR$/components/scripts/js/tests/managers/slideObjects/states/registerStateMetaData.test.js" />
         <option value="$PROJECT_DIR$/components/scripts/js/tests/classes/SlideObjectStateManager.test.js" />
+        <option value="$PROJECT_DIR$/gulpfile.js" />
+        <option value="$PROJECT_DIR$/components/scripts/js/tests/managers/slideObjects/states/registerStateMetaData.test.js" />
+        <option value="$PROJECT_DIR$/package.json" />
+        <option value="$PROJECT_DIR$/components/scripts/js/dev/classes/SlideObjectStateManager.js" />
+        <option value="$PROJECT_DIR$/components/scripts/js/dev/managers/slideObjects/states/registerStateMetaData.js" />
+        <option value="$PROJECT_DIR$/components/scripts/js/dev/managers/slideObjects/slideObjectManager.global.js" />
+        <option value="$PROJECT_DIR$/components/scripts/js/dev/managers/softwaretInterfacesManager/softwareInterfacesManager.captivate.js" />
+        <option value="$PROJECT_DIR$/components/scripts/js/dev/managers/slide/slideManager.global.js" />
+        <option value="$PROJECT_DIR$/components/scripts/js/dev/managers/slide/slideManager.captivate.js" />
       </list>
     </option>
   </component>
@@ -447,6 +456,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -651,6 +661,40 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="managers" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="slide" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="CaptivateExtra" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="_dev" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="components" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="scripts" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="js" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tests" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="classes" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -771,6 +815,112 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="managers" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="slideObjects" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="CaptivateExtra" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="_dev" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="components" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="scripts" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="js" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dev" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="managers" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="slideObjects" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="states" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="CaptivateExtra" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="_dev" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="components" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="scripts" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="js" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dev" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="managers" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="slide" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="CaptivateExtra" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="_dev" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="components" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="scripts" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="js" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dev" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="factories" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -826,7 +976,6 @@
         </subPane>
       </pane>
       <pane id="Scope" />
-      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -1080,15 +1229,14 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32819384" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33406836" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.21103896" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24934107" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.23616236" sideWeight="0.78896105" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.23616236" sideWeight="0.78896105" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2529859" sideWeight="0.4284141" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329718" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
@@ -1097,6 +1245,7 @@
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.21103896" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.335141" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
@@ -1191,98 +1340,94 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/components/scripts/js/dev/classes/proxies/slideobjects/statedata/WidgetStateDataProxy.captivate.js">
+    <entry file="file://$PROJECT_DIR$/components/scripts/js/dev/classes/proxies/slideobjects/BaseSlideObjectProxy.captivate.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
+        <state line="167" column="34" selection-start="6071" selection-end="6071" vertical-scroll-proportion="-17.84" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/components/scripts/js/dev/classes/proxies/slideobjects/statedata/ButtonStateDataProxy.captivate.js">
+    <entry file="file://$PROJECT_DIR$/components/scripts/js/tests/classes/SlideObjectStateManager.test.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="36" selection-start="460" selection-end="460" vertical-scroll-proportion="0.10841655" />
+        <state line="111" column="60" selection-start="4099" selection-end="4099" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/components/scripts/js/dev/classes/proxies/slideobjects/data/BaseSlideObjectDataProxy.captivate.js">
+    <entry file="file://$PROJECT_DIR$/gulpfile.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="40" column="10" selection-start="1046" selection-end="1046" vertical-scroll-proportion="0.0" />
+        <state line="60" column="57" selection-start="2649" selection-end="2649" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/components/scripts/js/dev/classes/Model.js">
+    <entry file="file://$PROJECT_DIR$/components/scripts/js/tests/managers/slideObjects/states/registerStateMetaData.test.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="0" selection-start="360" selection-end="360" vertical-scroll-proportion="0.0" />
+        <state line="420" column="30" selection-start="12072" selection-end="12072" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/components/scripts/js/dev/classes/InterruptedClickEventHandler.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/components/legacy/CaptivateBeautified_User_Variables">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="25540" column="32" selection-start="1222431" selection-end="1222431" vertical-scroll-proportion="0.4212963" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/components/scripts/js/dev/classes/EventMediator.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="366" column="28" selection-start="11660" selection-end="11660" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/components/scripts/js/dev/classes/proxies/slideobjects/data/ShapeDataProxy.captivate.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/components/scripts/js/tests/managers/softwareInterfacesManager/softwareInterfacesManager.test.captivate.js">
+    <entry file="file://$PROJECT_DIR$/package.json">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/components/scripts/js/dev/managers/softwaretInterfacesManager/softwareInterfacesManager.captivate.js">
+    <entry file="file://$PROJECT_DIR$/components/scripts/js/dev/managers/slideObjects/states/stateManager.global.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="63" column="15" selection-start="2193" selection-end="2193" vertical-scroll-proportion="-9.0">
-          <folding />
-        </state>
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/components/scripts/js/dev/classes/proxies/slideobjects/statedata/ShapeStateDataProxy.captivate.js">
+    <entry file="file://$PROJECT_DIR$/components/scripts/js/dev/managers/slideObjects/states/stateManager.captivate.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="93" column="14" selection-start="2364" selection-end="2366" vertical-scroll-proportion="-13.92">
-          <folding />
-        </state>
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/components/scripts/js/dev/classes/proxies/slideobjects/statedata/StateDataProxy.captivate.js">
+    <entry file="file://$PROJECT_DIR$/components/scripts/js/dev/managers/slideObjects/states/registerStateMetaData.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="263" column="60" selection-start="8088" selection-end="8088" vertical-scroll-proportion="-7.84">
-          <folding />
-        </state>
+        <state line="60" column="9" selection-start="1944" selection-end="1944" vertical-scroll-proportion="-9.84" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/components/scripts/js/dev/classes/proxies/slideobjects/BaseSlideObjectProxy.captivate.js">
+    <entry file="file://$PROJECT_DIR$/components/scripts/js/dev/managers/slideObjects/slideObjectManager.captivate.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="167" column="34" selection-start="6071" selection-end="6071" vertical-scroll-proportion="-17.84">
-          <folding />
-        </state>
+        <state line="179" column="81" selection-start="6308" selection-end="6327" vertical-scroll-proportion="24.16" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/components/scripts/js/dev/classes/SlideObjectStateManager.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="20" column="56" selection-start="550" selection-end="566" vertical-scroll-proportion="-20.0">
+        <state line="12" column="0" selection-start="298" selection-end="298" vertical-scroll-proportion="-9.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/components/scripts/js/dev/managers/slideObjects/slideObjectManager.global.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="36" column="30" selection-start="1362" selection-end="1362" vertical-scroll-proportion="-15.84" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/components/scripts/js/dev/managers/softwaretInterfacesManager/softwareInterfacesManager.captivate.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="46" column="41" selection-start="1598" selection-end="1598" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/components/scripts/js/tests/managers/slideObjects/states/registerStateMetaData.test.js">
+    <entry file="file://$PROJECT_DIR$/components/scripts/js/dev/managers/slide/slideManager.global.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="409" column="4" selection-start="11689" selection-end="11689" vertical-scroll-proportion="-8.84">
+        <state line="220" column="16" selection-start="6929" selection-end="6929" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/components/scripts/js/tests/classes/SlideObjectStateManager.test.js">
+    <entry file="file://$PROJECT_DIR$/components/scripts/js/dev/managers/slide/slideManager.captivate.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="111" column="60" selection-start="4099" selection-end="4099" vertical-scroll-proportion="0.48082596">
+        <state line="65" column="43" selection-start="2197" selection-end="2197" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/components/scripts/js/tests/managers/slide/slideManager.test.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="32" column="2" selection-start="946" selection-end="946" vertical-scroll-proportion="0.9039548">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/components/legacy/CaptivateBeautified_scorm_2004">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="24028" column="11" selection-start="1170016" selection-end="1170024" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>

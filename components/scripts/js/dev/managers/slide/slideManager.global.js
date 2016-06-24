@@ -171,7 +171,7 @@ _extra.registerModule("slideManager_global",["slideManager_software"],function()
     ////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////
     // This is the start point for a lot of functionality
-    function onSlideEnter() {
+    _extra.slideManager.onSlideEnter = function () {
 
         // In Internet Explorer, _extra will be deleted when we move out of its slide. So we'll add it back to the
         // window object.
@@ -209,14 +209,19 @@ _extra.registerModule("slideManager_global",["slideManager_software"],function()
             _extra.slideManager.enterSlideCallback.sendToCallback(currentSlideID, currentSlideID);
         }
 
-
     }
 
     // From now on, when moving into a new slide, we'll call the above function,
-    _extra.slideManager.addEnterSlideEventListener(onSlideEnter);
+    _extra.slideManager.addEnterSlideEventListener(_extra.slideManager.onSlideEnter);
 
     // Call this onLoad, as that is the first slide.
-    return onSlideEnter;
+    return function () {
+        if (_extra.slideManager.isInitiated()) {
+            _extra.slideManager.onSlideEnter();
+        } else {
+            _extra.slideManager.registerOnInitiatedCallback(_extra.slideManager.onSlideEnter);
+        }
+    };
 
 
 

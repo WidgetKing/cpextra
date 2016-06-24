@@ -11,6 +11,8 @@ _extra.registerModule("slideManager_software", ["softwareInterfacesManager", "Ca
 
     var slideIds = _extra.captivate.model.data.project_main.slides.split(","),
         tempBaseData,
+        hasDoCPInitHook = false,
+        doCPInitCallbacks = [],
         tempContainerData;
 
     _extra.slideManager = {
@@ -51,6 +53,32 @@ _extra.registerModule("slideManager_software", ["softwareInterfacesManager", "Ca
 
             this.currentInternalSlideId = slideIds[_extra.slideManager.currentSlideNumber];
 
+        },
+        "isInitiated": function () {
+            return _extra.captivate.isInitated();
+        },
+        "registerOnInitiatedCallback": function (method) {
+
+            if (doCPInitCallbacks) {
+
+                if (!hasDoCPInitHook) {
+                    _extra.addHookAfter(_extra.w.cp, "DoCPInit", _extra.slideManager.callDoCPInitCallbacks);
+                    hasDoCPInitHook = true;
+                }
+
+                doCPInitCallbacks.push(method);
+
+            }
+
+        },
+        "callDoCPInitCallbacks": function () {
+
+            for (var i = 0; i < doCPInitCallbacks.length; i += 1) {
+                doCPInitCallbacks[i]();
+            }
+
+            doCPInitCallbacks = null;
+            _extra.removeHook(_extra.w.cp, "DoCPInit", _extra.slideManager.callDoCPInitCallbacks);
         }
     };
 
