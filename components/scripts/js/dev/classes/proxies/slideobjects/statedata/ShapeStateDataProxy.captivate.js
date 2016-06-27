@@ -92,7 +92,10 @@ _extra.registerModule("ShapeStateDataProxy", ["StateDataProxy"], function () {
             slideObjectData = _extra.dataManager.getSlideObjectDataByName(stateItemData.name);
 
         pixelOffset = stateItemData.originalX - slideObjectData.originalX;
-        pixelOffset += this.calculateOffsetWithOriginal(slideObjectData.strokeThickness);
+
+        if (_extra.captivate.isResponsive) {
+            pixelOffset += this.calculateOffsetWithOriginal(slideObjectData.strokeThickness);
+        }
 
         stateItemData.offsetX = pixelOffset;
         stateItemData.offsetY = pixelOffset;
