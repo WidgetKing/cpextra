@@ -85,8 +85,10 @@
                                uir + "04_cpextra_event_listeners/wr/w_5296/scripts", // D:\01_PROJECTS\02_Infosemantics\00_CaptivateExtra\_dev\tests\output\_USER_ISSUES\04_cpextra_event_listeners\wr\w_5296
                                uir + "click_box_cursor/wr/w_15365/scripts", // D:\01_PROJECTS\02_Infosemantics\00_CaptivateExtra\_dev\tests\output\_USER_ISSUES\click_box_cursor\wr\w_15365
                                uir + "Autostate4/wr/w_2524/scripts",
+                               uir + "cp_extra_bug_example/wr/w_8282/scripts", // D:\01_PROJECTS\02_Infosemantics\00_CaptivateExtra\_dev\tests\output\_USER_ISSUES\cp_extra_bug_example\wr\w_8282\scripts
                                uir + "rollover_rollout/wr/w_15157/scripts", // D:\01_PROJECTS\02_Infosemantics\00_CaptivateExtra\_dev\tests\output\_USER_ISSUES\rollover_rollout\wr\w_15157
                                uir + "CPCONFIG_TEB-1/wr/w_5352/scripts",
+                               uir + "gabriel_test_cp_extra_and_zoom/wr/w_5585/scripts", // D:\01_PROJECTS\02_Infosemantics\00_CaptivateExtra\_dev\tests\output\_USER_ISSUES\gabriel_test_cp_extra_and_zoom\wr\w_5585\scripts
                                uir + "button_rollout/wr/w_5270/scripts", // D:\01_PROJECTS\02_Infosemantics\00_CaptivateExtra\_dev\tests\output\_USER_ISSUES\button_rollout\wr\w_5270\scripts
                                uir + "VideoEnded/wr/w_5414/scripts", //VideoEnded\wr\w_5414\scripts
                                uir + "PERSISTVARS-1/wr/w_5442/scripts",

@@ -137,6 +137,7 @@ _extra.registerModule("StateDataProxy", ["softwareInterfacesManager"], function 
     /////////////// Initialization Methods
     ///////////////////////////////////////////////////////////////////////
     StateDataProxy.prototype.initializeSubSlideObjects = function (editDataForSlideObjectType) {
+
         var tempData,
             formattedData;
 
@@ -144,14 +145,23 @@ _extra.registerModule("StateDataProxy", ["softwareInterfacesManager"], function 
 
             tempData = _extra.captivate.api.getDisplayObjByCP_UID(this._data.stsi[i]);
 
-            formattedData = this.getStateItemData(tempData);
+            if (tempData) {
 
-            // Find the draw method (this may be changed by child classes)
-            if (editDataForSlideObjectType) {
-                editDataForSlideObjectType(formattedData);
+                formattedData = this.getStateItemData(tempData);
+
+                // Find the draw method (this may be changed by child classes)
+                if (editDataForSlideObjectType) {
+                    editDataForSlideObjectType(formattedData);
+                }
+
+                this.slideObjects.push(formattedData);
+
+            } else {
+
+                _extra.log("ERROR: Could not find data for slide object: " + this._data.stsi[i]);
+
             }
 
-            this.slideObjects.push(formattedData);
 
         }
 
@@ -173,6 +183,10 @@ _extra.registerModule("StateDataProxy", ["softwareInterfacesManager"], function 
             "canvasContext":   (rawStateData.element.getContext) ? rawStateData.element.getContext("2d") : null,
             "name":            rawStateData.divName || rawStateData.parentDivName,
             "rawData":         rawStateData,
+
+            // Investigate: DisplayObject.prototype.subscribeToItemDrawingCompleteHandler
+            // May only work for responsive.
+
             "enterMethodName": "drawComplete",
             "exitMethodName":  "reset"
 
@@ -237,11 +251,15 @@ _extra.registerModule("StateDataProxy", ["softwareInterfacesManager"], function 
 
         };
 
+        try {
         // To trigger the ENTER event for slide objects.
         _extra.addHook(this.primaryObject.rawData, this.primaryObject.enterMethodName, this.enterHandler);
 
         // To trigger the EXIT event for slide objects.
         _extra.addHook(this.primaryObject.rawData, this.primaryObject.exitMethodName, this.exitHandler);
+        } catch (e) {
+            _extra.log(this);
+        }
 
     };
 

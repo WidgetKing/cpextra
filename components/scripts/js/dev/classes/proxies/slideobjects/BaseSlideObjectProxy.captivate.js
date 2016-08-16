@@ -153,6 +153,7 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
 
         this._onAudioPaused = function () {
 
+            _extra.log("HERE!");
             // For your reference, the content fo the Captivate Audio Pause method
             /*
             pause: function() {
@@ -240,12 +241,34 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
 
         if (this._data.hasAudio) {
 
-            this._audioData = _extra.captivate.audioManager.objectAudios[_extra.slideManager.currentInternalSlideId]
-                                                                        [this._data.audioID];
-            this._audioTag = this._audioData.nativeAudio;
+            var that = this,
+                callback = function (audioData) {
 
-            this._audioTag.addEventListener("ended", this._onAudioEnded);
-            this._audioTag.addEventListener("pause", this._onAudioPaused);
+                    _extra.audioManager.audioDataCallback.removeCallback(that._data.audioID, callback);
+
+                    _extra.log(audioData);
+                    that._audioData = audioData;
+                    that._audioTag = that._audioData.nativeAudio;
+                    that._audioTag.addEventListener("ended", that._onAudioEnded);
+                    that._audioTag.addEventListener("pause", that._onAudioPaused);
+
+                };
+
+            _extra.audioManager.audioDataCallback.addCallback(this._data.audioID, callback);
+
+            /*this._audioTag = this._audioData.nativeAudio;
+
+            if (this._audioTag) {
+
+                this._audioTag.addEventListener("ended", this._onAudioEnded);
+                this._audioTag.addEventListener("pause", this._onAudioPaused);
+
+            } else {
+                _extra.log("ERROR: Could not find the audio tag for '" + this.name + "'");
+
+                _extra.log(_extra.captivate.audioManager.allocAudioChannel);
+
+            }*/
 
         }
     };
