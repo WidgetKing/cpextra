@@ -30,6 +30,9 @@ _extra.registerModule("BaseSlideObjectDataProxy", function () {
         get name(){
             return this._name;
         },
+        get baseItemName() {
+            return this._data.base.bstin;
+        },
         get data() {
             return this._data;
         },
@@ -40,10 +43,10 @@ _extra.registerModule("BaseSlideObjectDataProxy", function () {
             return this._data.container.vbwr[1];
         },
         get originalWidth() {
-            return this._data.container.vbwr[2];
+            return this._data.container.vbwr[2] - this.originalX;
         },
         get originalHeight() {
-            return this._data.container.vbwr[3];
+            return this._data.container.vbwr[3] - this.originalY;
         },
         get startFrame() {
             return this._data.base.from;

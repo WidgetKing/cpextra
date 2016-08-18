@@ -84,10 +84,10 @@ _extra.registerModule("ShapeStateDataProxy", ["StateDataProxy"], function () {
                                  0);
     };
 
-    ShapeStateDataProxy.prototype.getStateItemData = function(rawStateData) {
+    ShapeStateDataProxy.prototype.formatDataViaNativeController = function(rawStateData) {
 
         // Super!
-        var stateItemData = ShapeStateDataProxy.superClass.getStateItemData.call(this, rawStateData),
+        var stateItemData = ShapeStateDataProxy.superClass.formatDataViaNativeController.call(this, rawStateData),
             pixelOffset,
             slideObjectData = _extra.dataManager.getSlideObjectDataByName(stateItemData.name);
 

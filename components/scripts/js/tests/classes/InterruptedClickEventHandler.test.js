@@ -5,7 +5,7 @@
  * Time: 4:10 PM
  * To change this template use File | Settings | File Templates.
  */
-describe("A test suite for the InterruptedClickEventHandler class", function () {
+xdescribe("A test suite for the InterruptedClickEventHandler class", function () {
 
     "use strict";
 

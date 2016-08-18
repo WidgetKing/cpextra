@@ -5,6 +5,7 @@
  * Time: 4:10 PM
  * To change this template use File | Settings | File Templates.
  */
+/*
 _extra.registerModule("InterruptedClickEventHandler", function () {
 
     "use strict";
@@ -66,9 +67,9 @@ _extra.registerModule("InterruptedClickEventHandler", function () {
                     // Turns out, that event doesn't need the complicated click detecting that 'rightclick' does.
                     // So we've commented out the below code. If however, in the future we need to use 'rightclick' again
                     // uncommenting the code bellow should make it work.
-                    /*case 2:
-                        eventDispatcher.dispatchEvent(_extra.eventManager.events.RIGHT_CLICK);
-                        break;*/
+                    //case 2:
+                    //    eventDispatcher.dispatchEvent(_extra.eventManager.events.RIGHT_CLICK);
+                    //    break;
 
                     default :
                         break;
@@ -106,4 +107,4 @@ _extra.registerModule("InterruptedClickEventHandler", function () {
 
     _extra.registerClass("InterruptedClickEventHandler", InterruptedClickEventHandler);
 
-});
+});*/

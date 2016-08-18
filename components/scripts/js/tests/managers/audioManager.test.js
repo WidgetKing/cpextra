@@ -5,7 +5,7 @@
  * Time: 3:04 PM
  * To change this template use File | Settings | File Templates.
  */
-fdescribe("A test suite for _extra.audioManager", function () {
+describe("A test suite for _extra.audioManager", function () {
 
     "use strict";
 

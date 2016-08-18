@@ -61,6 +61,7 @@
         headlessCaptivateTestSources = [ctr + "15_Headless_Regular/assets/libraries", // D:\01_PROJECTS\02_Infosemantics\00_CaptivateExtra\_dev\tests\output\captivate\15_Headless_Regular\assets\libraries
                                         ctr + "18_AudioLoop/assets/libraries", //D:\01_PROJECTS\02_Infosemantics\00_CaptivateExtra\_dev\tests\output\captivate\18_AudioLoop\assets\libraries
                                         uir + "XCMND_SOP-1/assets/libraries", // _USER_ISSUES\XCMND_SOP-1\assets\libraries
+                                        uir + "DragAndDrop/assets/libraries", // _USER_ISSUES\XCMND_SOP-1\assets\libraries
                                         uir + "PositionTest/assets/libraries", // _USER_ISSUES\XCMND_SOP-1\assets\libraries
                                         uir + "Spectrav9/assets/libraries" //D:\01_PROJECTS\02_Infosemantics\00_CaptivateExtra\_dev\tests\output\_USER_ISSUES\Spectrav9\assets\libraries
         ],

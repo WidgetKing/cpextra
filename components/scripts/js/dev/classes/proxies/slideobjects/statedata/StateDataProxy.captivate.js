@@ -139,28 +139,31 @@ _extra.registerModule("StateDataProxy", ["softwareInterfacesManager"], function 
     StateDataProxy.prototype.initializeSubSlideObjects = function (editDataForSlideObjectType) {
 
         var tempData,
-            formattedData;
+            formattedData,
+            uid;
 
         for (var i = 0; i < this._data.stsi.length; i += 1) {
 
-            tempData = _extra.captivate.api.getDisplayObjByCP_UID(this._data.stsi[i]);
+            uid = this._data.stsi[i];
+
+            tempData = _extra.captivate.api.getDisplayObjByCP_UID(uid);
 
             if (tempData) {
 
-                formattedData = this.getStateItemData(tempData);
-
-                // Find the draw method (this may be changed by child classes)
-                if (editDataForSlideObjectType) {
-                    editDataForSlideObjectType(formattedData);
-                }
-
-                this.slideObjects.push(formattedData);
+                formattedData = this.formatDataViaNativeController(tempData);
 
             } else {
 
-                _extra.log("ERROR: Could not find data for slide object: " + this._data.stsi[i]);
+                formattedData = this.formatDataBySlideObjectData(_extra.dataManager.getSlideObjectDataByID(uid));
 
             }
+
+            // Find the draw method (this may be changed by child classes)
+            if (editDataForSlideObjectType) {
+                editDataForSlideObjectType(formattedData);
+            }
+
+            this.slideObjects.push(formattedData);
 
 
         }
@@ -168,7 +171,23 @@ _extra.registerModule("StateDataProxy", ["softwareInterfacesManager"], function 
         this.primaryObject = this.slideObjects[0];
     };
 
-    StateDataProxy.prototype.getStateItemData = function (rawStateData) {
+    StateDataProxy.prototype.formatDataBySlideObjectData = function (rawStateData) {
+
+        var nativeElement = _extra.dataManager.getSlideObjectDataByName(rawStateData.baseItemName),
+            controller = _extra.captivate.api.getDisplayObjByCP_UID(nativeElement.uid),
+            stateItemData;
+
+        stateItemData = this.formatDataViaNativeController(controller);
+
+        stateItemData.originalX = rawStateData.originalX;
+        stateItemData.originalY = rawStateData.originalY;
+        stateItemData.originalWidth = rawStateData.originalWidth;
+        stateItemData.originalHeight = rawStateData.originalHeight;
+
+        return stateItemData;
+    };
+
+    StateDataProxy.prototype.formatDataViaNativeController = function (rawStateData) {
 
         var stateItemData = {
 
@@ -251,15 +270,11 @@ _extra.registerModule("StateDataProxy", ["softwareInterfacesManager"], function 
 
         };
 
-        try {
         // To trigger the ENTER event for slide objects.
         _extra.addHook(this.primaryObject.rawData, this.primaryObject.enterMethodName, this.enterHandler);
 
         // To trigger the EXIT event for slide objects.
         _extra.addHook(this.primaryObject.rawData, this.primaryObject.exitMethodName, this.exitHandler);
-        } catch (e) {
-            _extra.log(this);
-        }
 
     };
 

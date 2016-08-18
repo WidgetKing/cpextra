@@ -11,6 +11,7 @@ _extra.registerModule("stateManager_software",["Callback","slideObjectManager_gl
     ///////////////////////////////////////////////////////////////////////
     /////////////// Replace Native Change State Method
     ///////////////////////////////////////////////////////////////////////
+    // TODO: Change this to use the hook manager
     var nativeChangeStateMethod = _extra.captivate.api.changeState;
     _extra.captivate.api.changeState = function (slideObjectName, state) {
 
@@ -20,7 +21,7 @@ _extra.registerModule("stateManager_software",["Callback","slideObjectManager_gl
         // that doesn't exist. If that happens and we react to it, then that could cause errors in the slide
         // object proxy. Therefore, we must first check to see if this state exists before we tell slide objects
         // to react to it.
-        if (slideObjectData.hasState(state)) {
+        if (slideObjectData && slideObjectData.hasState(state)) {
 
             // Notify callbacks of state change.
             var changeDetails = {
