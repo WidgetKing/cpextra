@@ -11,7 +11,7 @@
 
     function performCommandVariablesTest(software, getMockObject) {
 
-        describe("A test suite for command variables in " + software, function () {
+        fdescribe("A test suite for command variables in " + software, function () {
 
             var module = unitTests.getModule("commandVariableManager");
 
@@ -39,7 +39,7 @@
                 _extra.variableManager.registerCommandVariable("Enable",function () {});
                 this.onLoadCallback();
                 expect(_extra.variableManager.hasVariable).toHaveBeenCalledWith("xcmndHide");
-                expect(_extra.variableManager.hasVariable).not.toHaveBeenCalledWith("_xcmndHide");
+                expect(_extra.variableManager.hasVariable).toHaveBeenCalledWith("_xcmndHide");
                 expect(_extra.variableManager.hasVariable).toHaveBeenCalledWith("_xcmndEnable");
             });
 
@@ -63,6 +63,19 @@
                 expect(_extra.slideObjects.hide).not.toHaveBeenCalled();
             });
 
+            it("should allow both underscore and non-underscore variables to work concurrently", function () {
+
+                var dummy = jasmine.createSpy("xcmndEnable calllback");
+
+                _extra.variableManager.registerCommandVariable("Reset",dummy);
+                this.onLoadCallback();
+                _extra.variableManager.setVariableValue("xcmndReset","foo");
+                expect(dummy).toHaveBeenCalledWith("foo");
+                _extra.variableManager.setVariableValue("_xcmndReset","bar");
+                expect(dummy).toHaveBeenCalledWith("bar");
+
+            });
+
         });
 
 
@@ -73,7 +86,9 @@
         var variables = {
             "xcmndHide":0,
             "xcmndShow":"My_Text_Box",
-            "_xcmndEnable":0
+            "_xcmndEnable":0,
+            "xcmndReset":0,
+            "_xcmndReset":0
         };
 
         var callbacks = {};

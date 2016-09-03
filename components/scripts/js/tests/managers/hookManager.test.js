@@ -5,7 +5,7 @@
  * Time: 11:10 AM
  * To change this template use File | Settings | File Templates.
  */
-describe("A test suite for _extra.hook", function () {
+fdescribe("A test suite for _extra.hook", function () {
 
     "use strict";
 
@@ -134,7 +134,7 @@ describe("A test suite for _extra.hook", function () {
 
     });
 
-    it("should allow us to edit the argument taht will be sent to the original method", function () {
+    it("should allow us to edit the argument that will be sent to the original method", function () {
 
         var raw = _extra.foo;
 
@@ -146,6 +146,53 @@ describe("A test suite for _extra.hook", function () {
         _extra.foo("old");
 
         expect(raw).toHaveBeenCalledWith("new");
+
+    });
+
+    it("should allow us to detect if a method already has a hook", function () {
+
+        var spy = jasmine.createSpy("spy");
+
+        _extra.addHook(_extra, "foo", spy);
+        expect(_extra.hasHook(_extra, "foo")).toBe(true);
+        _extra.removeHook(_extra, "foo", spy)
+        expect(_extra.hasHook(_extra, "foo")).toBe(false);
+
+    });
+
+    it("should allow us to add a temporary hook which lasts a single method call", function () {
+
+        var spy = jasmine.createSpy("spy");
+
+        _extra.addOneTimeHook(_extra, "foo", spy);
+
+        _extra.foo();
+        expect(spy).toHaveBeenCalled();
+
+        spy.calls.reset();
+
+        _extra.foo();
+        expect(spy).not.toHaveBeenCalled();
+
+    });
+
+    it("should call multiple hooks if we add them to the same object", function () {
+
+        var order = [];
+
+        var firstSpy = jasmine.createSpy("firstSpy").and.callFake(function () {
+                order.push(firstSpy);
+            }),
+            secondSpy = jasmine.createSpy("secondSpy").and.callFake(function () {
+                order.push(secondSpy);
+            });
+
+        _extra.addOneTimeHook(_extra, "foo", firstSpy);
+        _extra.addOneTimeHook(_extra, "foo", secondSpy);
+
+        _extra.foo();
+
+        expect(order).toEqual([firstSpy, secondSpy]);
 
     });
 });

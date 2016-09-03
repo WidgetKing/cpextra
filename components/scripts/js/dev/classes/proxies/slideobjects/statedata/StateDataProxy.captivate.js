@@ -174,10 +174,10 @@ _extra.registerModule("StateDataProxy", ["softwareInterfacesManager"], function 
     StateDataProxy.prototype.formatDataBySlideObjectData = function (rawStateData) {
 
         var nativeElement = _extra.dataManager.getSlideObjectDataByName(rawStateData.baseItemName),
-            controller = _extra.captivate.api.getDisplayObjByCP_UID(nativeElement.uid),
+            nativeController = _extra.captivate.api.getDisplayObjByCP_UID(nativeElement.uid),
             stateItemData;
 
-        stateItemData = this.formatDataViaNativeController(controller);
+        stateItemData = this.formatDataViaNativeController(nativeController);
 
         stateItemData.originalX = rawStateData.originalX;
         stateItemData.originalY = rawStateData.originalY;
@@ -187,21 +187,21 @@ _extra.registerModule("StateDataProxy", ["softwareInterfacesManager"], function 
         return stateItemData;
     };
 
-    StateDataProxy.prototype.formatDataViaNativeController = function (rawStateData) {
+    StateDataProxy.prototype.formatDataViaNativeController = function (nativeController) {
 
         var stateItemData = {
 
-            "upperDIV":        rawStateData.actualParent,
-            "contentDIV":      rawStateData.element.parentNode,
-            "originalX":       rawStateData.bounds.minX,
-            "originalY":       rawStateData.bounds.minY,
+            "upperDIV":        nativeController.actualParent,
+            "contentDIV":      nativeController.element.parentNode,
+            "originalX":       nativeController.bounds.minX,
+            "originalY":       nativeController.bounds.minY,
             "offsetX":         0,
             "offsetY":         0,
-            "originalWidth":   rawStateData.bounds.maxX - rawStateData.bounds.minX,
-            "originalHeight":  rawStateData.bounds.maxY - rawStateData.bounds.minY,
-            "canvasContext":   (rawStateData.element.getContext) ? rawStateData.element.getContext("2d") : null,
-            "name":            rawStateData.divName || rawStateData.parentDivName,
-            "rawData":         rawStateData,
+            "originalWidth":   nativeController.bounds.maxX - nativeController.bounds.minX,
+            "originalHeight":  nativeController.bounds.maxY - nativeController.bounds.minY,
+            "canvasContext":   (nativeController.element.getContext) ? nativeController.element.getContext("2d") : null,
+            "name":            nativeController.divName || nativeController.parentDivName,
+            "rawData":         nativeController,
 
             // Investigate: DisplayObject.prototype.subscribeToItemDrawingCompleteHandler
             // May only work for responsive.
@@ -270,11 +270,12 @@ _extra.registerModule("StateDataProxy", ["softwareInterfacesManager"], function 
 
         };
 
+        // TODO: Test that one time hooks work correctly in this situation
         // To trigger the ENTER event for slide objects.
-        _extra.addHook(this.primaryObject.rawData, this.primaryObject.enterMethodName, this.enterHandler);
+        _extra.addOneTimeHook(this.primaryObject.rawData, this.primaryObject.enterMethodName, this.enterHandler);
 
         // To trigger the EXIT event for slide objects.
-        _extra.addHook(this.primaryObject.rawData, this.primaryObject.exitMethodName, this.exitHandler);
+        _extra.addOneTimeHook(this.primaryObject.rawData, this.primaryObject.exitMethodName, this.exitHandler);
 
     };
 

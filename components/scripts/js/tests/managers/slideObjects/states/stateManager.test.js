@@ -12,10 +12,11 @@
 
     function stateManagerTests(software, getMockObject) {
 
-        describe("A test suite for _extra.slideObjects.states in " + software, function () {
+        fdescribe("A test suite for _extra.slideObjects.states in " + software, function () {
 
-            var softwareModule = unitTests.getModule("stateManager_software", software);
-            var globalModule = unitTests.getModule("stateManager_global");
+            var softwareModule = unitTests.getModule("stateManager_software", software),
+                hookModule = unitTests.getModule("hookManager"),
+                globalModule = unitTests.getModule("stateManager_global");
 
             beforeEach(function () {
                 window._extra = getMockObject();
@@ -25,6 +26,7 @@
                     "notherDummy":jasmine.createSpy("notherDummy")
                 };
 
+                hookModule();
                 softwareModule();
                 globalModule();
             });
@@ -42,11 +44,13 @@
                 _extra.slideObjects.states.changeCallback.addCallback("foobar", this.a.notherDummy);
 
                 _extra.slideObjects.states.change("foo","valid");
+                _extra.getNativeControllerByName("foo").drawComplete();
 
                 expect(this.a.dummy).toHaveBeenCalled();
                 expect(this.a.notherDummy).not.toHaveBeenCalled();
 
                 _extra.slideObjects.states.change("foobar","valid");
+                _extra.getNativeControllerByName("foobar").drawComplete();
 
                 expect(this.a.notherDummy).toHaveBeenCalled();
             });
@@ -71,11 +75,37 @@
 
 
     stateManagerTests(unitTests.CAPTIVATE, function () {
+
+        function createNativeController() {
+            return {
+                "drawComplete":function () {
+
+                }
+            }
+        }
+
+        var uid = {
+                "foo":1,
+                "foobar":2,
+                "bar":3
+            },
+            nativeControllers = {
+                "1":createNativeController(),
+                "2":createNativeController(),
+                "3":createNativeController()
+            };
+
         return {
+            "getNativeControllerByName":function (name) {
+                return nativeControllers[uid[name]];
+            },
             "captivate":{
                 "api":{
                     "changeState":function () {
 
+                    },
+                    "getDisplayObjByCP_UID": function (uid) {
+                        return nativeControllers[uid];
                     }
                 }
             },
@@ -88,12 +118,13 @@
                 }
             },
             "dataManager":{
-                "getSlideObjectDataByName":function () {
+                "getSlideObjectDataByName":function (slideObjectName) {
                     return {
                         "hasState":function(stateName) {
                             return stateName === "valid" || stateName === "Normal";
-                        }
-                    }
+                        },
+                        "uid":uid[slideObjectName]
+                    };
                 }
             },
             "classes":unitTests.classes

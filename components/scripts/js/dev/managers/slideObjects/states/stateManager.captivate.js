@@ -11,9 +11,7 @@ _extra.registerModule("stateManager_software",["Callback","slideObjectManager_gl
     ///////////////////////////////////////////////////////////////////////
     /////////////// Replace Native Change State Method
     ///////////////////////////////////////////////////////////////////////
-    // TODO: Change this to use the hook manager
-    var nativeChangeStateMethod = _extra.captivate.api.changeState;
-    _extra.captivate.api.changeState = function (slideObjectName, state) {
+    _extra.addHookAfter(_extra.captivate.api, "changeState", function (slideObjectName, state) {
 
         var slideObjectData = _extra.dataManager.getSlideObjectDataByName(slideObjectName);
 
@@ -29,14 +27,19 @@ _extra.registerModule("stateManager_software",["Callback","slideObjectManager_gl
                 "stateName": state
             };
 
-            _extra.slideObjects.states.changeCallback.sendToCallback("*", changeDetails);
-            _extra.slideObjects.states.changeCallback.sendToCallback(slideObjectName, changeDetails);
+            // In Captivate 9.0.2 with the new state system, we have to wait for drawComplete before css changes can
+            // be made.
+            var nativeController = _extra.captivate.api.getDisplayObjByCP_UID(slideObjectData.uid);
 
+            // Listen for the draw complete for one time
+            _extra.addOneTimeHook(nativeController, "drawComplete", function () {
+
+                _extra.slideObjects.states.changeCallback.sendToCallback("*", changeDetails);
+                _extra.slideObjects.states.changeCallback.sendToCallback(slideObjectName, changeDetails);
+
+            }, 1);
         }
-
-        // We call the native function after the callbacks to avoid any 'mouse out' hijinks.
-        nativeChangeStateMethod(slideObjectName, state);
-    };
+    });
     ///////////////////////////////////////////////////////////////////////
     /////////////// Define Main Methods
     ///////////////////////////////////////////////////////////////////////

@@ -80,12 +80,14 @@
                                ctr + "13_CE_AllObjects/wr/w_5259/scripts",
                                ctr + "14_CE_DragAndDrop/wr/w_5270/scripts",
                                ctr + "16_CE_TimingDifferences/wr/w_5270/scripts", // D:\01_PROJECTS\02_Infosemantics\00_CaptivateExtra\_dev\tests\output\captivate\16_CE_TimingDifferences\wr\w_5270\scripts
+                               ctr + "20_CE_Underscore_Variables/wr/w_5263/scripts", // D:\01_PROJECTS\02_INFOSEMANTICS\01_WIDGETS\01_CPEXTRA\01_PLATFORM\_dev\tests\output\captivate\20_CE_Underscore_Variables\wr\w_5263\scripts
                                uir + "00_home_menu/wr/w_15552/scripts", // D:\01_PROJECTS\02_Infosemantics\00_CaptivateExtra\_dev\tests\output\_USER_ISSUES\00_home_menu\wr\w_15552\scripts
                                uir + "01_module_1/wr/w_15320/scripts", // D:\01_PROJECTS\02_Infosemantics\00_CaptivateExtra\_dev\tests\output\_USER_ISSUES\01_module_1\wr\w_15320\scripts
                                uir + "03_module_3/wr/w_17057/scripts", // D:\01_PROJECTS\02_Infosemantics\00_CaptivateExtra\_dev\tests\output\_USER_ISSUES\03_module_3\wr
                                uir + "04_cpextra_event_listeners/wr/w_5296/scripts", // D:\01_PROJECTS\02_Infosemantics\00_CaptivateExtra\_dev\tests\output\_USER_ISSUES\04_cpextra_event_listeners\wr\w_5296
                                uir + "click_box_cursor/wr/w_15365/scripts", // D:\01_PROJECTS\02_Infosemantics\00_CaptivateExtra\_dev\tests\output\_USER_ISSUES\click_box_cursor\wr\w_15365
                                uir + "Autostate4/wr/w_2524/scripts",
+                               uir + "test_902/wr/w_5299/scripts", // D:\01_PROJECTS\02_INFOSEMANTICS\01_WIDGETS\01_CPEXTRA\01_PLATFORM\_dev\tests\output\_USER_ISSUES\test_902\wr\w_5299\scripts
                                uir + "cp_extra_bug_example/wr/w_8282/scripts", // D:\01_PROJECTS\02_Infosemantics\00_CaptivateExtra\_dev\tests\output\_USER_ISSUES\cp_extra_bug_example\wr\w_8282\scripts
                                uir + "rollover_rollout/wr/w_15157/scripts", // D:\01_PROJECTS\02_Infosemantics\00_CaptivateExtra\_dev\tests\output\_USER_ISSUES\rollover_rollout\wr\w_15157
                                uir + "CPCONFIG_TEB-1/wr/w_5352/scripts",

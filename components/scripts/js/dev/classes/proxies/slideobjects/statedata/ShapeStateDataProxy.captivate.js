@@ -84,10 +84,18 @@ _extra.registerModule("ShapeStateDataProxy", ["StateDataProxy"], function () {
                                  0);
     };
 
-    ShapeStateDataProxy.prototype.formatDataViaNativeController = function(rawStateData) {
+    /*ShapeStateDataProxy.prototype.formatDataBySlideObjectData = function(rawStateData) {
+        var stateItemData = ShapeStateDataProxy.superClass.formatDataBySlideObjectData.call(this, rawStateData);
+
+
+
+        return stateItemData;
+    };*/
+
+    ShapeStateDataProxy.prototype.formatDataViaNativeController = function(nativeController) {
 
         // Super!
-        var stateItemData = ShapeStateDataProxy.superClass.formatDataViaNativeController.call(this, rawStateData),
+        var stateItemData = ShapeStateDataProxy.superClass.formatDataViaNativeController.call(this, nativeController),
             pixelOffset,
             slideObjectData = _extra.dataManager.getSlideObjectDataByName(stateItemData.name);
 

@@ -136,29 +136,24 @@ _extra.registerModule("commandVariableManager",["variableManager","stateManager_
             });
         }
 
+
+        function registerVariable (variableName) {
+            if (_extra.variableManager.hasVariable(variableName)) {
+
+                listenForCommandVariableChange(variableName, _extra.variableManager.commandVariables[variableSuffix]);
+
+            }
+        }
+
         // We will now go through all the command variables and set them up.
         for (var variableSuffix in _extra.variableManager.commandVariables) {
             if (_extra.variableManager.commandVariables.hasOwnProperty(variableSuffix)) {
 
                 variableName = COMMAND_VARIABLE_PREFIX + variableSuffix;
 
-                // Check to find valid variable.
-                if (!_extra.variableManager.hasVariable(variableName)) {
+                registerVariable(variableName);
+                registerVariable("_" + variableName);
 
-                    // Variable with normal name doesn't exist. Try to find one with a semicolon in front.
-                    variableName = "_" + variableName;
-
-                    if (!_extra.variableManager.hasVariable(variableName)) {
-
-                        // There is no valid variable by this name. Continue to the next one.
-                        continue;
-
-                    }
-
-                }
-
-                // Now set up the variable's behaviour
-                listenForCommandVariableChange(variableName, _extra.variableManager.commandVariables[variableSuffix]);
 
             }
         }

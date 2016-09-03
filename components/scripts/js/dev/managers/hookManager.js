@@ -59,8 +59,40 @@ _extra.registerModule("hookManager", ["slideManager_global"], function () {
         return data;
     }
 
-    function destroyHook(data) {
-        data.location[data.methodName] = data.originalMethod;
+    function destroyHookAtIndex(index) {
+
+        var data = hooks[index];
+
+        if (data) {
+
+            hooks.splice(index, 1);
+            data.location[data.methodName] = data.originalMethod;
+
+        }
+
+    }
+
+    function destroyHookIfExists(location, methodName) {
+        destroyHookAtIndex(getHookIndex(location, methodName));
+    }
+
+    function getHookIndex(location, methodName, hookMethod) {
+
+        var data;
+
+        for (var i = 0; i < hooks.length; i += 1) {
+            data = hooks[i];
+
+            if (data.location === location &&
+                data.methodName === methodName &&
+                (!hookMethod || data.hookMethod === hookMethod)) {
+
+                return i;
+
+            }
+        }
+
+        return -1;
     }
 
     ///////////////////////////////////////////////////////////////////////
@@ -90,26 +122,40 @@ _extra.registerModule("hookManager", ["slideManager_global"], function () {
     // Same behaviour as after.
     _extra.addHook = _extra.addHookAfter;
 
+    _extra.hasHook = function (location, methodName) {
+
+        return getHookIndex(location, methodName) > -1;
+
+    };
+
     _extra.removeHook = function (location, methodName, hookMethod) {
 
-        var data;
+        var index = getHookIndex(location, methodName, hookMethod);
 
-        for (var i = 0; i < hooks.length; i += 1) {
-            data = hooks[i];
+        if (index > -1) {
 
-            if (data.location === location &&
-                data.methodName === methodName &&
-                data.hookMethod === hookMethod) {
-
-                hooks.splice(i,1);
-                destroyHook(data);
-                return true;
-
-            }
+            destroyHookAtIndex(index);
+            return true;
 
         }
 
         return false;
+
+    };
+
+    ///////////////////////////////////////////////////////////////////////
+    /////////////// One Time Hooks
+    ///////////////////////////////////////////////////////////////////////
+    _extra.addOneTimeHook = function (location, methodName, hookMethod) {
+
+        var handler = function () {
+
+            hookMethod.apply(this, arguments);
+            _extra.removeHook(location, methodName, handler);
+
+        };
+
+        _extra.addHookAfter(location, methodName, handler);
 
     };
 

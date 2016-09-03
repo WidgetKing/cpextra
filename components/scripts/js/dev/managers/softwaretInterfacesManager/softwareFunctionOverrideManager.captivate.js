@@ -12,11 +12,22 @@ _extra.registerModule("softwareFunctionOverrideManager", ["hookManager", "eventM
     ///////////////////////////////////////////////////////////////////////
     /////////////// Enter Frame
     ///////////////////////////////////////////////////////////////////////
-    _extra.addHook(_extra.captivate.movie, "_onEnterFrame", function () {
+    _extra.addHookAfter(_extra.captivate.movie, "_onEnterFrame", function () {
 
         _extra.eventManager.eventDispatcher.dispatchEvent(_extra.createEvent("enterframe"));
 
     });
+
+    _extra.executeOnNextFrame = function (method) {
+
+        var handler = function () {
+            method();
+            _extra.eventManager.eventDispatcher.removeEventListener("enterframe", handler);
+        };
+
+        _extra.eventManager.eventDispatcher.addEventListener("enterframe", handler);
+
+    };
 
 
 }, _extra.CAPTIVATE);

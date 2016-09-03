@@ -37,16 +37,16 @@ _extra.registerModule("BaseSlideObjectDataProxy", function () {
             return this._data;
         },
         get originalX() {
-            return this._data.container.vbwr[0];
+            return this._data.container.b[0];
         },
         get originalY() {
-            return this._data.container.vbwr[1];
+            return this._data.container.b[1];
         },
         get originalWidth() {
-            return this._data.container.vbwr[2] - this.originalX;
+            return this._data.container.b[2] - this.originalX;
         },
         get originalHeight() {
-            return this._data.container.vbwr[3] - this.originalY;
+            return this._data.container.b[3] - this.originalY;
         },
         get startFrame() {
             return this._data.base.from;

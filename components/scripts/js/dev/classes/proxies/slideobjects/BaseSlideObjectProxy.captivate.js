@@ -153,7 +153,6 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
 
         this._onAudioPaused = function () {
 
-            _extra.log("HERE!");
             // For your reference, the content fo the Captivate Audio Pause method
             /*
             pause: function() {
@@ -246,7 +245,6 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
 
                     _extra.audioManager.audioDataCallback.removeCallback(that._data.audioID, callback);
 
-                    _extra.log(audioData);
                     that._audioData = audioData;
                     that._audioTag = that._audioData.nativeAudio;
                     that._audioTag.addEventListener("ended", that._onAudioEnded);
@@ -364,7 +362,6 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
             }
 
             that._currentStateData.x = currentValue - that._offsetX;
-
 
         });
 

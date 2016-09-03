@@ -27,9 +27,7 @@ _extra.registerModule("ModelListener", function () {
         ///////////////////////////////////////////////////////////////////////
         this.addProperty = function (propertyName, onChangeCallback, defaultValue) {
 
-
             var dataBaseValue = model.retrieve(name,propertyName);
-
 
             properties[propertyName] = {
                 "onChangeCallback":onChangeCallback,
@@ -47,6 +45,7 @@ _extra.registerModule("ModelListener", function () {
             if (dataBaseValue !== undefined) {
                 onChangeCallback(null, dataBaseValue);
             }
+
         };
 
         this.unload = function () {
