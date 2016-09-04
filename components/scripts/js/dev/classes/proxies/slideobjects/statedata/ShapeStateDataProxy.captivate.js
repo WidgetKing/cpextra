@@ -48,10 +48,13 @@ _extra.registerModule("ShapeStateDataProxy", ["StateDataProxy"], function () {
 
     _extra.registerClass("ShapeStateDataProxy", ShapeStateDataProxy, "StateDataProxy", _extra.CAPTIVATE);
 
-    /*var strokeCContainerDifference = {
-        "1":-2,
-        "2":1,
-        "3":4,
+    var strokeCContainerDifference = {
+        // Changed these from what they originally. Check previous git version
+        // Or run from this format: return _extra.w.Math.max((strokeWidth * 3) - 5, 0);
+        "0":0,
+        "1":2,
+        "2":20,
+        "3":6,
         "4":7,
         "5":10,
         "6":13,
@@ -61,7 +64,7 @@ _extra.registerModule("ShapeStateDataProxy", ["StateDataProxy"], function () {
         "10":25
     };
 
-    var originalLocationStrokeDifferences = {
+    /*var originalLocationStrokeDifferences = {
         "0":0,
         "1":0.5,
         "2":1,
@@ -73,15 +76,26 @@ _extra.registerModule("ShapeStateDataProxy", ["StateDataProxy"], function () {
         "8":4,
         "9":4.5,
         "10":5
-    }; */
-
-    ShapeStateDataProxy.prototype.calculateOffsetWithOriginal = function(strokeWidth) {
-        return strokeWidth * 0.5;
     };
 
+    ShapeStateDataProxy.prototype.calculateOffsetWithOriginal = function(strokeWidth) {
+
+        return strokeWidth * 0.5;
+
+    };*/
+
     ShapeStateDataProxy.prototype.calculateCContainerOffset = function(strokeWidth) {
-        return _extra.w.Math.max((strokeWidth * 3) - 5,
-                                 0);
+
+        if (_extra.captivate.isResponsive) {
+
+            return strokeCContainerDifference[strokeWidth];
+
+        } else {
+
+            return strokeWidth * 2;
+
+        }
+
     };
 
     /*ShapeStateDataProxy.prototype.formatDataBySlideObjectData = function(rawStateData) {
@@ -101,9 +115,10 @@ _extra.registerModule("ShapeStateDataProxy", ["StateDataProxy"], function () {
 
         pixelOffset = stateItemData.originalX - slideObjectData.originalX;
 
-        if (_extra.captivate.isResponsive) {
-            pixelOffset += this.calculateOffsetWithOriginal(slideObjectData.strokeThickness);
-        }
+        //if (!_extra.captivate.isResponsive) {
+            //pixelOffset += this.calculateOffsetWithOriginal(slideObjectData.strokeThickness);
+            pixelOffset += this.calculateCContainerOffset(slideObjectData.strokeThickness);
+        //}
 
         stateItemData.offsetX = pixelOffset;
         stateItemData.offsetY = pixelOffset;
