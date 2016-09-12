@@ -224,6 +224,9 @@
         return gulp.src(glob)
             .pipe(gflatmap(function(stream, file){
 
+                // Uncomment to get list of files matching glob
+                //gutil.log(getDirectoryPath(file.path));
+                //return stream;
                 // Get location of compiled CpExtra
                 gulp.src(devFile)
                     // Save the new version over the currently located CpExtra instance
@@ -232,13 +235,14 @@
 
                 return stream;
 
-            }));
+            }))
+            .pipe(gconnect.reload());
 
     }
 
     gulp.task("updateCaptivateTests", ["compileCaptivateJS"], function () {
 
-        return updateOnGlob("tests/output/**/Infosemantics_CpExtra.js",
+        return updateOnGlob("tests/output/**/@(Infosemantics_CpExtra.js|captivate_extra.js)",
                             captivateExtraDevLocation + "/" + captivateExtraDevFileName);
 
     });

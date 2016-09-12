@@ -83,7 +83,7 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
         this._eventMediator = _extra.eventManager.getEventMediator(this.name);
         this._stateEndManager = new _extra.classes.SlideObjectEnterExitEventManager(this);
         this._stateEndManager.setCurrentDispatcher(this._currentStateData);
-        //this._interruptedClickEventHandler = new _extra.classes.InterruptedClickEventHandler(this._eventMediator, this.name);
+        this._interruptedClickEventHandler = new _extra.classes.InterruptedClickEventHandler(this._eventMediator, this.name);
         this._originalX = this._currentStateData.originalX;
         this._originalY = this._currentStateData.originalY;
 
@@ -419,7 +419,7 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
         this._eventMediator.swap(null);
         this._stateEndManager.setCurrentDispatcher(null);
         this._modelListener.unload();
-        //this._interruptedClickEventHandler.unload();
+        this._interruptedClickEventHandler.unload();
         if (this._internalInitializationHandler) {
             this._currentStateData.removeEventListener("internalinitialization", this._internalInitializationHandler);
         }

@@ -11,7 +11,7 @@
 
     function performCommandVariablesTest(software, getMockObject) {
 
-        fdescribe("A test suite for command variables in " + software, function () {
+        describe("A test suite for command variables in " + software, function () {
 
             var module = unitTests.getModule("commandVariableManager");
 
