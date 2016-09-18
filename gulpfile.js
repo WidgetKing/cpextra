@@ -220,15 +220,28 @@
             return path.substring(0,lastSlash);
         }
 
+        function getFileName(path) {
+            var lastSlash = path.lastIndexOf("\\");
+            var lastDot = path.lastIndexOf(".");
+            return path.substring(lastSlash + 1, lastDot);
+        }
+
+        var name;
+
         // Loop through files matching glob
         return gulp.src(glob)
             .pipe(gflatmap(function(stream, file){
 
+                name = getFileName(file.path);
+
                 // Uncomment to get list of files matching glob
-                //gutil.log(getDirectoryPath(file.path));
+                //gutil.log(getFileName(file.path));
                 //return stream;
                 // Get location of compiled CpExtra
                 gulp.src(devFile)
+                    .pipe(grename({
+                        basename: name
+                    }))
                     // Save the new version over the currently located CpExtra instance
                     .pipe(gulp.dest(getDirectoryPath(file.path)));
 
@@ -242,7 +255,7 @@
 
     gulp.task("updateCaptivateTests", ["compileCaptivateJS"], function () {
 
-        return updateOnGlob("tests/output/**/@(Infosemantics_CpExtra.js|captivate_extra.js)",
+        return updateOnGlob("tests/output/**/@(captivate_extra.js|Infosemantics_CpExtra.js)",
                             captivateExtraDevLocation + "/" + captivateExtraDevFileName);
 
     });
