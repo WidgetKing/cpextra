@@ -15,7 +15,6 @@ _extra.registerModule("existingActionCommandVariables", ["queryManager", "slideO
     ////////// Extend Captivate Functions
 
     function checkForVariable(parameter, finalMethod) {
-
         // Replacing variables with their actual values.
         if (_extra.variableManager.hasVariable(parameter)) {
             parameter = _extra.variableManager.getVariableValue(parameter);
@@ -60,5 +59,15 @@ _extra.registerModule("existingActionCommandVariables", ["queryManager", "slideO
         });
 
     }, handlers.sendParametersAsParameters);
+
+    ////////////////////////////////
+    ////////// LockFocusTo
+    register("LockFocusTo", function (slideObjectName) {
+
+        checkForVariable(slideObjectName, function (result) {
+            _extra.focusManager.lockFocusTo(result);
+        });
+
+    });
 
 });

@@ -20,6 +20,11 @@ _extra.registerModule("movieStatusManager", ["softwareInterfacesManager", "varia
 
         "isPaused": function () {
             return _extra.captivate.movie.paused;
+        },
+
+        "isCurrentFrameWithinRange": function (startFrame, endFrame) {
+            return _extra.movieStatus.currentFrame < endFrame &&
+                _extra.movieStatus.currentFrame >= startFrame;
         }
 
     };

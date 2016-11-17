@@ -86,10 +86,13 @@ _extra.registerModule("TextEntryBoxProxy", ["BaseSlideObjectProxy"], function ()
     });
 
     TextEntryBoxProxy.prototype.onSlideObjectInitialized = function () {
-        // Super!
-        TextEntryBoxProxy.superClass.onSlideObjectInitialized.call(this);
 
         this._inputField = _extra.w.document.getElementById(this.name + "_inputField");
+
+        this._focusDiv = this._inputField;
+
+        // Super!
+        TextEntryBoxProxy.superClass.onSlideObjectInitialized.call(this);
 
         if (!this._inputField) {
             _extra.log("Error: Was unable to locate the TEB input field");

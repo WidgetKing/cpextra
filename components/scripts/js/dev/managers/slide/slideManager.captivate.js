@@ -79,6 +79,18 @@ _extra.registerModule("slideManager_software", ["softwareInterfacesManager", "Ca
 
             doCPInitCallbacks = null;
             _extra.removeHook(_extra.w.cp, "DoCPInit", _extra.slideManager.callDoCPInitCallbacks);
+        },
+        "isSlideObjectOnSlideAndNotInTimeline": function (slideObjectName) {
+
+            if (_extra.slideManager.hasSlideObjectOnSlide(slideObjectName)) {
+
+                var data = _extra.dataManager.getSlideObjectDataByName(slideObjectName);
+
+                return !_extra.movieStatus.isCurrentFrameWithinRange(data.startFrame, data.endFrame);
+
+            }
+
+            return false;
         }
     };
 

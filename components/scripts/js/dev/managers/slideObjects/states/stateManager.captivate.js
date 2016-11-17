@@ -43,7 +43,17 @@ _extra.registerModule("stateManager_software",["Callback","slideObjectManager_gl
     _extra.slideObjects.states = {
         "change":function (query, state) {
             _extra.slideObjects.enactFunctionOnSlideObjects(query, function (slideObjectName) {
-                _extra.captivate.api.changeState(slideObjectName, state);
+
+                // Check if object is visible
+                if (_extra.slideManager.isSlideObjectOnSlideAndNotInTimeline(slideObjectName)) {
+
+                    _extra.captivate.api.changeState(slideObjectName, state);
+
+                } else {
+
+                    _extra.captivate.api.changeState(slideObjectName, state);
+
+                }
             });
         },
         "fixMissingMouseOutIssue":function (internalStateData, nameProperty) {

@@ -32,7 +32,6 @@ _extra.registerModule("StateDataProxy", ["softwareInterfacesManager"], function 
             }
 
         }
-
     }
 
 
@@ -193,6 +192,7 @@ _extra.registerModule("StateDataProxy", ["softwareInterfacesManager"], function 
 
             "upperDIV":        nativeController.actualParent,
             "contentDIV":      nativeController.element.parentNode,
+            "focusDIVId":      nativeController.parentDivName,
             "originalX":       nativeController.bounds.minX,
             "originalY":       nativeController.bounds.minY,
             "offsetX":         0,

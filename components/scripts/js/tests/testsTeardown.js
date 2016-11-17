@@ -20,7 +20,7 @@
             moduleFunction = unitTests.modules[moduleName];
             if (moduleFunction) {
                 moduleFunction();
-                alert("Loaded: " + moduleName);
+                //alert("Loaded: " + moduleName);
 
                 // If the above is not true, we've either written it wrong, or we have a Captivate version
                 // and a storyline version of the module.
@@ -30,14 +30,14 @@
                 moduleFunction = unitTests.modules[moduleName + "_" + unitTests.CAPTIVATE];
 
                 if (moduleFunction) {
-                    alert("Loaded: " + moduleName + "_" + unitTests.CAPTIVATE);
+                    //alert("Loaded: " + moduleName + "_" + unitTests.CAPTIVATE);
                     moduleFunction();
                 }
 
                 moduleFunction = unitTests.modules[moduleName + "_" + unitTests.STORYLINE];
 
                 if (moduleFunction) {
-                    alert("Loaded: " + moduleName + "_" + unitTests.STORYLINE);
+                    //alert("Loaded: " + moduleName + "_" + unitTests.STORYLINE);
                     moduleFunction();
                 }
 

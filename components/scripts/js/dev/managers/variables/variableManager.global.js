@@ -70,6 +70,7 @@ _extra.registerModule("variableManager", ["variableManager_software", "VariableE
 
     return function () {
 
+
         _extra.variableManager.variableData = {};
 
         _extra.variableManager.forEachVariable(function (varData) {
@@ -98,7 +99,6 @@ _extra.registerModule("variableManager", ["variableManager_software", "VariableE
                 }
 
                 prefix = prefix.toLowerCase();
-
                 // If someone has added a callback for this kind of prefix.
                 _extra.variableManager.prefixCallback.sendToCallback(prefix, name);
 

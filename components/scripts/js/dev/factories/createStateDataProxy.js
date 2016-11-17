@@ -46,6 +46,9 @@ _extra.registerModule("createStateDataProxy",["factoryManager"], function () {
             case _extra.dataTypes.slideObjects.SHAPE :
                 return new _extra.classes.ShapeStateDataProxy(data);
 
+            case _extra.dataTypes.slideObjects.WEB_OBJECT :
+                return new _extra.classes.WebObjectStateDataProxy(data);
+
 
             default :
                 return new _extra.classes.StateDataProxy(data);

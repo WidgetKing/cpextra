@@ -202,6 +202,9 @@ _extra.registerModule("slideObjectManager_software", ["generalDataManager", "Cal
             return null;*/
 
         },
+        "getNativeSlideObjectByName": function (name) {
+            return _extra.captivate.api.getDisplayObjByKey(name);
+        },
         "projectSlideObjectNames":{}
     };
 

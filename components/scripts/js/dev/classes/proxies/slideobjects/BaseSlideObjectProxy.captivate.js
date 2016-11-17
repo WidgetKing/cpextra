@@ -18,7 +18,7 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
 
     function BaseSlideObjectProxy(element, data) {
 
-        this.initializePrivateVariables(data);
+        this.initializePrivateVariables(element, data);
         // Assigning the event mediator with the divs for the current state of the slide object
         this._eventMediator.swap(this._currentStateData);
 
@@ -62,23 +62,44 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
         },
         get height() {
             return this._currentStateData.height;
-        }
+        },
 
+        get lockFocus() {
+            return this._lockFocus;
+        },
+        set lockFocus(value) {
+
+            // If we're just setting this to true again, we don't want to add multiple event listeners
+            if (this._lockFocus !== value) {
+
+                this._lockFocus = value;
+
+                if (value) {
+                    this._internalLockFocus();
+                } else {
+                    this._internalUnlockFocus();
+                }
+
+            }
+
+        }
     };
 
     ///////////////////////////////////////////////////////////////////////
     /////////////// INIT
     ///////////////////////////////////////////////////////////////////////
 
-    BaseSlideObjectProxy.prototype.initializePrivateVariables = function (data) {
+    BaseSlideObjectProxy.prototype.initializePrivateVariables = function (element, data) {
 
         // Private Variables that are public because we can't get around it
 
         this._data = data;
+        this._focusDiv = element;
         this._model = _extra.slideObjects.model;
         this._currentStateData = data.getDataForState(this.state);
         this._offsetX = 0;
         this._offsetY = 0;
+        this._lockFocus = false;
         this._modelListener = new _extra.classes.ModelListener(this.name, this._model);
         this._eventMediator = _extra.eventManager.getEventMediator(this.name);
         this._stateEndManager = new _extra.classes.SlideObjectEnterExitEventManager(this);
@@ -171,8 +192,7 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
             if (_extra.movieStatus.isPlaying()) {
 
                 // Make sure we are still inside the timeline for the slide object
-                if (_extra.movieStatus.currentFrame < that.data.endFrame &&
-                    _extra.movieStatus.currentFrame >= that.data.startFrame) {
+                if (_extra.movieStatus.isCurrentFrameWithinRange(that.data.startFrame, that.data.endFrame)) {
 
                     // Avoid the Promise Error in Google Chrome by waiting 150 milliseconds
                     _extra.w.setTimeout(function () {
@@ -191,6 +211,29 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
             }
 
         };
+
+        this._internalLockFocus = function () {
+            // Only lock focus if everything is already loaded.
+            if (this._currentStateData.isInitialized) {
+
+                $(this._focusDiv).on('keydown', this._focusHandler).focus();
+
+            }
+
+        };
+
+        this._focusHandler = function (e) {
+
+            if (e.keyCode === 9) {
+                e.preventDefault();
+                $(that._focusDiv).focus();
+            }
+
+        };
+
+        this._internalUnlockFocus = function () {
+            $(this._focusDiv).off('keydown', this._focusHandler);
+        };
     };
 
     BaseSlideObjectProxy.prototype.initializeInitialState = function () {
@@ -199,13 +242,17 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
 
         // If all the visual elements of the slide object have been set up, then we can do things such as add listeners now,
         if (this._currentStateData.isInitialized) {
+
             this.onSlideObjectInitialized();
+
         // If not then we'll have to wait for the state to tell us when it's ready.
         } else {
+
             this._internalInitializationHandler = function () {
                 that.onSlideObjectInitialized.call(that);
             };
-            this._currentStateData.addEventListener("internalinitialization", that._internalInitializationHandler);
+
+            this._currentStateData.addEventListener("internalinitialization", this._internalInitializationHandler);
         }
     };
 
@@ -224,6 +271,10 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
         if (this._internalInitializationHandler) {
             this._currentStateData.removeEventListener("internalinitialization", this._internalInitializationHandler);
             delete this._internalInitializationHandler;
+        }
+
+        if (this.lockFocus) {
+            this._internalLockFocus();
         }
 
         // At this point its possible the original X and Y positions have been updated.
@@ -419,6 +470,7 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
         this._eventMediator.swap(null);
         this._stateEndManager.setCurrentDispatcher(null);
         this._modelListener.unload();
+        this.lockFocus = false;
         this._interruptedClickEventHandler.unload();
         if (this._internalInitializationHandler) {
             this._currentStateData.removeEventListener("internalinitialization", this._internalInitializationHandler);

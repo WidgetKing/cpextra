@@ -178,10 +178,26 @@ _extra.registerModule("localStorageManager", ["variableManager", "queryManager"]
 
     // Tap into the variable manager's callbacks. This is how we are notified of variables.
     _extra.variableManager.prefixCallback.addCallback("ls", function (variableName) {
-        setUpStorageVariable(variableName, _extra.w.localStorage, LOCAL);
+        try {
+
+            setUpStorageVariable(variableName, _extra.w.localStorage, LOCAL);
+
+        } catch (e) {
+
+            _extra.error("PV001", "local");
+
+        }
     });
 
     _extra.variableManager.prefixCallback.addCallback("ss", function (variableName) {
-        setUpStorageVariable(variableName, _extra.w.sessionStorage, SESSION);
+        try {
+
+            setUpStorageVariable(variableName, _extra.w.sessionStorage, SESSION);
+
+        } catch (e) {
+
+            _extra.error("PV001", "session");
+
+        }
     });
 });

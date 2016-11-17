@@ -26,6 +26,8 @@
         greplace = require("gulp-replace"),
         grename = require("gulp-rename"),
         gflatmap = require('gulp-flatmap'),
+        gplumber = require('gulp-plumber'),
+        gglob = require("glob"),
         uglify = require("gulp-uglify"),
         gjsoneditor = require("gulp-json-editor"),
         path = require("path"),
@@ -216,41 +218,47 @@
     function updateOnGlob(glob, devFile) {
 
         function getDirectoryPath(path) {
-            var lastSlash = path.lastIndexOf("\\");
+            var lastSlash = path.lastIndexOf("\/");
             return path.substring(0,lastSlash);
         }
 
         function getFileName(path) {
-            var lastSlash = path.lastIndexOf("\\");
+            var lastSlash = path.lastIndexOf("\/");
             var lastDot = path.lastIndexOf(".");
             return path.substring(lastSlash + 1, lastDot);
         }
 
-        var name;
+        var stream,
+            filePath,
+            directoryPath,
+            fileName;
 
-        // Loop through files matching glob
-        return gulp.src(glob)
-            .pipe(gflatmap(function(stream, file){
+        // Get list of files matching glob
+        gglob(glob, {}, function (er, files) {
 
-                name = getFileName(file.path);
+            // Loop through file list
+            for (var i = 0; i < files.length; i += 1) {
 
-                // Uncomment to get list of files matching glob
-                //gutil.log(getFileName(file.path));
-                //return stream;
-                // Get location of compiled CpExtra
-                gulp.src(devFile)
-                    .pipe(grename({
-                        basename: name
+                filePath = files[i];
+                fileName = getFileName(filePath);
+                directoryPath = getDirectoryPath(filePath);
+
+                // DEBUGGING: Trace list of files
+                gutil.log(directoryPath);
+
+                    // Rename the javascript file to either the widget or the headless name
+                stream = gulp.src(devFile).pipe(grename({
+                        basename: fileName
                     }))
                     // Save the new version over the currently located CpExtra instance
-                    .pipe(gulp.dest(getDirectoryPath(file.path)));
+                    .pipe(gulp.dest(directoryPath))
+                    .pipe(gconnect.reload());
 
+            }
 
-                return stream;
+        });
 
-            }))
-            .pipe(gconnect.reload());
-
+        return stream;
     }
 
     gulp.task("updateCaptivateTests", ["compileCaptivateJS"], function () {
@@ -284,6 +292,7 @@
             livereload: true
         });
     });
+
 
 
     ////////// DEFAULT
