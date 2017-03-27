@@ -5,7 +5,7 @@
  * Time: 10:37 AM
  * To change this template use File | Settings | File Templates.
  */
-fdescribe("A test suite for _extra.focusManager", function () {
+describe("A test suite for _extra.focusManager", function () {
 
     "use strict";
 

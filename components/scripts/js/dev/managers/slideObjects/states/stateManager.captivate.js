@@ -44,14 +44,29 @@ _extra.registerModule("stateManager_software",["Callback","slideObjectManager_gl
         "change":function (query, state) {
             _extra.slideObjects.enactFunctionOnSlideObjects(query, function (slideObjectName) {
 
-                // Check if object is visible
+                var changeState = function () {
+                    _extra.captivate.api.changeState(slideObjectName, state);
+                };
+
+                // Check if the slide object has entered the timeline yet
+                // If it hasn't, then we need to wait until it has entereted the timeline to change its state.
+                // If we change it too early, then this will cause the slide object to appear before it is
+                // set to appear in the Captivate timeline.
+                // Bug voidance
                 if (_extra.slideManager.isSlideObjectOnSlideAndNotInTimeline(slideObjectName)) {
 
-                    _extra.captivate.api.changeState(slideObjectName, state);
+                    var callback = function () {
+
+                        changeState();
+                        _extra.slideObjects.enterTimelineCallback.removeCallback(slideObjectName, callback);
+
+                    };
+
+                    _extra.slideObjects.enterTimelineCallback.addCallback(slideObjectName, callback);
 
                 } else {
 
-                    _extra.captivate.api.changeState(slideObjectName, state);
+                    changeState();
 
                 }
             });

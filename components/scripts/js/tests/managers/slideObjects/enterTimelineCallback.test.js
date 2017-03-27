@@ -5,7 +5,7 @@
  * Time: 8:09 PM
  * To change this template use File | Settings | File Templates.
  */
-fdescribe("A test suite for _extra.slideObjects.enterTimelineCallback", function () {
+describe("A test suite for _extra.slideObjects.enterTimelineCallback", function () {
 
     "use strict";
 
@@ -35,8 +35,21 @@ fdescribe("A test suite for _extra.slideObjects.enterTimelineCallback", function
                 "getSlideObjectByName": function (slideObjectName) {
                     if (!hasSlideObject(slideObjectName)) {
                         slideObjects[slideObjectName] = new unitTests.classes.EventDispatcher();
+                        slideObjects[slideObjectName].name = slideObjectName;
                     }
+                    return slideObjects[slideObjectName];
                 }
+            },
+            "eventManager":{
+                "events":{
+                    "ENTER":"enter"
+                }
+            },
+            "w":{
+                "Object":window.Object
+            },
+            "log":function () {
+
             }
         };
 
@@ -61,6 +74,31 @@ fdescribe("A test suite for _extra.slideObjects.enterTimelineCallback", function
         enterTimeline("foobar");
 
         expect(spy).toHaveBeenCalled();
+
+    });
+
+    it("should remove event listener when no more handlers are added", function () {
+
+        var spy1 = jasmine.createSpy("spy1");
+        var spy2 = jasmine.createSpy("spy2");
+
+        var slideObject = _extra.slideObjects.getSlideObjectByName("foobar");
+        spyOn(slideObject,"removeEventListener");
+        spyOn(slideObject,"addEventListener");
+
+        _extra.slideObjects.enterTimelineCallback.addCallback("foobar", spy1);
+        expect(slideObject.removeEventListener).not.toHaveBeenCalled();
+        expect(slideObject.addEventListener).toHaveBeenCalled();
+        slideObject.addEventListener.calls.reset();
+
+        _extra.slideObjects.enterTimelineCallback.addCallback("foobar", spy2);
+        expect(slideObject.addEventListener).not.toHaveBeenCalled();
+
+        _extra.slideObjects.enterTimelineCallback.removeCallback("foobar", spy1);
+        expect(slideObject.removeEventListener).not.toHaveBeenCalled();
+
+        _extra.slideObjects.enterTimelineCallback.removeCallback("foobar", spy2);
+        expect(slideObject.removeEventListener).toHaveBeenCalled();
 
     });
 });

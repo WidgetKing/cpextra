@@ -12,7 +12,7 @@
 
     function stateManagerTests(software, getMockObject) {
 
-        describe("A test suite for _extra.slideObjects.states in " + software, function () {
+        fdescribe("A test suite for _extra.slideObjects.states in " + software, function () {
 
             var softwareModule = unitTests.getModule("stateManager_software", software),
                 hookModule = unitTests.getModule("hookManager"),
@@ -68,6 +68,24 @@
                 expect(this.a.dummy).not.toHaveBeenCalled();
 
             });
+
+            it("should wait for slide object to enter slide before changing state", function () {
+
+                _extra.slideObjects.states.changeCallback.addCallback("foobar", this.a.dummy);
+                spyOn(_extra.slideManager, "isSlideObjectOnSlideAndNotInTimeline").and.returnValue(true);
+                spyOn(_extra.slideObjects.enterTimelineCallback, "addCallback").and.callThrough();
+                spyOn(_extra.slideObjects.enterTimelineCallback, "removeCallback");
+
+                _extra.slideObjects.states.change("foobar","valid");
+                expect(this.a.dummy).not.toHaveBeenCalled();
+                expect(_extra.slideObjects.enterTimelineCallback.addCallback).toHaveBeenCalled();
+
+                _extra.slideObjects.enterTimelineCallback.sendToCallback("foobar");
+                expect(this.a.dummy).toHaveBeenCalled();
+                expect(_extra.slideObjects.enterTimelineCallback.removeCallback).toHaveBeenCalled();
+
+            });
+
         });
     }
 
@@ -85,7 +103,7 @@
                 "drawComplete":function () {
 
                 }
-            }
+            };
         }
 
         var uid = {
@@ -113,13 +131,19 @@
                     }
                 }
             },
+            "slideManager":{
+                "isSlideObjectOnSlideAndNotInTimeline": function () {
+                    return false;
+                }
+            },
             "slideObjects": {
                 "changeState":function () {
 
                 },
                 "enactFunctionOnSlideObjects":function (query, method) {
                     method(query);
-                }
+                },
+                "enterTimelineCallback":new unitTests.classes.Callback()
             },
             "dataManager":{
                 "getSlideObjectDataByName":function (slideObjectName) {

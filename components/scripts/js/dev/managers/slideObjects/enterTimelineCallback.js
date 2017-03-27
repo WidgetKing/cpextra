@@ -12,8 +12,28 @@ _extra.registerModule("enterTimelineCallback", ["hookManager", "slideObjectManag
     ///////////////////////////////////////////////////////////////////////
     /////////////// Event Handling
     ///////////////////////////////////////////////////////////////////////
-    function enteredSlideObjectTimeline(event) {
-        _extra.log(event);
+    var handlers = {};
+
+    function addHandler(slideObject, handler) {
+        slideObject.addEventListener(_extra.eventManager.events.ENTER, handler);
+        handlers[slideObject.name] = handler;
+    }
+
+    function removeHandler(slideObject) {
+
+        var handler = handlers[slideObject.name];
+
+        if (handler) {
+
+            slideObject.removeEventListener(_extra.eventManager.events.ENTER, handler);
+            delete handlers[slideObject.name];
+
+        }
+
+    }
+
+    function getHandler(slideObjectName) {
+        return handler[slideObjectName];
     }
 
     ///////////////////////////////////////////////////////////////////////
@@ -21,12 +41,38 @@ _extra.registerModule("enterTimelineCallback", ["hookManager", "slideObjectManag
     ///////////////////////////////////////////////////////////////////////
     _extra.slideObjects.enterTimelineCallback = new _extra.classes.Callback();
 
+    ///////////////////////////////////////////////////////////////////////
+    /////////////// Add Callback
+    ///////////////////////////////////////////////////////////////////////
     _extra.addHookBefore(_extra.slideObjects.enterTimelineCallback, "addCallback", function (slideObjectName) {
 
         var slideObject = _extra.slideObjects.getSlideObjectByName(slideObjectName);
+        var enterTimelineHandler = function () {
+            _extra.slideObjects.enterTimelineCallback.sendToCallback(slideObjectName);
+        };
 
-        slideObject.addEventListener(_extra.eventManager.events.ENTER, enteredSlideObjectTimeline);
+        if (!_extra.slideObjects.enterTimelineCallback.hasCallbackFor(slideObjectName)) {
+
+            addHandler(slideObject, enterTimelineHandler);
+
+        }
 
     });
+
+    ///////////////////////////////////////////////////////////////////////
+    /////////////// Remove Callback
+    ///////////////////////////////////////////////////////////////////////
+    _extra.addHookAfter(_extra.slideObjects.enterTimelineCallback, "removeCallback", function (slideObjectName) {
+
+        var slideObject = _extra.slideObjects.getSlideObjectByName(slideObjectName);
+
+        if (!_extra.slideObjects.enterTimelineCallback.hasCallbackFor(slideObjectName)) {
+
+            removeHandler(slideObject);
+
+        }
+
+    });
+
 
 });

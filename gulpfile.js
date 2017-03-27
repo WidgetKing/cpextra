@@ -244,7 +244,7 @@
                 directoryPath = getDirectoryPath(filePath);
 
                 // DEBUGGING: Trace list of files
-                gutil.log(directoryPath);
+                //gutil.log(directoryPath);
 
                     // Rename the javascript file to either the widget or the headless name
                 stream = gulp.src(devFile).pipe(grename({
