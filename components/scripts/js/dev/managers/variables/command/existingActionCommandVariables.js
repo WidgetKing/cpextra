@@ -61,11 +61,21 @@ _extra.registerModule("existingActionCommandVariables", ["queryManager", "slideO
     }, handlers.sendParametersAsParameters);
 
     ////////////////////////////////
-    ////////// LockFocusTo
-    register("LockFocusTo", function (slideObjectName) {
+    ////////// PreventTabOut
+    register("PreventTabOut", function (slideObjectName) {
 
         checkForVariable(slideObjectName, function (result) {
             _extra.focusManager.lockFocusTo(result);
+        });
+
+    });
+
+    ////////////////////////////////
+    ////////// PreventTabOut
+    register("AllowTabOut", function (slideObjectName) {
+
+        checkForVariable(slideObjectName, function (result) {
+            _extra.focusManager.unlockFocusFrom(result);
         });
 
     });

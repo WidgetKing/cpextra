@@ -57,11 +57,21 @@ function initExtra(topWindow) {
     // See the IE SAFETY section for more details.
     function createLoggingMethods(_extra) {
 
+        var elemDiv = window.document.createElement('div');
+        elemDiv.style.cssText = 'position:absolute;width:100%;height:100%;z-index:100;';
+        window.setTimeout(function () {
+
+        //window.document.body.appendChild(elemDiv);
+        }, 100);
+        console.log(elemDiv);
+
         /**
          * Sends a message to the debug console of the browser, assuming the console is available.
          * @param message
          */
         _extra.log = function (message) {
+
+            elemDiv.innerHTML += "<br/> " + message;
 
             if (_extra.debugging) {
 
@@ -163,7 +173,7 @@ function initExtra(topWindow) {
     //////////////
 
 
-
+    _extra.log("-------- HELLO WORLD! -------");
 
 
     if (_extra.w.X !== undefined) {

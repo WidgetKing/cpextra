@@ -9,6 +9,8 @@ _extra.registerModule("variableManager", ["variableManager_software", "VariableE
 
     "use strict";
 
+    _extra.log("----- Variable Manager -----");
+
     var variableEventManager = new _extra.classes.VariableEventManager(
             _extra.variableManager.internalListenForVariableChange,
             _extra.variableManager.internalStopListeningForVariableChange);

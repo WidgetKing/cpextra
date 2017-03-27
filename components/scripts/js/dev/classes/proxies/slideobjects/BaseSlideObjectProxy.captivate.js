@@ -13,7 +13,8 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
         CURSOR = "cursor",
         X = "x", Y = "y",
         WIDTH = "width",
-        HEIGHT = "height";
+        HEIGHT = "height",
+        LOCK_FOCUS = "lockFocus";
 
 
     function BaseSlideObjectProxy(element, data) {
@@ -216,7 +217,7 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
             // Only lock focus if everything is already loaded.
             if (this._currentStateData.isInitialized) {
 
-                $(this._focusDiv).on('keydown', this._focusHandler).focus();
+                _extra.$(this._focusDiv).on('keydown', this._focusHandler).focus();
 
             }
 
@@ -226,13 +227,13 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
 
             if (e.keyCode === 9) {
                 e.preventDefault();
-                $(that._focusDiv).focus();
+                _extra.$(that._focusDiv).focus();
             }
 
         };
 
         this._internalUnlockFocus = function () {
-            $(this._focusDiv).off('keydown', this._focusHandler);
+            _extra.$(this._focusDiv).off('keydown', this._focusHandler);
         };
     };
 
@@ -449,6 +450,14 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
         this._modelListener.addProperty(HEIGHT, function (previousValue, currentValue) {
 
             that._currentStateData.width = currentValue;
+
+        });
+
+        ////////////////////////////////
+        ////////// Lock Focus
+        this._modelListener.addProperty(LOCK_FOCUS, function (previousValue, currentValue) {
+
+            that.lockFocus = currentValue;
 
         });
     };

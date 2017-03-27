@@ -28,6 +28,7 @@ _extra.registerModule("dataTypeConverters",["globalSlideObjectTypes"], function 
                 return soTypes.IMAGE;
 
             case 19 :
+            case 22 : // Failure caption
             case 79 : // kCPOTStageQuestionText
             case 86 : // kCPOTStageQuestionTitle
                 return soTypes.CAPTION;
@@ -64,6 +65,7 @@ _extra.registerModule("dataTypeConverters",["globalSlideObjectTypes"], function 
             case 589 :
             case 612 :
             case 661 : // Success caption / shape
+            case 663 : // Failure caption / shape
             case 10166 : // kCPOTStageCorrectFeedbackShape
             case 10168 : // kCPOTStageIncorrectFeedbackShape
             case 10170 : // kCPOTStagePartialCorrectFeedbackShape

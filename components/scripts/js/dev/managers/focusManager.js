@@ -25,15 +25,25 @@ _extra.registerModule("focusManager", [], function () {
             return slideObjectName;
         },
 
-        "lockFocusTo": function (slideObjectName) {
+        "unlockFocusFrom": function (query) {
 
-            var slideObject = _extra.slideObjects.getSlideObjectByName(slideObjectName);
+            _extra.slideObjects.enactFunctionOnSlideObjects(query, function (slideObjectName) {
 
-            if (slideObject) {
+                _extra.slideObjects.model.write(slideObjectName, "lockFocus", false);
 
-                slideObject.lockFocus = true;
+            });
 
-            }
+        },
+
+        "lockFocusTo": function (query) {
+
+            _extra.slideObjects.enactFunctionOnSlideObjects(query, function (slideObjectName) {
+
+                _extra.slideObjects.model.write(slideObjectName, "lockFocus", true);
+
+            });
+
+
 
             /*_extra.w.setTimeout(function () {
 
