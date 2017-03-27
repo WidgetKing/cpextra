@@ -200,6 +200,9 @@
                             "foo","bar","foobar"
                         ]
                     };
+                },
+                "hasSlideObjectOnSlide": function(name) {
+                    return false;
                 }
             },
             "captivate": {

@@ -12,7 +12,7 @@
 
     function stateManagerTests(software, getMockObject) {
 
-        fdescribe("A test suite for _extra.slideObjects.states in " + software, function () {
+        describe("A test suite for _extra.slideObjects.states in " + software, function () {
 
             var softwareModule = unitTests.getModule("stateManager_software", software),
                 hookModule = unitTests.getModule("hookManager"),

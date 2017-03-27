@@ -27,6 +27,7 @@
         grename = require("gulp-rename"),
         gflatmap = require('gulp-flatmap'),
         gplumber = require('gulp-plumber'),
+        ginsert = require('gulp-insert'),
         gglob = require("glob"),
         uglify = require("gulp-uglify"),
         gjsoneditor = require("gulp-json-editor"),
@@ -66,10 +67,24 @@
         storylineExtraDevFileName = "storyline_extra.js",
         karmaConfig = "karma.conf.js";
 
-    var buildNumber = jsonPackage.buildNumber;
+    var buildNumber = jsonPackage.buildNumber,
+        versionNumber = jsonPackage.version;
 
 
-
+    //////////////////////////////////////
+    ///////// KARMA
+    //////////////////////////////////////
+    function getCopywriteNotice() {
+        return "/**\n" +
+               " * Captivate Extra\n" +
+               " * Version: " + versionNumber + "\n" +
+               " * Build:" + buildNumber + "\n" +
+               " * Written By: Tristan Ward\n" +
+               " * Company: Infosemantics\n" +
+               " * Licence: See licence document provided with CpExtra purchase\n" +
+               " * Copyright: Tristan Ward 2017\n" +
+               " */\n";
+    }
 
     //////////////////////////////////////
     ///////// KARMA
@@ -206,6 +221,7 @@
                 .pipe(grename({
                     basename: "Infosemantics_CpExtra"
                 }))
+                .pipe(ginsert.prepend(getCopywriteNotice()))
                 .pipe(gulp.dest("builds/production"));
     });
 

@@ -136,13 +136,8 @@ function initExtra(topWindow) {
 
 
 
-    try {
     createLoggingMethods(_extra);
 
-    } catch (e) {
-
-    console.log("HERE");
-    }
 
     if (isProjectWindow(topWindow)) {
         // If the window we get right at the start is the project window, then this is most likely a headless project.
@@ -173,9 +168,6 @@ function initExtra(topWindow) {
     //////////////
     ///// Extra Pre-detection
     //////////////
-
-
-    _extra.log("-------- HELLO WORLD! -------");
 
 
     if (_extra.w.X !== undefined) {
