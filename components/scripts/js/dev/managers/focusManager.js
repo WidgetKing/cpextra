@@ -25,23 +25,23 @@ _extra.registerModule("focusManager", [], function () {
             return slideObjectName;
         },
 
-        "unlockFocusFrom": function (query) {
+        "unlockFocusFrom": function (slideObjectName) {
 
-            _extra.slideObjects.enactFunctionOnSlideObjects(query, function (slideObjectName) {
+            //_extra.slideObjects.enactFunctionOnSlideObjects(query, function (slideObjectName) {
 
                 _extra.slideObjects.model.write(slideObjectName, "lockFocus", false);
 
-            });
+            //});
 
         },
 
-        "lockFocusTo": function (query) {
+        "lockFocusTo": function (slideObjectName) {
 
-            _extra.slideObjects.enactFunctionOnSlideObjects(query, function (slideObjectName) {
+            //_extra.slideObjects.enactFunctionOnSlideObjects(query, function (slideObjectName) {
 
                 _extra.slideObjects.model.write(slideObjectName, "lockFocus", true);
 
-            });
+            //});
 
 
 

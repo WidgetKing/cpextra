@@ -61,6 +61,18 @@ _extra.registerModule("existingActionCommandVariables", ["queryManager", "slideO
 
     };
 
+    _extra.variableManager.commands.preventTabOut = function (query) {
+
+        _extra.variableManager.parseSets.SP.CD.SOR(query, _extra.focusManager.lockFocusTo);
+
+    };
+
+    _extra.variableManager.commands.allowTabOut = function (query) {
+
+        _extra.variableManager.parseSets.SP.CD.SOR(query, _extra.focusManager.unlockFocusFrom);
+
+    };
+
 
     register("Hide", _extra.variableManager.commands.hide);
     register("Show", _extra.variableManager.commands.show);
@@ -69,4 +81,6 @@ _extra.registerModule("existingActionCommandVariables", ["queryManager", "slideO
 
     register("ChangeState", _extra.variableManager.commands.changeState, handlers.sendParametersAsParameters);
 
+    register("PreventTabOut", _extra.variableManager.commands.preventTabOut);
+    register("AllowTabOut", _extra.variableManager.commands.allowTabOut);
 });
