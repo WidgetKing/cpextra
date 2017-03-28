@@ -79,7 +79,64 @@ _extra.registerModule("parameterParseSets", ["parameterParser", "variableManager
 
                 },
                 // SLide Related
-                "SLR":function () {
+                "SLR":function (string, output) {
+
+                    function canOutputSlide(name) {
+
+                        var slideDetails = _extra.slideManager.getSlideIndexFromName(name);
+
+                        if (slideDetails && slideDetails.slide > -1) {
+
+                            output(slideDetails.slide);
+                            return true;
+
+                        }
+
+                        return false;
+
+                    }
+
+                    function manageRange(data) {
+
+                    }
+
+                    var data = _extra.variableManager.parse.string(string);
+
+                    if (data.is$Variable) {
+
+                        data = data.variable;
+
+                    }
+
+                    if (!canOutputSlide(data.value)) {
+
+                        if (data.isVariable) {
+
+                            data = data.variable;
+
+                        }
+
+                        if (data.isNumber) {
+
+                            output(data.value);
+
+                        } else if (data.isQuery) {
+
+                            _extra.slideManager.enactFunctionOnSlides(data.value, function (name) {
+                                // Convert name to number and export
+                                canOutputSlide(name);
+                            });
+
+                        } else if (!canOutputSlide(data.value)) {
+
+                            // Now we're possibly dealing with a range
+                            manageRange(data);
+
+                        }
+
+                    }
+
+
 
                 },
                 // STring Related

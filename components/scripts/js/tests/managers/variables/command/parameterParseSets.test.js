@@ -16,6 +16,7 @@ describe("A test suite for the parameterParseSets", function () {
         variables,
         slideObjectQueries,
         variableQueries,
+        slideNames,
         dummy,
         testSet,
         slideObjects;
@@ -31,8 +32,13 @@ describe("A test suite for the parameterParseSets", function () {
             "variable":"value",
             "variableVariable":"variable",
             "variableVar@":"var@",
+            "variable1":1,
             "slideObjectVariable":"slideObject",
-            "syntaxVariable":"syntax@"
+            "syntaxVariable":"syntax@",
+            "variableSlide1":"slide1",
+            "variableSlide2":"slide2",
+            "variableSlide10":"slide10",
+            "variableWithSameNameAsSlide":"slide1"
         };
         slideObjectQueries = {
             "syntax@": [
@@ -46,7 +52,25 @@ describe("A test suite for the parameterParseSets", function () {
                 "var2"
             ]
         };
-        dummy = jasmine.createSpy("dummy");
+        slideNames = {
+            "slide1":{
+                "scene":1,
+                "slide":1
+            },
+            "slide2": {
+                "scene":1,
+                "slide":2
+            },
+            "slide10": {
+                "scene":1,
+                "slide":10
+            },
+            "variableWithSameNameAsSlide": {
+                "scene":1,
+                "slide":99
+            }
+        };
+        dummy = jasmine.createSpy("dummy"); //_extra.slideManager.getSlideIndexFromName
 
         window._extra = {
             "error":jasmine.createSpy("_extra.error"),
@@ -58,6 +82,19 @@ describe("A test suite for the parameterParseSets", function () {
                         for (var i = 0; i < variableQueries[query].length; i += 1) {
                             method(variableQueries[query][i]);
                         }
+
+                    }
+                }
+            },
+            "slideManager":{
+                "getSlideIndexFromName": function (name) {
+                    return slideNames[name];
+                },
+                "enactFunctionOnSlides": function (query, method) {
+                    var list = _extra.queryList(query, slideNames);
+
+                    for (var i = 0; i < list.length; i += 1) {
+                        method(list[i]);
 
                     }
                 }
@@ -80,7 +117,8 @@ describe("A test suite for the parameterParseSets", function () {
             "w":{
                 "parseFloat":parseFloat,
                 "parseInt":parseInt,
-                "isNaN":isNaN
+                "isNaN":isNaN,
+                "Array":Array
             }
         };
 
@@ -215,7 +253,7 @@ describe("A test suite for the parameterParseSets", function () {
     });
 
     ///////////////////////////////////////////////////////////////////////
-    /////////////// MD.SOR_SR
+    /////////////// MD.SOR_STR
     ///////////////////////////////////////////////////////////////////////
     describe("A test suite for SP.CD.STR", function () {
 
@@ -234,6 +272,75 @@ describe("A test suite for the parameterParseSets", function () {
 
             expect(testSet("slideObjectVariable")).toBe("slideObject");
             expect(testSet("$$slideObjectVariable$$")).toBe("slideObject");
+
+        });
+        
+    });
+
+
+    ///////////////////////////////////////////////////////////////////////
+    /////////////// SP.CD_SLR
+    ///////////////////////////////////////////////////////////////////////
+    fdescribe("A test suite for SP.CD_SLR", function () {
+
+        beforeEach(function () {
+            testSet = _extra.variableManager.parseSets.SP.CD.SLR;
+        });
+        
+        it("should return us a slide name if we send it a direct slide name or number", function () {
+
+            testSet('"invalid"', dummy);
+            expect(dummy).not.toHaveBeenCalled();
+            testSet('"slide1"', dummy);
+            expect(dummy).toHaveBeenCalledWith(1);
+
+            testSet(6, dummy);
+            expect(dummy).toHaveBeenCalledWith(6);
+            testSet("7", dummy);
+            expect(dummy).toHaveBeenCalledWith(7);
+            
+        });
+
+        it("should return us a slide number if it comes from a variable", function () {
+
+            testSet("$$variableSlide10$$", dummy);
+            expect(dummy).toHaveBeenCalledWith(10);
+
+            testSet("variableSlide2", dummy);
+            expect(dummy).toHaveBeenCalledWith(2);
+
+            testSet("variable1", dummy);
+            expect(dummy).toHaveBeenCalledWith(1);
+
+
+
+        });
+
+        it("should use slide names first when a variable and a slide share the same name", function () {
+
+            testSet("variableWithSameNameAsSlide", dummy);
+            expect(dummy).toHaveBeenCalledWith(99);
+
+            testSet("$$variableWithSameNameAsSlide$$", dummy);
+            expect(dummy).toHaveBeenCalledWith(1);
+
+        });
+
+        it("should accept an @syntax range of slides", function () {
+
+            testSet("slide@", dummy);
+            expect(dummy).toHaveBeenCalledWith(1);
+            expect(dummy).toHaveBeenCalledWith(2);
+            expect(dummy).toHaveBeenCalledWith(10);
+
+        });
+
+        xit("should be able to distinguish between valid and invalid ranges", function () {
+
+            testSet("1-3", dummy);
+            expect(dummy).toHaveBeenCalledWith(1);
+            expect(dummy).toHaveBeenCalledWith(2);
+            expect(dummy).toHaveBeenCalledWith(3);
 
         });
         

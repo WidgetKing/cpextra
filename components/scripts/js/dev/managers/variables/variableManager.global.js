@@ -34,13 +34,18 @@ _extra.registerModule("variableManager", ["variableManager_software", "VariableE
     /////////////// @Syntax
     ///////////////////////////////////////////////////////////////////////
     _extra.variableManager.enactFunctionOnVariables = function (query, method) {
+
         if (_extra.isQuery(query)) {
 
             var list = _extra.queryList(query, _extra.variableManager.variableData);
 
-            for (var i = 0; i < list.length; i += 1) {
+            if (list) {
 
-                method(list[i]);
+                for (var i = 0; i < list.length; i += 1) {
+
+                    method(list[i]);
+
+                }
 
             }
 
@@ -49,6 +54,7 @@ _extra.registerModule("variableManager", ["variableManager_software", "VariableE
             method(query);
 
         }
+
     };
 
     ///////////////////////////////////////////////////////////////////////

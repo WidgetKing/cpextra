@@ -14,7 +14,8 @@
         describe("A test suite for testing _extra.slideManager in " + software, function () {
 
             var softwareModule = unitTests.getModule("slideManager_software", software),
-                globalModule = unitTests.getModule("slideManager_global");
+                globalModule = unitTests.getModule("slideManager_global"),
+                queryListModule = unitTests.getModule("queryManager");
 
 
             beforeAll(function () {
@@ -26,6 +27,7 @@
                 _extra.classes = unitTests.classes;
                 softwareModule();
                 globalModule();
+                queryListModule();
             });
 
             afterEach(function () {
@@ -180,6 +182,20 @@
                     expect(_extra.slideManager.currentSlideDOMElement).toBeDefined();
                 });
 
+                it("should allow us to enact a method on an @syntax range of slides", function () {
+
+                    _extra.slideManager.slideNames[1].push("slide1");
+                    _extra.slideManager.slideNames[1].push("slide2");
+
+                    var dummy = jasmine.createSpy("dummy");
+
+                    _extra.slideManager.enactFunctionOnSlides("slide@", dummy);
+
+                    expect(dummy).toHaveBeenCalledWith("slide1");
+                    expect(dummy).toHaveBeenCalledWith("slide2");
+
+                });
+
             }
 
         });
@@ -224,7 +240,8 @@
                 },
                 "Event":Event,
                 "isNaN":isNaN,
-                "parseInt":parseInt
+                "parseInt":parseInt,
+                "Array":Array
             },
             "eventManager":{
                 "eventDispatcher": document.createElement("div")
@@ -234,6 +251,9 @@
             },
             "createEvent": function (name) {
                 return new unitTests.classes.CustomEvent(name);
+            },
+            "isQuery": function(query) {
+                return query.indexOf("@") >= -1;
             }
         };
     });

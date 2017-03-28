@@ -12,7 +12,7 @@ _extra.registerModule("queryManager", function () {
     _extra.WILDCARD_CHARACTER = "@";
     _extra.GLOBAL_WILDCARD_CHARACTER = "#";
 
-    _extra.queryList = function(query, list, wildcard) {
+    _extra.queryList = function(query, list, wildcard) {console.log("HERE")
 
         if (!wildcard) {
             wildcard = _extra.getQueryType(query);
@@ -31,7 +31,7 @@ _extra.registerModule("queryManager", function () {
                 end = query.substr(wildcardIndex + 1, query.length - 1),
                 returnList = [],
                 evaluateItem = function (name) {
-                    // Check if this slide objects's name matches the first part of the passed in query.
+                    // Check if this slide object's name matches the first part of the passed in query.
                     if (name.substr(0,start.length) === start) {
 
                         // Now check if it matches the last part.

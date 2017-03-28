@@ -28,7 +28,7 @@ _extra.registerModule("commandVariables_global", ["commandVariableManager", "sli
 
         });
     };
-
+    register("EnableMouseEvents", _extra.variableManager.commands.enableMouseEvents);
 
     _extra.variableManager.commands.disableMouseEvents = function (query) {
         _extra.variableManager.parseSets.SP.CD.SOR(query, function (slideObjectName) {
@@ -38,8 +38,6 @@ _extra.registerModule("commandVariables_global", ["commandVariableManager", "sli
         });
     };
 
-
-    register("EnableMouseEvents", _extra.variableManager.commands.enableMouseEvents);
     register("DisableMouseEvents", _extra.variableManager.commands.disableMouseEvents);
 
     ////////////////////////////////
@@ -53,6 +51,7 @@ _extra.registerModule("commandVariables_global", ["commandVariableManager", "sli
             });
 
     };
+
     register("Reset", _extra.variableManager.commands.reset);
 
     ////////////////////////////////
@@ -83,7 +82,17 @@ _extra.registerModule("commandVariables_global", ["commandVariableManager", "sli
     ///////////////////////////////////////////////////////////////////////
     ////////////////////////////////
     ////////// Cursor
-    register("SetCursor", _extra.slideObjects.setCursor, handlers.sendParametersAsParameters);
+    _extra.variableManager.commands.setCursor = function (query, cursorName) {
+
+        _extra.variableManager.parseSets.MP.SOR_STR(query, cursorName, function (slideObjectName, cursorName) {
+
+            _extra.slideObjects.setCursor(slideObjectName, cursorName);
+
+        });
+
+    };
+
+    register("SetCursor", _extra.variableManager.commands.setCursor, handlers.sendParametersAsParameters);
 
     ////////////////////////////////
     ////////// Position
