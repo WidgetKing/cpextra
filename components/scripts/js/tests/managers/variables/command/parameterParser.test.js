@@ -5,7 +5,7 @@
  * Time: 7:57 AM
  * To change this template use File | Settings | File Templates.
  */
-fdescribe("A test suite for _extra.variableManager.parser", function () {
+describe("A test suite for _extra.variableManager.parser", function () {
 
     "use strict";
 

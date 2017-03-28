@@ -14,15 +14,35 @@ _extra.registerModule("existingActionCommandVariables", ["queryManager", "slideO
         handlers = _extra.variableManager.parameterHandlers;
 
     ////////////////////////////////
+    ////////// Extend Captivate Functions
+
+    /*function checkForVariable(parameter, finalMethod) {
+
+        // Replacing variables with their actual values.
+        if (_extra.variableManager.hasVariable(parameter)) {
+            parameter = _extra.variableManager.getVariableValue(parameter);
+        }
+
+        // If this isn't a query then we want to make sure it's a valid slide object.
+        if (!_extra.isQuery(parameter) && !_extra.slideObjects.hasSlideObjectInProject(parameter)) {
+            _extra.error("CV001", parameter);
+            return;
+        }
+
+        finalMethod(parameter);
+    }*/
+
+
+    ////////////////////////////////
     ////////// Hide
-    register("Hide", function (parameter) {
+    /*register("Hide", function (parameter) {
         checkForVariable(parameter, _extra.slideObjects.hide);
     });
     ////////////////////////////////
     ////////// Show
     register("Show", function (parameter) {
         checkForVariable(parameter, _extra.slideObjects.show);
-    });
+    });*/
 
     _extra.variableManager.commands.hide = function (query) {
         _extra.variableManager.parseSets.SP.CD.SOR(query, _extra.slideObjects.hide);
@@ -48,7 +68,5 @@ _extra.registerModule("existingActionCommandVariables", ["queryManager", "slideO
     register("Disable", _extra.variableManager.commands.disable);
 
     register("ChangeState", _extra.variableManager.commands.changeState, handlers.sendParametersAsParameters);
-
-    });
 
 });

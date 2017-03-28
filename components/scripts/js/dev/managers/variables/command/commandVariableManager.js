@@ -112,20 +112,11 @@ _extra.registerModule("commandVariableManager",["variableManager","stateManager_
             });
         }
 
-<<<<<<< HEAD
-
 
         ///////////////////////////////////////////////////////////////////////
         /////////////// Setting up registered command variables
         ///////////////////////////////////////////////////////////////////////
         // We will now go through all the command variables and set them up.
-        for (var variableSuffix in _extra.variableManager.commandVariables) {
-            if (_extra.variableManager.commandVariables.hasOwnProperty(variableSuffix)) {
-
-                variableName = COMMAND_VARIABLE_PREFIX + variableSuffix;
-=======
->>>>>>> master
-
         function registerVariable (variableName) {
             if (_extra.variableManager.hasVariable(variableName)) {
 
@@ -142,7 +133,6 @@ _extra.registerModule("commandVariableManager",["variableManager","stateManager_
 
                 registerVariable(variableName);
                 registerVariable("_" + variableName);
-
 
             }
         }

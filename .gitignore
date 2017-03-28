@@ -1,13 +1,8 @@
 .DS_Store
 node_modules
 .tmp
-<<<<<<< HEAD
 .idea/**
 .idea/workspace.xml
-=======
-.idea
-workspace.xml
->>>>>>> master
 .jshintrc
 tests/output
 tests/sources

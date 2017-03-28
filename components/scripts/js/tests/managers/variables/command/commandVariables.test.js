@@ -13,7 +13,8 @@
 
         describe("A test suite for command variables in " + software, function () {
 
-            var module = unitTests.getModule("commandVariableManager");
+            var module = unitTests.getModule("commandVariableManager"),
+                whiteSpaceManager = unitTests.getModule("whiteSpaceManager");
 
             beforeEach(function () {
                 window._extra = getMockObject();

@@ -5,7 +5,7 @@
  * Time: 11:36 AM
  * To change this template use File | Settings | File Templates.
  */
-fdescribe("A test suite for the parameterParseSets", function () {
+describe("A test suite for the parameterParseSets", function () {
 
     "use strict";
 

@@ -15,7 +15,7 @@
             globalModule = unitTests.getModule("variableManager"),
             queryEngine = unitTests.getModule("queryManager");
 
-        fdescribe("Test suite to test the general variable manager in " + software, function () {
+        describe("Test suite to test the general variable manager in " + software, function () {
 
             var a = {};
 

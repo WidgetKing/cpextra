@@ -27,14 +27,14 @@ describe("A test suite for the whiteSpaceManager module", function () {
     });
 
 
-    fit("should be able to remove spaces from a string, without removing them from inside double quotes", function () {
+    it("should be able to remove spaces from a string, without removing them from inside double quotes", function () {
 
         var result = _extra.variableManager.safelyRemoveWhiteSpace('   "foo bar"   ');
         expect(result).toBe('"foo bar"');
 
     });
 
-    fit("should when removing spaces allow us to choose something to replace commas with", function () {
+    it("should when removing spaces allow us to choose something to replace commas with", function () {
 
         var result = _extra.variableManager.safelyRemoveWhiteSpace(' hello ,  "foo, bar", world   ',"#");
         expect(result).toBe('hello#"foo, bar"#world');
