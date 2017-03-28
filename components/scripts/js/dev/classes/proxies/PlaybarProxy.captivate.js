@@ -34,17 +34,10 @@ _extra.registerModule("PlaybarProxy", function () {
             // If we've already loaded everything
             if (_extra.slideManager && _extra.cssManager) {
 
+
                 if (hasSlider) {
 
-                    if (that._scrubbing) {
-                        _extra.cssManager.removeClassFrom(sliderDIV.parentNode, "extra-mouse-disabled");
-                        _extra.cssManager.removeClassFrom(sliderDIV, "extra-mouse-disabled");
-                        _extra.cssManager.removeClassFrom(sliderThumbDIV, "extra-mouse-disabled");
-                    } else {
-                        _extra.cssManager.addClassTo(sliderDIV.parentNode, "extra-mouse-disabled");
-                        _extra.cssManager.addClassTo(sliderDIV, "extra-mouse-disabled");
-                        _extra.cssManager.addClassTo(sliderThumbDIV, "extra-mouse-disabled");
-                    }
+                    that.managerPlaybarScrubbing();
 
                 }
 
@@ -54,10 +47,30 @@ _extra.registerModule("PlaybarProxy", function () {
 
         };
 
-        this.addEnterSlideCallback = function() {
+        this.managerPlaybarScrubbing = function () {
+
+            if (that._scrubbing) {
+                _extra.cssManager.removeClassFrom(sliderDIV.parentNode, "extra-mouse-disabled");
+                _extra.cssManager.removeClassFrom(sliderDIV, "extra-mouse-disabled");
+                _extra.cssManager.removeClassFrom(sliderThumbDIV, "extra-mouse-disabled");
+            } else {
+                _extra.cssManager.addClassTo(sliderDIV.parentNode, "extra-mouse-disabled");
+                _extra.cssManager.addClassTo(sliderDIV, "extra-mouse-disabled");
+                _extra.cssManager.addClassTo(sliderThumbDIV, "extra-mouse-disabled");
+            }
+
+        };
+
+        this.init = function() {
 
             // These objects change on every slide, so we have to repeatedly grab these objects.
             _extra.slideManager.enterSlideCallback.addCallback("*", getPlaybarElements);
+
+            // When the window resizes, the playbar css is reset, which means xprefDisablePlaybarScrubbing may not work
+            // correctly. We'll update this.
+            // Also, every time you resize, Captivate creates a new playbar div. What's up with that?
+            _extra.w.addEventListener("resize", getPlaybarElements);
+
             getPlaybarElements();
 
         };
@@ -87,12 +100,12 @@ _extra.registerModule("PlaybarProxy", function () {
         // available.
         if (_extra.slideManager) {
 
-            this.addEnterSlideCallback();
+            this.init();
 
         } else {
 
             _extra.registerModule("PlaybarProxy_initialize", ["slideManager_global", "cssManager"], function () {
-                _extra.captivate.playbar.addEnterSlideCallback();
+                _extra.captivate.playbar.init();
             });
 
         }

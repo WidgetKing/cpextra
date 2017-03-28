@@ -5,7 +5,7 @@
  * Time: 11:12 AM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("timeInfoVariables", ["infoVariableManager", "timeManager", "doubleDidgitPreferences"], function () {
+_extra.registerModule("timeInfoVariables", ["infoVariableManager", "movieStatusManager", "doubleDidgitPreferences"], function () {
 
     "use strict";
 
@@ -21,7 +21,7 @@ _extra.registerModule("timeInfoVariables", ["infoVariableManager", "timeManager"
     function getTimeFromFrames(frames) {
 
         var r = _extra.w.Math.floor,
-            seconds = r(frames / _extra.FPS),
+            seconds = r(frames / _extra.movieStatus.FPS),
             minutes = r(seconds / 60),
             hours = r(minutes / 60);
 
@@ -86,7 +86,7 @@ _extra.registerModule("timeInfoVariables", ["infoVariableManager", "timeManager"
     ///////////////////////////////////////////////////////////////////////
     _extra.preferences.calculateTotalProjectTime = function () {
 
-        var time = getTimeFromFrames(_extra.totalFrames);
+        var time = getTimeFromFrames(_extra.movieStatus.totalFrames);
 
         setVariableBySuffix("ProjectTotalSeconds", time.seconds);
         setVariableBySuffix("ProjectTotalMinutes", time.minutes);
@@ -95,7 +95,7 @@ _extra.registerModule("timeInfoVariables", ["infoVariableManager", "timeManager"
 
     _extra.preferences.calculateElapsedProjectTime = function () {
 
-        var time = getTimeFromFrames(_extra.currentFrame);
+        var time = getTimeFromFrames(_extra.movieStatus.currentFrame);
 
         setVariableBySuffix("ProjectElapsedSeconds", time.seconds);
         setVariableBySuffix("ProjectElapsedMinutes", time.minutes);

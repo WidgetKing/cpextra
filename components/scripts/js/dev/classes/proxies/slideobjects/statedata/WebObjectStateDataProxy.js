@@ -9,22 +9,12 @@ _extra.registerModule("WebObjectStateDataProxy", ["StateDataProxy"], function ()
 
     "use strict";
 
-    function WebObjectStateDataProxy(data) {
+    function WebObjectStateDataProxy(data) { //loadWebObject
 
         _extra.classes.StateDataProxy.call(this, data, function (data) {
 
-            if (_extra.captivate.isResponsive) {
-
-                data.drawMethodObject = data.rawData;
-                data.drawMethodName = "drawForResponsive";
-                data.timeout = 1;
-
-            } else {
-
-                data.drawMethodObject = data.canvasContext;
-                data.drawMethodName = "drawImage";
-
-            }
+            //data.upperDIV = data.contentDIV;
+            data.enterMethodName = "loadWebObject";
 
         });
 

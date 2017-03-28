@@ -8,7 +8,6 @@
 _extra.registerModule("slideObjectManager_global", ["slideObjectManager_software", "queryManager"], function () {
     "use strict";
 
-
     /**
      * List of proxy objects associated with slideObjects. This helps us avoid duplication.
      * @type {{}}
@@ -75,23 +74,35 @@ _extra.registerModule("slideObjectManager_global", ["slideObjectManager_software
 
     };
 
-    ///////////////////////////////////////////////////////////////////////
-    /////////////// ON SLIDE ENTER
-    ///////////////////////////////////////////////////////////////////////
-    _extra.slideManager.enterSlideCallback.addCallback("*", function () {
-
+    _extra.slideObjects.unloadSlideObjectsFromOtherSlides = function () {
 
         // Run through the list of slide object proxies and unload them
         for (var slideObjectName in slideObjectProxies) {
             if (slideObjectProxies.hasOwnProperty(slideObjectName)) {
 
-                slideObjectProxies[slideObjectName].unload();
+                if (!_extra.slideManager.hasSlideObjectOnSlide(slideObjectName, _extra.slideManager.currentSceneNumber,
+                    _extra.slideManager.currentSlideNumber)) {
+
+                    slideObjectProxies[slideObjectName].unload();
+                    delete slideObjectProxies[slideObjectName];
+
+                }
 
             }
         }
+    };
+
+    ///////////////////////////////////////////////////////////////////////
+    /////////////// ON SLIDE ENTER
+    ///////////////////////////////////////////////////////////////////////
+    _extra.slideManager.enterSlideCallback.addCallback("*", function () {
+
+        var slideObjectName;
+
+        _extra.slideObjects.unloadSlideObjectsFromOtherSlides();
 
         // Clear the proxy list as we are on a new slide with new objects
-        slideObjectProxies = {};
+        //slideObjectProxies = {};
 
         var slideData = _extra.slideManager.getSlideData();
 
@@ -107,10 +118,11 @@ _extra.registerModule("slideObjectManager_global", ["slideObjectManager_software
 
                 // Commented out until a time where we will tie this callback into scene/slide numbers
                 //_extra.slideObjects.enteredSlideChildObjectsCallbacks.sendToCallback(_extra.slideManager.currentSlideNumber, slideObjectName);
+
             }
 
         } else {
-           _extra.error("Could not find slide data in slideObjectManager.global");
+            _extra.error("Could not find slide data in slideObjectManager.global");
         }
     });
 });

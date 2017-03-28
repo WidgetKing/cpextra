@@ -28,7 +28,7 @@ describe("A test suite for the _extra.slideObjects.states.registerStateMetaData 
                 "Object":Object
             },
             "captivate":{
-                "projectDIV":document.createElement("DIV")
+                "projectContainer":document.createElement("DIV")
             },
             "log":function () {},
             "error":function () {},

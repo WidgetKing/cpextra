@@ -15,6 +15,9 @@ _extra.registerModule("generalDataManager", ["softwareInterfacesManager", "dataT
 
             if (data.base) {
                 data.container = _extra.captivate.allSlideObjectsData[slideObjectName + "c"];
+                if (!data.container) {
+                    _extra.log("Could not find container data for: " + slideObjectName);
+                }
                 return _extra.factories.createSlideObjectData(slideObjectName, data,
                                                               _extra.dataTypes.convertSlideObjectType(data.base.type, slideObjectName));
             }
@@ -33,10 +36,45 @@ _extra.registerModule("generalDataManager", ["softwareInterfacesManager", "dataT
             return _extra.w.NaN;
         },
         "getSlideObjectDataByID": function (id) {
-            var data = _extra.captivate.api.getDisplayObjByCP_UID(id);
-            return _extra.dataManager.getSlideObjectDataByName(data.parentDivName);
+
+            var data = _extra.captivate.api.getDisplayObjByCP_UID(id),
+                name;
+
+            if (data) {
+
+                name = data.parentDivName;
+
+            } else {
+
+                name = getSlideObjectNameByID(id);
+
+            }
+
+            return _extra.dataManager.getSlideObjectDataByName(name);
+
         }
     };
+
+    function getSlideObjectNameByID(uid) {
+
+        var slideObject;
+
+        for (var name in _extra.captivate.allSlideObjectsData) {
+            if (_extra.captivate.allSlideObjectsData.hasOwnProperty(name)) {
+
+                slideObject = _extra.captivate.allSlideObjectsData[name];
+
+                if (slideObject.uid === uid) {
+
+                    return slideObject.dn;
+
+                }
+
+            }
+        }
+
+        return null;
+    }
 
     //_extra.log(_extra.dataManager.getSlideObjectDataByName("Text_Entry_Box_1"));
     /*_extra.m = _extra.X.cp.model;

@@ -106,7 +106,6 @@
 
                 var result = _extra.slideObjects.getSlideObjectNamesMatchingWildcardName("me#");
                 expect(result.length).toBe(2);
-                console.log(result);
 
             });
 
@@ -201,6 +200,9 @@
                             "foo","bar","foobar"
                         ]
                     };
+                },
+                "hasSlideObjectOnSlide": function(name) {
+                    return false;
                 }
             },
             "captivate": {

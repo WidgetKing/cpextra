@@ -133,7 +133,7 @@
             SuperClass = null;
         }
 
-        alert("Register Class\nclassName: " + className + "\nclassSoftware: " + software);
+        //alert("Register Class\nclassName: " + className + "\nclassSoftware: " + software);
 
         if (SuperClass) {
 
@@ -173,7 +173,7 @@
 
         if (software) {
 
-            alert("Registered class as belonging to: " + software);
+            //alert("Registered class as belonging to: " + software);
 
             if (!unitTests.softwareClasses[className]) {
                 unitTests.softwareClasses[className] = {};

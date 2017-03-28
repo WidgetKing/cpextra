@@ -104,7 +104,7 @@ describe("A test suite for testing the SlideObjectStateManager class", function 
                 "isNaN":isNaN
             },
             "captivate":{
-                "projectDIV":document.createElement("DIV")
+                "projectContainer":document.createElement("DIV")
             },
             "variableManager": {
                 "setVariableValue":function (variableName, value) {

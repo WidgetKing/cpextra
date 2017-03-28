@@ -13,114 +13,21 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
         CURSOR = "cursor",
         X = "x", Y = "y",
         WIDTH = "width",
-        HEIGHT = "height";
+        HEIGHT = "height",
+        LOCK_FOCUS = "lockFocus";
 
 
     function BaseSlideObjectProxy(element, data) {
 
-
-        ///////////////////////////////////////////////////////////////////////
-        /////////////// Private Variables that are public because we can't get around it
-        ///////////////////////////////////////////////////////////////////////
-        this._data = data;
-        this._model = _extra.slideObjects.model;
-        this._currentStateData = data.getDataForState(this.state);
-        this._offsetX = 0;
-        this._offsetY = 0;
-        this._modelListener = new _extra.classes.ModelListener(this.name, this._model);
-        this._eventMediator = _extra.eventManager.getEventMediator(this.name);
-        this._stateEndManager = new _extra.classes.SlideObjectEnterExitEventManager(this);
-        this._stateEndManager.setCurrentDispatcher(this._currentStateData);
-        this._interruptedClickEventHanlder = new _extra.classes.InterruptedClickEventHandler(this._eventMediator, this.name);
-        this._originalX = this._currentStateData.originalX;
-        this._originalY = this._currentStateData.originalY;
-
-        ///////////////////////////////////////////////////////////////////////
-        /////////////// Private Variables
-        ///////////////////////////////////////////////////////////////////////
-        var that = this;
-
+        this.initializePrivateVariables(element, data);
+        // Assigning the event mediator with the divs for the current state of the slide object
         this._eventMediator.swap(this._currentStateData);
 
-        ///////////////////////////////////////////////////////////////////////
-        /////////////// Public Methods
-        ///////////////////////////////////////////////////////////////////////
-        this.addEventListener = function (eventName, callback) {
-            that._eventMediator.addEventListener(eventName, callback);
-        };
+        this.initializePublicMethods();
 
-        this.removeEventListener = function (eventName, callback) {
-            that._eventMediator.removeEventListener(eventName, callback);
-        };
+        this.initializeInternalMethods();
 
-        this.hasEventListener = function(eventName) {
-            return that._eventMediator.hasEventListener(eventName);
-        };
-
-        this.dispatchEvent = function(event) {
-            that._eventMediator.dispatchEvent(event);
-        };
-
-        this.enableForMouse = function() {
-            that._modelListener.model.write(this.name, ENABLE_FOR_MOUSE, true);
-        };
-
-        this.disableForMouse = function() {
-            that._modelListener.model.write(this.name, ENABLE_FOR_MOUSE, false);
-        };
-
-        this.setHandCursor = function(cursorType) {
-            that._modelListener.model.write(this.name, CURSOR, cursorType);
-        };
-
-
-        ///////////////////////////////////////////////////////////////////////
-        /////////////// Internal Methods
-        ///////////////////////////////////////////////////////////////////////
-        ////////////////////////////////
-        ////////// Manage State Changing
-
-        this._onStateChange = function(details) {
-
-            var futureStateData = data.getDataForState(details.stateName);
-
-            // Change the event listeners from the DOM elements of the previous state to the one of this state.
-            that._eventMediator.swap(futureStateData);
-            that._stateEndManager.setCurrentDispatcher(futureStateData);
-            that._interruptedClickEventHanlder.stateHasChanged();
-
-            // Update the offset
-            that._offsetX = that._originalX - futureStateData.originalX;
-            that._offsetY = that._originalY - futureStateData.originalY;
-
-            // Complete the transition
-            that._currentStateData = futureStateData;
-
-            // Update to model
-            that._modelListener.model.update(that.name);
-
-        };
-        _extra.slideObjects.states.changeCallback.addCallback(this.name, this._onStateChange);
-
-        this._onAudioEnded = function () {
-            that.dispatchEvent("audioended");
-        };
-
-        ///////////////////////////////////////////////////////////////////////
-        /////////////// STATE INITIALIZED
-        ///////////////////////////////////////////////////////////////////////
-
-        // If all the visual elements of the slide object have been set up, then we can do things such as add listeners now,
-        if (this._currentStateData.isInitialized) {
-            this.onSlideObjectInitialized();
-        // If not then we'll have to wait for the state tot ell us when it's ready.
-        } else {
-            this._internalInitializationHandler = function () {
-                that.onSlideObjectInitialized.call(that);
-            };
-            this._currentStateData.addEventListener("internalinitialization", that._internalInitializationHandler);
-        }
-
+        this.initializeInitialState();
 
     }
 
@@ -156,37 +63,269 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
         },
         get height() {
             return this._currentStateData.height;
+        },
+
+        get lockFocus() {
+            return this._lockFocus;
+        },
+        set lockFocus(value) {
+
+            // If we're just setting this to true again, we don't want to add multiple event listeners
+            if (this._lockFocus !== value) {
+
+                this._lockFocus = value;
+
+                if (value) {
+                    this._internalLockFocus();
+                } else {
+                    this._internalUnlockFocus();
+                }
+
+            }
+
         }
+    };
 
+    ///////////////////////////////////////////////////////////////////////
+    /////////////// INIT
+    ///////////////////////////////////////////////////////////////////////
+
+    BaseSlideObjectProxy.prototype.initializePrivateVariables = function (element, data) {
+
+        // Private Variables that are public because we can't get around it
+
+        this._data = data;
+        this._focusDiv = element;
+        this._model = _extra.slideObjects.model;
+        this._currentStateData = data.getDataForState(this.state);
+        this._offsetX = 0;
+        this._offsetY = 0;
+        this._lockFocus = false;
+        this._modelListener = new _extra.classes.ModelListener(this.name, this._model);
+        this._eventMediator = _extra.eventManager.getEventMediator(this.name);
+        this._stateEndManager = new _extra.classes.SlideObjectEnterExitEventManager(this);
+        this._stateEndManager.setCurrentDispatcher(this._currentStateData);
+        this._interruptedClickEventHandler = new _extra.classes.InterruptedClickEventHandler(this._eventMediator, this.name);
+        this._originalX = this._currentStateData.originalX;
+        this._originalY = this._currentStateData.originalY;
 
     };
 
-    BaseSlideObjectProxy.prototype.changeState = function (stateName) {
-        _extra.slideObjects.states.change(this.name, stateName);
+    BaseSlideObjectProxy.prototype.initializePublicMethods = function () {
+        var that = this;
+
+        this.addEventListener = function (eventName, callback) {
+            that._eventMediator.addEventListener(eventName, callback);
+        };
+
+        this.removeEventListener = function (eventName, callback) {
+            that._eventMediator.removeEventListener(eventName, callback);
+        };
+
+        this.hasEventListener = function(eventName) {
+            return that._eventMediator.hasEventListener(eventName);
+        };
+
+        this.dispatchEvent = function(event) {
+            that._eventMediator.dispatchEvent(event);
+        };
+
+        this.enableForMouse = function() {
+            that._modelListener.model.write(this.name, ENABLE_FOR_MOUSE, true);
+        };
+
+        this.disableForMouse = function() {
+            that._modelListener.model.write(this.name, ENABLE_FOR_MOUSE, false);
+        };
+
+        this.setHandCursor = function(cursorType) {
+            that._modelListener.model.write(this.name, CURSOR, cursorType);
+        };
     };
+
+    BaseSlideObjectProxy.prototype.initializeInternalMethods = function () {
+
+        var that = this;
+
+        this._onStateChange = function(details) {
+
+            var futureStateData = that.data.getDataForState(details.stateName);
+
+            // Change the event listeners from the DOM elements of the previous state to the one of this state.
+            that._eventMediator.swap(futureStateData);
+            that._stateEndManager.setCurrentDispatcher(futureStateData);
+            //that._interruptedClickEventHandler.stateHasChanged();
+
+            // Update the offset
+            that._offsetX = that._originalX - futureStateData.originalX;
+            that._offsetY = that._originalY - futureStateData.originalY;
+
+            // Complete the transition
+            that._currentStateData = futureStateData;
+
+            // Update to model
+            that._modelListener.model.update(that.name);
+
+        };
+        _extra.slideObjects.states.changeCallback.addCallback(this.name, this._onStateChange);
+
+        this._onAudioEnded = function () {
+            that.dispatchEvent("audioended");
+        };
+
+        this._onAudioPaused = function () {
+
+            // For your reference, the content fo the Captivate Audio Pause method
+            /*
+            pause: function() {
+                        if (!this.paused && this.am.webAudio && this.am.pauseWebAudio(this.src)) this.paused = !0, this.am.verbose && a.log("webAudio:pause " + this.id + " " + this.src);
+                        else if (this.isSeekPending() && (this.am.verbose && this.revoke && a.log("AdObjPause deleting revoke " + this.id), delete this.revoke), !this.paused) this.paused = !0, this.am.verbose && a.log("AdObjPause " + this.id + " " + this.src), this.nativeAudio && (this.nativeAudio.pause(), this.nativeAudio.pausedAt = (new Date).getTime())
+                    },
+             */
+
+            // There is a possibility that the movie has paused the audio instead of letting it play all the way
+            // to the end.
+            // If the movie is paused, then Captivate usually lets the audio play all the way to the end
+            // However, if the movie is playing, the audio is 'stopped' at a certain frame and the 'ended'
+            // event is not fired.
+            // So we'll fire it instead
+
+            if (_extra.movieStatus.isPlaying()) {
+
+                // Make sure we are still inside the timeline for the slide object
+                if (_extra.movieStatus.isCurrentFrameWithinRange(that.data.startFrame, that.data.endFrame)) {
+
+                    // Avoid the Promise Error in Google Chrome by waiting 150 milliseconds
+                    _extra.w.setTimeout(function () {
+
+                        // We want to make sure Captivate realizes that the audio has stopped.
+                        // So we fiddle with the audio data.
+                        // Stops Many Errors.
+                        // Hopefully.
+                        that._audioData.paused = true;
+                        that.dispatchEvent("audioended");
+
+                    }, 150);
+
+                }
+
+            }
+
+        };
+
+        this._internalLockFocus = function () {
+            // Only lock focus if everything is already loaded.
+            if (this._currentStateData.isInitialized) {
+
+                _extra.$(this._focusDiv).on('keydown', this._focusHandler).focus();
+
+            }
+
+        };
+
+        this._focusHandler = function (e) {
+
+            if (e.keyCode === 9) {
+                e.preventDefault();
+                _extra.$(that._focusDiv).focus();
+            }
+
+        };
+
+        this._internalUnlockFocus = function () {
+            _extra.$(this._focusDiv).off('keydown', this._focusHandler);
+        };
+    };
+
+    BaseSlideObjectProxy.prototype.initializeInitialState = function () {
+
+        var that = this;
+
+        // If all the visual elements of the slide object have been set up, then we can do things such as add listeners now,
+        if (this._currentStateData.isInitialized) {
+
+            this.onSlideObjectInitialized();
+
+        // If not then we'll have to wait for the state to tell us when it's ready.
+        } else {
+
+            this._internalInitializationHandler = function () {
+                that.onSlideObjectInitialized.call(that);
+            };
+
+            this._currentStateData.addEventListener("internalinitialization", this._internalInitializationHandler);
+        }
+    };
+
+
+
+
+
+    ///////////////////////////////////////////////////////////////////////
+    /////////////// Once the slide object has been completely loaded
+    ///////////////////////////////////////////////////////////////////////
 
     BaseSlideObjectProxy.prototype.onSlideObjectInitialized = function () {
 
+        // If we created an event handler to detect when the slide object had finished loading
+        // Then we want to unload that listener now
         if (this._internalInitializationHandler) {
             this._currentStateData.removeEventListener("internalinitialization", this._internalInitializationHandler);
             delete this._internalInitializationHandler;
         }
 
-        var that = this;
+        if (this.lockFocus) {
+            this._internalLockFocus();
+        }
 
         // At this point its possible the original X and Y positions have been updated.
         this._originalX = this._currentStateData.originalX;
         this._originalY = this._currentStateData.originalY;
 
+        this._listenForAudioEvents();
 
-         ////////////////////////////////
-         ////////// Audio
-         if (this._data.hasAudio) {
+        this._addModelListeners();
 
-             this._audioData = _extra.captivate.audioManager.objectAudios[_extra.slideManager.currentInternalSlideId][this._data.audioID];
-             this._audioTag = this._audioData.nativeAudio;
-             this._audioTag.addEventListener("ended", this._onAudioEnded);
-         }
+    };
+
+    BaseSlideObjectProxy.prototype._listenForAudioEvents = function () {
+
+        if (this._data.hasAudio) {
+
+            var that = this,
+                callback = function (audioData) {
+
+                    _extra.audioManager.audioDataCallback.removeCallback(that._data.audioID, callback);
+
+                    that._audioData = audioData;
+                    that._audioTag = that._audioData.nativeAudio;
+                    that._audioTag.addEventListener("ended", that._onAudioEnded);
+                    that._audioTag.addEventListener("pause", that._onAudioPaused);
+
+                };
+
+            _extra.audioManager.audioDataCallback.addCallback(this._data.audioID, callback);
+
+            /*this._audioTag = this._audioData.nativeAudio;
+
+            if (this._audioTag) {
+
+                this._audioTag.addEventListener("ended", this._onAudioEnded);
+                this._audioTag.addEventListener("pause", this._onAudioPaused);
+
+            } else {
+                _extra.log("ERROR: Could not find the audio tag for '" + this.name + "'");
+
+                _extra.log(_extra.captivate.audioManager.allocAudioChannel);
+
+            }*/
+
+        }
+    };
+
+    BaseSlideObjectProxy.prototype._addModelListeners = function () {
+
+        var that = this;
 
         ////////////////////////////////
         ////////// Enable For Mouse
@@ -276,7 +415,6 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
 
             that._currentStateData.x = currentValue - that._offsetX;
 
-
         });
 
         ////////////////////////////////
@@ -314,15 +452,35 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
             that._currentStateData.width = currentValue;
 
         });
+
+        ////////////////////////////////
+        ////////// Lock Focus
+        this._modelListener.addProperty(LOCK_FOCUS, function (previousValue, currentValue) {
+
+            that.lockFocus = currentValue;
+
+        });
     };
 
+    ///////////////////////////////////////////////////////////////////////
+    /////////////// OTHER
+    ///////////////////////////////////////////////////////////////////////
+
+    BaseSlideObjectProxy.prototype.changeState = function (stateName) {
+        _extra.slideObjects.states.change(this.name, stateName);
+    };
+
+    ///////////////////////////////////////////////////////////////////////
+    /////////////// UNLOAD
+    ///////////////////////////////////////////////////////////////////////
     BaseSlideObjectProxy.prototype.unload = function () {
 
         this.dispatchEvent("unload");
         this._eventMediator.swap(null);
         this._stateEndManager.setCurrentDispatcher(null);
         this._modelListener.unload();
-        this._interruptedClickEventHanlder.unload();
+        this.lockFocus = false;
+        this._interruptedClickEventHandler.unload();
         if (this._internalInitializationHandler) {
             this._currentStateData.removeEventListener("internalinitialization", this._internalInitializationHandler);
         }
@@ -330,6 +488,7 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
 
         if (this._data.hasAudio && this._audioTag) {
             this._audioTag.removeEventListener("ended", this._onAudioEnded);
+            this._audioTag.removeEventListener("pause", this._onAudioPaused);
         }
 
         // Write States current location to Captivate data

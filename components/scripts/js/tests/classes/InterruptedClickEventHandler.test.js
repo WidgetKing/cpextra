@@ -32,7 +32,8 @@ describe("A test suite for the InterruptedClickEventHandler class", function () 
                     "DOUBLE_CLICK":"dblclick",
                     "MOUSE_DOWN":"mousedown",
                     "MOUSE_UP":"mouseup"
-                }
+                },
+                "useTouchEvents":true
             },
             "preferences":{
                 "doubleClickDelay":2000
@@ -73,15 +74,8 @@ describe("A test suite for the InterruptedClickEventHandler class", function () 
         delete window._extra;
     });
 
-    it("should not dispatch any events if no changes in state occur", function () {
+    it("should dispatch click event if down and up events are detected", function () {
         eventHandlers.mousedown(leftClickEvent);
-        eventHandlers.mouseup(leftClickEvent);
-        expect(this.eventMediator.dispatchEvent).not.toHaveBeenCalled();
-    });
-
-    it("should dispatch a click event if state changes part way through", function () {
-        eventHandlers.mousedown(leftClickEvent);
-        this.handler.stateHasChanged();
         eventHandlers.mouseup(leftClickEvent);
         expect(this.eventMediator.dispatchEvent).toHaveBeenCalledWith("click");
     });
@@ -95,26 +89,15 @@ describe("A test suite for the InterruptedClickEventHandler class", function () 
     });*/
 
     it("should not dispatch a click event if we just get a mouse up and no mouse down", function () {
-        this.handler.stateHasChanged();
         eventHandlers.mouseup(leftClickEvent);
         expect(this.eventMediator.dispatchEvent).not.toHaveBeenCalled();
     });
 
     it("should not dispatch a click event if we moused up somewhere outside of the object", function () {
         eventHandlers.mousedown(leftClickEvent);
-        this.handler.stateHasChanged();
         eventHandlers.documentUp(leftClickEvent);
         eventHandlers.mouseup(leftClickEvent);
         expect(this.eventMediator.dispatchEvent).not.toHaveBeenCalled();
-    });
-
-    it("should not dispatch a click event if the state changed before the click", function () {
-
-        this.handler.stateHasChanged();
-        eventHandlers.mousedown(leftClickEvent);
-        eventHandlers.mouseup(leftClickEvent);
-        expect(this.eventMediator.dispatchEvent).not.toHaveBeenCalled();
-
     });
 
     it("should unload listeners", function () {
@@ -128,16 +111,13 @@ describe("A test suite for the InterruptedClickEventHandler class", function () 
     it("should dispatch a double click event if two interrupted clicks occur close to each other", function () {
 
         eventHandlers.mousedown(leftClickEvent);
-        this.handler.stateHasChanged();
         eventHandlers.mouseup(leftClickEvent);
         eventHandlers.mousedown(leftClickEvent);
-        this.handler.stateHasChanged();
         eventHandlers.mouseup(leftClickEvent);
         expect(this.eventMediator.dispatchEvent).toHaveBeenCalledWith("dblclick");
         this.eventMediator.dispatchEvent.calls.reset();
 
         eventHandlers.mousedown(leftClickEvent);
-        this.handler.stateHasChanged();
         eventHandlers.mouseup(leftClickEvent);
         expect(this.eventMediator.dispatchEvent).not.toHaveBeenCalledWith("dblclick");
 
@@ -147,20 +127,17 @@ describe("A test suite for the InterruptedClickEventHandler class", function () 
 
         // First Click
         eventHandlers.mousedown(leftClickEvent);
-        this.handler.stateHasChanged();
         eventHandlers.mouseup(leftClickEvent);
 
         // Second Click - Three seconds later
         milliseconds = 3000;
         eventHandlers.mousedown(leftClickEvent);
-        this.handler.stateHasChanged();
         eventHandlers.mouseup(leftClickEvent);
         expect(this.eventMediator.dispatchEvent).not.toHaveBeenCalledWith("dblclick");
 
         // Third Click - Two seconds later
         milliseconds += _extra.preferences.doubleClickDelay;
         eventHandlers.mousedown(leftClickEvent);
-        this.handler.stateHasChanged();
         eventHandlers.mouseup(leftClickEvent);
         expect(this.eventMediator.dispatchEvent).toHaveBeenCalledWith("dblclick");
 

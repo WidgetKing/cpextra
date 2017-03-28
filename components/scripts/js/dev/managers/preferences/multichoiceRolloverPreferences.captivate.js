@@ -110,13 +110,14 @@ _extra.registerModule("multichoiceRolloverPreferences", ["preferenceManager", "h
             var that = this,
                 dummyHighlight = _extra.w.document.getElementById(this.element.id + "_dummyhighlight"),
                 text = _extra.w.document.getElementById(this.answerTextCanvasDivName).parentNode,
+                baseZIndex = _extra.w.parseInt(dummyHighlight.style.zIndex),
                 bulletText = this.answerLabelCanvasElement.parentNode;
 
 
             // Send the highlight to the top.
             text.style.position = "absolute";
-            text.style.zIndex = dummyHighlight.style.zIndex + 1;
-            bulletText.style.zIndex = text.style.zIndex + 1;
+            text.style.zIndex = baseZIndex + 1;
+            bulletText.style.zIndex = baseZIndex + 2;
 
             function mouseOverHandler () {
                 // When the question has been answered, we shouldn't change the rollover color.

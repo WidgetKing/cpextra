@@ -19,6 +19,12 @@ _extra.registerModule("TextEntryBoxDataProxy", ["BaseSlideObjectDataProxy"], fun
 
     _extra.registerClass("TextEntryBoxDataProxy", TextEntryBoxDataProxy, "BaseSlideObjectDataProxy", _extra.CAPTIVATE);
 
+    _extra.w.Object.defineProperty(TextEntryBoxDataProxy.prototype,"inputDivName", {
+        get: function() {
+            return this.name + "_inputField";
+        }
+    });
+
     _extra.w.Object.defineProperty(TextEntryBoxDataProxy.prototype,"variable", {
         get: function() {
             return this._data.base.vn;

@@ -30,8 +30,29 @@ _extra.registerModule("BaseSlideObjectDataProxy", function () {
         get name(){
             return this._name;
         },
+        get baseItemName() {
+            return this._data.base.bstin;
+        },
         get data() {
             return this._data;
+        },
+        get originalX() {
+            return this._data.container.b[0];
+        },
+        get originalY() {
+            return this._data.container.b[1];
+        },
+        get originalWidth() {
+            return this._data.container.b[2] - this.originalX;
+        },
+        get originalHeight() {
+            return this._data.container.b[3] - this.originalY;
+        },
+        get startFrame() {
+            return this._data.base.from;
+        },
+        get endFrame() {
+            return this._data.base.to;
         },
         get type() {
             return this._type;

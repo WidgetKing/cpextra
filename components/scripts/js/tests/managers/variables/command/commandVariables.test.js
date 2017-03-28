@@ -11,10 +11,9 @@
 
     function performCommandVariablesTest(software, getMockObject) {
 
-        fdescribe("A test suite for command variables in " + software, function () {
+        describe("A test suite for command variables in " + software, function () {
 
-            var module = unitTests.getModule("commandVariableManager"),
-                whiteSpaceManager = unitTests.getModule("whiteSpaceManager");
+            var module = unitTests.getModule("commandVariableManager");
 
             beforeEach(function () {
                 window._extra = getMockObject();
@@ -43,7 +42,7 @@
                 this.onLoadCallback();
 
                 expect(_extra.variableManager.hasVariable).toHaveBeenCalledWith("xcmndHide");
-                expect(_extra.variableManager.hasVariable).not.toHaveBeenCalledWith("_xcmndHide");
+                expect(_extra.variableManager.hasVariable).toHaveBeenCalledWith("_xcmndHide");
                 expect(_extra.variableManager.hasVariable).toHaveBeenCalledWith("_xcmndEnable");
             });
 
@@ -171,7 +170,9 @@
         var variables = {
             "xcmndHide":0,
             "xcmndShow":"My_Text_Box",
-            "_xcmndEnable":0
+            "_xcmndEnable":0,
+            "xcmndReset":0,
+            "_xcmndReset":0
         };
 
         var callbacks = {};

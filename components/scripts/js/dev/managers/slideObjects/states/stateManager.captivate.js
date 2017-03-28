@@ -11,8 +11,7 @@ _extra.registerModule("stateManager_software",["Callback","slideObjectManager_gl
     ///////////////////////////////////////////////////////////////////////
     /////////////// Replace Native Change State Method
     ///////////////////////////////////////////////////////////////////////
-    var nativeChangeStateMethod = _extra.captivate.api.changeState;
-    _extra.captivate.api.changeState = function (slideObjectName, state) {
+    _extra.addHookAfter(_extra.captivate.api, "changeState", function (slideObjectName, state) {
 
         var slideObjectData = _extra.dataManager.getSlideObjectDataByName(slideObjectName);
 
@@ -20,7 +19,7 @@ _extra.registerModule("stateManager_software",["Callback","slideObjectManager_gl
         // that doesn't exist. If that happens and we react to it, then that could cause errors in the slide
         // object proxy. Therefore, we must first check to see if this state exists before we tell slide objects
         // to react to it.
-        if (slideObjectData.hasState(state)) {
+        if (slideObjectData && slideObjectData.hasState(state)) {
 
             // Notify callbacks of state change.
             var changeDetails = {
@@ -28,14 +27,15 @@ _extra.registerModule("stateManager_software",["Callback","slideObjectManager_gl
                 "stateName": state
             };
 
-            _extra.slideObjects.states.changeCallback.sendToCallback("*", changeDetails);
-            _extra.slideObjects.states.changeCallback.sendToCallback(slideObjectName, changeDetails);
+            _extra.slideObjects.states.callOnStateDrawn(slideObjectName, function () {
+
+                _extra.slideObjects.states.changeCallback.sendToCallback("*", changeDetails);
+                _extra.slideObjects.states.changeCallback.sendToCallback(slideObjectName, changeDetails);
+
+            });
 
         }
-
-        // We call the native function after the callbacks to avoid any 'mouse out' hijinks.
-        nativeChangeStateMethod(slideObjectName, state);
-    };
+    });
     ///////////////////////////////////////////////////////////////////////
     /////////////// Define Main Methods
     ///////////////////////////////////////////////////////////////////////
@@ -43,7 +43,32 @@ _extra.registerModule("stateManager_software",["Callback","slideObjectManager_gl
     _extra.slideObjects.states = {
         "change":function (query, state) {
             _extra.slideObjects.enactFunctionOnSlideObjects(query, function (slideObjectName) {
-                _extra.captivate.api.changeState(slideObjectName, state);
+
+                var changeState = function () {
+                    _extra.captivate.api.changeState(slideObjectName, state);
+                };
+
+                // Check if the slide object has entered the timeline yet
+                // If it hasn't, then we need to wait until it has entereted the timeline to change its state.
+                // If we change it too early, then this will cause the slide object to appear before it is
+                // set to appear in the Captivate timeline.
+                // Bug voidance
+                if (_extra.slideManager.isSlideObjectOnSlideAndNotInTimeline(slideObjectName)) {
+
+                    var callback = function () {
+
+                        changeState();
+                        _extra.slideObjects.enterTimelineCallback.removeCallback(slideObjectName, callback);
+
+                    };
+
+                    _extra.slideObjects.enterTimelineCallback.addCallback(slideObjectName, callback);
+
+                } else {
+
+                    changeState();
+
+                }
             });
         },
         "fixMissingMouseOutIssue":function (internalStateData, nameProperty) {

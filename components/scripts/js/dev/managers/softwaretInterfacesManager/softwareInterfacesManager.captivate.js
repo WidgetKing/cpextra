@@ -9,6 +9,18 @@ _extra.registerModule("softwareInterfacesManager", function () {
 
     "use strict";
 
+    function getProjectDimensions(data) {
+        if (_extra.captivate.projectContainer.style[data.containerProperty] === "100%") {
+
+            return _extra.w[data.innerProperty];
+
+        } else {
+
+            return _extra.w.parseInt(data.containerSize);
+
+        }
+    }
+
     // Define a private object to hold the references to the different points in
     // the Captivate API
     _extra.captivate = {
@@ -25,35 +37,35 @@ _extra.registerModule("softwareInterfacesManager", function () {
         "playbar": new _extra.classes.PlaybarProxy(),
         "variableManager": _extra.w.cp.variablesManager,
         "isResponsive": _extra.w.cp.responsive,
-        "projectDIV": _extra.w.cp.projectContainer,
+        "projectContainer": _extra.w.cp.projectContainer,
+        "projectDIV": _extra.w.document.getElementById("project"),
         "audioManager": _extra.w.cp.movie.am,
         "numSlides":_extra.w.cpInfoSlideCount,
         "openURLLocation":_extra.w.cp,
         "openURLMethodName":"openURL",
+        "isInitated": function () {
+            return _extra.w.cp.initiated;
+        },
         "getResponsiveProjectWidth": function () {
             return _extra.captivate.api.ResponsiveProjWidth;
         },
         "getProjectWidth": function () {
-            if (_extra.captivate.projectDIV.style.width === "100%") {
 
-                return _extra.w.innerWidth;
+            return getProjectDimensions({
+                "containerProperty":"width",
+                "innerProperty":"innerWidth",
+                "containerSize": _extra.captivate.projectContainer.style.width
+            });
 
-            } else {
-
-                return parseInt(_extra.captivate.projectDIV.style.width);
-
-            }
         },
         "getProjectHeight": function () {
-            if (_extra.captivate.projectDIV.style.height === "100%") {
 
-                return _extra.w.innerHeight;
+            return getProjectDimensions({
+                "containerProperty":"height",
+                "innerProperty":"innerHeight",
+                "containerSize": _extra.captivate.projectDIV.style.height
+            });
 
-            } else {
-
-                return parseInt(_extra.captivate.projectDIV.style.height);
-
-            }
         },
         "events":{
             /**

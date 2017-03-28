@@ -57,11 +57,23 @@ function initExtra(topWindow) {
     // See the IE SAFETY section for more details.
     function createLoggingMethods(_extra) {
 
+        // Only for Captivate Prime test. DELETE THIS
+        /*var elemDiv = window.document.createElement('div');
+        elemDiv.style.cssText = 'position:absolute;width:100%;height:100%;z-index:100;';
+        window.setTimeout(function () {
+
+        //window.document.body.appendChild(elemDiv);
+        }, 100);
+        console.log(elemDiv);*/
+
         /**
          * Sends a message to the debug console of the browser, assuming the console is available.
          * @param message
          */
         _extra.log = function (message) {
+
+            // DELETE ME
+            //elemDiv.innerHTML += "<br/> " + message;
 
             if (_extra.debugging) {
 
@@ -124,13 +136,8 @@ function initExtra(topWindow) {
 
 
 
-    try {
     createLoggingMethods(_extra);
 
-    } catch (e) {
-
-    console.log("HERE");
-    }
 
     if (isProjectWindow(topWindow)) {
         // If the window we get right at the start is the project window, then this is most likely a headless project.
@@ -161,9 +168,6 @@ function initExtra(topWindow) {
     //////////////
     ///// Extra Pre-detection
     //////////////
-
-
-
 
 
     if (_extra.w.X !== undefined) {

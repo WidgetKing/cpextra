@@ -13,11 +13,6 @@ _extra.registerModule("createStateDataProxy",["factoryManager"], function () {
 
 
         switch (type) {
-            /*case _extra.dataTypes.slideObjects.TEXT_ENTRY_BOX :
-                return new _extra.classes.TextEntryBoxProxy(element, data);
-                break;*/
-            case _extra.dataTypes.slideObjects.TEXT_ENTRY_BOX :
-                return new _extra.classes.TextEntryBoxStateDataProxy(data);
 
             /*case _extra.dataTypes.slideObjects.CLICK_BOX:
                 return new _extra.classes.ClickBoxStateDataProxy(data);
@@ -27,6 +22,17 @@ _extra.registerModule("createStateDataProxy",["factoryManager"], function () {
 
             /*case _extra.dataTypes.slideObjects.CAPTION :
                 return new _extra.classes.CaptionStateDataProxy(data);*/
+
+            /*case _extra.dataTypes.slideObjects.WEB_OBJECT :
+                return new _extra.classes.WebObjectStateDataProxy(data);*/
+
+
+
+                ///////////////////////////////////////////////////////////////////////
+                /////////////// IMPLEMENTED
+                ///////////////////////////////////////////////////////////////////////
+            case _extra.dataTypes.slideObjects.TEXT_ENTRY_BOX :
+                return new _extra.classes.TextEntryBoxStateDataProxy(data);
 
             case _extra.dataTypes.slideObjects.BUTTON :
                 return new _extra.classes.ButtonStateDataProxy(data);
@@ -40,8 +46,9 @@ _extra.registerModule("createStateDataProxy",["factoryManager"], function () {
             case _extra.dataTypes.slideObjects.SHAPE :
                 return new _extra.classes.ShapeStateDataProxy(data);
 
-            /*case _extra.dataTypes.slideObjects.WEB_OBJECT :
-                return new _extra.classes.WebObjectStateDataProxy(data);*/
+            case _extra.dataTypes.slideObjects.WEB_OBJECT :
+                return new _extra.classes.WebObjectStateDataProxy(data);
+
 
             default :
                 return new _extra.classes.StateDataProxy(data);

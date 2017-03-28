@@ -15,6 +15,14 @@ _extra.registerModule("existingActionCommandVariables", ["queryManager", "slideO
 
     ////////////////////////////////
     ////////// Hide
+    register("Hide", function (parameter) {
+        checkForVariable(parameter, _extra.slideObjects.hide);
+    });
+    ////////////////////////////////
+    ////////// Show
+    register("Show", function (parameter) {
+        checkForVariable(parameter, _extra.slideObjects.show);
+    });
 
     _extra.variableManager.commands.hide = function (query) {
         _extra.variableManager.parseSets.SP.CD.SOR(query, _extra.slideObjects.hide);
@@ -24,13 +32,6 @@ _extra.registerModule("existingActionCommandVariables", ["queryManager", "slideO
         _extra.variableManager.parseSets.SP.CD.SOR(query, _extra.slideObjects.show);
     };
 
-    _extra.variableManager.commands.enable = function (query) {
-        _extra.variableManager.parseSets.SP.CD.SOR(query, _extra.slideObjects.enable);
-    };
-
-    _extra.variableManager.commands.disable = function (query) {
-        _extra.variableManager.parseSets.SP.CD.SOR(query, _extra.slideObjects.disable);
-    };
 
     _extra.variableManager.commands.changeState = function (query, stateName) {
 
@@ -48,5 +49,6 @@ _extra.registerModule("existingActionCommandVariables", ["queryManager", "slideO
 
     register("ChangeState", _extra.variableManager.commands.changeState, handlers.sendParametersAsParameters);
 
+    });
 
 });
