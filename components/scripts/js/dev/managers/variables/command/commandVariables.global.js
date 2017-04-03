@@ -12,6 +12,72 @@ _extra.registerModule("commandVariables_global", ["commandVariableManager", "sli
     var register = _extra.variableManager.registerCommandVariable,
         handlers = _extra.variableManager.parameterHandlers;
 
+    function processRegistration(data) {
+        /*var example = {
+            "EnableMouseEvents":{
+                "parameterHandler":handlers.sendParametersAsParameters
+                "commandName":"enableMouseEvents",
+                "updateData":function (data, a, b) {
+
+                }
+                "parseSet":_extra.variableManager.parseSets.SP.CD.SOR,
+                "parseSetData":{
+                    "anything":null
+                }
+            }
+        };*/
+
+        function entryPoint() {
+            for (var variableName in data) {
+                if (data.hasOwnProperty(variableName)) {
+
+                    registerVariable(variableName, data[variableName]);
+
+                }
+            }
+        }
+
+        function registerVariable(variableName, data) {
+
+            function entryPoint() {
+
+                _extra.variableManager.commands[data.commandName] = handleVariableChange;
+
+                // Register
+                _extra.variableManager.registerCommandVariable(variableName, handleVariableChange,
+                    data.parameterHandler);
+
+            }
+
+            function handleVariableChange () {
+
+                if (data.updateData) {
+
+                    // Make the first parameter the parseSetData
+                    Array.prototype.unshift.call(arguments, data.parseSetData);
+                    // Update data to the parameters we've received
+                    data.updateData.apply(this, arguments);
+
+                    data.parseSet(data.parseSetData);
+
+                } else {
+
+                    _extra.error("You forgot to add a data.updateData method");
+
+                }
+
+            }
+
+            entryPoint();
+
+        }
+
+
+        entryPoint();
+
+
+    }
+
     ///////////////////////////////////////////////////////////////////////
     /////////////// BASIC COMMAND VARIABLES
     ///////////////////////////////////////////////////////////////////////
@@ -93,6 +159,24 @@ _extra.registerModule("commandVariables_global", ["commandVariableManager", "sli
     };
 
     register("SetCursor", _extra.variableManager.commands.setCursor, handlers.sendParametersAsParameters);
+
+    ///////////////////////////////////////////////////////////////////////
+    /////////////// ACTIONS
+    ///////////////////////////////////////////////////////////////////////
+    ////////////////////////////////
+    ////////// Call Action On
+    _extra.variableManager.commands.callActionOn = function (query, actionName) {
+
+        _extra.variableManager.parseSets.MP.SOR_STR(query, actionName, function (slideObjectName, cursorName) {
+
+            _extra.actionManager.callActionOn(slideObjectName, cursorName);
+
+        });
+
+    };
+    // Note: This doesn't work with @ syntax
+    register("CallActionOn", _extra.variableManager.commands.callActionOn,
+             handlers.sendParametersAsParameters);
 
     ////////////////////////////////
     ////////// Position

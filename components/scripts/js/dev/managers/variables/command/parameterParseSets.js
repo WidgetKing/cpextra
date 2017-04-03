@@ -252,15 +252,58 @@ _extra.registerModule("parameterParseSets", ["parameterParser", "variableManager
 
                 },
                 // STring Related
-                "STR":function (string) {
+                "STR":function (string, validation, exception) {
 
-                    var data = _extra.variableManager.parse.string(string);
+                    function getString(string) {
 
-                    if (data.isVariable) {
-                        return data.variable.value;
-                    } else {
-                        return data.value;
+                        var data = _extra.variableManager.parse.string(string);
+
+                        if (data.isVariable) {
+                            return data.variable.value;
+                        } else {
+                            return data.value;
+                        }
+
                     }
+
+                    function executeValidation (originalString) {
+
+                        var string = originalString.toLowerCase();
+                        var result = validation[string];
+
+                        if (result === undefined) {
+
+                            exception(originalString);
+
+
+                        } else {
+
+                            if (validation[string] !== null) {
+
+                                return validation[string];
+
+                            } else {
+
+                                return string;
+
+                            }
+
+                        }
+
+                        return null;
+
+                    }
+
+
+
+                    // Entry point
+                    string = getString(string);
+
+                    if (validation) {
+                        string = executeValidation(string);
+                    }
+
+                    return string;
 
                 }
             }

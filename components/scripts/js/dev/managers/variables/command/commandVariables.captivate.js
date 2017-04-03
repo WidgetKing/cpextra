@@ -12,9 +12,6 @@ _extra.registerModule("commandVariables_software", ["commandVariables_global", "
     var register = _extra.variableManager.registerCommandVariable,
         handlers = _extra.variableManager.parameterHandlers;
 
-    // Note: This doesn't work with @ syntax
-    register("CallActionOn", _extra.actionManager.callActionOn, handlers.sendParametersAsParameters);
-
     ////////////////////////////////
     ////////// Event Handler
     register("AddEventListener", _extra.slideObjects.addEventListener, handlers.sendParametersAsParameters);

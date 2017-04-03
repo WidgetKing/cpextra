@@ -264,17 +264,17 @@ describe("A test suite for the parameterParseSets", function () {
     ///////////////////////////////////////////////////////////////////////
     /////////////// MD.SOR_STR
     ///////////////////////////////////////////////////////////////////////
-    describe("A test suite for SP.CD.STR", function () {
+    fdescribe("A test suite for SP.CD.STR", function () {
 
         beforeEach(function () {
             testSet = _extra.variableManager.parseSets.SP.CD.STR;
         });
-        
+
         it("should send a string directly through if it doesn't match a variable", function () {
-            
+
             expect(testSet("foobar")).toBe("foobar");
             expect(testSet('"foobar"')).toBe("foobar");
-            
+
         });
 
         it("should give us the variable's value if we pass in a variable name", function () {
@@ -283,7 +283,24 @@ describe("A test suite for the parameterParseSets", function () {
             expect(testSet("$$slideObjectVariable$$")).toBe("slideObject");
 
         });
-        
+
+        it("should allow us to set valid strings and throw exceptions when they don't fit", function () {
+
+            var spy = jasmine.createSpy("spy");
+
+            expect(testSet("foo", {"foo":null}, spy)).toBe("foo");
+            expect(testSet("FOO", {"foo":null}, spy)).toBe("foo");
+            expect(testSet("foo", {"foo":"bar"}, spy)).toBe("bar");
+            expect(testSet("foobar", {"foo":"bar", "foobar":"bar"}, spy)).toBe("bar");
+
+            expect(spy).not.toHaveBeenCalled();
+
+            // Exceptions
+            expect(testSet("INVALID", {"foo":"bar"}, spy)).toBe(null);
+            expect(spy).toHaveBeenCalledWith("INVALID");
+
+        });
+
     });
 
 
