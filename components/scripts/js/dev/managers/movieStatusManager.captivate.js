@@ -23,7 +23,7 @@ _extra.registerModule("movieStatusManager", ["softwareInterfacesManager", "varia
         },
 
         "isCurrentFrameWithinRange": function (startFrame, endFrame) {
-            return _extra.movieStatus.currentFrame < endFrame &&
+            return _extra.movieStatus.currentFrame <= endFrame &&
                 _extra.movieStatus.currentFrame >= startFrame;
         }
 
@@ -33,9 +33,17 @@ _extra.registerModule("movieStatusManager", ["softwareInterfacesManager", "varia
     // This is read by the xinfoCourseElapsedTime variables.
     _extra.variableManager.listenForVariableChange("cpInfoCurrentFrame", function () {
 
-        _extra.movieStatus.currentFrame = _extra.variableManager.getVariableValue("cpInfoCurrentFrame");
-        // dispatch new frame event
-        _extra.eventManager.eventDispatcher.dispatchEvent(_extra.createEvent("newframe"));
+        var newFrameNumber = _extra.variableManager.getVariableValue("cpInfoCurrentFrame");
+        newFrameNumber = _extra.w.Math.min(_extra.movieStatus.totalFrames, newFrameNumber);
+
+        if (newFrameNumber !== _extra.movieStatus.currentFrame) {
+
+            _extra.movieStatus.currentFrame = newFrameNumber;
+            // dispatch new frame event
+            _extra.eventManager.eventDispatcher.dispatchEvent(_extra.createEvent("newframe"));
+
+        }
+
 
     });
 

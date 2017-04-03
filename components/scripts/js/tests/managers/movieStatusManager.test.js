@@ -23,6 +23,9 @@ describe("A test suite for _extra.movieStatus", function () {
         };
 
         window._extra = {
+            "w":{
+                "Math":Math
+            },
             "createEvent":function (name){
                 return {
                     "type":name
@@ -91,6 +94,15 @@ describe("A test suite for _extra.movieStatus", function () {
         expect(_extra.movieStatus.currentFrame).toBe(12);
 
         expect(_extra.eventManager.eventDispatcher.dispatchEvent).toHaveBeenCalled();
+
+    });
+
+    it("shouldn't let current frame exceed the maximum number of frames", function () {
+
+        _extra.captivate.totalFrames = 100;
+
+        _extra.variableManager.setVariableValue("cpInfoCurrentFrame", 101);
+        expect(_extra.movieStatus.currentFrame).toBe(100);
 
     });
 });
