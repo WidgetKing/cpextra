@@ -55,11 +55,15 @@ describe("A test suite for the parameterParseSets", function () {
         slideNames = {
             "slide1":{
                 "scene":1,
-                "slide":1
+                "slide":1 // Note: the slide numbers are reduced by 1 by the getSlideIndexFromName method
             },
             "slide2": {
                 "scene":1,
                 "slide":2
+            },
+            "slide3": {
+                "scene":1,
+                "slide":3
             },
             "slide10": {
                 "scene":1,
@@ -87,8 +91,13 @@ describe("A test suite for the parameterParseSets", function () {
                 }
             },
             "slideManager":{
+                "numSlides":100,
                 "getSlideIndexFromName": function (name) {
-                    return slideNames[name];
+                    var details = slideNames[name];
+                    if (details) {
+                        details.slide -= 1;
+                    }
+                    return details;
                 },
                 "enactFunctionOnSlides": function (query, method) {
                     var list = _extra.queryList(query, slideNames);
@@ -281,7 +290,7 @@ describe("A test suite for the parameterParseSets", function () {
     ///////////////////////////////////////////////////////////////////////
     /////////////// SP.CD_SLR
     ///////////////////////////////////////////////////////////////////////
-    fdescribe("A test suite for SP.CD_SLR", function () {
+    describe("A test suite for SP.CD_SLR", function () {
 
         beforeEach(function () {
             testSet = _extra.variableManager.parseSets.SP.CD.SLR;
@@ -335,12 +344,110 @@ describe("A test suite for the parameterParseSets", function () {
 
         });
 
-        xit("should be able to distinguish between valid and invalid ranges", function () {
+        it("should be able to accept number ranges", function () {
 
             testSet("1-3", dummy);
             expect(dummy).toHaveBeenCalledWith(1);
             expect(dummy).toHaveBeenCalledWith(2);
             expect(dummy).toHaveBeenCalledWith(3);
+
+            expect(dummy).not.toHaveBeenCalledWith(4);
+            expect(dummy).not.toHaveBeenCalledWith(0);
+
+            testSet("7-5", dummy);
+            expect(dummy).toHaveBeenCalledWith(7);
+            expect(dummy).toHaveBeenCalledWith(6);
+            expect(dummy).toHaveBeenCalledWith(5);
+
+            testSet("9-9", dummy);
+            expect(dummy).toHaveBeenCalledWith(9);
+
+        });
+
+        it("should be able to use slide names in ranges", function () {
+
+            testSet("slide1-slide2", dummy);
+            expect(dummy).toHaveBeenCalledWith(1);
+            expect(dummy).toHaveBeenCalledWith(2);
+
+            testSet("slide3-5", dummy);
+            expect(dummy).toHaveBeenCalledWith(3);
+            expect(dummy).toHaveBeenCalledWith(4);
+            expect(dummy).toHaveBeenCalledWith(5);
+
+            testSet("12-slide10", dummy);
+            expect(dummy).toHaveBeenCalledWith(12);
+            expect(dummy).toHaveBeenCalledWith(11);
+            expect(dummy).toHaveBeenCalledWith(10);
+
+        });
+
+        it("should output every slide number if passed 'all'", function () {
+
+            _extra.slideManager.numSlides = 3;
+            testSet("all", dummy);
+            expect(dummy).toHaveBeenCalledWith(1);
+            expect(dummy).toHaveBeenCalledWith(2);
+            expect(dummy).toHaveBeenCalledWith(3);
+
+            dummy.calls.reset();
+
+            testSet("ALL", dummy);
+            expect(dummy).toHaveBeenCalledWith(1);
+            expect(dummy).toHaveBeenCalledWith(2);
+            expect(dummy).toHaveBeenCalledWith(3);
+
+            expect(_extra.error).not.toHaveBeenCalled();
+
+        });
+
+        it("should report an error if we pass it invalid ranges", function () {
+
+            testSet("1-3-5", dummy);
+            expect(_extra.error).toHaveBeenCalledWith("CV070", jasmine.anything());
+            expect(dummy).not.toHaveBeenCalled();
+
+            _extra.error.calls.reset();
+
+            testSet("1-", dummy);
+            expect(_extra.error).toHaveBeenCalledWith("CV070", jasmine.anything());
+            expect(dummy).not.toHaveBeenCalled();
+
+        });
+
+        it("should report error if we pass an invalid slide name", function () {
+
+            testSet("invalidSlide", dummy);
+            expect(_extra.error).toHaveBeenCalledWith("CV071", jasmine.anything());
+            expect(dummy).not.toHaveBeenCalled();
+
+            _extra.error.calls.reset();
+
+            testSet("invalidSlide-5", dummy);
+            expect(_extra.error).toHaveBeenCalledWith("CV071", jasmine.anything());
+            expect(dummy).not.toHaveBeenCalled();
+
+            _extra.error.calls.reset();
+
+            testSet("5-invalidSlide", dummy);
+            expect(_extra.error).toHaveBeenCalledWith("CV071", jasmine.anything());
+            expect(dummy).not.toHaveBeenCalled();
+
+        });
+
+        it("should report error if we try to mark a slide as correct which is beyond the number of slides in the project", function () {
+
+            _extra.slideManager.numSlides = 100;
+            testSet(101, dummy);
+            expect(_extra.error).toHaveBeenCalledWith("CV072", jasmine.anything(), jasmine.anything());
+            expect(dummy).not.toHaveBeenCalled();
+
+            _extra.error.calls.reset();
+
+            testSet("99-101", dummy);
+            expect(_extra.error).toHaveBeenCalledWith("CV072", jasmine.anything(), jasmine.anything());
+            expect(dummy).toHaveBeenCalledWith(99);
+            expect(dummy).toHaveBeenCalledWith(100);
 
         });
         

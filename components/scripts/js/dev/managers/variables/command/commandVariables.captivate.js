@@ -20,8 +20,4 @@ _extra.registerModule("commandVariables_software", ["commandVariables_global", "
     register("AddEventListener", _extra.slideObjects.addEventListener, handlers.sendParametersAsParameters);
     register("RemoveEventListener", _extra.slideObjects.removeEventListener, handlers.sendParametersAsParameters);
 
-    ////////////////////////////////
-    ////////// TOC
-    register("CompleteSlide", _extra.TOCManager.completeSlide);
-
 }, _extra.CAPTIVATE);

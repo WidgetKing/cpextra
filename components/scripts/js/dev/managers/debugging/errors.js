@@ -191,13 +191,15 @@ _extra.registerModule("errors", ["debuggingManager"], function () {
                     "<br>Please check the spelling of <b>" + value + "</b>.";
         },
         "CV071": function (slideName) {
-            return "Tried to mark slide <b>" + slideName + "</b> as complete, but could not find any slide with the name <b>" + slideName + "</b>." +
-                    "<br/>Please check the spelling of <b>" + slideName + "</b>. Slide names are <b>case sensitive</b> and <b>cannot have spaces</b>.";
+            return "Tried to mark slide <b>" + slideName + "</b> as complete, but could not find any slide with the name <b>" +
+                   slideName + "</b>." + "<br/>Please check the spelling of <b>" + slideName +
+                   "</b>. Slide names are <b>case sensitive</b>. If the slide name contains spaces, " +
+                'wrap the slide name in "double quotes."';
         },
         "CV072": function (slideNumber, slideCount) {
             return "Tried to mark slide number <b>" + slideNumber + "</b> as complete, but there are only <b>" +
-                    slideCount + "</b> slides in the project." +
-                    "<br/>Perhaps you have deleted a few slides and this command needs updating.";
+                   slideCount + "</b> slides in the project." +
+                   "<br/>Perhaps you have deleted a few slides and this command needs updating.";
         }
     };
 

@@ -12,7 +12,7 @@ _extra.registerModule("queryManager", function () {
     _extra.WILDCARD_CHARACTER = "@";
     _extra.GLOBAL_WILDCARD_CHARACTER = "#";
 
-    _extra.queryList = function(query, list, wildcard) {console.log("HERE")
+    _extra.queryList = function(query, list, wildcard) {
 
         if (!wildcard) {
             wildcard = _extra.getQueryType(query);

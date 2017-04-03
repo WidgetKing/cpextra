@@ -73,6 +73,12 @@ _extra.registerModule("existingActionCommandVariables", ["queryManager", "slideO
 
     };
 
+    _extra.variableManager.commands.completeSlide = function (query) {
+
+        _extra.variableManager.parseSets.SP.CD.SLR(query, _extra.TOCManager.completeSlide);
+
+    };
+
 
     register("Hide", _extra.variableManager.commands.hide);
     register("Show", _extra.variableManager.commands.show);
@@ -83,4 +89,8 @@ _extra.registerModule("existingActionCommandVariables", ["queryManager", "slideO
 
     register("PreventTabOut", _extra.variableManager.commands.preventTabOut);
     register("AllowTabOut", _extra.variableManager.commands.allowTabOut);
+
+    ////////////////////////////////
+    ////////// TOC
+    register("CompleteSlide", _extra.variableManager.commands.completeSlide);
 });

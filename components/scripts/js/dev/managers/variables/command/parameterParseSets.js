@@ -81,14 +81,69 @@ _extra.registerModule("parameterParseSets", ["parameterParser", "variableManager
                 // SLide Related
                 "SLR":function (string, output) {
 
+                    function initialParsing() {
+
+                        var data = _extra.variableManager.parse.string(string);
+
+                        if (data.is$Variable) {
+
+                            data = data.variable;
+
+                        }
+
+                        if (!canOutputSlide(data.value)) {
+
+                            if (data.isVariable) {
+
+                                data = data.variable;
+
+                            }
+
+                            if (data.isNumber) {
+
+                                outputSlide(data.value);
+
+                            } else if (data.isQuery) {
+
+                                _extra.slideManager.enactFunctionOnSlides(data.value, function (name) {
+                                    // Convert name to number and export
+                                    canOutputSlide(name);
+                                });
+
+                            } else if (!canOutputSlide(data.value)) {
+
+                                // Check if we're dealing with 'all'
+                                if (data.value.toLowerCase && data.value.toLowerCase() === "all") {
+                                    data.value = "1-" + _extra.slideManager.numSlides;
+                                }
+
+                                // Now we're possibly dealing with a range
+                                manageRange(data.value);
+
+                            }
+
+                        }
+                    }
+
                     function canOutputSlide(name) {
 
                         var slideDetails = _extra.slideManager.getSlideIndexFromName(name);
 
                         if (slideDetails && slideDetails.slide > -1) {
 
-                            output(slideDetails.slide);
-                            return true;
+                            // counter for zero based
+                            var slideNumber = slideDetails.slide + 1;
+
+                            if (slideNumber > _extra.slideManager.numSlides) {
+
+                                _extra.error("CV072", slideNumber, _extra.slideManager.numSlides);
+
+                            } else {
+
+                                outputSlide(slideNumber);
+                                return true;
+
+                            }
 
                         }
 
@@ -96,45 +151,102 @@ _extra.registerModule("parameterParseSets", ["parameterParser", "variableManager
 
                     }
 
-                    function manageRange(data) {
+                    function manageRange(range) {
+                        var rangeComponents = range.split("-");
 
+                        switch (rangeComponents.length) {
+
+                            case 2:
+
+                                // Make sure none of these ranges are empty
+                                if (rangeComponents[0] !== "" && rangeComponents[1] !== "") {
+
+                                    applyToRange(rangeComponents[0], rangeComponents[1]);
+
+                                } else {
+
+                                    _extra.error("CV070", range);
+
+                                }
+
+
+                                break;
+
+                            case 1:
+                                // If we're here, we've likely hit an invalid slide name
+                                _extra.error("CV071", range);
+                                break;
+
+                            default :
+                                _extra.error("CV070", range);
+                                break;
+
+                        }
                     }
 
-                    var data = _extra.variableManager.parse.string(string);
+                    function applyToRange (start, end) {
 
-                    if (data.is$Variable) {
+                        start = parseSlideIdentifier(start);
+                        end = parseSlideIdentifier(end);
 
-                        data = data.variable;
+                        if (start === null || end === null) {
+                            return;
+                        }
 
-                    }
+                        if (end < start) {
+                            var temp = start;
+                            start = end;
+                            end = temp;
+                        }
 
-                    if (!canOutputSlide(data.value)) {
+                        var i = start;
 
-                        if (data.isVariable) {
+                        while (i <= end) {
 
-                            data = data.variable;
+                            outputSlide(i);
+                            i += 1;
 
                         }
 
-                        if (data.isNumber) {
+                    }
 
-                            output(data.value);
+                    function parseSlideIdentifier (identifier) {
 
-                        } else if (data.isQuery) {
+                        if (_extra.w.isNaN(identifier)) { // Is a slide name
 
-                            _extra.slideManager.enactFunctionOnSlides(data.value, function (name) {
-                                // Convert name to number and export
-                                canOutputSlide(name);
-                            });
+                            var details = _extra.slideManager.getSlideIndexFromName(identifier);
 
-                        } else if (!canOutputSlide(data.value)) {
+                            if (details) {
+                                return details.slide + 1;
+                            } else {
+                                // Not a valid slide name
+                                _extra.error("CV071", identifier);
+                                return null;
+                            }
 
-                            // Now we're possibly dealing with a range
-                            manageRange(data);
+                        } else {
+                            return _extra.w.parseInt(identifier);
+                        }
+
+                    }
+
+                    function outputSlide (slideNumber) {
+
+                        if (slideNumber > _extra.slideManager.numSlides) {
+
+                            _extra.error("CV072", slideNumber, _extra.slideManager.numSlides);
+
+                        } else {
+
+                            output(slideNumber);
 
                         }
 
                     }
+
+
+
+                    initialParsing();
 
 
 
