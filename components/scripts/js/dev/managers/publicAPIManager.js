@@ -21,5 +21,7 @@ _extra.registerModule("publicAPIManager", function () {
         _extra.X.disable = _extra.variableManager.commands.disable;
         _extra.X.enable = _extra.variableManager.commands.enable;
         _extra.X.changeState = _extra.variableManager.commands.changeState;
+        _extra.X.completeSlide = _extra.variableManager.commands.completeSlide;
+
     };
 });
