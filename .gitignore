@@ -12,3 +12,4 @@ components/_dump
 components/legacy
 CaptivateExtra.iml
 coverage
+_dev.iml

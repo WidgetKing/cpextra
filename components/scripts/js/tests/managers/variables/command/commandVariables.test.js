@@ -1,223 +1,178 @@
 /**
  * Created with IntelliJ IDEA.
  * User: Tristan
- * Date: 20/10/15
- * Time: 9:40 AM
+ * Date: 4/04/17
+ * Time: 9:27 AM
  * To change this template use File | Settings | File Templates.
  */
-(function () {
+describe("A test suite for _extra.commandVariables", function () {
 
     "use strict";
 
-    function performCommandVariablesTest(software, getMockObject) {
+    var module = unitTests.getModule("commandVariables_global");
 
-        describe("A test suite for command variables in " + software, function () {
+    var register,
+        changeVariable;
 
-            var module = unitTests.getModule("commandVariableManager"),
-                whiteSpaceManager = unitTests.getModule("whiteSpaceManager");
+    beforeEach(function () {
 
-            beforeEach(function () {
-                window._extra = getMockObject();
-                _extra.classes = unitTests.classes;
-                spyOn(_extra.slideObjects, "hide").and.callThrough();
-                whiteSpaceManager();
-                this.onLoadCallback = module();
-            });
+        var variableMethods = {
 
-            afterEach(function () {
-                delete window._extra;
-            });
-
-            it("should allow us to register our own command variable", function () {
-                spyOn(_extra.variableManager,"hasVariable").and.callThrough();
-
-                _extra.variableManager.registerCommandVariable("MyVariable", function () {});
-                this.onLoadCallback();
-                expect(_extra.variableManager.hasVariable).toHaveBeenCalledWith("xcmndMyVariable");
-            });
-
-            it("should detect if relevant variables exist", function () {
-                spyOn(_extra.variableManager,"hasVariable").and.callThrough();
-                _extra.variableManager.registerCommandVariable("Hide", function () {});
-                _extra.variableManager.registerCommandVariable("Enable", function () {});
-                this.onLoadCallback();
-
-                expect(_extra.variableManager.hasVariable).toHaveBeenCalledWith("xcmndHide");
-                expect(_extra.variableManager.hasVariable).toHaveBeenCalledWith("_xcmndHide");
-                expect(_extra.variableManager.hasVariable).toHaveBeenCalledWith("_xcmndEnable");
-            });
-
-            it("should pass the parameters set in the variable along to an internal function", function () {
-
-                var dummy = jasmine.createSpy("hide calllback");
-
-                _extra.variableManager.registerCommandVariable("Hide",dummy);
-
-                this.onLoadCallback();
-
-                _extra.variableManager.setVariableValue("xcmndHide","foobar");
-                expect(dummy).toHaveBeenCalledWith("foobar");
-                _extra.variableManager.setVariableValue("xcmndHide","foo, bar");
-                expect(dummy).toHaveBeenCalledWith("foo");
-                expect(dummy).toHaveBeenCalledWith("bar");
-                expect(_extra.variableManager.getVariableValue("xcmndHide")).toBe("");
-            });
-
-            it("should not react to '' being passed into the command variables", function () {
-
-                var dummy = jasmine.createSpy("hide calllback");
-
-                _extra.variableManager.registerCommandVariable("Hide",dummy);
-
-                this.onLoadCallback();
-                _extra.variableManager.setVariableValue("xcmndHide","");
-                expect(_extra.slideObjects.hide).not.toHaveBeenCalled();
-            });
-
-            it("should strip out spaces from set value", function () {
-
-                var dummy = jasmine.createSpy("hide calllback");
-
-                _extra.variableManager.registerCommandVariable("Hide",dummy);
-
-                this.onLoadCallback();
-
-                _extra.variableManager.setVariableValue("xcmndHide","foo bar");
-                expect(dummy).toHaveBeenCalledWith("foobar");
-
-            });
-
-            it("should not strip out spaces from anything surrounded by double quotes: " + '""', function () {
-
-                var dummy = jasmine.createSpy("hide calllback");
-
-                _extra.variableManager.registerCommandVariable("Hide",dummy);
-
-                this.onLoadCallback();
-
-                _extra.variableManager.setVariableValue("xcmndHide",'"foo bar"');
-                expect(dummy).toHaveBeenCalledWith('"foo bar"');
-
-            });
-
-            it("should not split on commas ',' inside of double quotes: " + '""', function () {
-
-                var dummy = jasmine.createSpy("hide calllback");
-
-                _extra.variableManager.registerCommandVariable("Hide",dummy);
-
-                this.onLoadCallback();
-
-                _extra.variableManager.setVariableValue("xcmndHide",'"foo, bar", hello');
-                expect(dummy).toHaveBeenCalledWith('"foo, bar"');
-                expect(dummy).toHaveBeenCalledWith("hello");
-
-            });
-
-            it("should be able to handle the bug where Captivate assigns a div to a variable", function () {
-
-                // When you assign a captivate variable the name of a slide object, it assigns the variable
-                // with that slide object's div, rather than just the string.
-                // This can be a major headache sometimes.
-
-                var dummy = jasmine.createSpy("hide calllback");
-
-                _extra.variableManager.registerCommandVariable("Hide",dummy);
-
-                this.onLoadCallback();
-
-                _extra.variableManager.setVariableValue("xcmndHide", {
-                    id:"slideobject"
-                });
-                expect(dummy).toHaveBeenCalledWith("slideobject");
-
-                // If just a non-div object is passed in, then we won't notify CpExtra
-                dummy.calls.reset();
-                _extra.variableManager.setVariableValue("xcmndHide", {});
-                expect(dummy).not.toHaveBeenCalled();
-
-            });
-
-            it("should allow us to change the methods by which parameters are handled", function () {
-
-                var hideSpy = jasmine.createSpy("hide calllback"),
-                    showSpy = jasmine.createSpy("show calllback");
-
-                // Setup variables
-                _extra.variableManager.registerCommandVariable("Hide",hideSpy,
-                        _extra.variableManager.parameterHandlers.executeOncePerParameter);
-
-                _extra.variableManager.registerCommandVariable("Show", showSpy,
-                        _extra.variableManager.parameterHandlers.sendParametersAsParameters);
-
-                this.onLoadCallback();
-
-                _extra.variableManager.setVariableValue("xcmndHide", "foo, bar");
-                expect(hideSpy).toHaveBeenCalledWith("foo");
-                expect(hideSpy).toHaveBeenCalledWith("bar");
-
-                _extra.variableManager.setVariableValue("xcmndShow", "foo, bar");
-                expect(showSpy).toHaveBeenCalledWith("foo", "bar");
-
-            });
-
-        });
-
-
-    }
-
-    performCommandVariablesTest(unitTests.CAPTIVATE, function () {
-
-        var variables = {
-            "xcmndHide":0,
-            "xcmndShow":"My_Text_Box",
-            "_xcmndEnable":0,
-            "xcmndReset":0,
-            "_xcmndReset":0
         };
 
-        var callbacks = {};
+        changeVariable = function (name, value) {
+            if (variableMethods.hasOwnProperty(name)) {
+                variableMethods[name](value);
+            }
+        };
 
-        return {
+        window._extra = {
+            "classes":unitTests.classes,
+            "w":{
+                "Array":Array
+            },
             "variableManager":{
-                "hasVariable":function (name) {
-                    return variables.hasOwnProperty(name);
+                "registerCommandVariable":jasmine.createSpy("variableManager.registerCommandVariable").and.callFake(function (name, method) {
+                    variableMethods[name] = method;
+                }),
+                "commands":{},
+                "parameterHandlers":{
+                    "sendParametersAsParameters":jasmine.createSpy("sendParametersAsParameters")
                 },
-                "getVariableValue": function (variableName) {
-                    return variables[variableName];
-                },
-                "setVariableValue": function (variableName, value) {
-                    variables[variableName] = value;
-                    if (callbacks[variableName]) {
-                        callbacks[variableName]();
+                "parseSets":{
+                    "SP":{
+                        "CD":{
+                            "SOR":jasmine.createSpy("SP.CD.SOR"),
+                            "SLR":jasmine.createSpy("SP.CD.SLR"),
+                            "STR":jasmine.createSpy("SP.CD.STR")
+                        }
+                    },
+                    "MP":{
+                        "SOR_EVT_INT_CRI":jasmine.createSpy("SOR_EVT_INT_CRI"),
+                        "SOR_STR":jasmine.createSpy("SOR_STR")
                     }
-                },
-                "listenForVariableChange": function (variableName, callback) {
-                    callbacks[variableName] = callback;
-                    //_extra.captivate.eventDispatcher.addEventListener("CPAPI_VARIABLEVALUECHANGED",callback,variableName);
-                },
-                "stopListeningForVariableChange": function(variableName, callback) {
-                    //_extra.captivate.eventDispatcher.removeEventListener("CPAPI_VARIABLEVALUECHANGED",callback,variableName);
-                },
-                "internalListenForVariableChange":function () {
-
-                },
-                "internalStopListeningForVariableChange":function() {
-
                 }
             },
             "slideObjects":{
-                "hide":function () {},
-                "show":function () {},
-                "enable":function () {},
-                "disable":function () {},
-                "enableForMouse":function () {},
-                "disableForMouse":function () {},
+                "posX":jasmine.createSpy("slideObjects.posX"),
+                "posY":jasmine.createSpy("slideObjects.posY"),
+                "width":jasmine.createSpy("slideObjects.width"),
+                "height":jasmine.createSpy("slideObjects.height"),
+                "setCursor":jasmine.createSpy("slideObjects.setCursor"),
                 "states":{
-                    "change":function () {}
+                    "change":jasmine.createSpy("slideObjects.states.change")
+                }
+            },
+            "focusManager":{
+                "lockFocusTo": jasmine.createSpy("lockFocusTo"),
+                "unlockFocusFrom": jasmine.createSpy("unlockFocusFrom")
+            },
+            "TOCManager":{
+                "completeSlide": jasmine.createSpy("completeSlide")
+            },
+            "actionManager":{
+                "callActionOn": jasmine.createSpy("callActionOn")
+            },
+            "eventManager":{
+                "events":{
+
                 }
             }
         };
+
+        module();
+        register = _extra.variableManager.processCommandVariableRegistration;
+        _extra.variableManager.registerCommandVariable.calls.reset();
+
     });
 
-}());
+    afterEach(function () {
+        delete window._extra;
+    });
+
+    it("should define the processCommandVariableRegistration method", function () {
+
+        expect(_extra.variableManager.processCommandVariableRegistration).toBeDefined();
+
+    });
+
+    it("should allow us to register a basic command variable", function () {
+
+        var data = {
+            "varName":{
+                "parseSet":jasmine.createSpy("parseSet")
+            }
+        };
+
+        register(data);
+
+        expect(_extra.variableManager.registerCommandVariable).toHaveBeenCalledWith("varName", jasmine.any(Function), undefined);
+
+    });
+
+    it("should allow us to register multiple variables at once", function () {
+
+        var data = {
+            "foo":{
+                "parseSet":jasmine.createSpy("parseSet")
+            },
+            "bar":{
+                "parseSet":jasmine.createSpy("parseSet")
+            }
+        };
+
+        register(data);
+
+        expect(_extra.variableManager.registerCommandVariable).toHaveBeenCalledWith("foo", jasmine.any(Function), undefined);
+        expect(_extra.variableManager.registerCommandVariable).toHaveBeenCalledWith("bar", jasmine.any(Function), undefined);
+
+    });
+
+    it("should allow us to add this variable to the variableManager.commands object", function () {
+
+        var data = {
+            "varName":{
+                "commandName":"foobar",
+                "parseSet":jasmine.createSpy("parseSet")
+            }
+        };
+
+        register(data);
+
+        expect(_extra.variableManager.commands.foobar).toBeDefined();
+
+    });
+
+    it("should allow us to set a custom parameter handler", function () {
+
+        var data = {
+            "varName":{
+                "parseSet":jasmine.createSpy("parseSet"),
+                "parameterHandler": jasmine.createSpy("customParameterHandler")
+            }
+        };
+
+        register(data);
+
+        expect(_extra.variableManager.registerCommandVariable).toHaveBeenCalledWith("varName", jasmine.any(Function), data.varName.parameterHandler);
+
+    });
+
+    it("should send the parse set the parse data", function () {
+
+        var data = {
+            "varName":{
+                "updateData":jasmine.createSpy("updateData"),
+                "parseSet":jasmine.createSpy("parseSet"),
+                "parseSetData":{}
+            }
+        };
+
+        register(data);
+        changeVariable("varName", "value");
+
+        expect(data.varName.updateData).toHaveBeenCalledWith(data.varName.parseSetData, "value");
+        expect(data.varName.parseSet).toHaveBeenCalledWith(data.varName.parseSetData);
+
+    });
+});

@@ -100,4 +100,15 @@ describe("A suite to test _extra.eventManager", function () {
 
     });
 
+    it("should allow us to add and remove event listeners via the addEventListener and removeEventListener methods", function () {
+
+        _extra.eventManager.addEventListener("foobar", "click", "button", "criteria");
+        var mediator = _extra.eventManager.getEventMediator("foobar");
+        expect(mediator.hasEventListener("click", "button", "criteria")).toBe(true);
+
+        _extra.eventManager.removeEventListener("foobar", "click", "button", "criteria");
+        expect(mediator.hasEventListener("click", "button", "criteria")).toBe(false);
+
+    });
+
 });

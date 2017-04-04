@@ -164,44 +164,6 @@ _extra.registerModule("slideObjectUtilMethods", ["slideObjectManager_global", "e
         SLIDE_OBJECT_EVENT = "slideobject",
         VIDEO_EVENT = "videoevent",
         AUDIO_EVENT = "audioevent",
-        cursorTypes = {
-            "auto":true,
-            "default":true,
-            "none":true,
-            "context-menu":true,
-            "help":true,
-            "pointer":true,
-            "progress":true,
-            "wait":true,
-            "cell":true,
-            "crosshair":true,
-            "text":true,
-            "vertical-text":true,
-            "alias":true,
-            "copy":true,
-            "move":true,
-            "no-drop":true,
-            "not-allowed":true,
-            "all-scroll":true,
-            "col-resize":true,
-            "row-resize":true,
-            "n-resize":true,
-            "e-resize":true,
-            "s-resize":true,
-            "w-resize":true,
-            "ne-resize":true,
-            "nw-resize":true,
-            "se-resize":true,
-            "sw-resize":true,
-            "ew-resize":true,
-            "ns-resize":true,
-            "nesw-resize":true,
-            "nwse-resize":true,
-            "zoom-in":true,
-            "zoom-out":true,
-            "grab":true,
-            "grabbing":true
-        },
         eventTypes = {
             "enter":{
                 "type":SLIDE_OBJECT_EVENT,
@@ -406,30 +368,27 @@ _extra.registerModule("slideObjectUtilMethods", ["slideObjectManager_global", "e
     ///////////////////////////////////////////////////////////////////////
     _extra.slideObjects.enableForMouse = function (query) {
 
-        _extra.variableManager.commands.enableForMouse(query);
+        //_extra.variableManager.commands.enableForMouse(query);
 
         /*_extra.slideObjects.enactFunctionOnSlideObjects(query, function (slideObjectName) {
             _extra.slideObjects.model.write(slideObjectName, "enableForMouse", true);
         });*/
 
+        _extra.slideObjects.model.write(query, "enableForMouse", true);
+
     };
     _extra.slideObjects.disableForMouse = function (query) {
 
-        _extra.variableManager.commands.disableForMouse(query);
+        //_extra.variableManager.commands.disableForMouse(query);
 
         /*_extra.slideObjects.enactFunctionOnSlideObjects(query, function (slideObjectName) {
             _extra.slideObjects.model.write(slideObjectName, "enableForMouse", false);
         });*/
 
+        _extra.slideObjects.model.write(query, "enableForMouse", false);
+
     };
     _extra.slideObjects.setCursor = function (query, cursorType) {
-
-        // Check we are setting a valid cursor.
-        cursorType = cursorType.toLowerCase();
-        if (!cursorTypes[cursorType]) {
-            _extra.error("CV020", query, cursorType);
-            return;
-        }
 
         _extra.slideObjects.enactFunctionOnSlideObjects(query, function (slideObjectName) {
             _extra.slideObjects.model.write(slideObjectName, "cursor", cursorType);

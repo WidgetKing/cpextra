@@ -19,6 +19,30 @@ _extra.registerModule("eventManager", ["EventMediator", "EventDispatcher", "slid
 
         "eventDispatcher": new _extra.classes.EventDispatcher(),
 
+        "addEventListener": function (slideObjectName, event, interactiveObject, criteria) {
+
+            var mediator = _extra.eventManager.getEventMediator(slideObjectName);
+
+            if (mediator) {
+
+                mediator.addEventListener(event, interactiveObject, criteria);
+
+            }
+
+        },
+
+        "removeEventListener": function (slideObjectName, event, interactiveObject, criteria) {
+
+            var mediator = _extra.eventManager.getEventMediator(slideObjectName);
+
+            if (mediator) {
+
+                mediator.removeEventListener(event, interactiveObject, criteria);
+
+            }
+
+        },
+
         "getEventMediator": function (slideObjectName) {
 
             if (!eventMediators[slideObjectName]) {
@@ -47,19 +71,33 @@ _extra.registerModule("eventManager", ["EventMediator", "EventDispatcher", "slid
         },
         "events": {
             "MOUSE_DOWN": (isMobile) ? "touchstart" : "mousedown",
+            "MOUSEDOWN": (isMobile) ? "touchstart" : "mousedown",
             "MOUSE_UP": (isMobile) ? "touchend" : "mouseup",
+            "MOUSEUP": (isMobile) ? "touchend" : "mouseup",
             "MOUSE_MOVE": (isMobile) ? "touchmove" : "mousemove",
+            "MOUSEMOVE": (isMobile) ? "touchmove" : "mousemove",
             "MOUSE_OVER": "mouseover",
+            "MOUSEOVER": "mouseover",
             "MOUSE_OUT": "mouseleave",
+            "MOUSEOUT": "mouseleave",
             "ROLLOVER": "mouseover",
             "ROLLOUT": "mouseout",
             "RIGHT_CLICK": "contextmenu", // rightclick
+            "RIGHTCLICK": "contextmenu", // rightclick
             "CLICK": "click",
             "DOUBLE_CLICK": "dblclick",
+            "DOUBLECLICK": "dblclick",
+            "DBLCLICK": "dblclick",
             "ENTER":"enter",
             "EXIT":"exit",
             "VIDEO_ENDED": "videoended",
-            "AUDIO_ENDED": "audioended"
+            "VIDEOENDED": "videoended",
+            "VIDEO_END": "videoended",
+            "VIDEOEND": "videoended",
+            "AUDIO_ENDED": "audioended",
+            "AUDIOENDED": "audioended",
+            "AUDIO_END": "audioended",
+            "AUDIOEND": "audioended"
         }
     };
 

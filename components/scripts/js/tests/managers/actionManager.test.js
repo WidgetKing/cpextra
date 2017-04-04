@@ -61,67 +61,28 @@ describe("A test suite for _extra.actionManager", function () {
     });
 
     it("should inform us when we pass it a slide object that doesn't exist", function () {
-        _extra.actionManager.callActionOn("invalid", true);
+        _extra.actionManager.callActionOn("invalid", "success");
         expect(_extra.error).toHaveBeenCalled();
     });
 
     it("should inform us when we try to call an action on a non-interactive object", function () {
-        _extra.actionManager.callActionOn("normalObject", true);
+        _extra.actionManager.callActionOn("normalObject", "success");
         expect(_extra.captivate.movie.executeAction).not.toHaveBeenCalled();
         expect(_extra.error).toHaveBeenCalled();
     });
 
-    it("should allow us to call the success or failure advanced action on a particular object", function () {
-
-        _extra.actionManager.callActionOn("interactiveObject", true);
-        expect(_extra.captivate.movie.executeAction).toHaveBeenCalledWith("success");
-        _extra.actionManager.callActionOn("interactiveObject", false);
-        expect(_extra.captivate.movie.executeAction).toHaveBeenCalledWith("failure");
-
-    });
-
     it("should interpret strings as certain criteria types", function () {
-        _extra.actionManager.callActionOn("interactiveObject","SUCCESS");
-        expect(_extra.captivate.movie.executeAction).toHaveBeenCalledWith("success");
-        _extra.actionManager.callActionOn("interactiveObject","faIlure");
-        expect(_extra.captivate.movie.executeAction).toHaveBeenCalledWith("failure");
-        _extra.captivate.movie.executeAction.calls.reset();
 
-        _extra.actionManager.callActionOn("interactiveObject","1");
+        _extra.actionManager.callActionOn("interactiveObject","success");
         expect(_extra.captivate.movie.executeAction).toHaveBeenCalledWith("success");
-        _extra.actionManager.callActionOn("interactiveObject","0");
+        _extra.actionManager.callActionOn("interactiveObject","failure");
         expect(_extra.captivate.movie.executeAction).toHaveBeenCalledWith("failure");
-        _extra.captivate.movie.executeAction.calls.reset();
-
-        /*_extra.actionManager.callActionOn("interactiveObject","foobar");
-        expect(_extra.captivate.movie.executeAction).not.toHaveBeenCalled();
-        expect(_extra.error).toHaveBeenCalled();*/
 
     });
 
     it("should be able to call onFocusLost actions on Text Entry Boxes", function () {
 
-        _extra.actionManager.callActionOn("TEB", "FOCUSLOST");
-        expect(_extra.captivate.movie.executeAction).toHaveBeenCalledWith("focus_lost");
-        _extra.captivate.movie.executeAction.calls.reset();
-
-        _extra.actionManager.callActionOn("TEB", "FOCUS_LOST");
-        expect(_extra.captivate.movie.executeAction).toHaveBeenCalledWith("focus_lost");
-        _extra.captivate.movie.executeAction.calls.reset();
-
-        _extra.actionManager.callActionOn("TEB", "FOCUS");
-        expect(_extra.captivate.movie.executeAction).toHaveBeenCalledWith("focus_lost");
-        _extra.captivate.movie.executeAction.calls.reset();
-
         _extra.actionManager.callActionOn("interactiveObject", "focuslost");
-        expect(_extra.captivate.movie.executeAction).not.toHaveBeenCalled();
-        expect(_extra.error).toHaveBeenCalled();
-
-    });
-
-    it("should send an error if it can't interpret what the action criteria is", function () {
-
-        _extra.actionManager.callActionOn("interactiveObject", new Date());
         expect(_extra.captivate.movie.executeAction).not.toHaveBeenCalled();
         expect(_extra.error).toHaveBeenCalled();
 

@@ -75,14 +75,32 @@ _extra.registerModule("errors", ["debuggingManager"], function () {
         "CV001": function (slideObject) {
             return "Could not find a slide object in the movie by the name of <b>" + slideObject + "</b>." +
                    "<br/>To resolve this issue, please find the xcmnd variable that is attempting to reference " +
-                   "this object and check you have spelled the object's name correctly.";
+                   "this object and check you have spelt the object's name correctly.";
+        },
+
+        "CV002": function (variableName) {
+            return "Could not find a variable in the movie by the name of <b>" + variableName + "</b>." +
+                "<br/>To resolve this issue, please find the xcmnd variable that is attempting to " +
+                "reference this variable and check you have spelt the variable's name correctly."
+        },
+
+        "CV003": function (invalidString) {
+            return "The string <b>" + invalidString + "</b> does not match an expected keyword " +
+                   "for the command variable it was assigned to." +
+                   "<br/>Please check the spelling of <b>" + invalidString + "</b> and that you are assigning " +
+                   "to the correct command variable";
+        },
+
+        "CV004": function (query) {
+            return "Tried to use the @syntax query <b>" + query + "</b> on a parameter that doesn't allow " +
+                   "@syntax queries.<br/>Please remove the @syntax query and replace it with a singular property."
         },
 
         ///////////////////////////////////////////////////////////////////////
         /////////////// xcmndCallActionOn
         ///////////////////////////////////////////////////////////////////////
-        "CV010": function (slideObject, criteria) {
-            return "Unable to call a <b>" + criteria + "</b> action on <b>" + slideObject +"</b> because <b>" +
+        "CV010": function (criteria) {
+            return "Unable to call a <b>" + criteria + "</b> action on a slide object because <b>" +
                     criteria + "</b> is not listed as a valid action. " + "<br/>Please check the spelling of <b>" +
                     criteria + "</b>.";
         },
@@ -104,8 +122,8 @@ _extra.registerModule("errors", ["debuggingManager"], function () {
         ///////////////////////////////////////////////////////////////////////
         /////////////// xcmndSetCursor
         ///////////////////////////////////////////////////////////////////////
-        "CV020": function (query, cursorName) {
-            return "Tried to use xcmndSetCursor to apply cursor named <b>" + cursorName + "</b> to <b>" + query + "</b>. " +
+        "CV020": function (cursorName) {
+            return "Tried to use xcmndSetCursor to apply cursor named <b>" + cursorName + "</b> to a slide object. " +
                    "<b>" + cursorName + "</b> is not a valid cursor name. " +
                     "<br/>Please check if you have misspelt the cursor name.";
         },
