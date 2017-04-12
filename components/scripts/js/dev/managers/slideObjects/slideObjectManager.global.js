@@ -49,7 +49,6 @@ _extra.registerModule("slideObjectManager_global", ["slideObjectManager_software
         }
 
 
-
         return slideObjectProxies[id];
 
     };

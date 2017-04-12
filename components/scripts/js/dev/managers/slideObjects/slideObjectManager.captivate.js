@@ -83,11 +83,14 @@ _extra.registerModule("slideObjectManager_software", ["generalDataManager", "Cal
                 name = name.substr(0, name.length - TEB_SUFFIX.length);
             }
 
-            if (_extra.slideObjects.hasSlideObjectInProject(name)) {
+            if (_extra.slideObjects.hasSlideObjectInProject(name) &&
+                !_extra.slideManager.isNameOfSlide(name)) {
 
                 // Just in case we clicked on the state of an object.
                 name = _extra.slideObjects.getSlideObjectNameFromStateName(name);
+
                 returnValue = _extra.slideObjects.getSlideObjectByName(name);
+
             }
 
             return returnValue;
