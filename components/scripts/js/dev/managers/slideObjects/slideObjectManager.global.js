@@ -92,6 +92,60 @@ _extra.registerModule("slideObjectManager_global", ["slideObjectManager_software
         }
     };
 
+    _extra.slideObjects.getSlideObjectProperty = function (slideObjectName, property) {
+
+        var slideObject = _extra.slideObjects.getSlideObjectByName(slideObjectName);
+
+        if (slideObject) {
+
+            return slideObject[property];
+
+        } else {
+
+            // We have a valid slide object, but it's just not on the slide at the moment.
+            // Therefore we'll grab this information from the model.
+            return _extra.slideObjects.model.retrieve(slideObjectName, property);
+
+        }
+
+    };
+
+    ///////////////////////////////////////////////////////////////////////
+    /////////////// Command variable methods
+    ///////////////////////////////////////////////////////////////////////
+    _extra.slideObjects.enableForMouse = function (query) {
+
+        //_extra.variableManager.commands.enableForMouse(query);
+
+        /*_extra.slideObjects.enactFunctionOnSlideObjects(query, function (slideObjectName) {
+         _extra.slideObjects.model.write(slideObjectName, "enableForMouse", true);
+         });*/
+
+        _extra.slideObjects.model.write(query, "enableForMouse", true);
+
+    };
+
+    _extra.slideObjects.disableForMouse = function (query) {
+
+        //_extra.variableManager.commands.disableForMouse(query);
+
+        /*_extra.slideObjects.enactFunctionOnSlideObjects(query, function (slideObjectName) {
+         _extra.slideObjects.model.write(slideObjectName, "enableForMouse", false);
+         });*/
+
+        _extra.slideObjects.model.write(query, "enableForMouse", false);
+
+    };
+
+
+    _extra.slideObjects.setCursor = function (query, cursorType) {
+
+        _extra.slideObjects.enactFunctionOnSlideObjects(query, function (slideObjectName) {
+            _extra.slideObjects.model.write(slideObjectName, "cursor", cursorType);
+        });
+
+    };
+
     ///////////////////////////////////////////////////////////////////////
     /////////////// ON SLIDE ENTER
     ///////////////////////////////////////////////////////////////////////

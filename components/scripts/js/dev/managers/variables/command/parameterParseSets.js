@@ -9,7 +9,32 @@ _extra.registerModule("parameterParseSets", ["parameterParser", "variableManager
 
     "use strict";
 
-    var runException = function(p) { // p: Stands for Parameters
+    ///////////////////////////////////////////////////////////////////////
+    /////////////// Util methods
+    ///////////////////////////////////////////////////////////////////////
+    var initialParsing = function (p, parameter) {
+
+            if (p.substituteParseResult) {
+
+                p.parseResult = p.substituteParseResult;
+
+            } else {
+
+                p.parseResult = _extra.variableManager.parse.string(p[parameter]);
+
+            }
+
+            if (p.parseResult.isVariable) {
+
+                p.parseResult = p.parseResult.variable;
+
+            }
+
+        },
+
+
+
+        runException = function(p) { // p: Stands for Parameters
 
         // Have a method to handle this exception
         if (p.data.exceptions && p.data.exceptions.hasOwnProperty(p.exceptionName)) {
@@ -32,6 +57,7 @@ _extra.registerModule("parameterParseSets", ["parameterParser", "variableManager
         }
 
         p.fail();
+
     };
 
     _extra.variableManager.parseSets = {
@@ -57,39 +83,29 @@ _extra.registerModule("parameterParseSets", ["parameterParser", "variableManager
 
                     function entryPoint () {
 
-                        var queryData = _extra.variableManager.parse.string(p.query);
+                        initialParsing(p, "query");
 
-                        if (queryData.isVariable) {
-                            processData(queryData.variable);
-                        } else {
-                            processData(queryData);
-                        }
+                        if (p.parseResult.isSlideObject) {
 
-                    }
+                            p.output(p.parseResult.value);
 
-                    function processData(queryData) {
-
-                        if (queryData.isSlideObject) {
-
-                            p.output(queryData.value);
-
-                        } else if (queryData.isQuery) {
+                        } else if (p.parseResult.isQuery) {
 
                             if (p.noQueries) {
 
                                 runException({
                                     "data":p,
                                     "exceptionName":"illegalQuery",
-                                    "issue":queryData.value,
+                                    "issue":p.parseResult.value,
                                     "output":p.output,
                                     "fail": function () {
-                                        _extra.error("CV004", queryData.value);
+                                        _extra.error("CV004", p.parseResult.value);
                                     }
                                 });
 
                             } else {
 
-                                _extra.slideObjects.enactFunctionOnSlideObjects(queryData.value, p.output);
+                                _extra.slideObjects.enactFunctionOnSlideObjects(p.parseResult.value, p.output);
 
                             }
 
@@ -99,10 +115,10 @@ _extra.registerModule("parameterParseSets", ["parameterParser", "variableManager
                             runException({
                                 "data":p,
                                 "exceptionName":"invalidName",
-                                "issue":queryData.value,
+                                "issue":p.parseResult.value,
                                 "output":p.output,
                                 "fail": function () {
-                                    _extra.error("CV001", queryData.value);
+                                    _extra.error("CV001", p.parseResult.value);
                                 }
                             });
 
@@ -123,28 +139,32 @@ _extra.registerModule("parameterParseSets", ["parameterParser", "variableManager
                 // invalidName
                 "VR":function (p) {
 
-                    var queryData = _extra.variableManager.parse.string(p.query);
+                    if (p.substituteParseResult) {
+                        p.parseResult = p.substituteParseResult;
+                    } else {
+                        p.parseResult = _extra.variableManager.parse.string(p.query);
+                    }
 
-                    if (queryData.is$Variable) {
+                    if (p.parseResult.is$Variable) {
 
-                        queryData = queryData.variable;
+                        p.parseResult = p.parseResult.variable;
 
                     }
 
-                    if (queryData.isVariable) {
+                    if (p.parseResult.isVariable) {
 
-                        p.output(queryData.value);
+                        p.output(p.parseResult.value);
 
-                    } else if (queryData.isQuery) {
+                    } else if (p.parseResult.isQuery) {
 
                         if (p.alternateQueryHandler) {
 
                             // This is mainly here so we can @syntax local and session storage variables
-                            p.alternateQueryHandler(queryData.value, p.output);
+                            p.alternateQueryHandler(p.parseResult.value, p.output);
 
                         } else {
 
-                            _extra.variableManager.enactFunctionOnVariables(queryData.value, p.output);
+                            _extra.variableManager.enactFunctionOnVariables(p.parseResult.value, p.output);
 
                         }
 
@@ -153,10 +173,10 @@ _extra.registerModule("parameterParseSets", ["parameterParser", "variableManager
                         runException({
                             "data":p,
                             "exceptionName":"invalidName",
-                            "issue":queryData.value,
+                            "issue":p.parseResult.value,
                             "output":p.output,
                             "fail": function () {
-                                _extra.error("CV002", queryData.value);
+                                _extra.error("CV002", p.parseResult.value);
                             }
                         });
 
@@ -175,42 +195,52 @@ _extra.registerModule("parameterParseSets", ["parameterParser", "variableManager
 
                     function entryPoint() {
 
-                        var data = _extra.variableManager.parse.string(p.query);
+                        if (p.substituteParseResult) {
 
-                        if (data.is$Variable) {
+                            p.parseResult = p.substituteParseResult;
 
-                            data = data.variable;
+                        } else {
+
+                            p.parseResult = _extra.variableManager.parse.string(p.query);
 
                         }
 
-                        if (!canOutputSlide(data.value)) {
+                        if (p.parseResult.is$Variable) {
 
-                            if (data.isVariable) {
+                            p.parseResult = p.parseResult.variable;
 
-                                data = data.variable;
+                        }
+
+                        if (!canOutputSlide(p.parseResult.value)) {
+
+                            if (p.parseResult.isVariable) {
+
+                                p.parseResult = p.parseResult.variable;
 
                             }
 
-                            if (data.isNumber) {
+                            if (p.parseResult.isNumber) {
 
-                                outputSlide(data.value);
+                                outputSlide(p.parseResult.value);
 
-                            } else if (data.isQuery) {
+                            } else if (p.parseResult.isQuery) {
 
-                                _extra.slideManager.enactFunctionOnSlides(data.value, function (name) {
+                                _extra.slideManager.enactFunctionOnSlides(p.parseResult.value,
+                                                                          function (name) {
                                     // Convert name to number and export
                                     canOutputSlide(name);
                                 });
 
-                            } else if (!canOutputSlide(data.value)) {
+                            } else if (!canOutputSlide(p.parseResult.value)) {
 
                                 // Check if we're dealing with 'all'
-                                if (data.value.toLowerCase && data.value.toLowerCase() === "all") {
-                                    data.value = "1-" + _extra.slideManager.numSlides;
+                                if (p.parseResult.value.toLowerCase &&
+                                    p.parseResult.value.toLowerCase() === "all") {
+                                    p.parseResult.value = "1-" + _extra.slideManager.numSlides;
                                 }
 
                                 // Now we're possibly dealing with a range
-                                manageRange(data.value);
+                                manageRange(p.parseResult.value);
 
                             }
 
@@ -384,10 +414,12 @@ _extra.registerModule("parameterParseSets", ["parameterParser", "variableManager
 
                     function entryPoint() {
 
-                        var string = getString(p.string);
+                        var string = getString();
 
                         if (p.validation) {
+
                             string = executeValidation(string);
+
                         }
 
                         if (string) {
@@ -398,19 +430,15 @@ _extra.registerModule("parameterParseSets", ["parameterParser", "variableManager
 
                     }
 
-                    function getString(string) {
+                    function getString() {
 
-                        var data = _extra.variableManager.parse.string(string);
+                        initialParsing(p, "string");
 
-                        if (data.isVariable) {
-                            data = data.variable;
+                        if (p.parseResult.isNumber) {
+                            return p.parseResult.value.toString();
                         }
 
-                        if (data.isNumber) {
-                            return data.value.toString();
-                        }
-
-                        return data.value;
+                        return p.parseResult.value;
 
                     }
 
@@ -426,7 +454,7 @@ _extra.registerModule("parameterParseSets", ["parameterParser", "variableManager
                                 "exceptionName":"invalidString",
                                 "issue":originalString,
                                 "output":function (correctedString) {
-                                    result = correctedString
+                                    result = correctedString;
                                 },
                                 "fail": function () {
                                     result = null;
@@ -457,7 +485,7 @@ _extra.registerModule("parameterParseSets", ["parameterParser", "variableManager
                                 return string.toUpperCase();
 
                             case "none" :
-                                return string
+                                return string;
 
                             default :
                                 return string.toLowerCase();
@@ -468,6 +496,37 @@ _extra.registerModule("parameterParseSets", ["parameterParser", "variableManager
 
 
                     entryPoint();
+
+                },
+
+                ///////////////////////////////////////////////////////////////////////
+                /////////////// NUMBER RELATED
+                ///////////////////////////////////////////////////////////////////////
+                ///// Exceptions
+                // NaN
+                "NR": function (p) {
+
+                    initialParsing(p, "number");
+
+                    if (p.parseResult.isNumber) {
+
+                        p.output(p.parseResult.value);
+
+                    } else {
+
+                        runException({
+                            "data":p,
+                            "exceptionName":"NaN",
+                            "issue": p.parseResult.value,
+                            "output": p.output,
+                            "fail": function () {
+                                _extra.error("CV005", p.parseResult.value);
+                            }
+                        });
+
+                    }
+
+
 
                 }
             }
@@ -480,7 +539,7 @@ _extra.registerModule("parameterParseSets", ["parameterParser", "variableManager
         ////////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////
         "MP":{
-            "SOR_STR": function (p) { //query, string, output) {
+            "SOR_STR": function (p) {
 
                 var string;
 
@@ -575,12 +634,156 @@ _extra.registerModule("parameterParseSets", ["parameterParser", "variableManager
                         }
                     };
 
-                    _extra.variableManager.parseSets.MP.SOR_STR(data)
+                    _extra.variableManager.parseSets.MP.SOR_STR(data);
 
                 }
 
 
 
+
+                entryPoint();
+
+            },
+
+            ///////////////////////////////////////////////////////////////////////
+            /////////////// GETTER/SETTER
+            ///////////////////////////////////////////////////////////////////////
+            //// Exceptions
+            // illegalSet
+            "SOR_NR": function (p) {
+
+                var p1 = _extra.variableManager.parse.string(p.slideObject),
+                    p2 = _extra.variableManager.parse.string(p.number);
+
+                function entryPoint () {
+
+                    setUpData();
+
+                    if (isGetter()) {
+
+                        handleGet();
+
+                    } else { // is setter
+
+                        if (p.getOnly) {
+
+                            handleIllegalSet();
+
+                        } else {
+
+                            handleSet();
+
+                        }
+
+                    }
+
+                }
+
+                function setUpData () {
+
+                    if (!p.SOR) {
+                        p.SOR = {};
+                    }
+                    p.SOR.substituteParseResult = p1;
+                    p.SOR.query = p.slideObject;
+
+                    if (!p.NR) {
+                        p.NR = {};
+                    }
+                    p.NR.substituteParseResult = p2;
+                    p.NR.number = p.number;
+
+                }
+
+                function isGetter () {
+
+                    // Variable | Slide Object
+                    // Variable@Syntax | SlideObject
+                    if (p2.isSlideObject || (p2.isVariable && p2.variable.isSlideObject)) {
+
+                        if (p1.isVariable || p1.isQuery) {
+
+                            return true;
+
+                        }
+
+                    }
+
+                    return false;
+
+                }
+
+                function handleGet () {
+
+                    var slideObject = null;
+
+                    p.NR.output = function (n) {
+                        slideObject = n;
+                    };
+                    p.NR.noQueries = true;
+
+                    _extra.variableManager.parseSets.SP.CD.SOR(p.NR);
+
+                    if (slideObject !== null) {
+
+                        p.SOR.output = function (variableName) {
+
+                            p.get(variableName, slideObject);
+
+                        };
+
+                        _extra.variableManager.parseSets.SP.CD.VR(p.SOR);
+
+                    }
+
+                }
+
+                function handleSet () {
+
+                    var number = null;
+
+                    p.NR.output = function (n) {
+                        number = n;
+                    };
+
+                    _extra.variableManager.parseSets.SP.CD.NR(p.NR);
+
+                    if (number !== null) {
+
+                        p.SOR.output = function (slideObjectName) {
+
+                            p.set(slideObjectName, number);
+
+                        };
+
+                        _extra.variableManager.parseSets.SP.CD.SOR(p.SOR);
+
+                    }
+
+                }
+
+                function handleIllegalSet () {
+
+                    // Get accurate slide object name (for use in error message)
+                    var slideObject = p1;
+                    if (slideObject.isVariable) {
+                        slideObject = slideObject.variable;
+                    }
+                    slideObject = slideObject.value;
+
+                    runException({
+                        "data":p,
+                        "exceptionName":"illegalSet",
+                        "issue": slideObject,
+                        "output": null,
+                        "fail": function () {
+
+                            _extra.error("CV006", slideObject, "<i>unknown</i>");
+
+                        }
+                    });
+
+                }
 
                 entryPoint();
 

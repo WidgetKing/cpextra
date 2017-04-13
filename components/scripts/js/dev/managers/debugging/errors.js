@@ -93,7 +93,18 @@ _extra.registerModule("errors", ["debuggingManager"], function () {
 
         "CV004": function (query) {
             return "Tried to use the @syntax query <b>" + query + "</b> on a parameter that doesn't allow " +
-                   "@syntax queries.<br/>Please remove the @syntax query and replace it with a singular property."
+                   "@syntax queries.<br/>Please remove the @syntax query and replace it with a singular property.";
+        },
+
+        "CV005": function (number) {
+            return "Tried to pass use the value <b>" + number + "</b> for a property that requires a number." +
+                "<br/>Please check the spelling of <b>" + number + "</b>";
+        },
+
+        "CV006": function (slideObject, property) {
+            return "Tried to write to slide object <b>" + slideObject + "</b>'s <b>" + property + "</b> property." +
+                   "<br/>However, this is not a property that CpExtra allows you to set. " +
+                   "<br/>Do not attempt to write to the <b>" + property + "</b> property";
         },
 
         ///////////////////////////////////////////////////////////////////////
@@ -162,6 +173,7 @@ _extra.registerModule("errors", ["debuggingManager"], function () {
         ///////////////////////////////////////////////////////////////////////
         /////////////// xcmndPosX, xcmndPosY, xcmndWidth, xcmndHeight
         ///////////////////////////////////////////////////////////////////////
+        // TODO: Implement the following errors
         "CV040": function (slideObject, property) {
             return "Tried alter the <b>" + property + "</b> property on <b>" + slideObject +
                    "</b> but could not find any slide objects with that name. " +

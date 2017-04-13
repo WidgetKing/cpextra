@@ -38,7 +38,7 @@ _extra.registerModule("commandVariables_global", ["commandVariableManager", "sli
                         "query":undefined, // Changed in the updateData method
                         "output":method
                     }
-                }
+                };
             },
 
             createEventListenerObjectData: function (commandName, method) {
@@ -57,7 +57,7 @@ _extra.registerModule("commandVariables_global", ["commandVariableManager", "sli
                     "parameterHandler": handlers.sendParametersAsParameters,
                     "parseSet": parseSets.MP.SOR_EVT_INT_CRI,
                     "parseSetData": {
-                        "slideObjectName":undefined,   // Changed in the updateData method
+                        "slideObject":undefined,   // Changed in the updateData method
                         "event":undefined,             // Changed in the updateData method
                         "interactiveObject":undefined, // Changed in the updateData method
                         "criteria":undefined,          // Changed in the updateData method
@@ -81,7 +81,64 @@ _extra.registerModule("commandVariables_global", ["commandVariableManager", "sli
                             }
                         }
                     }
-                }
+                };
+            },
+
+            "createBaseGetterSetterData": function (commandName, getter) {
+                return {
+                    "commandName":commandName,
+                    "updateData": function (data, p1, p2) {
+                        data.slideObject = p1;
+                        data.number = p2;
+                    },
+                    "parameterHandler": handlers.sendParametersAsParameters,
+                    "parseSet": parseSets.MP.SOR_NR,
+                    "parseSetData": {
+                        "slideObject":undefined,   // Changed in the updateData method
+                        "number":undefined,        // Changed in the updateData method
+                        "get":getter
+                    }
+                };
+            },
+
+            "createGetterData": function (commandName, getter) {
+                var data = commandDatas.createBaseGetterSetterData(commandName, getter);
+                data.parseSetData.getOnly = true;
+                data.parseSetData.exceptions = {
+                    "illegalSet":function (slideObject) {
+                        _extra.error("CV006", slideObject, commandName);
+                        return _extra.variableManager.parseSets.SKIP_ERROR;
+                    }
+                };
+                return data;
+            },
+
+            "createGetterSetterData": function (commandName, getter, setter) {
+                var data = commandDatas.createBaseGetterSetterData(commandName, getter);
+                data.parseSetData.set = setter;
+                data.parseSetData.NR = {
+                    "exceptions":{
+                        "NaN": function (string) {
+
+                            string = string.toLowerCase();
+
+                            if (string === "default" ||
+                                string === "reset" ||
+                                string === "original") {
+
+                                return "reset";
+
+                            } else {
+
+                                return false;
+
+                            }
+
+                        }
+                    }
+                };
+
+                return data;
             }
         };
 
@@ -282,6 +339,54 @@ _extra.registerModule("commandVariables_global", ["commandVariableManager", "sli
                                 _extra.eventManager.removeEventListener(slideObject, event, interactiveObject, criteria);
         }),
 
+
+
+        ///////////////////////////////////////////////////////////////////////
+        /////////////// X and Y
+        ///////////////////////////////////////////////////////////////////////
+        "PosX": commandDatas.createGetterSetterData("posX",
+            function (variableName, slideObject) { // Get
+
+                _extra.variableManager.setVariableValue(variableName,
+                                       _extra.slideObjects.getSlideObjectProperty(slideObject, "x"));
+
+            },
+            function (slideObjectName, number) { // Set
+
+                _extra.slideObjects.model.write(slideObjectName, "x", number);
+
+            }),
+
+        "PosY": commandDatas.createGetterSetterData("posY",
+            function (variableName, slideObject) { // Get
+
+                _extra.variableManager.setVariableValue(variableName,
+                                       _extra.slideObjects.getSlideObjectProperty(slideObject, "y"));
+
+            },
+            function (slideObjectName, number) { // Set
+
+                _extra.slideObjects.model.write(slideObjectName, "y", number);
+
+            }),
+
+        ///////////////////////////////////////////////////////////////////////
+        /////////////// X and Y
+        ///////////////////////////////////////////////////////////////////////
+        "Width": commandDatas.createGetterData("width", function (variableName, slideObject) {
+
+            _extra.variableManager.setVariableValue(variableName,
+                _extra.slideObjects.getSlideObjectProperty(slideObject, "width"));
+
+        }),
+
+        "Height": commandDatas.createGetterData("height", function (variableName, slideObject) {
+
+            _extra.variableManager.setVariableValue(variableName,
+                _extra.slideObjects.getSlideObjectProperty(slideObject, "height"));
+
+        }),
+
         ///////////////////////////////////////////////////////////////////////
         /////////////// Slide Objects
         ///////////////////////////////////////////////////////////////////////
@@ -397,23 +502,6 @@ _extra.registerModule("commandVariables_global", ["commandVariableManager", "sli
 
         }
 
-
     });
-
-/*
-
-    ////////////////////////////////
-    ////////// Position
-    register("PosX", _extra.slideObjects.posX, handlers.sendParametersAsParameters);
-    register("PosY", _extra.slideObjects.posY, handlers.sendParametersAsParameters);
-
-    ////////////////////////////////
-    ////////// Width / Height
-    register("Width", _extra.slideObjects.width, handlers.sendParametersAsParameters);
-    register("Height", _extra.slideObjects.height, handlers.sendParametersAsParameters);
-
-
-*/
-
 
 });

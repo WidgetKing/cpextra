@@ -151,7 +151,7 @@ describe("A test suite for the parameterParseSets", function () {
     });
 
     ///////////////////////////////////////////////////////////////////////
-    /////////////// SP.CD.SOR
+    /////////////// SP.CD.VR
     ///////////////////////////////////////////////////////////////////////
     describe("A test suite for SP.CD.VR", function () {
 
@@ -159,7 +159,7 @@ describe("A test suite for the parameterParseSets", function () {
             testSet = _extra.variableManager.parseSets.SP.CD.VR;
             testData = {
                 "output":dummy
-            }
+            };
         });
 
         it("should parse a loose variable name", function () {
@@ -220,6 +220,19 @@ describe("A test suite for the parameterParseSets", function () {
 
         });
 
+        it("should allow us to use a substituteParseResult", function () {
+
+            testData.query = "variableVariable";
+            testData.substituteParseResult = _extra.variableManager.parse.string(testData.query);
+            spyOn(_extra.variableManager.parse, "string").and.callThrough();
+            testSet(testData);
+
+            expect(dummy).toHaveBeenCalledWith("variableVariable");
+            expect(_extra.variableManager.parse.string).not.toHaveBeenCalled();
+
+        });
+
+
     });
 
     ///////////////////////////////////////////////////////////////////////
@@ -231,7 +244,7 @@ describe("A test suite for the parameterParseSets", function () {
             testSet = _extra.variableManager.parseSets.SP.CD.SOR;
             testData = {
                 "output":dummy
-            }
+            };
         });
 
         it("should parse a loose slide object name", function () {
@@ -379,6 +392,18 @@ describe("A test suite for the parameterParseSets", function () {
 
         });
 
+        it("should allow us to use substituteParseResult", function () {
+
+            testData.query = "slideObject";
+            testData.substituteParseResult = _extra.variableManager.parse.string(testData.query);
+            spyOn(_extra.variableManager.parse, "string").and.callThrough();
+            testSet(testData);
+
+            expect(dummy).toHaveBeenCalledWith("slideObject");
+            expect(_extra.variableManager.parse.string).not.toHaveBeenCalled();
+
+        });
+
     });
 
     ///////////////////////////////////////////////////////////////////////
@@ -520,8 +545,85 @@ describe("A test suite for the parameterParseSets", function () {
 
         });
 
+        it("should allow us to use substituteParseResult", function () {
+
+            testData.string = "foo";
+            testData.substituteParseResult = _extra.variableManager.parse.string(testData.string);
+            spyOn(_extra.variableManager.parse, "string").and.callThrough();
+            testSet(testData);
+            expect(dummy).toHaveBeenCalledWith("foo");
+            expect(_extra.variableManager.parse.string).not.toHaveBeenCalled();
+
+        });
+
     });
 
+
+    ///////////////////////////////////////////////////////////////////////
+    /////////////// SP.NR
+    ///////////////////////////////////////////////////////////////////////
+    describe("A test suite for SP.CD_NR", function () {
+
+        beforeEach(function () {
+            testSet = _extra.variableManager.parseSets.SP.CD.NR;
+            testData = {
+                "output":dummy
+            };
+        });
+
+        it("should return us a number when we pass it a number", function () {
+
+            testData.number = 3;
+            testSet(testData);
+            expect(dummy).toHaveBeenCalledWith(3);
+
+            testData.number = "4";
+            testSet(testData);
+            expect(dummy).toHaveBeenCalledWith(4);
+            expect(dummy).not.toHaveBeenCalledWith("4");
+
+        });
+
+        it("should use a variable's value", function () {
+
+            testData.number = "variable1";
+            testSet(testData);
+            expect(dummy).toHaveBeenCalledWith(1);
+
+            dummy.calls.reset();
+
+            testData.number = "$$variable1$$";
+            testSet(testData);
+            expect(dummy).toHaveBeenCalledWith(1);
+
+        });
+
+        it("should throw an exception if the value passed in is not a number", function () {
+
+            testData.exceptions = {
+                "NaN":jasmine.createSpy("exceptions.NaN")
+            };
+
+            testData.number = "Invalid";
+            testSet(testData);
+            expect(dummy).not.toHaveBeenCalled();
+            expect(testData.exceptions.NaN).toHaveBeenCalledWith("Invalid");
+            expect(_extra.error).toHaveBeenCalledWith("CV005", "Invalid");
+
+        });
+
+        it("should allow us to supply pre-existing parameter analysis", function () {
+
+            testData.number = 3;
+            testData.substituteParseResult = _extra.variableManager.parse.string(testData.number);
+            spyOn(_extra.variableManager.parse, "string").and.callThrough();
+            testSet(testData);
+            expect(dummy).toHaveBeenCalledWith(3);
+            expect(_extra.variableManager.parse.string).not.toHaveBeenCalled();
+
+        });
+
+    });
 
     ///////////////////////////////////////////////////////////////////////
     /////////////// SP.CD_SLR
@@ -706,7 +808,7 @@ describe("A test suite for the parameterParseSets", function () {
             testData.query = "invalidSlide";
             testData.exceptions = {
                 "invalidSlide":jasmine.createSpy("exceptions.invalidSlide").and.callFake(function () {
-                    return 7
+                    return 7;
                 })
             };
             testSet(testData);
@@ -722,7 +824,7 @@ describe("A test suite for the parameterParseSets", function () {
             testData.query = "5-invalidSlide";
             testData.exceptions = {
                 "invalidSlide":jasmine.createSpy("exceptions.invalidSlide").and.callFake(function () {
-                    return 7
+                    return 7;
                 })
             };
             testSet(testData);
@@ -757,11 +859,22 @@ describe("A test suite for the parameterParseSets", function () {
             expect(dummy).toHaveBeenCalledWith(100);
 
         });
+
+        it("should allow us to use substituteParseResult", function () {
+
+            testData.query = '"slide1"';
+            testData.substituteParseResult = _extra.variableManager.parse.string(testData.query);
+            spyOn(_extra.variableManager.parse, "string").and.callThrough();
+            testSet(testData);
+            expect(dummy).toHaveBeenCalledWith(1);
+            expect(_extra.variableManager.parse.string).not.toHaveBeenCalled();
+
+        });
         
     });
 
     ///////////////////////////////////////////////////////////////////////
-    /////////////// MD.SOR_SR
+    /////////////// MD.SOR_STR
     ///////////////////////////////////////////////////////////////////////
     describe("A test suite for MD.SOR_STR", function () {
 
@@ -855,6 +968,107 @@ describe("A test suite for the parameterParseSets", function () {
             testSet(testData);
 
             expect(testData.EVT.exceptions.invalidString).toHaveBeenCalled();
+
+        });
+
+    });
+
+    fdescribe("A test suite for MD.SOR_NR", function () {
+
+        var getOutput,
+            setOutput;
+
+        beforeEach(function () {
+
+            getOutput = jasmine.createSpy("getOutput");
+            setOutput = jasmine.createSpy("setOutput");
+
+            testData = {
+                "get":getOutput,
+                "set":setOutput
+            };
+
+            testSet = _extra.variableManager.parseSets.MP.SOR_NR;
+        });
+
+
+        it("should set the location on a slide object", function () {
+
+            testData.slideObject = "slideObject";
+            testData.number = 0;
+
+            testSet(testData);
+            expect(setOutput).toHaveBeenCalledWith("slideObject", 0);
+            expect(getOutput).not.toHaveBeenCalled();
+
+        });
+
+        it("should set the location of a slide object query", function () {
+
+            testData.slideObject = "syntax@";
+            testData.number = "variable1";
+
+            testSet(testData);
+            expect(setOutput).toHaveBeenCalledWith("syntax1", 1);
+            expect(setOutput).toHaveBeenCalledWith("syntax2", 1);
+
+        });
+
+        it("should set location of slide object when slide object name given through variable", function () {
+
+            testData.slideObject = "slideObjectVariable";
+            testData.number = "-1";
+
+            testSet(testData);
+            expect(setOutput).toHaveBeenCalledWith("slideObject", -1);
+
+        });
+
+        it("should get the location of a slide object", function () {
+
+            testData.slideObject = "variable";
+            testData.number = "slideObject";
+
+            testSet(testData);
+            expect(getOutput).toHaveBeenCalledWith("variable", "slideObject");
+            expect(setOutput).not.toHaveBeenCalled();
+
+        });
+
+        it("should throw an exception if we try to get from an @syntax query", function () {
+
+            testData.slideObject = "variable";
+            testData.number = "syntax@";
+
+            testSet(testData);
+            expect(getOutput).not.toHaveBeenCalled();
+            expect(_extra.error).toHaveBeenCalledWith("CV005", "syntax@");
+
+        });
+
+        it("should set the location of a slide object to an @syntax range of variables", function () {
+
+            testData.slideObject = "var@";
+            testData.number = "slideObjectVariable";
+
+            testSet(testData);
+            expect(getOutput).toHaveBeenCalledWith("var1", "slideObject");
+            expect(getOutput).toHaveBeenCalledWith("var2", "slideObject");
+            expect(setOutput).not.toHaveBeenCalled();
+
+        });
+
+        it("should throw an error if we try to set in getOnly mode", function () {
+
+            testData.slideObject = "slideObjectVariable";
+            testData.number = 6;
+            testData.getOnly = true;
+
+            testSet(testData);
+
+            expect(getOutput).not.toHaveBeenCalled();
+            expect(setOutput).not.toHaveBeenCalled();
+            expect(_extra.error).toHaveBeenCalledWith("CV006", "slideObject", jasmine.anything());
 
         });
 
