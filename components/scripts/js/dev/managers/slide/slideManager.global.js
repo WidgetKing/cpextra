@@ -154,6 +154,32 @@ _extra.registerModule("slideManager_global",["slideManager_software"],function()
         return false;
     };
 
+    // TODO: Make this work for multiple scenes
+    _extra.slideManager.enactFunctionOnSlides = function (query, method) {
+
+        if (_extra.isQuery(query)) {
+
+            var list = _extra.queryList(query, _extra.slideManager.slideNames[1]);
+
+            if (list) {
+
+                for (var i = 0; i < list.length; i += 1) {
+
+                    method(list[i]);
+
+                }
+
+            }
+
+
+        } else {
+
+            method(query);
+
+        }
+
+    };
+
     /**
      * Allows you to register with the slideManager to be informed when we enter a new slide.
      * Register '*' to be informed of all slides.

@@ -146,29 +146,6 @@ describe("A test suite to test local and session storage variable saving", funct
 
             });
 
-            it("should allow us to flush all variables matching a query", function () {
-
-                // Setup
-                var queryMatch1 = prefix + "_1",
-                    queryMatch2 = prefix + "_2",
-                    queryMissMatch = "no_3";
-
-                storage.setItem(queryMatch1,"foobar");
-                storage.setItem(queryMatch2,"foobar");
-                storage.setItem(queryMissMatch,"foobar");
-                storage.setItem.calls.reset();
-                _extra.variableManager.prefixCallback.sendToCallback(prefix, queryMatch1);
-                _extra.variableManager.prefixCallback.sendToCallback(prefix, queryMatch2);
-                _extra.variableManager.prefixCallback.sendToCallback(prefix, queryMissMatch);
-
-                // Test removing the items
-                _extra.variableManager.flushStorage(prefix + "@");
-                expect(storage.removeItem).toHaveBeenCalledWith(queryMatch1);
-                expect(storage.removeItem).toHaveBeenCalledWith(queryMatch2);
-                expect(storage.removeItem).not.toHaveBeenCalledWith(queryMissMatch);
-
-            });
-
             it("should allow us to save an individual variable without saving all of them", function () {
 
                 _extra.variableManager.prefixCallback.sendToCallback(prefix, testVariable + "1");

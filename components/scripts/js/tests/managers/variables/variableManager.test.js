@@ -36,6 +36,12 @@
                 expect(_extra.variableManager).toBeDefined();
             });
 
+            it("should define the commands subobject", function () {
+
+                expect(_extra.variableManager.commands).toBeDefined();
+
+            });
+
             it("should create a callback for variable prefixes", function () {
                 expect(_extra.variableManager.prefixCallback.constructor).toEqual(_extra.classes.Callback);
             });
@@ -109,27 +115,8 @@
                 expect(_extra.variableManager.getVariableValue("AA_example")).toBe(defaultValue);
 
                 _extra.variableManager.reset("Invalid");
-                expect(_extra.error.calls.argsFor(0)[0]).toBe("CV050");
-
-            });
-
-            it("should allow us to reset variables using @syntax", function () {
-
-                var AA_Default = _extra.variableManager.getVariableValue("AA_example"),
-                    BB_Default = _extra.variableManager.getVariableValue("_BB_example");
-
-                this.onLoadCallback();
-                _extra.variableManager.setVariableValue("AA_example", "New");
-                _extra.variableManager.setVariableValue("_BB_example", "New");
-                _extra.variableManager.setVariableValue("ss_sessionStorage", "New");
-                _extra.variableManager.setVariableValue("ls_localStorage", "New");
-
-                _extra.variableManager.reset("@_example");
-
-                expect(_extra.variableManager.getVariableValue("AA_example")).toBe(AA_Default);
-                expect(_extra.variableManager.getVariableValue("_BB_example")).toBe(BB_Default);
-                expect(_extra.variableManager.getVariableValue("ss_sessionStorage")).toBe("New");
-                expect(_extra.variableManager.getVariableValue("ls_localStorage")).toBe("New");
+                expect(_extra.error).not.toHaveBeenCalled();
+                //expect(_extra.error.calls.argsFor(0)[0]).toBe("CV050");
 
             });
 

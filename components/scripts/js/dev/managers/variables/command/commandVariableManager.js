@@ -5,7 +5,7 @@
  * Time: 9:38 AM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("commandVariableManager",["variableManager","stateManager_global"], function () {
+_extra.registerModule("commandVariableManager",["variableManager","stateManager_global","whiteSpaceManager"], function () {
 
     "use strict";
 
@@ -93,38 +93,14 @@ _extra.registerModule("commandVariableManager",["variableManager","stateManager_
                     var parameters;
 
                     if (typeof value === "string") {
-                        // Remove spaces from value string
-                        value = value.replace(/\s+/g,'');
 
-                        /*
-                         * // Regular expression for removing spaces except inside of quotation marks.
-                         *
-                         * value = value.replace(/([^"]+)|("[^"]+")/g, function($0, $1, $2) {
-                         *    if ($1) {
-                         *        return $1.replace(/\s/g, '');
-                         *    } else {
-                         *        return $2;
-                         *    }
-                         *});
-                         *
-                         *
-                         *  // Regular expression for replacing the , outside of quotation marks with the unicode character
-                         *  // \u0000, which can't be typed, which therefore allows us to use split safely without splitting on commas
-                         *  // inside of quotation marks
-                         *
-                         * value = value.replace(/([^"]+)|("[^"]+")/g, function($0, $1, $2) {
-                         *    if ($1) {
-                         *        return $1.replace(/\,/g, '\u0000');
-                         *    } else {
-                         *        return $2;
-                         *    }
-                         *});
-                         *
-                         * parameters = value.split("\u0000");
-                         */
+                        // Remove spaces and tabs and such, but not from inside double quotes
+                        value = _extra.variableManager.safelyRemoveWhiteSpace(value, "\u0000");
 
-                        parameters = value.split(",");
+                        parameters = value.split("\u0000");
+
                     } else {
+                        // This is likely a number.
                         parameters = [value];
                     }
 
@@ -137,6 +113,10 @@ _extra.registerModule("commandVariableManager",["variableManager","stateManager_
         }
 
 
+        ///////////////////////////////////////////////////////////////////////
+        /////////////// Setting up registered command variables
+        ///////////////////////////////////////////////////////////////////////
+        // We will now go through all the command variables and set them up.
         function registerVariable (variableName) {
             if (_extra.variableManager.hasVariable(variableName)) {
 
@@ -153,7 +133,6 @@ _extra.registerModule("commandVariableManager",["variableManager","stateManager_
 
                 registerVariable(variableName);
                 registerVariable("_" + variableName);
-
 
             }
         }

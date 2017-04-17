@@ -72,6 +72,22 @@ _extra.registerModule("localStorageManager", ["variableManager", "queryManager"]
 
     };
 
+    _extra.variableManager.enactFunctionOnStorageVariables = function (query, output) {
+
+        var list = _extra.queryList(query, storageVariables);
+
+        if (list) {
+
+            for (var i = 0; i < list.length; i += 1) {
+
+                output(list[i]);
+
+            }
+
+        }
+
+    };
+
     _extra.variableManager.flushStorage = function(variableName) {
 
         // If this variable exists
@@ -81,17 +97,6 @@ _extra.registerModule("localStorageManager", ["variableManager", "queryManager"]
             variablesNotToSave[variableName] = true;
 
         // If we've been given a query
-        } else if (_extra.isQuery(variableName)) {
-
-            var list = _extra.queryList(variableName, storageVariables);
-
-            for (var i = 0; i < list.length; i += 1) {
-
-                _extra.variableManager.flushStorage(list[i]);
-
-            }
-
-        // If none of the above, then we might be dealing with a speacial keyword... Or an error.
         } else {
 
             // Check if this could be some special characters.

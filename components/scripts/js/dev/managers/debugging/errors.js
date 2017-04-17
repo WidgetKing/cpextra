@@ -54,6 +54,18 @@ _extra.registerModule("errors", ["debuggingManager"], function () {
 
         ////////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////
+        //////////////////// PARSING ERRORS
+        ////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////
+
+        "PE001": function (variableName) {
+            return "Tried to access explicitly defined variable <b>$$" + variableName + "$$</b>." +
+                   "<br/>However, thre is no variable of the name <b>" + variableName + "</b>." +
+                   "<br/>To correct this issue please check that you have spelled the variable's name correctly.";
+        },
+
+        ////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////
         //////////////////// COMMAND VARIABLE ERRORS
         ////////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////
@@ -63,14 +75,43 @@ _extra.registerModule("errors", ["debuggingManager"], function () {
         "CV001": function (slideObject) {
             return "Could not find a slide object in the movie by the name of <b>" + slideObject + "</b>." +
                    "<br/>To resolve this issue, please find the xcmnd variable that is attempting to reference " +
-                   "this object and check you have spelled the object's name correctly.";
+                   "this object and check you have spelt the object's name correctly.";
+        },
+
+        "CV002": function (variableName) {
+            return "Could not find a variable in the movie by the name of <b>" + variableName + "</b>." +
+                "<br/>To resolve this issue, please find the xcmnd variable that is attempting to " +
+                "reference this variable and check you have spelt the variable's name correctly."
+        },
+
+        "CV003": function (invalidString) {
+            return "The string <b>" + invalidString + "</b> does not match an expected keyword " +
+                   "for the command variable it was assigned to." +
+                   "<br/>Please check the spelling of <b>" + invalidString + "</b> and that you are assigning " +
+                   "to the correct command variable";
+        },
+
+        "CV004": function (query) {
+            return "Tried to use the @syntax query <b>" + query + "</b> on a parameter that doesn't allow " +
+                   "@syntax queries.<br/>Please remove the @syntax query and replace it with a singular property.";
+        },
+
+        "CV005": function (number) {
+            return "Tried to pass use the value <b>" + number + "</b> for a property that requires a number." +
+                "<br/>Please check the spelling of <b>" + number + "</b>";
+        },
+
+        "CV006": function (slideObject, property) {
+            return "Tried to write to slide object <b>" + slideObject + "</b>'s <b>" + property + "</b> property." +
+                   "<br/>However, this is not a property that CpExtra allows you to set. " +
+                   "<br/>Do not attempt to write to the <b>" + property + "</b> property";
         },
 
         ///////////////////////////////////////////////////////////////////////
         /////////////// xcmndCallActionOn
         ///////////////////////////////////////////////////////////////////////
-        "CV010": function (slideObject, criteria) {
-            return "Unable to call a <b>" + criteria + "</b> action on <b>" + slideObject +"</b> because <b>" +
+        "CV010": function (criteria) {
+            return "Unable to call a <b>" + criteria + "</b> action on a slide object because <b>" +
                     criteria + "</b> is not listed as a valid action. " + "<br/>Please check the spelling of <b>" +
                     criteria + "</b>.";
         },
@@ -92,8 +133,8 @@ _extra.registerModule("errors", ["debuggingManager"], function () {
         ///////////////////////////////////////////////////////////////////////
         /////////////// xcmndSetCursor
         ///////////////////////////////////////////////////////////////////////
-        "CV020": function (query, cursorName) {
-            return "Tried to use xcmndSetCursor to apply cursor named <b>" + cursorName + "</b> to <b>" + query + "</b>. " +
+        "CV020": function (cursorName) {
+            return "Tried to use xcmndSetCursor to apply cursor named <b>" + cursorName + "</b> to a slide object. " +
                    "<b>" + cursorName + "</b> is not a valid cursor name. " +
                     "<br/>Please check if you have misspelt the cursor name.";
         },
@@ -132,6 +173,7 @@ _extra.registerModule("errors", ["debuggingManager"], function () {
         ///////////////////////////////////////////////////////////////////////
         /////////////// xcmndPosX, xcmndPosY, xcmndWidth, xcmndHeight
         ///////////////////////////////////////////////////////////////////////
+        // TODO: Implement the following errors
         "CV040": function (slideObject, property) {
             return "Tried alter the <b>" + property + "</b> property on <b>" + slideObject +
                    "</b> but could not find any slide objects with that name. " +
@@ -179,13 +221,15 @@ _extra.registerModule("errors", ["debuggingManager"], function () {
                     "<br>Please check the spelling of <b>" + value + "</b>.";
         },
         "CV071": function (slideName) {
-            return "Tried to mark slide <b>" + slideName + "</b> as complete, but could not find any slide with the name <b>" + slideName + "</b>." +
-                    "<br/>Please check the spelling of <b>" + slideName + "</b>. Slide names are <b>case sensitive</b> and <b>cannot have spaces</b>.";
+            return "Tried to mark slide <b>" + slideName + "</b> as complete, but could not find any slide with the name <b>" +
+                   slideName + "</b>." + "<br/>Please check the spelling of <b>" + slideName +
+                   "</b>. Slide names are <b>case sensitive</b>. If the slide name contains spaces, " +
+                'wrap the slide name in "double quotes."';
         },
         "CV072": function (slideNumber, slideCount) {
             return "Tried to mark slide number <b>" + slideNumber + "</b> as complete, but there are only <b>" +
-                    slideCount + "</b> slides in the project." +
-                    "<br/>Perhaps you have deleted a few slides and this command needs updating.";
+                   slideCount + "</b> slides in the project." +
+                   "<br/>Perhaps you have deleted a few slides and this command needs updating.";
         }
     };
 

@@ -17,6 +17,11 @@ _extra.registerModule("variableManager", ["variableManager_software", "VariableE
     _extra.variableManager.hasParsedVariables = false;
     _extra.variableManager.prefixCallback = new _extra.classes.Callback();
 
+    _extra.variableManager.commands = {};
+
+    ///////////////////////////////////////////////////////////////////////
+    /////////////// Variable Event Listeners
+    ///////////////////////////////////////////////////////////////////////
     _extra.variableManager.listenForVariableChange = function (variableName, callback) {
         variableEventManager.addListener(variableName, callback);
     };
@@ -25,22 +30,22 @@ _extra.registerModule("variableManager", ["variableManager_software", "VariableE
         variableEventManager.removeListener(variableName, callback);
     };
 
-    _extra.variableManager.isSystemVariable = function (variableName) {
-        if (_extra.variableManager.variableData && _extra.variableManager.variableData[variableName] !== undefined) {
-            return _extra.variableManager.variableData[variableName].isSystemVariable;
-        } else {
-            return false;
-        }
-    };
-
+    ///////////////////////////////////////////////////////////////////////
+    /////////////// @Syntax
+    ///////////////////////////////////////////////////////////////////////
     _extra.variableManager.enactFunctionOnVariables = function (query, method) {
+
         if (_extra.isQuery(query)) {
 
             var list = _extra.queryList(query, _extra.variableManager.variableData);
 
-            for (var i = 0; i < list.length; i += 1) {
+            if (list) {
 
-                method(list[i]);
+                for (var i = 0; i < list.length; i += 1) {
+
+                    method(list[i]);
+
+                }
 
             }
 
@@ -49,25 +54,44 @@ _extra.registerModule("variableManager", ["variableManager_software", "VariableE
             method(query);
 
         }
+
     };
+
+    ///////////////////////////////////////////////////////////////////////
+    /////////////// Utils
+    ///////////////////////////////////////////////////////////////////////
+    _extra.variableManager.isSystemVariable = function (variableName) {
+        if (_extra.variableManager.variableData && _extra.variableManager.variableData[variableName] !== undefined) {
+            return _extra.variableManager.variableData[variableName].isSystemVariable;
+        } else {
+            return false;
+        }
+    };
+
 
     _extra.variableManager.reset = function (variableName) {
 
         if (_extra.variableManager.variableData) {
-            _extra.variableManager.enactFunctionOnVariables(variableName, function (variableName) {
 
-                var variableData = _extra.variableManager.variableData[variableName];
+            var variableData = _extra.variableManager.variableData[variableName];
 
-                if (variableData === undefined) {
-                    _extra.error("CV050", variableName);
-                } else {
-                    _extra.variableManager.setVariableValue(variableName, variableData.defaultValue);
-                }
+            if (variableData) {
+                _extra.variableManager.setVariableValue(variableName, variableData.defaultValue);
+            }
 
-            });
         }
     };
 
+
+
+
+
+
+    ////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
+    //////////////////// On load callback
+    ////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
     return function () {
 
 

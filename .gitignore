@@ -1,8 +1,8 @@
 .DS_Store
 node_modules
 .tmp
-.idea
-workspace.xml
+.idea/**
+.idea/workspace.xml
 .jshintrc
 tests/output
 tests/sources
@@ -12,3 +12,4 @@ components/_dump
 components/legacy
 CaptivateExtra.iml
 coverage
+_dev.iml

@@ -1,17 +1,16 @@
 /**
  * Created with IntelliJ IDEA.
  * User: Tristan
- * Date: 4/04/17
- * Time: 9:27 AM
+ * Date: 17/04/17
+ * Time: 1:14 PM
  * To change this template use File | Settings | File Templates.
  */
-describe("A test suite for _extra.commandVariables", function () {
+fdescribe("A test suite for _extra.variableManager.processCommandVariableRegistration", function () {
 
     "use strict";
 
-    var module = unitTests.getModule("commandVariables_global");
-
-    var register,
+    var module = unitTests.getModule("processCommandVariableRegistration"),
+        register,
         changeVariable;
 
     beforeEach(function () {
@@ -83,11 +82,96 @@ describe("A test suite for _extra.commandVariables", function () {
         module();
         register = _extra.variableManager.processCommandVariableRegistration;
         _extra.variableManager.registerCommandVariable.calls.reset();
-
     });
 
     afterEach(function () {
         delete window._extra;
     });
 
+
+    it("should define the processCommandVariableRegistration method", function () {
+
+        expect(_extra.variableManager.processCommandVariableRegistration).toBeDefined();
+
+    });
+
+    it("should allow us to register a basic command variable", function () {
+
+        var data = {
+            "varName":{
+                "parseSet":jasmine.createSpy("parseSet")
+            }
+        };
+
+        register(data);
+
+        expect(_extra.variableManager.registerCommandVariable).toHaveBeenCalledWith("varName", jasmine.any(Function), undefined);
+
+    });
+
+    it("should allow us to register multiple variables at once", function () {
+
+        var data = {
+            "foo":{
+                "parseSet":jasmine.createSpy("parseSet")
+            },
+            "bar":{
+                "parseSet":jasmine.createSpy("parseSet")
+            }
+        };
+
+        register(data);
+
+        expect(_extra.variableManager.registerCommandVariable).toHaveBeenCalledWith("foo", jasmine.any(Function), undefined);
+        expect(_extra.variableManager.registerCommandVariable).toHaveBeenCalledWith("bar", jasmine.any(Function), undefined);
+
+    });
+
+    it("should allow us to add this variable to the variableManager.commands object", function () {
+
+        var data = {
+            "varName":{
+                "commandName":"foobar",
+                "parseSet":jasmine.createSpy("parseSet")
+            }
+        };
+
+        register(data);
+
+        expect(_extra.variableManager.commands.foobar).toBeDefined();
+
+    });
+
+    it("should allow us to set a custom parameter handler", function () {
+
+        var data = {
+            "varName":{
+                "parseSet":jasmine.createSpy("parseSet"),
+                "parameterHandler": jasmine.createSpy("customParameterHandler")
+            }
+        };
+
+        register(data);
+
+        expect(_extra.variableManager.registerCommandVariable).toHaveBeenCalledWith("varName", jasmine.any(Function), data.varName.parameterHandler);
+
+    });
+
+    it("should send the parse set the parse data", function () {
+
+        var data = {
+            "varName":{
+                "updateData":jasmine.createSpy("updateData"),
+                "parseSet":jasmine.createSpy("parseSet"),
+                "parseSetData":{}
+            }
+        };
+
+        register(data);
+        changeVariable("varName", "value");
+
+        expect(data.varName.updateData).toHaveBeenCalledWith(data.varName.parseSetData, "value");
+        expect(data.varName.parseSet).toHaveBeenCalledWith(data.varName.parseSetData);
+
+    });
 });

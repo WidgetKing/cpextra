@@ -10,7 +10,8 @@ describe("A test suite for _extra.variableManager.parser", function () {
     "use strict";
 
     var module = unitTests.getModule("parameterParser"),
-        queryEngine = unitTests.getModule("queryManager");
+        queryEngine = unitTests.getModule("queryManager"),
+        whiteSpaceManager = unitTests.getModule("whiteSpaceManager");
 
     beforeEach(function () {
 
@@ -47,10 +48,12 @@ describe("A test suite for _extra.variableManager.parser", function () {
                 "parseInt":parseInt,
                 "isNaN":isNaN
             },
-            "parseInt":parseInt
+            "parseInt":parseInt,
+            "error":jasmine.createSpy("_extra.error")
         };
 
         queryEngine();
+        whiteSpaceManager();
         module();
     });
 
@@ -237,6 +240,49 @@ describe("A test suite for _extra.variableManager.parser", function () {
             "value":"custom",
             "test":"hello"
         }));
+
+    });
+
+    it("should detect explicit strings and strip out the quotation marks from the value", function () {
+
+        var result = _extra.variableManager.parse.string('"string"');
+
+        expect(result.value).toBe("string");
+        expect(result.isString).toBe(true);
+
+    });
+
+    it("should not accept a variable name inside of quotation marks as being an actual variable", function () {
+
+        var result = _extra.variableManager.parse.string('"variable"');
+
+        expect(result.value).toBe("variable");
+        expect(result.isVariable).toBe(false);
+
+    });
+
+    it("should detect $variables and strip out the $$ either side of the variable name", function () {
+
+        var result = _extra.variableManager.parse.string("$$variable$$");
+
+        expect(result.value).toBe("variable");
+        expect(result.variable.value).toBe("value");
+        expect(result.isVariable).toBe(true);
+        expect(result.is$Variable).toBe(true);
+
+        expect(_extra.error).not.toHaveBeenCalled();
+
+    });
+
+    it("should not recognize slide object names inside of $$ as being slide objects", function () {
+
+        var result = _extra.variableManager.parse.string("$$slideObject$$");
+
+        expect(result.isSlideObject).toBe(false);
+        expect(result.is$Variable).toBe(true);
+        expect(result.isVariable).toBe(false);
+
+        expect(_extra.error).toHaveBeenCalledWith("PE001", jasmine.anything());
 
     });
 

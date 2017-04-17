@@ -78,7 +78,7 @@
         return "/**\n" +
                " * Captivate Extra\n" +
                " * Version: " + versionNumber + "\n" +
-               " * Build:" + buildNumber + "\n" +
+               " * Build: " + buildNumber + "\n" +
                " * Written By: Tristan Ward\n" +
                " * Company: Infosemantics\n" +
                " * Licence: See licence document provided with CpExtra purchase\n" +

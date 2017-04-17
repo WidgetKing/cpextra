@@ -23,12 +23,15 @@ describe("A test suite for the public api manager which exposes methods to the _
             },
             "slideObjects":{
                 "getSlideObjectByName": "getSlideObjectByName",
-                "hide":"hide",
-                "show":"show",
-                "enable":"enable",
-                "disable":"disable",
-                "states":{
-                    "change":"change"
+
+            },
+            "variableManager":{
+                "commands":{
+                    "hide":"hide",
+                    "show":"show",
+                    "enable":"enable",
+                    "disable":"disable",
+                    "changeState":"changeState"
                 }
             },
             "w":{
@@ -47,11 +50,11 @@ describe("A test suite for the public api manager which exposes methods to the _
         expect(_extra.X.gotoSlide).toEqual(_extra.slideManager.gotoSlide);
         expect(_extra.X.getSlideObjectByName).toEqual(_extra.slideObjects.getSlideObjectByName);
 
-        expect(_extra.X.hide).toEqual(_extra.slideObjects.hide);
-        expect(_extra.X.show).toEqual(_extra.slideObjects.show);
-        expect(_extra.X.enable).toEqual(_extra.slideObjects.enable);
-        expect(_extra.X.disable).toEqual(_extra.slideObjects.disable);
-        expect(_extra.X.changeState).toEqual(_extra.slideObjects.states.change);
+        expect(_extra.X.hide).toEqual(_extra.variableManager.commands.hide);
+        expect(_extra.X.show).toEqual(_extra.variableManager.commands.show);
+        expect(_extra.X.enable).toEqual(_extra.variableManager.commands.enable);
+        expect(_extra.X.disable).toEqual(_extra.variableManager.commands.disable);
+        expect(_extra.X.changeState).toEqual(_extra.variableManager.commands.changeState);
 
     });
 });
