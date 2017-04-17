@@ -229,6 +229,7 @@ describe("A test suite for the parameterParseSets", function () {
 
             expect(dummy).toHaveBeenCalledWith("variableVariable");
             expect(_extra.variableManager.parse.string).not.toHaveBeenCalled();
+            expect(testData.substituteParseResult).not.toBeDefined();
 
         });
 
@@ -401,6 +402,7 @@ describe("A test suite for the parameterParseSets", function () {
 
             expect(dummy).toHaveBeenCalledWith("slideObject");
             expect(_extra.variableManager.parse.string).not.toHaveBeenCalled();
+            expect(testData.substituteParseResult).not.toBeDefined();
 
         });
 
@@ -553,6 +555,7 @@ describe("A test suite for the parameterParseSets", function () {
             testSet(testData);
             expect(dummy).toHaveBeenCalledWith("foo");
             expect(_extra.variableManager.parse.string).not.toHaveBeenCalled();
+            expect(testData.substituteParseResult).not.toBeDefined();
 
         });
 
@@ -620,6 +623,7 @@ describe("A test suite for the parameterParseSets", function () {
             testSet(testData);
             expect(dummy).toHaveBeenCalledWith(3);
             expect(_extra.variableManager.parse.string).not.toHaveBeenCalled();
+            expect(testData.substituteParseResult).not.toBeDefined();
 
         });
 
@@ -868,6 +872,7 @@ describe("A test suite for the parameterParseSets", function () {
             testSet(testData);
             expect(dummy).toHaveBeenCalledWith(1);
             expect(_extra.variableManager.parse.string).not.toHaveBeenCalled();
+            expect(testData.substituteParseResult).not.toBeDefined();
 
         });
         
@@ -973,7 +978,7 @@ describe("A test suite for the parameterParseSets", function () {
 
     });
 
-    fdescribe("A test suite for MD.SOR_NR", function () {
+    describe("A test suite for MD.SOR_NR", function () {
 
         var getOutput,
             setOutput;

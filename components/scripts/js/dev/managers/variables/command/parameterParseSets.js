@@ -12,11 +12,12 @@ _extra.registerModule("parameterParseSets", ["parameterParser", "variableManager
     ///////////////////////////////////////////////////////////////////////
     /////////////// Util methods
     ///////////////////////////////////////////////////////////////////////
-    var initialParsing = function (p, parameter) {
+    var initialParsing = function (p, parameter, replaceVariable) {
 
             if (p.substituteParseResult) {
 
                 p.parseResult = p.substituteParseResult;
+                delete p.substituteParseResult;
 
             } else {
 
@@ -24,7 +25,7 @@ _extra.registerModule("parameterParseSets", ["parameterParser", "variableManager
 
             }
 
-            if (p.parseResult.isVariable) {
+            if (replaceVariable && p.parseResult.isVariable) {
 
                 p.parseResult = p.parseResult.variable;
 
@@ -83,7 +84,7 @@ _extra.registerModule("parameterParseSets", ["parameterParser", "variableManager
 
                     function entryPoint () {
 
-                        initialParsing(p, "query");
+                        initialParsing(p, "query", true);
 
                         if (p.parseResult.isSlideObject) {
 
@@ -139,11 +140,7 @@ _extra.registerModule("parameterParseSets", ["parameterParser", "variableManager
                 // invalidName
                 "VR":function (p) {
 
-                    if (p.substituteParseResult) {
-                        p.parseResult = p.substituteParseResult;
-                    } else {
-                        p.parseResult = _extra.variableManager.parse.string(p.query);
-                    }
+                    initialParsing(p, "query", false);
 
                     if (p.parseResult.is$Variable) {
 
@@ -195,15 +192,7 @@ _extra.registerModule("parameterParseSets", ["parameterParser", "variableManager
 
                     function entryPoint() {
 
-                        if (p.substituteParseResult) {
-
-                            p.parseResult = p.substituteParseResult;
-
-                        } else {
-
-                            p.parseResult = _extra.variableManager.parse.string(p.query);
-
-                        }
+                        initialParsing(p, "query", false);
 
                         if (p.parseResult.is$Variable) {
 
@@ -432,7 +421,7 @@ _extra.registerModule("parameterParseSets", ["parameterParser", "variableManager
 
                     function getString() {
 
-                        initialParsing(p, "string");
+                        initialParsing(p, "string", true);
 
                         if (p.parseResult.isNumber) {
                             return p.parseResult.value.toString();
@@ -506,7 +495,7 @@ _extra.registerModule("parameterParseSets", ["parameterParser", "variableManager
                 // NaN
                 "NR": function (p) {
 
-                    initialParsing(p, "number");
+                    initialParsing(p, "number", true);
 
                     if (p.parseResult.isNumber) {
 
