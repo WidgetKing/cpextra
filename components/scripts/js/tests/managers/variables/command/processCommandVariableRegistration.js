@@ -5,7 +5,7 @@
  * Time: 1:14 PM
  * To change this template use File | Settings | File Templates.
  */
-fdescribe("A test suite for _extra.variableManager.processCommandVariableRegistration", function () {
+describe("A test suite for _extra.variableManager.processCommandVariableRegistration", function () {
 
     "use strict";
 

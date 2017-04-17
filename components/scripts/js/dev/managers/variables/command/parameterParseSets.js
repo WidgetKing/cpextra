@@ -80,6 +80,7 @@ _extra.registerModule("parameterParseSets", ["parameterParser", "variableManager
                 ///// Exceptions
                 // invalidName
                 // illegalQuery
+                // nonInteractive
                 "SOR":function (p) {
 
                     function entryPoint () {
@@ -88,7 +89,7 @@ _extra.registerModule("parameterParseSets", ["parameterParser", "variableManager
 
                         if (p.parseResult.isSlideObject) {
 
-                            p.output(p.parseResult.value);
+                            processSlideObject(p.parseResult.value);
 
                         } else if (p.parseResult.isQuery) {
 
@@ -106,7 +107,10 @@ _extra.registerModule("parameterParseSets", ["parameterParser", "variableManager
 
                             } else {
 
-                                _extra.slideObjects.enactFunctionOnSlideObjects(p.parseResult.value, p.output);
+                                _extra.slideObjects.enactFunctionOnSlideObjects(p.parseResult.value,
+                                    function (slideObjectName) {
+                                        processSlideObject(slideObjectName, true);
+                                    });
 
                             }
 
@@ -124,6 +128,36 @@ _extra.registerModule("parameterParseSets", ["parameterParser", "variableManager
                             });
 
                         }
+
+                    }
+
+                    function processSlideObject (slideObjectName, skipException) {
+
+                        // If we require an Interactive Object, then we'll double check it here.
+                        if (p.requireInteractiveObject &&
+                            !_extra.slideObjects.isInteractiveObject(slideObjectName)) {
+
+                            if (skipException !== true) {
+
+                                runException({
+                                    "data":p,
+                                    "exceptionName":"nonInteractive",
+                                    "issue":slideObjectName,
+                                    "output":p.output,
+                                    "fail": function () {
+                                        _extra.error("CV007", slideObjectName);
+                                    }
+                                });
+
+                            }
+
+                        } else {
+
+                            // Success!
+                            p.output(slideObjectName);
+
+                        }
+
 
                     }
 
@@ -605,6 +639,7 @@ _extra.registerModule("parameterParseSets", ["parameterParser", "variableManager
                 function parseInteractiveObject () {
                     p.INT.query = p.interactiveObject;
                     p.INT.noQueries = true;
+                    p.INT.requireInteractiveObject = true;
                     p.INT.output = function (interactiveObject) {
                         result.interactiveObject = interactiveObject;
                     };

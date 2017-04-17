@@ -149,6 +149,13 @@
                 expect(_extra.slideObjects.hasSlideObjectInProject("invalid")).toBe(false);
             });
 
+            it("should allow us to check if a slide object is an interactive object", function () {
+
+                expect(_extra.slideObjects.isInteractiveObject("nonInteractive")).toBe(false);
+                expect(_extra.slideObjects.isInteractiveObject("interactive")).toBe(true);
+
+            });
+
 
 
 
@@ -172,11 +179,24 @@
     }
 
     testSlideObjectManager(unitTests.CAPTIVATE, function () {
+
+        var slideObjectDatas = {
+            "interactive":{
+                "isInteractiveObject":true
+            },
+            "nonInteractive":{
+                "isInteractiveObject":false
+            }
+        };
+
         return {
             "classes": unitTests.classes,
             "dataManager":{
                 "getSlideObjectTypeByName": function() {
                     return 1;
+                },
+                "getSlideObjectDataByName": function (slideObjectName) {
+                    return slideObjectDatas[slideObjectName];
                 }
             },
             "slideManager":{

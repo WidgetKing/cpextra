@@ -96,9 +96,40 @@ _extra.registerModule("commandVariables_global", ["processCommandVariableRegistr
                     "parseSetData": {
                         "slideObject":undefined,   // Changed in the updateData method
                         "number":undefined,        // Changed in the updateData method
-                        "get":getter
+                        "get":getter,
+                        "SOR":{
+
+                        }
                     }
                 };
+            },
+
+            "createScoreGetterSetterData": function (commandName, getter, setter) {
+                var data = commandDatas.createGetterSetterData(commandName, getter, setter);
+                data.parseSetData.SOR.requireInteractiveObject = true;
+                data.parseSetData.NR.exceptions.NaN = function (string) {
+
+                    string = string.toLowerCase();
+
+                    if (string === "max" ||
+                        string === "top" ||
+                        string === "full" ||
+                        string === "topscore") {
+
+                        return "max";
+
+                    } else if (string === "half") {
+
+                        return "half";
+
+                    } else {
+
+                        return false;
+
+                    }
+
+                };
+                return data;
             },
 
             "createGetterData": function (commandName, getter) {
@@ -114,6 +145,7 @@ _extra.registerModule("commandVariables_global", ["processCommandVariableRegistr
             },
 
             "createGetterSetterData": function (commandName, getter, setter) {
+
                 var data = commandDatas.createBaseGetterSetterData(commandName, getter);
                 data.parseSetData.set = setter;
                 data.parseSetData.NR = {
@@ -272,6 +304,34 @@ _extra.registerModule("commandVariables_global", ["processCommandVariableRegistr
         }),
 
 
+        ///////////////////////////////////////////////////////////////////////
+        /////////////// Set/Get Score
+        ///////////////////////////////////////////////////////////////////////
+        "Score": commandDatas.createScoreGetterSetterData("score",
+            function (variableName, slideObjectName) { // Get
+
+                _extra.variableManager.setVariableValue(variableName,
+                    _extra.quizManager.getSlideObjectScore(slideObjectName));
+
+            },
+            function (slideObjectName, number) { // Set
+
+                _extra.quizManager.setSlideObjectScore(slideObjectName, number);
+
+            }),
+
+        ///////////////////////////////////////////////////////////////////////
+        /////////////// MaxScore
+        ///////////////////////////////////////////////////////////////////////
+        "MaxScore": commandDatas.createGetterData("maxScore", function (variableName, slideObjectName) {
+
+            var slideObject = _extra.quizManager.getSlideObjectQuestionData(slideObjectName);
+
+            if (slideObject) {
+                _extra.variableManager.setVariableValue(variableName, slideObject.maxScore);
+            }
+
+        }),
 
         ///////////////////////////////////////////////////////////////////////
         /////////////// X and Y
@@ -303,7 +363,7 @@ _extra.registerModule("commandVariables_global", ["processCommandVariableRegistr
             }),
 
         ///////////////////////////////////////////////////////////////////////
-        /////////////// X and Y
+        /////////////// Width and Height
         ///////////////////////////////////////////////////////////////////////
         "Width": commandDatas.createGetterData("width", function (variableName, slideObject) {
 

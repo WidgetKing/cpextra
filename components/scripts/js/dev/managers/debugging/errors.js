@@ -107,6 +107,13 @@ _extra.registerModule("errors", ["debuggingManager"], function () {
                    "<br/>Do not attempt to write to the <b>" + property + "</b> property";
         },
 
+        "CV007": function (slideObject) {
+            return "Tried to interact with slide object <b>" + slideObject + "</b>. " +
+                   "However, this action requires an interactive object, and <b>" + slideObject + "</b> " +
+                   "is not an interactive object." +
+                   "<br/>Please check the spelling of <b>" + slideObject + "</b>. ";
+        },
+
         ///////////////////////////////////////////////////////////////////////
         /////////////// xcmndCallActionOn
         ///////////////////////////////////////////////////////////////////////

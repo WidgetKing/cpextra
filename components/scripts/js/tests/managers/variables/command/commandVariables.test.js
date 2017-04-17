@@ -9,7 +9,8 @@ describe("A test suite for _extra.commandVariables", function () {
 
     "use strict";
 
-    var module = unitTests.getModule("commandVariables_global");
+    var module = unitTests.getModule("commandVariables_global"),
+        processCommandVariable = unitTests.getModule("processCommandVariableRegistration");
 
     var register,
         changeVariable;
@@ -80,6 +81,7 @@ describe("A test suite for _extra.commandVariables", function () {
             }
         };
 
+        processCommandVariable();
         module();
         register = _extra.variableManager.processCommandVariableRegistration;
         _extra.variableManager.registerCommandVariable.calls.reset();
@@ -90,4 +92,9 @@ describe("A test suite for _extra.commandVariables", function () {
         delete window._extra;
     });
 
+    it("should not throw any errors?", function () {
+
+
+
+    });
 });

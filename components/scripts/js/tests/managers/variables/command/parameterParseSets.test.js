@@ -14,6 +14,7 @@ describe("A test suite for the parameterParseSets", function () {
         queryEngine = unitTests.getModule("queryManager"),
         whiteSpaceManager = unitTests.getModule("whiteSpaceManager"),
         variables,
+        interactiveObjects,
         slideObjectQueries,
         variableQueries,
         slideNames,
@@ -28,6 +29,10 @@ describe("A test suite for the parameterParseSets", function () {
             "slideObject":true,
             "syntax1":true,
             "syntax2":true,
+            "interactiveObject":true,
+            "noninteractiveObject":true
+        };
+        interactiveObjects = {
             "interactiveObject":true
         };
         variables = {
@@ -46,6 +51,11 @@ describe("A test suite for the parameterParseSets", function () {
             "syntax@": [
                 "syntax1",
                 "syntax2"
+            ],
+            "@Object": [
+                "interactiveObject",
+                "noninteractiveObject",
+                "slideObject"
             ]
         };
         variableQueries = {
@@ -123,6 +133,9 @@ describe("A test suite for the parameterParseSets", function () {
                         }
 
                     }
+                },
+                "isInteractiveObject": function (slideObjectName) {
+                    return interactiveObjects.hasOwnProperty(slideObjectName);
                 }
             },
             "w":{
@@ -330,6 +343,33 @@ describe("A test suite for the parameterParseSets", function () {
             testSet(testData);
 
             expect(dummy).toHaveBeenCalledWith("slideObject");
+
+        });
+
+        it("should allow us to require an interactive object", function () {
+
+            testData.query = "interactiveObject";
+            testData.requireInteractiveObject = true;
+            testSet(testData);
+            expect(dummy).toHaveBeenCalledWith("interactiveObject");
+
+            dummy.calls.reset();
+
+            testData.query = "noninteractiveObject";
+            testSet(testData);
+            expect(dummy).not.toHaveBeenCalled();
+            expect(_extra.error).toHaveBeenCalledWith("CV007", "noninteractiveObject");
+
+        });
+
+        it("should filter out non-interactive objects when using @syntax", function () {
+
+            testData.query = "@Object";
+            testData.requireInteractiveObject = true;
+            testSet(testData);
+            expect(dummy).toHaveBeenCalledWith("interactiveObject");
+            expect(dummy).not.toHaveBeenCalledWith("noninteractiveObject");
+            expect(dummy).not.toHaveBeenCalledWith("slideObject");
 
         });
 
