@@ -11,7 +11,7 @@
 
     function performCommandVariablesTest(software, getMockObject) {
 
-        describe("A test suite for command variables in " + software, function () {
+        fdescribe("A test suite for command variables in " + software, function () {
 
             var module = unitTests.getModule("commandVariableManager"),
                 whiteSpaceManager = unitTests.getModule("whiteSpaceManager");

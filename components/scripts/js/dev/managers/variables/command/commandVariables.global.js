@@ -396,7 +396,17 @@ _extra.registerModule("commandVariables_global", ["processCommandVariableRegistr
 
         "CallActionOn": {
             "commandName":"callActionOn",
-            "updateData":updateDataTechniques.parametersToQueryString,
+            "updateData":function (data, query, criteria) {
+
+                // If no criteria has been defined, we'll call the SUCCESS criteria by default
+                if (!criteria) {
+                    criteria = SUCCESS_CRITERIA;
+                }
+
+                data.query = query;
+                data.string = criteria;
+
+            },
             "parameterHandler": handlers.sendParametersAsParameters,
             "parseSet": parseSets.MP.SOR_STR,
             "parseSetData":{

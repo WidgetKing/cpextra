@@ -61,6 +61,38 @@ _extra.registerModule("commandVariableManager",["variableManager","stateManager_
         };
     };
 
+    _extra.variableManager.prepareParameters = function(value) {
+
+        // Div issue
+        if (typeof value === "object") {
+            if (value.id !== undefined) {
+                value = value.id;
+            } else {
+                return null;
+            }
+        }
+
+        // If we have been given nothing, then we will not bother informing the command variable.
+        // This likely comes from clearing the command variable after enacting its command.
+        if (value !== "") {
+
+            if (typeof value === "string") {
+
+                // Remove spaces and tabs and such, but not from inside double quotes
+                value = _extra.variableManager.safelyRemoveWhiteSpace(value, "\u0000");
+
+                return value.split("\u0000");
+
+            } else {
+                // This is likely a number.
+                return [value];
+            }
+
+        }
+
+        return null;
+
+    };
 
 
     ///////////////////////////////////////////////////////////////////////
@@ -76,33 +108,9 @@ _extra.registerModule("commandVariableManager",["variableManager","stateManager_
             _extra.variableManager.listenForVariableChange(variableName, function () {
 
                 var value = _extra.variableManager.getVariableValue(variableName);
+                var parameters = _extra.variableManager.prepareParameters(value);
 
-                if (typeof value === "object") {
-                    if (value.id !== undefined) {
-                        value = value.id;
-                    } else {
-                        return;
-                    }
-                }
-
-
-                // If we have been given nothing, then we will not bother informing the command variable.
-                // This likely comes from clearing the command variable after enacting its command.
-                if (value !== "") {
-
-                    var parameters;
-
-                    if (typeof value === "string") {
-
-                        // Remove spaces and tabs and such, but not from inside double quotes
-                        value = _extra.variableManager.safelyRemoveWhiteSpace(value, "\u0000");
-
-                        parameters = value.split("\u0000");
-
-                    } else {
-                        // This is likely a number.
-                        parameters = [value];
-                    }
+                if (parameters) {
 
                     variableMetadata.parameterHandler(parameters, variableMetadata.callback);
                     _extra.variableManager.setVariableValue(variableName,"");

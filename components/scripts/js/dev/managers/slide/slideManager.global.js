@@ -235,8 +235,7 @@ _extra.registerModule("slideManager_global",["slideManager_software"],function()
             _extra.slideManager.enterSlideCallback.sendToCallback(currentSlideID, currentSlideID);
         }
 
-    }
-
+    };
     // From now on, when moving into a new slide, we'll call the above function,
     _extra.slideManager.addEnterSlideEventListener(_extra.slideManager.onSlideEnter);
 
