@@ -91,6 +91,25 @@ _extra.registerModule("slideManager_software", ["softwareInterfacesManager", "Ca
             }
 
             return false;
+        },
+        "isNameOfSlide": function (slideObjectName) {
+
+            // Remove 'c' from end of name.
+            if (slideObjectName.charAt(slideObjectName.length - 1) === "c") {
+                slideObjectName = slideObjectName.substring(0, slideObjectName.length - 1);
+            }
+
+            // TODO: Convert this to an object so we don't have to itterate every time.
+            // TODO: Create unit tests for this.
+            for (var i = 0; i < slideIds.length; i += 1) {
+
+                if (slideIds[i] === slideObjectName) {
+                    return true;
+                }
+
+            }
+
+            return false;
         }
     };
 
