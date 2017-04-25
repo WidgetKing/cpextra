@@ -166,13 +166,29 @@ describe("A test suite for the parameterParseSets", function () {
     ///////////////////////////////////////////////////////////////////////
     /////////////// SP.CD.VR
     ///////////////////////////////////////////////////////////////////////
-    describe("A test suite for SP.CD.VR", function () {
+    fdescribe("A test suite for SP.CD.VR", function () {
 
         beforeEach(function () {
             testSet = _extra.variableManager.parseSets.SP.CD.VR;
             testData = {
                 "output":dummy
             };
+        });
+
+        it("should pass any number", function () {
+
+            testData.query = "1";
+            testSet(testData);
+            expect(dummy).toHaveBeenCalledWith(1);
+
+            testData.query = "0";
+            testSet(testData);
+            expect(dummy).toHaveBeenCalledWith(0);
+
+            testData.query = "-1";
+            testSet(testData);
+            expect(dummy).toHaveBeenCalledWith(-1);
+
         });
 
         it("should parse a loose variable name", function () {
@@ -1013,6 +1029,131 @@ describe("A test suite for the parameterParseSets", function () {
             testSet(testData);
 
             expect(testData.EVT.exceptions.invalidString).toHaveBeenCalled();
+
+        });
+
+    });
+
+    describe("A test suite for MD.VR_NR", function () {
+
+        beforeEach(function () {
+
+            testData = {
+                "output":dummy
+            };
+
+            testSet = _extra.variableManager.parseSets.MP.VR_NR;
+
+        });
+
+        it("should return us a variable and a number", function () {
+
+            testData.variable = "variable";
+            testData.number = "4";
+            testSet(testData);
+            expect(dummy).toHaveBeenCalledWith("variable", 4);
+            expect(_extra.error).not.toHaveBeenCalled();
+
+        });
+
+        it("should allow us to use variables in place of parameters", function () {
+
+            testData.variable = "$$variableVariable$$";
+            testData.number = "variable1";
+            testSet(testData);
+            expect(dummy).toHaveBeenCalledWith("variable", 1);
+            expect(_extra.error).not.toHaveBeenCalled();
+
+        });
+
+    });
+
+    fdescribe("A test suite for MD.VR_NR1_NR2", function () {
+
+        beforeEach(function () {
+
+            testData = {
+                "output":dummy
+            };
+
+            testSet = _extra.variableManager.parseSets.MP.VR_NR1_NR2;
+
+        });
+
+        it("should return us a variable and two numbers", function () {
+
+            testData.variable = "variable";
+            testData.number1 = "1";
+            testData.number2 = "0";
+            testSet(testData);
+            expect(dummy).toHaveBeenCalledWith("variable", 1, 0);
+            expect(_extra.error).not.toHaveBeenCalled();
+            expect(testData.NR).not.toBeDefined();
+            expect(testData.number).not.toBeDefined();
+
+        });
+
+        it("should not loose its value after repeat calls", function () {
+
+            testData.variable = "variable";
+            testData.number1 = "1";
+            testData.number2 = "0";
+            testSet(testData);
+            expect(dummy).toHaveBeenCalledWith("variable", 1, 0);
+
+            testData.variable = "variable";
+            testData.number1 = "100";
+            testData.number2 = "0";
+            testSet(testData);
+            expect(dummy).toHaveBeenCalledWith("variable", 100, 0);
+
+        });
+
+    });
+
+    describe("A test suite for MD.VR_NR_STR", function () {
+
+        beforeEach(function () {
+
+            testData = {
+                "output":dummy
+            };
+
+            testSet = _extra.variableManager.parseSets.MP.VR_NR_STR;
+
+        });
+
+        it("should allow us to send through a variable, number, and string", function () {
+
+            testData.variable = "variable";
+            testData.number = "4";
+            testData.string = "string";
+            testSet(testData);
+            expect(dummy).toHaveBeenCalledWith("variable", 4, "string");
+            expect(_extra.error).not.toHaveBeenCalled();
+
+        });
+
+        it("should allow us to use variables", function () {
+
+            testData.variable = "$$variableVariable$$";
+            testData.number = "variable1";
+            testData.string = "variable";
+            testSet(testData);
+            expect(dummy).toHaveBeenCalledWith("variable", 1, "value");
+            expect(_extra.error).not.toHaveBeenCalled();
+
+        });
+
+        it("should allow us to use an @syntax query", function () {
+
+            testData.variable = "var@";
+            testData.number = "4";
+            testData.string = "string";
+            testSet(testData);
+            expect(dummy).toHaveBeenCalledWith("var1", 4, "string");
+            expect(dummy).toHaveBeenCalledWith("var2", 4, "string");
+            expect(_extra.error).not.toHaveBeenCalled();
 
         });
 

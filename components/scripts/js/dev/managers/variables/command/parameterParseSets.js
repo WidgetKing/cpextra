@@ -12,7 +12,8 @@ _extra.registerModule("parameterParseSets", ["parameterParser", "variableManager
     ///////////////////////////////////////////////////////////////////////
     /////////////// Util methods
     ///////////////////////////////////////////////////////////////////////
-    var initialParsing = function (p, parameter, replaceVariable) {
+    var parseSets,
+        initialParsing = function (p, parameter, replaceVariable) {
 
             if (p.substituteParseResult) {
 
@@ -33,7 +34,21 @@ _extra.registerModule("parameterParseSets", ["parameterParser", "variableManager
 
         },
 
+        validateDataBlock = function (p, dataName, currentParameter, dataParameter) {
+            if (p.dataName === undefined) {
+                p[dataName] = {};
+            }
+            p[dataName][dataParameter] = p[currentParameter];
+        },
 
+        getSingleParameter = function (dataBlock, parseSet) {
+            var result;
+            dataBlock.output = function (r) {
+                result = r;
+            };
+            parseSet(dataBlock);
+            return result;
+        },
 
         runException = function(p) { // p: Stands for Parameters
 
@@ -43,7 +58,7 @@ _extra.registerModule("parameterParseSets", ["parameterParser", "variableManager
             var result = p.data.exceptions[p.exceptionName](p.issue);
 
             // Don't want to output, but don't want to call error...
-            if (result === _extra.variableManager.parseSets.SKIP_ERROR) {
+            if (result === parseSets.SKIP_ERROR) {
 
                 return;
 
@@ -198,6 +213,10 @@ _extra.registerModule("parameterParseSets", ["parameterParser", "variableManager
                             _extra.variableManager.enactFunctionOnVariables(p.parseResult.value, p.output);
 
                         }
+
+                    } else if (p.parseResult.isNumber) {
+
+                        p.output(p.parseResult.value);
 
                     } else {
 
@@ -562,37 +581,158 @@ _extra.registerModule("parameterParseSets", ["parameterParser", "variableManager
         ////////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////
         "MP":{
+
+            ///////////////////////////////////////////////////////////////////////
+            /////////////// Slide Object + String
+            ///////////////////////////////////////////////////////////////////////
             "SOR_STR": function (p) {
 
-                var string;
-
-                if (!p.STR) {
-                    p.STR = {};
+                function entryPoint () {
+                    validateData();
+                    var string = getSingleParameter(p.STR, parseSets.SP.CD.STR);
+                    if (string) {
+                        applyToSlideObjects(string);
+                    }
                 }
 
-                p.STR.string = p.string;
-                p.STR.output = function (result) {
-                    string = result;
-                };
+                function validateData () {
+                    validateDataBlock(p, "STR", "string", "string");
+                    validateDataBlock(p, "SOR", "query", "query");
+                }
 
-                _extra.variableManager.parseSets.SP.CD.STR(p.STR);
+                function applyToSlideObjects (string) {
 
-                if (string) {
-
-                    if (!p.SOR) {
-                        p.SOR = {};
-                    }
-
-                    p.SOR.query = p.query;
                     p.SOR.output = function (slideObject) {
                         p.output(slideObject, string);
                     };
 
-                    _extra.variableManager.parseSets.SP.CD.SOR(p.SOR);
+                    parseSets.SP.CD.SOR(p.SOR);
 
                 }
+
+                entryPoint();
+
             },
 
+            ///////////////////////////////////////////////////////////////////////
+            /////////////// Variable + Number
+            ///////////////////////////////////////////////////////////////////////
+
+            "VR_NR": function (p) {
+
+                function entryPoint () {
+
+                    validateData();
+
+                    var number = getSingleParameter(p.NR, parseSets.SP.CD.NR);
+
+                    if (!_extra.w.isNaN(number)) {
+                        applyToVariables(number);
+                    }
+
+                }
+
+                function applyToVariables (number) {
+
+                    p.VR.output = function (variableName) {
+                        p.output(variableName, number);
+                    };
+                    parseSets.SP.CD.VR(p.VR);
+
+                }
+
+                function validateData () {
+
+                    validateDataBlock(p, "VR", "variable", "query");
+                    validateDataBlock(p, "NR", "number", "number");
+
+                }
+
+                entryPoint();
+
+            },
+
+            ///////////////////////////////////////////////////////////////////////
+            /////////////// Variable + Number + Number
+            ///////////////////////////////////////////////////////////////////////
+            "VR_NR1_NR2": function (p) {
+
+                function entryPoint () {
+
+                    validateData();
+
+                    var number = getSingleParameter(p.NR2, parseSets.SP.CD.NR);
+
+                    if (!_extra.w.isNaN(number)) {
+
+                        applyToVariables(number);
+
+                    }
+
+                }
+
+                function validateData () {
+                    validateDataBlock(p, "NR2", "number2", "number");
+                }
+
+                function applyToVariables (number2) {
+
+                    p.NR = p.NR1;
+                    p.number = p.number1;
+
+                    var output = p.output;
+                    p.output = function (variableName, number1) {
+                        _extra.log("SET UPPER: " + number1);
+                        _extra.log("SET LOWER: " + number2);
+                        output(variableName, number1, number2);
+                    };
+                    parseSets.MP.VR_NR(p);
+
+                    p.output = output;
+                    delete p.NR;
+                    delete p.number;
+
+                }
+
+                entryPoint();
+
+
+
+            },
+
+            ///////////////////////////////////////////////////////////////////////
+            /////////////// Variable + Number + String
+            ///////////////////////////////////////////////////////////////////////
+            "VR_NR_STR": function (p) {
+
+                function entryPoint () {
+
+                    validateDataBlock(p, "STR", "string", "string");
+                    var string = getSingleParameter(p.STR, parseSets.SP.CD.STR);
+                    if (string) {
+                        applyToVariables(string);
+                    }
+
+                }
+
+                function applyToVariables (string) {
+
+                    var output = p.output;
+                    p.output = function (variableName, number) {
+                        output(variableName, number, string);
+                    };
+                    parseSets.MP.VR_NR(p);
+                    p.output = output;
+
+                }
+
+                entryPoint();
+
+            },
+
+            ///////////////////////////////////////////////////////////////////////
+            /////////////// Event Listener
+            ///////////////////////////////////////////////////////////////////////
             "SOR_EVT_INT_CRI": function (p) {
 
                 var result = {
@@ -633,7 +773,7 @@ _extra.registerModule("parameterParseSets", ["parameterParser", "variableManager
                     p.CRI.output = function (string) {
                         result.criteria = string;
                     };
-                    _extra.variableManager.parseSets.SP.CD.STR(p.CRI);
+                    parseSets.SP.CD.STR(p.CRI);
                 }
 
                 function parseInteractiveObject () {
@@ -643,7 +783,7 @@ _extra.registerModule("parameterParseSets", ["parameterParser", "variableManager
                     p.INT.output = function (interactiveObject) {
                         result.interactiveObject = interactiveObject;
                     };
-                    _extra.variableManager.parseSets.SP.CD.SOR(p.INT);
+                    parseSets.SP.CD.SOR(p.INT);
                 }
 
                 function parseEventAndSlideObject () {
@@ -658,12 +798,9 @@ _extra.registerModule("parameterParseSets", ["parameterParser", "variableManager
                         }
                     };
 
-                    _extra.variableManager.parseSets.MP.SOR_STR(data);
+                    parseSets.MP.SOR_STR(data);
 
                 }
-
-
-
 
                 entryPoint();
 
@@ -705,17 +842,11 @@ _extra.registerModule("parameterParseSets", ["parameterParser", "variableManager
 
                 function setUpData () {
 
-                    if (!p.SOR) {
-                        p.SOR = {};
-                    }
+                    validateDataBlock(p, "SOR", "slideObject", "query");
                     p.SOR.substituteParseResult = p1;
-                    p.SOR.query = p.slideObject;
 
-                    if (!p.NR) {
-                        p.NR = {};
-                    }
+                    validateDataBlock(p, "NR", "number", "number");
                     p.NR.substituteParseResult = p2;
-                    p.NR.number = p.number;
 
                 }
 
@@ -746,7 +877,7 @@ _extra.registerModule("parameterParseSets", ["parameterParser", "variableManager
                     };
                     p.NR.noQueries = true;
 
-                    _extra.variableManager.parseSets.SP.CD.SOR(p.NR);
+                    parseSets.SP.CD.SOR(p.NR);
 
                     if (slideObject !== null) {
 
@@ -756,7 +887,7 @@ _extra.registerModule("parameterParseSets", ["parameterParser", "variableManager
 
                         };
 
-                        _extra.variableManager.parseSets.SP.CD.VR(p.SOR);
+                        parseSets.SP.CD.VR(p.SOR);
 
                     }
 
@@ -770,7 +901,7 @@ _extra.registerModule("parameterParseSets", ["parameterParser", "variableManager
                         number = n;
                     };
 
-                    _extra.variableManager.parseSets.SP.CD.NR(p.NR);
+                    parseSets.SP.CD.NR(p.NR);
 
                     if (number !== null) {
 
@@ -780,7 +911,7 @@ _extra.registerModule("parameterParseSets", ["parameterParser", "variableManager
 
                         };
 
-                        _extra.variableManager.parseSets.SP.CD.SOR(p.SOR);
+                        parseSets.SP.CD.SOR(p.SOR);
 
                     }
 
@@ -815,5 +946,7 @@ _extra.registerModule("parameterParseSets", ["parameterParser", "variableManager
         }
 
     };
+
+    parseSets = _extra.variableManager.parseSets;
 
 });

@@ -41,6 +41,18 @@ _extra.registerModule("commandVariables_global", ["processCommandVariableRegistr
                 };
             },
 
+            createVariableCommandData: function (commandName, method) {
+                return {
+                    "commandName": commandName,
+                    "updateData": updateDataTechniques.parameterToQuery,
+                    "parseSet":parseSets.SP.CD.VR,
+                    "parseSetData": {
+                        "query":undefined, // Changed in the updateData method
+                        "output":method
+                    }
+                };
+            },
+
             createEventListenerObjectData: function (commandName, method) {
                 return {
                     "commandName":commandName,
@@ -112,6 +124,7 @@ _extra.registerModule("commandVariables_global", ["processCommandVariableRegistr
                     string = string.toLowerCase();
 
                     if (string === "max" ||
+                        string === "maximum" ||
                         string === "top" ||
                         string === "full" ||
                         string === "topscore") {
@@ -220,6 +233,76 @@ _extra.registerModule("commandVariables_global", ["processCommandVariableRegistr
         ///////////////////////////////////////////////////////////////////////
         /////////////// BASIC VARIABLE COMMAND VARIABLES
         ///////////////////////////////////////////////////////////////////////
+
+        ////////////////////////////////
+        ////////// Round
+        "Round": commandDatas.createVariableCommandData("round", _extra.variableManager.mathActions.round),
+        "Floor": commandDatas.createVariableCommandData("floor", _extra.variableManager.mathActions.floor),
+        "Ceil": commandDatas.createVariableCommandData("ceil", _extra.variableManager.mathActions.ceil),
+        "RoundTo": {
+            "commandName":"roundTo",
+            "parameterHandler": handlers.sendParametersAsParameters,
+            "updateData": function (data, variableName, number, string) {
+                if (!string) {
+                    string = "normal";
+                }
+                data.variable = variableName;
+                data.number = number;
+                data.string = string;
+            },
+            "parseSet": parseSets.MP.VR_NR_STR,
+            "parseSetData": {
+                "variable": undefined,
+                "number": undefined,
+                "string": undefined,
+                "output": _extra.variableManager.mathActions.roundTo,
+                "STR":{
+                    "validation":{
+                        "up":"up",
+                        "upper":"up",
+                        "ceil":"up",
+
+                        "down":"down",
+                        "floor":"down",
+
+                        "normal":"normal",
+                        "none":"normal",
+                        "ordinary":"normal",
+                        "null":"normal"
+                    }
+                }
+            }
+        },
+
+        ////////////////////////////////
+        ////////// Random
+        "Random": {
+            "commandName": "random",
+            "updateData": function (data, variable, upperLimit, lowerLimit) {
+
+                if (lowerLimit === undefined) {
+                    lowerLimit = "0";
+                }
+
+                if (upperLimit === undefined) {
+                    upperLimit = "1";
+                }
+
+                data.variable = variable;
+                data.number1 = upperLimit;
+                data.number2 = lowerLimit;
+
+                _extra.log(data);
+            },
+            "parameterHandler": handlers.sendParametersAsParameters,
+            "parseSet":parseSets.MP.VR_NR1_NR2,
+            "parseSetData": {
+                "variable": undefined,
+                "number1": undefined,
+                "number2": undefined,
+                "output": _extra.variableManager.mathActions.random
+            }
+        },
 
         ////////////////////////////////
         ////////// Reset
