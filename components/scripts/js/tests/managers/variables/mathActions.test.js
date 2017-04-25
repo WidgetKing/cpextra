@@ -5,7 +5,7 @@
  * Time: 4:54 PM
  * To change this template use File | Settings | File Templates.
  */
-fdescribe("A test suite for _extra.variableManager.mathActions", function () {
+describe("A test suite for _extra.variableManager.mathActions", function () {
 
     "use strict";
 

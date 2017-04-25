@@ -26,15 +26,18 @@ _extra.registerModule("actionManager",["softwareInterfacesManager"],function () 
 
                     switch (criteria) {
                         case SUCCESS_CRITERIA :
+                            _extra.log("SUCCESS");
                                 stringCode = data.successAction;
                             break;
 
                         case FAILURE_CRITERIA:
+                            _extra.log("FAILURE");
                                 stringCode = data.failureAction;
                             break;
 
                         case FOCUS_LOST_CRITERIA:
 
+                            _extra.log("FOCUS LOST");
                                 if (data.focusLostAction) {
 
                                     stringCode = data.focusLostAction;

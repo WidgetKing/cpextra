@@ -19,9 +19,6 @@ _extra.registerModule("mathActions", ["variableManager"], function () {
 
         "random": function (variableName, upper, lower) {
 
-            _extra.log("upper: " + upper);
-            _extra.log("lower: " + lower);
-
             var value = _extra.w.Math.random();
 
             if (upper !== 1 || lower !== 0) {

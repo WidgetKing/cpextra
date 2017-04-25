@@ -57,10 +57,6 @@ _extra.registerModule("commandVariables_global", ["processCommandVariableRegistr
                 return {
                     "commandName":commandName,
                     "updateData": function (data, slideObject, event, interactiveObject, criteria) {
-                        if (!criteria) {
-                            criteria = SUCCESS_CRITERIA;
-                        }
-
                         data.slideObject = slideObject;
                         data.event = event;
                         data.interactiveObject = interactiveObject;
@@ -91,6 +87,9 @@ _extra.registerModule("commandVariables_global", ["processCommandVariableRegistr
                                     return _extra.variableManager.parseSets.SKIP_ERROR;
                                 }
                             }
+                        },
+                        "CRI":{
+                            "default":SUCCESS_CRITERIA
                         }
                     }
                 };
@@ -243,9 +242,6 @@ _extra.registerModule("commandVariables_global", ["processCommandVariableRegistr
             "commandName":"roundTo",
             "parameterHandler": handlers.sendParametersAsParameters,
             "updateData": function (data, variableName, number, string) {
-                if (!string) {
-                    string = "normal";
-                }
                 data.variable = variableName;
                 data.number = number;
                 data.string = string;
@@ -257,6 +253,7 @@ _extra.registerModule("commandVariables_global", ["processCommandVariableRegistr
                 "string": undefined,
                 "output": _extra.variableManager.mathActions.roundTo,
                 "STR":{
+                    "default":"normal",
                     "validation":{
                         "up":"up",
                         "upper":"up",
@@ -279,20 +276,9 @@ _extra.registerModule("commandVariables_global", ["processCommandVariableRegistr
         "Random": {
             "commandName": "random",
             "updateData": function (data, variable, upperLimit, lowerLimit) {
-
-                if (lowerLimit === undefined) {
-                    lowerLimit = "0";
-                }
-
-                if (upperLimit === undefined) {
-                    upperLimit = "1";
-                }
-
                 data.variable = variable;
                 data.number1 = upperLimit;
                 data.number2 = lowerLimit;
-
-                _extra.log(data);
             },
             "parameterHandler": handlers.sendParametersAsParameters,
             "parseSet":parseSets.MP.VR_NR1_NR2,
@@ -300,7 +286,13 @@ _extra.registerModule("commandVariables_global", ["processCommandVariableRegistr
                 "variable": undefined,
                 "number1": undefined,
                 "number2": undefined,
-                "output": _extra.variableManager.mathActions.random
+                "output": _extra.variableManager.mathActions.random,
+                "NR1": {
+                    "default":1 // Upper limit
+                },
+                "NR2": {
+                    "default":0 // Lower limit
+                }
             }
         },
 
@@ -385,6 +377,56 @@ _extra.registerModule("commandVariables_global", ["processCommandVariableRegistr
                             function (slideObject, event, interactiveObject, criteria) {
                                 _extra.eventManager.removeEventListener(slideObject, event, interactiveObject, criteria);
         }),
+
+        ///////////////////////////////////////////////////////////////////////
+        /////////////// Alert
+        ///////////////////////////////////////////////////////////////////////
+        "Alert": {
+            "commandName":"alert",
+            "parseSet":parseSets.MP.STR1_STR2_INT_CRI,
+            "parameterHandler": handlers.sendParametersAsParameters,
+            "updateData":function (data, string1, string2, interactiveObject, criteria) {
+
+                data.string1 = string1;
+                data.string2 = string2;
+                data.interactiveObject = interactiveObject;
+                data.criteria = criteria;
+
+            },
+            "parseSetData":{
+                "string1":undefined, // Changed in the updateData method
+                "string2":undefined, // Changed in the updateData method
+                "interactiveObject":undefined, // Changed in the updateData method
+                "criteria":undefined, // Changed in the updateData method
+                "STR2":{
+                    "default":"CpExtra Alert"
+                },
+                "INT":{
+                    "default":null
+                },
+                "CRI":{
+                    "default":SUCCESS_CRITERIA
+                },
+                "output":function (message, title, interactiveObject, criteria) {
+
+                    var data = {
+                        "message":message,
+                        "title":title
+                    };
+
+                    // If no interactive object has been set, then we don't need to specify
+                    // a firstButtonAction
+                    if (interactiveObject) {
+                        data.firstButtonAction = function () {
+                            _extra.actionManager.callActionOn(interactiveObject, criteria);
+                        };
+                    }
+
+                    _extra.alertManager.sendAlert(data);
+
+                }
+            }
+        },
 
 
         ///////////////////////////////////////////////////////////////////////
@@ -539,49 +581,20 @@ _extra.registerModule("commandVariables_global", ["processCommandVariableRegistr
 
         "CallActionOn": {
             "commandName":"callActionOn",
-            "updateData":function (data, query, criteria) {
+            "updateData":function (data, interactiveObject, criteria) {
 
-                // If no criteria has been defined, we'll call the SUCCESS criteria by default
-                if (!criteria) {
-                    criteria = SUCCESS_CRITERIA;
-                }
-
-                data.query = query;
-                data.string = criteria;
+                data.interactiveObject = interactiveObject;
+                data.criteria = criteria;
 
             },
             "parameterHandler": handlers.sendParametersAsParameters,
-            "parseSet": parseSets.MP.SOR_STR,
+            "parseSet": parseSets.MP.INT_CRI,
             "parseSetData":{
                 "query":undefined, // Changed in the updateData method
-                "string":undefined, //  // Changed in the updateData method
+                "string":undefined, // Changed in the updateData method
                 "output":_extra.actionManager.callActionOn,
-                "STR": {
-                    "exceptions":{
-                        "invalidString":function(criteria) {
-                            _extra.error("CV010", criteria);
-                            // Don't report the CV003 error
-                            return _extra.variableManager.parseSets.SKIP_ERROR;
-                        }
-                    },
-                    "validation":{
-                        "1":SUCCESS_CRITERIA,
-                        "true":SUCCESS_CRITERIA,
-                        "correct":SUCCESS_CRITERIA,
-                        "success":SUCCESS_CRITERIA,
-
-                        "0":FAILURE_CRITERIA,
-                        "false":FAILURE_CRITERIA,
-                        "fail":FAILURE_CRITERIA,
-                        "failure":FAILURE_CRITERIA,
-                        "lastattempt":FAILURE_CRITERIA,
-                        "last":FAILURE_CRITERIA,
-                        "last_attempt":FAILURE_CRITERIA,
-
-                        "focus":FOCUS_LOST_CRITERIA,
-                        "focuslost":FOCUS_LOST_CRITERIA,
-                        "focus_lost":FOCUS_LOST_CRITERIA
-                    }
+                "CRI": {
+                    "default": SUCCESS_CRITERIA
                 }
             }
 

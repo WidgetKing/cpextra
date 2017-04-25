@@ -10,7 +10,8 @@ describe("A test suite for the URL Manager", function () {
     "use strict";
 
     var module = unitTests.getModule("URLManager"),
-        hookModule = unitTests.getModule("hookManager");
+        hookModule = unitTests.getModule("hookManager"),
+        replaceVariableInStringModule = unitTests.getModule("replaceVariablesInString");
 
     beforeEach(function () {
 
@@ -42,6 +43,7 @@ describe("A test suite for the URL Manager", function () {
             }
         };
 
+        replaceVariableInStringModule();
         hookModule();
         module();
     });

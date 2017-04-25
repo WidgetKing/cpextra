@@ -166,7 +166,7 @@ describe("A test suite for the parameterParseSets", function () {
     ///////////////////////////////////////////////////////////////////////
     /////////////// SP.CD.VR
     ///////////////////////////////////////////////////////////////////////
-    fdescribe("A test suite for SP.CD.VR", function () {
+    describe("A test suite for SP.CD.VR", function () {
 
         beforeEach(function () {
             testSet = _extra.variableManager.parseSets.SP.CD.VR;
@@ -259,6 +259,17 @@ describe("A test suite for the parameterParseSets", function () {
             expect(dummy).toHaveBeenCalledWith("variableVariable");
             expect(_extra.variableManager.parse.string).not.toHaveBeenCalled();
             expect(testData.substituteParseResult).not.toBeDefined();
+
+        });
+
+        it("should allow us to set a default", function () {
+
+            testData.query = null;
+            testData.default = "variableDefault";
+            testSet(testData);
+
+            expect(dummy).toHaveBeenCalledWith("variableDefault");
+            expect(_extra.error).not.toHaveBeenCalled();
 
         });
 
@@ -462,6 +473,17 @@ describe("A test suite for the parameterParseSets", function () {
 
         });
 
+        it("should allow us to set a default", function () {
+
+            testData.query = null;
+            testData.default = "slideObjectDefault";
+            testSet(testData);
+
+            expect(dummy).toHaveBeenCalledWith("slideObjectDefault");
+            expect(_extra.error).not.toHaveBeenCalled();
+
+        });
+
     });
 
     ///////////////////////////////////////////////////////////////////////
@@ -615,6 +637,15 @@ describe("A test suite for the parameterParseSets", function () {
 
         });
 
+        it("should allow us to set a default value", function () {
+
+            testData.default = "default";
+            testSet(testData);
+            expect(dummy).toHaveBeenCalledWith("default");
+            expect(_extra.error).not.toHaveBeenCalled();
+
+        });
+
     });
 
 
@@ -680,6 +711,17 @@ describe("A test suite for the parameterParseSets", function () {
             expect(dummy).toHaveBeenCalledWith(3);
             expect(_extra.variableManager.parse.string).not.toHaveBeenCalled();
             expect(testData.substituteParseResult).not.toBeDefined();
+
+        });
+
+        it("should allow us to set a default", function () {
+
+            //testData.number = null;
+            testData.default = 3;
+            testSet(testData);
+
+            expect(dummy).toHaveBeenCalledWith(3);
+            expect(_extra.error).not.toHaveBeenCalled();
 
         });
 
@@ -931,6 +973,17 @@ describe("A test suite for the parameterParseSets", function () {
             expect(testData.substituteParseResult).not.toBeDefined();
 
         });
+
+        it("should allow us to set a default", function () {
+
+            //testData.number = null;
+            testData.default = "slideDefault";
+            testSet(testData);
+
+            expect(dummy).toHaveBeenCalledWith("slideDefault");
+            expect(_extra.error).not.toHaveBeenCalled();
+
+        });
         
     });
 
@@ -970,8 +1023,8 @@ describe("A test suite for the parameterParseSets", function () {
             };
 
             testSet(testData);
-
             expect(testData.STR.exceptions.invalidString).toHaveBeenCalledWith("invalid");
+
         });
 
         it("should allow us to hear exceptions to slide object set", function () {
@@ -990,6 +1043,70 @@ describe("A test suite for the parameterParseSets", function () {
 
         });
     });
+
+    ///////////////////////////////////////////////////////////////////////
+    /////////////// STR1_STR2_INT_CRI
+    ///////////////////////////////////////////////////////////////////////
+    describe("A test suite for MD.STR1_STR2_INT_CRI", function () {
+
+        beforeEach(function () {
+            testData = {
+                "output":dummy
+            };
+            testSet = _extra.variableManager.parseSets.MP.STR1_STR2_INT_CRI;
+        });
+
+        it("should pass us two strings, an interactive object, and a criteria", function () {
+
+            testData.string1 = "message";
+            testData.string2 = "title";
+            testData.interactiveObject = "interactiveObject";
+            testData.criteria = "success";
+
+            testSet(testData);
+
+            expect(dummy).toHaveBeenCalledWith("message", "title", "interactiveObject", "success");
+
+        });
+
+        it("should throw error CV010 if we pass an invalid criteria", function () {
+
+            testData.string1 = "message";
+            testData.string2 = "title";
+            testData.interactiveObject = "interactiveObject";
+            testData.criteria = "invalid";
+
+            testSet(testData);
+
+            expect(dummy).not.toHaveBeenCalled();
+            expect(_extra.error).toHaveBeenCalledWith("CV010", "invalid");
+
+        });
+
+        it("should allow us not to specify certain parameters if they are marked optional", function () {
+
+            testData.string1 = "message";
+            testData.STR2 = {
+                "default":null
+            };
+            testData.INT = {
+                "default":null
+            };
+            testData.CRI = {
+                "default":null
+            };
+
+            testSet(testData);
+
+            expect(dummy).toHaveBeenCalledWith("message", null, null, null);
+
+        });
+
+    });
+
+    ///////////////////////////////////////////////////////////////////////
+    /////////////// SOR_EVT_INT_CRI
+    ///////////////////////////////////////////////////////////////////////
 
     describe("A test suite for MD.SOR_EVT_INT_CRI", function () {
 
@@ -1066,9 +1183,22 @@ describe("A test suite for the parameterParseSets", function () {
 
         });
 
+        it("should allow us to set default values", function () {
+
+            testData.variable = "variable";
+            testData.number = null;
+            testData.NR = {
+                "default":null
+            };
+            testSet(testData);
+            expect(dummy).toHaveBeenCalledWith("variable", null);
+            expect(_extra.error).not.toHaveBeenCalled();
+
+        });
+
     });
 
-    fdescribe("A test suite for MD.VR_NR1_NR2", function () {
+    describe("A test suite for MD.VR_NR1_NR2", function () {
 
         beforeEach(function () {
 

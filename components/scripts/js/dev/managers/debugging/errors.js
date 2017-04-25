@@ -119,8 +119,8 @@ _extra.registerModule("errors", ["debuggingManager"], function () {
         ///////////////////////////////////////////////////////////////////////
         "CV010": function (criteria) {
             return "Unable to call a <b>" + criteria + "</b> action on a slide object because <b>" +
-                    criteria + "</b> is not listed as a valid action. " + "<br/>Please check the spelling of <b>" +
-                    criteria + "</b>.";
+                    criteria + "</b> is not listed as a valid action. " + "<br/>Please change <b>" +
+                    criteria + "</b> to <b>success, failure </b> or <b>focuslost</b>.";
         },
         "CV011": function (slideObject) {
             return "Tried to call a <b>focus lost</b> action on <b>" + slideObject +

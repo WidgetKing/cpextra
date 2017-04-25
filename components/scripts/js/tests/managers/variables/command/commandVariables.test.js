@@ -52,6 +52,13 @@ describe("A test suite for _extra.commandVariables", function () {
                         "SOR_EVT_INT_CRI":jasmine.createSpy("SOR_EVT_INT_CRI"),
                         "SOR_STR":jasmine.createSpy("SOR_STR")
                     }
+                },
+                "mathActions":{
+                    "round":jasmine.createSpy("mathActions.round"),
+                    "roundTo":jasmine.createSpy("mathActions.roundTo"),
+                    "ceil":jasmine.createSpy("mathActions.ceil"),
+                    "floor":jasmine.createSpy("mathActions.floor"),
+                    "random":jasmine.createSpy("mathActions.random")
                 }
             },
             "slideObjects":{
