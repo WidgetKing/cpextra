@@ -95,8 +95,8 @@ _extra.registerModule("BaseSlideObjectDataProxy", function () {
             }
         },
         get isInteractiveObject() {
-            // TODO: Account for interactive widgets.
-            return this.type === _extra.dataTypes.slideObjects.CLICK_BOX ||
+            return this._data.base.hasOwnProperty("oca") ||
+                   this.type === _extra.dataTypes.slideObjects.CLICK_BOX ||
                    this.type === _extra.dataTypes.slideObjects.BUTTON ||
                    this.type === _extra.dataTypes.slideObjects.TEXT_ENTRY_BOX;
         },
