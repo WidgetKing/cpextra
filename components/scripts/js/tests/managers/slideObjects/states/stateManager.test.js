@@ -15,8 +15,7 @@
         describe("A test suite for _extra.slideObjects.states in " + software, function () {
 
             var softwareModule = unitTests.getModule("stateManager_software", software),
-                hookModule = unitTests.getModule("hookManager"),
-                globalModule = unitTests.getModule("stateManager_global");
+                hookModule = unitTests.getModule("hookManager");
 
             beforeEach(function () {
                 window._extra = getMockObject();
@@ -28,7 +27,6 @@
 
                 hookModule();
                 softwareModule();
-                globalModule();
 
                 _extra.slideObjects.states.callOnStateDrawn = function(name, method) {
                     method();

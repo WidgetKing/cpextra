@@ -13,22 +13,44 @@ _extra.registerModule("Callback", function () {
     _extra.registerClass("Callback", function () {
 
         this.data = {};
-        this.addCallback = function (index, callback) {
+
+        this.addCallback = function (index, callback, overwritable) {
+
+            // If this is the first callback we're adding.
             if (!this.data[index]) {
-                this.data[index] = [];
+
+                this.data[index] = {
+                    "overwritable": null,
+                    "regular": []
+                };
+
             }
-            this.data[index].push(callback);
+
+            if (overwritable) {
+                this.data[index].overwritable = callback;
+            } else {
+                this.data[index].regular.push(callback);
+            }
         };
+
         this.hasCallbackFor = function (index) {
             return this.data[index] !== undefined;
         };
+
         this.sendToCallback = function (index,parameter) {
             var returnValue,
-                tempReturnValue;
+                tempReturnValue,
+                data = this.data[index];
 
-            if (this.data[index]) {
+            if (data) {
 
-                var a = this.data[index];
+                // Trigger overwritable callback
+                if (data.overwritable) {
+                    data.overwritable(parameter);
+                }
+
+                // Trigger regular callbacks
+                var a = data.regular;
 
                 for (var i = 0; i < a.length; i += 1) {
 
@@ -44,6 +66,7 @@ _extra.registerModule("Callback", function () {
 
             return returnValue;
         };
+
         this.forEach = function (method) {
 
             var a;
@@ -51,7 +74,11 @@ _extra.registerModule("Callback", function () {
             for (var index in this.data) {
                 if (this.data.hasOwnProperty(index)) {
 
-                    a = this.data[index];
+                    if (this.data[index].overwritable) {
+                        method(index, this.data[index].overwritable);
+                    }
+
+                    a = this.data[index].regular;
                     for (var i = 0; i < a.length; i += 1) {
                         method(index,a[i]);
                     }
@@ -60,12 +87,26 @@ _extra.registerModule("Callback", function () {
             }
         };
 
-        this.removeCallback = function (index,callbackToRemove) {
-            if (this.data[index]) {
-                var a = this.data[index],
+        this.removeCallback = function (index, callbackToRemove) {
+
+            var data = this.data[index];
+
+            if (data) {
+
+                // Check overwrite first
+                if (data.overwritable && data.overwritable === callbackToRemove) {
+                    delete data.overwritable;
+                    return;
+                }
+
+                var a = data.regular,
                     registeredCallback;
+
+
                 for (var i = 0; i < a.length; i += 1) {
+
                     registeredCallback = a[i];
+
                     if (callbackToRemove === registeredCallback) {
                         a.splice(i,1);
 
@@ -80,6 +121,7 @@ _extra.registerModule("Callback", function () {
                 }
             }
         };
+
         this.clear = function () {
             this.data = {};
         };

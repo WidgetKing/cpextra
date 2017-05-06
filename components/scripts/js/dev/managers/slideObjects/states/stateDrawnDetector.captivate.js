@@ -5,7 +5,7 @@
  * Time: 6:33 PM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("stateDrawnDetector", ["stateManager_global"], function () {
+_extra.registerModule("stateDrawnDetector", ["stateManager_software"], function () {
 
     "use strict";
 
@@ -14,8 +14,7 @@ _extra.registerModule("stateDrawnDetector", ["stateManager_global"], function ()
         // In Captivate 9.0.2 with the new state system, we have to wait for drawComplete before css changes can
         // be made.
         var slideObjectData = _extra.dataManager.getSlideObjectDataByName(slideObjectName),
-            nativeController = _extra.captivate.api.getDisplayObjByCP_UID(slideObjectData.uid),
-            methodCalledInDrawComplete;
+            nativeController = _extra.captivate.api.getDisplayObjByCP_UID(slideObjectData.uid);
 
         function drawHandler() {
 

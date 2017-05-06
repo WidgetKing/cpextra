@@ -33,7 +33,7 @@ _extra.registerModule("enterTimelineCallback", ["hookManager", "slideObjectManag
     }
 
     function getHandler(slideObjectName) {
-        return handler[slideObjectName];
+        return handlers[slideObjectName];
     }
 
     ///////////////////////////////////////////////////////////////////////

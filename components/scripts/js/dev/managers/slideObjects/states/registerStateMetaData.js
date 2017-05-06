@@ -5,7 +5,7 @@
  * Time: 4:24 PM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("registerStateMetaData",["slideObjectManager_global", "SlideObjectStateManager", "slideManager_global","stateManager_global"], function () {
+_extra.registerModule("registerStateMetaData",["slideObjectManager_global", "SlideObjectStateManager", "slideManager_global","stateManager_software"], function () {
 
     "use strict";
 
