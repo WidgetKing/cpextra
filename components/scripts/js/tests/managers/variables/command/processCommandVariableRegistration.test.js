@@ -27,6 +27,7 @@ describe("A test suite for _extra.variableManager.processCommandVariableRegistra
 
         window._extra = {
             "classes":unitTests.classes,
+            "X":{},
             "w":{
                 "Array":Array
             },
@@ -139,6 +140,7 @@ describe("A test suite for _extra.variableManager.processCommandVariableRegistra
         register(data);
 
         expect(_extra.variableManager.commands.foobar).toBeDefined();
+        expect(_extra.X.foobar).toBeDefined();
 
     });
 

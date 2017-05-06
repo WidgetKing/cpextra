@@ -50,11 +50,5 @@ describe("A test suite for the public api manager which exposes methods to the _
         expect(_extra.X.gotoSlide).toEqual(_extra.slideManager.gotoSlide);
         expect(_extra.X.getSlideObjectByName).toEqual(_extra.slideObjects.getSlideObjectByName);
 
-        expect(_extra.X.hide).toEqual(_extra.variableManager.commands.hide);
-        expect(_extra.X.show).toEqual(_extra.variableManager.commands.show);
-        expect(_extra.X.enable).toEqual(_extra.variableManager.commands.enable);
-        expect(_extra.X.disable).toEqual(_extra.variableManager.commands.disable);
-        expect(_extra.X.changeState).toEqual(_extra.variableManager.commands.changeState);
-
     });
 });

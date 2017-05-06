@@ -5,7 +5,7 @@
  * Time: 9:38 AM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("commandVariableManager",["variableManager","stateManager_global","whiteSpaceManager"], function () {
+_extra.registerModule("commandVariableManager",["variableManager","stateManager_software","whiteSpaceManager"], function () {
 
     "use strict";
 
@@ -94,7 +94,6 @@ _extra.registerModule("commandVariableManager",["variableManager","stateManager_
 
     };
 
-
     ///////////////////////////////////////////////////////////////////////
     /////////////// SETTING UP COMMAND VARIABLES
     ///////////////////////////////////////////////////////////////////////
@@ -152,9 +151,6 @@ _extra.registerModule("commandVariableManager",["variableManager","stateManager_
         _extra.variableManager.parameterHandlers = null;
 
     };
-
-
-
 
 
 });

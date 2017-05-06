@@ -10,8 +10,6 @@ _extra.registerModule("commandVariables_global", ["processCommandVariableRegistr
     "use strict";
 
     var SUCCESS_CRITERIA = "success",
-        FAILURE_CRITERIA = "failure",
-        FOCUS_LOST_CRITERIA = "focuslost",
 
         parseSets = _extra.variableManager.parseSets,
         handlers = _extra.variableManager.parameterHandlers,

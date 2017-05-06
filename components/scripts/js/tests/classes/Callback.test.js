@@ -5,7 +5,7 @@
  * Time: 8:37 PM
  * To change this template use File | Settings | File Templates.
  */
-fdescribe("A suite for testing the callback class", function() {
+describe("A suite for testing the callback class", function() {
     "use strict";
 
     // Get access to the callback class so we can start tests.

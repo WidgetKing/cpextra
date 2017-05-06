@@ -16,6 +16,7 @@ _extra.registerModule("publicAPIManager", function () {
         _extra.X.getSlideData = _extra.slideManager.getSlideData;
         _extra.X.gotoSlide = _extra.slideManager.gotoSlide;
         _extra.X.getSlideObjectByName = _extra.slideObjects.getSlideObjectByName;
+        /*
         _extra.X.hide = _extra.variableManager.commands.hide;
         _extra.X.show = _extra.variableManager.commands.show;
         _extra.X.disable = _extra.variableManager.commands.disable;
@@ -23,6 +24,7 @@ _extra.registerModule("publicAPIManager", function () {
         _extra.X.changeState = _extra.variableManager.commands.changeState;
         _extra.X.completeSlide = _extra.variableManager.commands.completeSlide;
         _extra.X.callActionOn = _extra.variableManager.commands.callActionOn;
+        */
 
     };
 });

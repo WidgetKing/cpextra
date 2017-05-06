@@ -41,6 +41,7 @@ _extra.registerModule("processCommandVariableRegistration", ["commandVariableMan
                 if (data.commandName) {
 
                     _extra.variableManager.commands[data.commandName] = handleVariableChange;
+                    _extra.X[data.commandName] = handleVariableChange;
 
                 }
 

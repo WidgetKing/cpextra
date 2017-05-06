@@ -44,8 +44,6 @@ _extra.registerModule("stateManager_software",["Callback","slideObjectManager_gl
         "change":function (query, state) {
             _extra.slideObjects.enactFunctionOnSlideObjects(query, function (slideObjectName) {
 
-                _extra.log("Changing " + slideObjectName + " to: " + state);
-
                 var changeState = function () {
                     _extra.captivate.api.changeState(slideObjectName, state);
                 };
@@ -58,8 +56,6 @@ _extra.registerModule("stateManager_software",["Callback","slideObjectManager_gl
                 if (_extra.slideManager.isSlideObjectOnSlideAndNotInTimeline(slideObjectName)) {
 
                     var callback = function () {
-
-                        _extra.log("Making change " + slideObjectName + " to: " + state);
 
                         changeState();
                         _extra.slideObjects.enterTimelineCallback.removeCallback(slideObjectName, callback);

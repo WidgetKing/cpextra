@@ -29,6 +29,7 @@ describe("A test suite for _extra.commandVariables", function () {
 
         window._extra = {
             "classes":unitTests.classes,
+            "X":{},
             "w":{
                 "Array":Array
             },
@@ -92,7 +93,6 @@ describe("A test suite for _extra.commandVariables", function () {
         module();
         register = _extra.variableManager.processCommandVariableRegistration;
         _extra.variableManager.registerCommandVariable.calls.reset();
-
     });
 
     afterEach(function () {
