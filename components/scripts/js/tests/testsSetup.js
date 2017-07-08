@@ -54,6 +54,13 @@
                         },
                         "movie":{
 
+                        },
+                        "PB":{
+                            "PlayBarSlider":{
+                                "prototype":{
+
+                                }
+                            }
                         }
                     },
                     "cpAPIInterface": {

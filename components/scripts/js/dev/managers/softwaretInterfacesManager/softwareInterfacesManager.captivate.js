@@ -43,6 +43,7 @@ _extra.registerModule("softwareInterfacesManager", function () {
         "numSlides":_extra.w.cpInfoSlideCount,
         "openURLLocation":_extra.w.cp,
         "openURLMethodName":"openURL",
+        "playbarClass":_extra.w.cp.PB.PlayBarSlider,
         "isInitated": function () {
             return _extra.w.cp.initiated;
         },
