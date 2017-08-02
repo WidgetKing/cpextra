@@ -245,16 +245,16 @@ describe("A test suite for _extra.variableManager.parser", function () {
 
     it("should detect explicit strings and strip out the quotation marks from the value", function () {
 
-        var result = _extra.variableManager.parse.string('"string"');
+        var result = _extra.variableManager.parse.string('[string]');
 
         expect(result.value).toBe("string");
         expect(result.isString).toBe(true);
 
     });
 
-    it("should not accept a variable name inside of quotation marks as being an actual variable", function () {
+    it("should not accept a variable name inside of brackets [] as being an actual variable", function () {
 
-        var result = _extra.variableManager.parse.string('"variable"');
+        var result = _extra.variableManager.parse.string('[variable]');
 
         expect(result.value).toBe("variable");
         expect(result.isVariable).toBe(false);

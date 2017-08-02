@@ -249,21 +249,39 @@ _extra.registerModule("parameterParseSets", ["parameterParser", "variableManager
 
                         } else if (p.parseResult.isNumber) {
 
-                            p.output(p.parseResult.value);
+                            runError("CV008", "invalidNumber");
+
+                        } else if (p.parseResult.isString) {
+
+                            if (_extra.variableManager.hasVariable(p.parseResult.value)) {
+
+                                p.output(p.parseResult.value);
+
+                            } else {
+
+                                runError("CV002", "invalidName");
+
+                            }
 
                         } else {
 
-                            runException({
-                                "data":p,
-                                "exceptionName":"invalidName",
-                                "issue":p.parseResult.value,
-                                "output":p.output,
-                                "fail": function () {
-                                    _extra.error("CV002", p.parseResult.value);
-                                }
-                            });
+                            runError("CV002", "invalidName");
 
                         }
+
+                    }
+
+                    function runError (code, name) {
+
+                        runException({
+                            "data":p,
+                            "exceptionName": name,
+                            "issue":p.parseResult.value,
+                            "output":p.output,
+                            "fail": function () {
+                                _extra.error(code, p.parseResult.value);
+                            }
+                        });
 
                     }
 

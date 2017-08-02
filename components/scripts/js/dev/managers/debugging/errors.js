@@ -114,6 +114,13 @@ _extra.registerModule("errors", ["debuggingManager"], function () {
                    "<br/>Please check the spelling of <b>" + slideObject + "</b>. ";
         },
 
+        "CV008": function (number) {
+            return "Received number <b>" + number + "</b> where a variable name was expected. " +
+                   "If you assign a variable name to another variable, Captivate automatically " +
+                   "swaps out that string with the variable's value. <br/>To fix this issue, surround " +
+                   "the variable name in square braces [].<br/>Example: <b>[MyVar]</b>.";
+        },
+
         ///////////////////////////////////////////////////////////////////////
         /////////////// xcmndCallActionOn
         ///////////////////////////////////////////////////////////////////////

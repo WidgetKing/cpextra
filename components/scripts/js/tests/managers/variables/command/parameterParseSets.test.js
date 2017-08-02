@@ -175,19 +175,17 @@ describe("A test suite for the parameterParseSets", function () {
             };
         });
 
-        it("should pass any number", function () {
+        it("should throw an error at a number", function () {
 
-            testData.query = "1";
+            testData.exceptions = {
+                "invalidNumber": jasmine.createSpy("backup")
+            };
+            testData.query = "1234";
             testSet(testData);
-            expect(dummy).toHaveBeenCalledWith(1);
 
-            testData.query = "0";
-            testSet(testData);
-            expect(dummy).toHaveBeenCalledWith(0);
-
-            testData.query = "-1";
-            testSet(testData);
-            expect(dummy).toHaveBeenCalledWith(-1);
+            expect(dummy).not.toHaveBeenCalled();
+            expect(testData.exceptions.invalidNumber).toHaveBeenCalledWith(1234);
+            expect(_extra.error).toHaveBeenCalledWith("CV008", jasmine.anything());
 
         });
 
@@ -273,6 +271,16 @@ describe("A test suite for the parameterParseSets", function () {
 
         });
 
+        it("should accept a string as a valid variable name", function () {
+
+            testData.query = "[variableVariable]";
+            testSet(testData);
+
+            expect(dummy).toHaveBeenCalledWith("variableVariable");
+            expect(_extra.error).not.toHaveBeenCalled();
+
+        });
+
 
     });
 
@@ -346,7 +354,7 @@ describe("A test suite for the parameterParseSets", function () {
         
         it("should accept a string", function () {
 
-            testData.query = '"slideObject"';
+            testData.query = '[slideObject]';
             testSet(testData);
 
             expect(dummy).toHaveBeenCalledWith("slideObject");
@@ -504,7 +512,7 @@ describe("A test suite for the parameterParseSets", function () {
             testSet(testData);
             expect(dummy).toHaveBeenCalledWith("foo");
 
-            testData.string = '"bar"';
+            testData.string = '[bar]';
             testSet(testData);
             expect(dummy).toHaveBeenCalledWith("bar");
 
@@ -741,11 +749,11 @@ describe("A test suite for the parameterParseSets", function () {
         
         it("should return us a slide name if we send it a direct slide name or number", function () {
 
-            testData.query = '"invalid"';
+            testData.query = '[invalid]';
             testSet(testData);
             expect(dummy).not.toHaveBeenCalled();
 
-            testData.query = '"slide1"';
+            testData.query = '[slide1]';
             testSet(testData);
             expect(dummy).toHaveBeenCalledWith(1);
 
@@ -964,7 +972,7 @@ describe("A test suite for the parameterParseSets", function () {
 
         it("should allow us to use substituteParseResult", function () {
 
-            testData.query = '"slide1"';
+            testData.query = '[slide1]';
             testData.substituteParseResult = _extra.variableManager.parse.string(testData.query);
             spyOn(_extra.variableManager.parse, "string").and.callThrough();
             testSet(testData);

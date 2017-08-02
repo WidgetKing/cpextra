@@ -117,19 +117,24 @@ function initExtra(topWindow) {
             // Purposefully left blank as we don't want to do anything with the registered modules.
         };
 
-        // Now to check whether this X is a User Variable
-        if (typeof _extra.w[property] === "object") {
-            // Okay, if it's an object then it must be CpExtra. User Variables can't be objects.
-            _extra.log("Aborted initializing Extra for a second time, as we have detected the window." + property +
-                       " property has already been defined.");
+        if (_extra.w) {
 
-        } else {
-            // If it's not an object, it's a good bet its a user variable.
-            _extra.error("CpExtra could not start because it encountered a User Variable named <b>" + property +
-                         "</b> in the project. CpExtra has reserved this User Variable name. <br/>Please delete the <b>" +
-                         property + "</b> User Variable.");
+            // Now to check whether this X is a User Variable
+            if (typeof _extra.w[property] === "object") {
+                // Okay, if it's an object then it must be CpExtra. User Variables can't be objects.
+                _extra.log("Aborted initializing Extra for a second time, as we have detected the window." + property +
+                           " property has already been defined.");
+
+            } else {
+                // If it's not an object, it's a good bet its a user variable.
+                _extra.error("CpExtra could not start because it encountered a User Variable named <b>" + property +
+                             "</b> in the project. CpExtra has reserved this User Variable name. <br/>Please delete the <b>" +
+                             property + "</b> User Variable.");
+
+            }
 
         }
+
 
     }
 
@@ -455,7 +460,15 @@ function initExtra(topWindow) {
         // devices had this error, so now we just eval the whole thing to get around the many potential issues with
         // executing code in the iFrame scope.
         //if (_extra.isIE) {
+        if (_extra.w.unitTests) {
+
+            return method();
+
+        } else {
+
             return _extra.w.eval("(" + method.toString() + "())");
+
+        }
         /*} else {
             return method();
         }*/

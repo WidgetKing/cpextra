@@ -26,7 +26,7 @@
     //    _extra.log("Hello");
     //});
     _extra.addHookBefore(playbarPrototype, "moveSlider", moveSliderHook);
-    _extra.addHookBefore(playbarPrototype, "updateSlider", updateSliderHook);
+    //_extra.addHookBefore(playbarPrototype, "updateSlider", updateSliderHook);
     _extra.addHookBefore(playbarPrototype, "onMouseDown", slideMouseDownHook);
     //_extra.log(_extra.captivate.api.PB.rootObj);
 

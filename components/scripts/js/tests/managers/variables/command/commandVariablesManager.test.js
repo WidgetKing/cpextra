@@ -87,7 +87,7 @@
 
             });
 
-            it("should not strip out spaces from anything surrounded by double quotes: " + '""', function () {
+            it("should not strip out spaces from anything surrounded by double braces: []", function () {
 
                 var dummy = jasmine.createSpy("hide calllback");
 
@@ -95,12 +95,12 @@
 
                 this.onLoadCallback();
 
-                _extra.variableManager.setVariableValue("xcmndHide",'"foo bar"');
-                expect(dummy).toHaveBeenCalledWith('"foo bar"');
+                _extra.variableManager.setVariableValue("xcmndHide",'[foo bar]');
+                expect(dummy).toHaveBeenCalledWith('[foo bar]');
 
             });
 
-            it("should not split on commas ',' inside of double quotes: " + '""', function () {
+            it("should not split on commas ',' inside of double braces: []", function () {
 
                 var dummy = jasmine.createSpy("hide calllback");
 
@@ -108,8 +108,8 @@
 
                 this.onLoadCallback();
 
-                _extra.variableManager.setVariableValue("xcmndHide",'"foo, bar", hello');
-                expect(dummy).toHaveBeenCalledWith('"foo, bar"');
+                _extra.variableManager.setVariableValue("xcmndHide",'[foo, bar], hello');
+                expect(dummy).toHaveBeenCalledWith('[foo, bar]');
                 expect(dummy).toHaveBeenCalledWith("hello");
 
             });

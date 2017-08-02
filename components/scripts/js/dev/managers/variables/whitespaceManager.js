@@ -18,7 +18,9 @@ _extra.registerModule("whiteSpaceManager", ["variableManager"], function () {
         }
 
         // Regular expression for removing spaces except inside of quotation marks.
-        return value.replace(/([^"]+)|("[^"]+")/g, function($0, $1, $2) {
+        // Quotation Marks: /([^"]+)|("[^"]+")/g
+        // Allows escaping : /([^"]+)|("(?:[^"\\]|\\.)+")/
+        return value.replace( /([^[]+)|(\[[^\]]+\])/g, function($0, $1, $2) {
            if ($1) {
                // Inside here we can make changes to everything OUTSIDE of ""
                // First we'll take all the commas and swap them out with the /u0000 character

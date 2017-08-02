@@ -46,7 +46,7 @@ _extra.registerModule("parameterParser", ["variableManager", "queryManager", "wh
 
             "explicitString":function (string, data) {
                  // Check for explicit String
-                if (string.charAt(0) === '"' && string.charAt(string.length - 1) === '"') {
+                if (string.charAt(0) === '[' && string.charAt(string.length - 1) === ']') {
 
                     // Strip out the quotation marks
                     string = string.substr(1, string.length - 2);

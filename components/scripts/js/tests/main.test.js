@@ -142,7 +142,7 @@
 
     });
 
-    xdescribe("Test Suite for main.js module registering", function () {
+    describe("Test Suite for main.js module registering", function () {
 
         var dummy = function () {};
         var a = {};
@@ -154,7 +154,13 @@
             delete window.parent.X;
             delete window.parent._extra;
 
-            initExtra();
+            window.cp = {
+                "movie": {
+
+                }
+            };
+
+            initExtra(window);
             /*_extra.w = {
                 "eval": jasmine.createSpy("_extra.w.eval")
             };*/
@@ -165,14 +171,14 @@
 
         afterEach(function () {
             delete window._extra;
+            delete window.cp;
         });
 
         it("should immediately call the constructor for a module that has no dependencies", function () {
 
             _extra.registerModule("moduleName", a.dummy);
 
-            expect(_extra.w.eval).toHaveBeenCalled();
-            //expect(a.dummy).toHaveBeenCalled();
+            expect(a.dummy).toHaveBeenCalled();
         });
 
         it("should throw an exception if we pass in a module that depends on itself", function () {
@@ -227,16 +233,6 @@
             expect(a.dummy).not.toHaveBeenCalled();
         });
 
-
-        it("should note call module's onload callback when the Widget's Initialize function is called in Storyline", function () {
-            _extra.registerModule("foo", function () {
-                return a.dummy;
-            });
-
-            window.CaptivateExtraWidgetInit();
-            expect(a.dummy).not.toHaveBeenCalled();
-        });
-
         it("should call module's onload callback when the Widget's Initialize function is called", function () {
             _extra.registerModule("foo", function () {
                 return a.dummy;
@@ -275,11 +271,19 @@
             delete window.X;
             delete window.parent.X;
             delete window.parent._extra;
+
+            window.cp = {
+                "movie": {
+
+                }
+            };
+
            initExtra();
         });
 
         afterEach(function () {
             delete window._extra;
+            delete window.cp;
         });
 
         it("should be able to register and access a class", function () {
