@@ -21,14 +21,17 @@
         return false;
     }
 
-    var playbarPrototype = _extra.captivate.playbarClass.prototype;
-    //_extra.addHookBefore(_extra.captivate.movie, "jumpToFrame", function () {
-    //    _extra.log("Hello");
-    //});
-    _extra.addHookBefore(playbarPrototype, "moveSlider", moveSliderHook);
-    //_extra.addHookBefore(playbarPrototype, "updateSlider", updateSliderHook);
-    _extra.addHookBefore(playbarPrototype, "onMouseDown", slideMouseDownHook);
-    //_extra.log(_extra.captivate.api.PB.rootObj);
+    // It's possible the playbar has been turned off. In such a case, do not continue.
+    if (_extra.captivate.playbarClass) {
+        var playbarPrototype = _extra.captivate.playbarClass.prototype;
+        //_extra.addHookBefore(_extra.captivate.movie, "jumpToFrame", function () {
+        //    _extra.log("Hello");
+        //});
+        _extra.addHookBefore(playbarPrototype, "moveSlider", moveSliderHook);
+        //_extra.addHookBefore(playbarPrototype, "updateSlider", updateSliderHook);
+        _extra.addHookBefore(playbarPrototype, "onMouseDown", slideMouseDownHook);
+        //_extra.log(_extra.captivate.api.PB.rootObj);
+    }
 
     // TODO: Make sure this works when loaded as widget
     // TODO: Make sure this works in Captivate 2017

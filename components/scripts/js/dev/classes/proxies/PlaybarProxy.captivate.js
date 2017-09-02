@@ -54,24 +54,31 @@ _extra.registerModule("PlaybarProxy", function () {
         this.managerPlaybarScrubbing = function () {
 
             // TODO: IE Fix, but has bug where you can drag on the playbar and it recognizes the mouse up.
-            /*var playbarPrototype = _extra.captivate.playbarClass.prototype;
+            /*
+
+            // If the playbar has been turned off in Captivate settings, this will prevent an error.
+            if (_extra.captivate.playbarClass) {
+
+                var playbarPrototype = _extra.captivate.playbarClass.prototype;
 
 
 
-            if (that._scrubbing) {
+                if (that._scrubbing) {
 
-                _extra.removeHook(playbarPrototype, "moveSlider", dummy);
-                _extra.removeHook(playbarPrototype, "onMouseDown", dummy);
-                // Hand cursor.
-                _extra.cssManager.removeClassFrom(sliderThumbDIV, "extra-mouse-disabled");
-                _extra.log("Removing Hook");
+                    _extra.removeHook(playbarPrototype, "moveSlider", dummy);
+                    _extra.removeHook(playbarPrototype, "onMouseDown", dummy);
+                    // Hand cursor.
+                    _extra.cssManager.removeClassFrom(sliderThumbDIV, "extra-mouse-disabled");
+                    _extra.log("Removing Hook");
 
-            } else {
+                } else {
 
-                _extra.addHookBefore(playbarPrototype, "moveSlider", dummy);
-                _extra.addHookBefore(playbarPrototype, "onMouseDown", dummy);
-                _extra.cssManager.addClassTo(sliderThumbDIV, "extra-mouse-disabled");
-                _extra.log("Adding Hook");
+                    _extra.addHookBefore(playbarPrototype, "moveSlider", dummy);
+                    _extra.addHookBefore(playbarPrototype, "onMouseDown", dummy);
+                    _extra.cssManager.addClassTo(sliderThumbDIV, "extra-mouse-disabled");
+                    _extra.log("Adding Hook");
+
+                }
 
             }*/
 

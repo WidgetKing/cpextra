@@ -21,6 +21,16 @@ _extra.registerModule("softwareInterfacesManager", function () {
         }
     }
 
+    function getPlaybarClass () {
+        if (_extra.w.cp.PB) {
+
+            return _extra.w.cp.PB.PlayBarSlider;
+
+        }
+
+        return false;
+    }
+
     // Define a private object to hold the references to the different points in
     // the Captivate API
     _extra.captivate = {
@@ -43,7 +53,7 @@ _extra.registerModule("softwareInterfacesManager", function () {
         "numSlides":_extra.w.cpInfoSlideCount,
         "openURLLocation":_extra.w.cp,
         "openURLMethodName":"openURL",
-        "playbarClass":_extra.w.cp.PB.PlayBarSlider,
+        "playbarClass":getPlaybarClass(),
         "isInitated": function () {
             return _extra.w.cp.initiated;
         },
