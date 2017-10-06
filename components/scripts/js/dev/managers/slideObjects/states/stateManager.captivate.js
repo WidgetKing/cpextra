@@ -15,6 +15,7 @@ _extra.registerModule("stateManager_software",["Callback","slideObjectManager_gl
 
         var slideObjectData = _extra.dataManager.getSlideObjectDataByName(slideObjectName);
 
+
         // Sometimes (drag and drop interactions) Captivate may try to set an object to display a state
         // that doesn't exist. If that happens and we react to it, then that could cause errors in the slide
         // object proxy. Therefore, we must first check to see if this state exists before we tell slide objects

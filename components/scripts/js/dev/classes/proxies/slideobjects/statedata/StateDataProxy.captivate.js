@@ -137,7 +137,7 @@ _extra.registerModule("StateDataProxy", ["softwareInterfacesManager"], function 
     ///////////////////////////////////////////////////////////////////////
     StateDataProxy.prototype.initializeSubSlideObjects = function (editDataForSlideObjectType) {
 
-        var tempData,
+        var nativeController,
             formattedData,
             uid;
 
@@ -145,11 +145,11 @@ _extra.registerModule("StateDataProxy", ["softwareInterfacesManager"], function 
 
             uid = this._data.stsi[i];
 
-            tempData = _extra.captivate.api.getDisplayObjByCP_UID(uid);
+            nativeController = _extra.captivate.api.getDisplayObjByCP_UID(uid);
 
-            if (tempData) {
+            if (nativeController) {
 
-                formattedData = this.formatDataViaNativeController(tempData);
+                formattedData = this.formatDataViaNativeController(nativeController);
 
             } else {
 
@@ -178,8 +178,8 @@ _extra.registerModule("StateDataProxy", ["softwareInterfacesManager"], function 
 
         stateItemData = this.formatDataViaNativeController(nativeController);
 
-        stateItemData.originalX = rawStateData.originalX;
-        stateItemData.originalY = rawStateData.originalY;
+        //stateItemData.originalX = rawStateData.originalX;
+        //stateItemData.originalY = rawStateData.originalY;
         stateItemData.originalWidth = rawStateData.originalWidth;
         stateItemData.originalHeight = rawStateData.originalHeight;
 
@@ -188,13 +188,13 @@ _extra.registerModule("StateDataProxy", ["softwareInterfacesManager"], function 
 
     StateDataProxy.prototype.formatDataViaNativeController = function (nativeController) {
 
-        var stateItemData = {
+        return {
 
             "upperDIV":        nativeController.actualParent,
             "contentDIV":      nativeController.element.parentNode,
             "focusDIVId":      nativeController.parentDivName,
-            "originalX":       nativeController.bounds.minX,
-            "originalY":       nativeController.bounds.minY,
+            "originalX":       _extra.slideObjects.locationManager.getOriginalX(nativeController),
+            "originalY":       _extra.slideObjects.locationManager.getOriginalY(nativeController),
             "offsetX":         0,
             "offsetY":         0,
             "originalWidth":   nativeController.bounds.maxX - nativeController.bounds.minX,
@@ -207,29 +207,12 @@ _extra.registerModule("StateDataProxy", ["softwareInterfacesManager"], function 
             // May only work for responsive.
 
             "enterMethodName": "drawComplete",
-            "exitMethodName":  "reset"
+            "exitMethodName":  "reset",
+
+            "isPositionedByPercentage": _extra.slideObjects.locationManager.
+                                        isPositionedByPercentage(nativeController)
 
         };
-
-        stateItemData.isPositionedByPercentage = this.getIsPositionedByPercentage(stateItemData);
-
-        return stateItemData;
-    };
-
-    StateDataProxy.prototype.getIsPositionedByPercentage = function (stateItemData) {
-
-        if (stateItemData.rawData.responsiveCSS) {
-
-            var currentWidthCSS = stateItemData.rawData.responsiveCSS[_extra.captivate.getResponsiveProjectWidth()];
-
-            if (currentWidthCSS) {
-                // If the value is something like 35%, then we know it's positioned according to percentage.
-                // Otherwise it's positioned according to pixels.
-                return currentWidthCSS.l.indexOf("%") > -1;
-            }
-        }
-
-        return false;
     };
 
     StateDataProxy.prototype.calculateFirstSlideOriginalPosition = function () {
@@ -364,9 +347,11 @@ _extra.registerModule("StateDataProxy", ["softwareInterfacesManager"], function 
             valueForSlideObject -= offset - data[offsetProperty];
 
             responsiveCSS = _extra.captivate.api.getResponsiveCSS(data.rawData.responsiveCSS);
+
             if (data.isPositionedByPercentage) {
-                //responsiveCSS[minifiedProperty] = that.convertPixelToPercentage(value, cssProperty) + "%";
+
                 responsiveCSS[minifiedProperty] = that.convertPixelToPercentage(valueForSlideObject, cssProperty) + "%";
+
             } else {
                 //responsiveCSS[minifiedProperty] = value + "px";
                 responsiveCSS[minifiedProperty] = valueForSlideObject + "px";
@@ -376,14 +361,26 @@ _extra.registerModule("StateDataProxy", ["softwareInterfacesManager"], function 
 
     };
 
-    StateDataProxy.prototype.convertPixelToPercentage = function (value, property) {
+    StateDataProxy.prototype.convertPixelToPercentage = function (value, property, width, height) {
 
         var max;
 
         if (property === "left") {
-            max = _extra.captivate.getProjectWidth();
+
+            if (!width) {
+                width = _extra.captivate.getProjectWidth();
+            }
+
+            max = width;
+
         } else if (property === "top") {
-            max = _extra.captivate.getProjectHeight();
+
+            if (!height) {
+                height = _extra.captivate.getProjectHeight();
+            }
+
+            max = height;
+
         }
 
         return (value / max) * 100;

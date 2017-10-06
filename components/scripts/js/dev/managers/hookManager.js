@@ -103,11 +103,9 @@ _extra.registerModule("hookManager", ["slideManager_global"], function () {
 
     _extra.addHookAfter = function (location, methodName, hookMethod) {
 
-
         var data = createHook(location, methodName, hookMethod);
 
         data.callHookBeforeOriginal = false;
-
 
     };
 
