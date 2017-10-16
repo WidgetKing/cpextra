@@ -17,12 +17,16 @@ _extra.registerModule("generalDataManager", ["softwareInterfacesManager", "dataT
                 data.container = _extra.captivate.allSlideObjectsData[slideObjectName + "c"];
                 if (!data.container) {
                     _extra.log("Could not find container data for: " + slideObjectName);
+                    _extra.log(data);
                 }
                 return _extra.factories.createSlideObjectData(slideObjectName, data,
                                                               _extra.dataTypes.convertSlideObjectType(data.base.type, slideObjectName));
             }
             return null;
         },
+
+
+
         "getSlideObjectTypeByName": function (slideObjectName) {
 
             var data = _extra.captivate.allSlideObjectsData[slideObjectName];
@@ -35,6 +39,10 @@ _extra.registerModule("generalDataManager", ["softwareInterfacesManager", "dataT
 
             return _extra.w.NaN;
         },
+
+
+
+
         "getSlideObjectDataByID": function (id) {
 
             var data = _extra.captivate.api.getDisplayObjByCP_UID(id),
@@ -52,7 +60,22 @@ _extra.registerModule("generalDataManager", ["softwareInterfacesManager", "dataT
 
             return _extra.dataManager.getSlideObjectDataByName(name);
 
+        },
+
+
+        "isHyperlink":function (name) {
+            var data = _extra.captivate.allSlideObjectsData[name];
+
+            return data.hasOwnProperty("accstr") &&
+                data.hasOwnProperty("b") &&
+                data.hasOwnProperty("oca") &&
+                data.hasOwnProperty("ti") &&
+                !data.hasOwnProperty("isCpObject") &&
+                !data.hasOwnProperty("uid") &&
+                !data.hasOwnProperty("mdi");
+
         }
+
     };
 
     function getSlideObjectNameByID(uid) {

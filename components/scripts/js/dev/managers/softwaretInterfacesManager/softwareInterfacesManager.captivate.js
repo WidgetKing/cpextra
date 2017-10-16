@@ -51,6 +51,7 @@ _extra.registerModule("softwareInterfacesManager", function () {
         "projectDIV": _extra.w.document.getElementById("project"),
         "audioManager": _extra.w.cp.movie.am,
         "numSlides":_extra.w.cpInfoSlideCount,
+        "keyManager": _extra.w.cp.movie.stage.m_keyManager,
         "openURLLocation":_extra.w.cp,
         "openURLMethodName":"openURL",
         "playbarClass":getPlaybarClass(),

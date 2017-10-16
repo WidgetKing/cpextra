@@ -5,7 +5,7 @@
  * Time: 2:09 PM
  * To change this template use File | Settings | File Templates.
  */
-fdescribe("A test suite for _extra.slideObjects.locationManager", function () {
+describe("A test suite for _extra.slideObjects.locationManager", function () {
 
     "use strict";
 

@@ -93,7 +93,6 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
     BaseSlideObjectProxy.prototype.initializePrivateVariables = function (element, data) {
 
         // Private Variables that are public because we can't get around it
-
         this._data = data;
         this._focusDiv = element;
         this._model = _extra.slideObjects.model;

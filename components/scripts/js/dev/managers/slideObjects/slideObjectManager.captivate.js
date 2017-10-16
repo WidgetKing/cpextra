@@ -86,6 +86,7 @@ _extra.registerModule("slideObjectManager_software", ["generalDataManager", "Cal
             }
 
             if (_extra.slideObjects.hasSlideObjectInProject(name) &&
+                !_extra.dataManager.isHyperlink(name) &&
                 !_extra.slideManager.isNameOfSlide(name)) {
 
                 // Just in case we clicked on the state of an object.

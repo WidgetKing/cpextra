@@ -53,7 +53,11 @@
 
                         },
                         "movie":{
+                            "stage": {
+                                "m_keyManager":{
 
+                                }
+                            }
                         },
                         "PB":{
                             "PlayBarSlider":{

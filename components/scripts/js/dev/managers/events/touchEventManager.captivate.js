@@ -19,10 +19,11 @@ _extra.registerModule("touchEventManager", ["eventManager","slideObjectManager_g
      */
 
     function onTouchStart(event) {
-        var slideObject = _extra.slideObjects.getSlideObjectByDIV(event.target);
+        _extra.slideObjects.getSlideObjectByDIV(event.target);
     }
 
     function onTouchEnd(event) {
+
         var slideObject = _extra.slideObjects.getSlideObjectByDIV(event.target);
 
         if (slideObject && _extra.slideObjects.states.doesSlideObjectHaveDownState(slideObject.name)) {
