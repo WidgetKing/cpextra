@@ -12,6 +12,7 @@
     function dataManagerTests(software, mockObject) {
 
         describe("A test suite for the data manager in " + software, function () {
+
             var module = unitTests.modules["generalDataManager_" + software];
             var globalDataTypes = unitTests.getModule("globalSlideObjectTypes");
 
@@ -43,6 +44,15 @@
             it("should allow us to send it a slide object name and it will return its data type", function () {
 
                 expect(_extra.dataManager.getSlideObjectTypeByName("foobar")).toBe(24);
+
+            });
+
+            it("should return the same data object if we request the same object", function () {
+
+                var data1 = _extra.dataManager.getSlideObjectDataByName("foobar"),
+                    data2 = _extra.dataManager.getSlideObjectDataByName("foobar");
+
+                expect(data1).toBe(data2);
 
             });
 

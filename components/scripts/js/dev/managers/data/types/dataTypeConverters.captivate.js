@@ -34,6 +34,7 @@ _extra.registerModule("dataTypeConverters",["globalSlideObjectTypes"], function 
                 return soTypes.CAPTION;
 
             case 24 :
+            case 10094 :
                 return soTypes.TEXT_ENTRY_BOX;
 
             case 28 :

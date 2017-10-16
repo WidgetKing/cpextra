@@ -11,9 +11,20 @@ _extra.registerModule("TextEntryBoxStateDataProxy", ["StateDataProxy"], function
 
     function TextEntryBoxStateDataProxy(data) {
 
+        var name = data.name;
+
         _extra.classes.StateDataProxy.call(this, data, function (data) {
 
+            if (!data.name) {
+                data.name = name;
+            }
+
             data.upperDIV = _extra.w.document.getElementById(data.name + "c");
+
+            // Short answer field
+            if (!data.upperDIV) {
+                data.upperDIV = _extra.w.document.getElementById(data.name + "sha_inputField");
+            }
 
             /*if (_extra.captivate.isResponsive) {
 

@@ -117,46 +117,55 @@ _extra.registerModule("BaseSlideObjectDataProxy", function () {
             // If this is the first time we've called this method for this instance.
             if (!this._stateDatas) {
 
-                var that = this;
-                // Define variables
-                var stateDataProxy,
-                    stateDatas = {};
-                // Set public variable so we can keep track of whether this is the first time or not.
-                this._stateDatas = stateDatas;
+                this._stateDatas = this.findStateData();
 
-                if (this._initialStateData.states.length <= 1) {
-
-                    // This object does not have any states.
-                    // So we have to fake the data.
-                    // Previous version of this line when it was in the getStateData section
-                    // stateDatas[stateName] = _extra.factories.createStateDataProxy(this.type, {
-                    stateDatas.Normal = _extra.factories.createStateDataProxy(this.type, {
-                        "stsi":[this.uid],
-                        "stn":"Normal",
-                        "stt":0
-                    });
-                    /*stateDatas[stateName] = new _extra.classes.StateDataProxy({
-                        "stsi":[this.uid],
-                        "stn":"Normal"
-                    });*/
-
-                } else {
-
-                    // Loop through the state information
-                    this._initialStateData.states.forEach(function (rawStateData) {
-
-                        stateDataProxy = _extra.factories.createStateDataProxy(that.type, rawStateData);
-                        // stateDataProxy = new _extra.classes.StateDataProxy(rawStateData);
-                        // Assign this data to the holder object.
-                        stateDatas[stateDataProxy.name] = stateDataProxy;
-
-                    });
-
-                }
             }
 
             return this._stateDatas;
         }
+    };
+
+    BaseSlideObjectData.prototype.findStateData = function () {
+
+        // Define variables
+        var stateDataProxy,
+            that = this,
+            stateDatas = {};
+        // Set public variable so we can keep track of whether this is the first time or not.
+        this._stateDatas = stateDatas;
+
+        if (!this._initialStateData.states || this._initialStateData.states.length <= 1) {
+
+            // This object does not have any states.
+            // So we have to fake the data.
+            // Previous version of this line when it was in the getStateData section
+            // stateDatas[stateName] = _extra.factories.createStateDataProxy(this.type, {
+            stateDatas.Normal = _extra.factories.createStateDataProxy(this.type, {
+                "stsi":[this.uid],
+                "stn":"Normal",
+                "stt":0,
+                "name": this.name
+            });
+            /*stateDatas[stateName] = new _extra.classes.StateDataProxy({
+             "stsi":[this.uid],
+             "stn":"Normal"
+             });*/
+
+        } else {
+
+            // Loop through the state information
+            this._initialStateData.states.forEach(function (rawStateData) {
+
+                stateDataProxy = _extra.factories.createStateDataProxy(that.type, rawStateData);
+                // stateDataProxy = new _extra.classes.StateDataProxy(rawStateData);
+                // Assign this data to the holder object.
+                stateDatas[stateDataProxy.name] = stateDataProxy;
+
+            });
+
+        }
+
+        return stateDatas;
     };
 
     BaseSlideObjectData.prototype.hasState = function (stateName) {

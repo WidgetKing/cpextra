@@ -87,22 +87,33 @@ _extra.registerModule("TextEntryBoxProxy", ["BaseSlideObjectProxy"], function ()
 
     TextEntryBoxProxy.prototype.onSlideObjectInitialized = function () {
 
-        this._inputField = _extra.w.document.getElementById(this.name + "_inputField");
+        this._inputField = this.getInputFieldDiv();
 
         this._focusDiv = this._inputField;
 
         // Super!
         TextEntryBoxProxy.superClass.onSlideObjectInitialized.call(this);
 
-        if (!this._inputField) {
-            _extra.log("Error: Was unable to locate the TEB input field");
-        }
-
         // Check to see if the value of the text box was set before the input existed.
         if (this.hasOwnProperty("_tempValue")) {
             this.value = this._tempValue;
             delete this._tempValue;
         }
+    };
+
+    TextEntryBoxProxy.prototype.getInputFieldDiv = function () {
+        var field = _extra.w.document.getElementById(this.name + "_inputField");
+
+        // Short answer question field
+        if (!field) {
+            field = _extra.w.document.getElementById(this.name + "sha_inputField");
+        }
+
+        if (!field) {
+            _extra.log("Error: Was unable to locate the TEB input field");
+        }
+
+        return field;
     };
 
     TextEntryBoxProxy.prototype.unload = function() {

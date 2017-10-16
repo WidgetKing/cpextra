@@ -74,16 +74,27 @@ _extra.registerModule("slideObjectManager_software", ["generalDataManager", "Cal
             }
             return stateName;
         },
+        "removeSuffix":function (name, suffix) {
+
+            if (name.substr(name.length - suffix.length, name.length) === suffix) {
+                name= name.substr(0, name.length - suffix.length);
+            }
+
+            return name;
+        },
         "getSlideObjectByDIV":function (div) {
 
+            if (!div) {
+                return null;
+            }
+
             var name = div.id,
-                TEB_SUFFIX = "_inputField",
                 returnValue = null;
 
             // Remove the TEB_SUFFIX from the end of the div name.
-            if (name.substr(name.length - TEB_SUFFIX.length, name.length) === TEB_SUFFIX) {
-                name = name.substr(0, name.length - TEB_SUFFIX.length);
-            }
+            name = _extra.slideObjects.removeSuffix(name, "_inputField");
+            name = _extra.slideObjects.removeSuffix(name, "sha");
+
 
             if (_extra.slideObjects.hasSlideObjectInProject(name) &&
                 !_extra.dataManager.isHyperlink(name) &&
@@ -101,111 +112,73 @@ _extra.registerModule("slideObjectManager_software", ["generalDataManager", "Cal
         },
         "getSlideObjectNamesMatchingWildcardName": function (query, returnProxies) {
 
-            var queryType = _extra.getQueryType(query);
+            function entryPoint () {
+                /// ENTRY POINT
+                var queryType = _extra.getQueryType(query),
+                    list;
 
-            if (queryType) {
-
-                var list = [],
-                    i;
-
-                // Local slide
-                if (queryType === _extra.WILDCARD_CHARACTER) {
-
-                    var slide = _extra.slideManager.currentSlideDOMElement;
-
-                    for (i = 0; i < slide.childNodes.length; i += 1) {
-                        list.push(slide.childNodes[i].id);
-                    }
-
-                // Whole project
-                } else if (queryType === _extra.GLOBAL_WILDCARD_CHARACTER) {
-
-                    list = _extra.slideObjects.projectSlideObjectNames;
-
-                // Unknown
-                } else {
+                if (!queryType) {
                     return null;
                 }
 
+                list = createList(queryType);
 
-                /// Found the list, make the query.
-                list = _extra.queryList(query, list, queryType);
+                if (list) {
 
-                // If a list of proxies was wanted, not a list of names
-                if (list && returnProxies) {
+                    /// Found the list, make the query.
+                    list = _extra.queryList(query, list, queryType);
 
-                    var proxyList = [];
-
-                    for (i = 0; i < list.length; i += 1) {
-
-                        proxyList.push(_extra.slideObjects.getSlideObjectProxy(list[i]));
-
-                    }
-
-                    list = proxyList;
+                    list = convertToProxies(list);
 
                 }
 
                 return list;
-
             }
 
-            return null;
+            function createList (type) {
 
-            // Previously, before we externalized this code to _extra.queryList
-            /*var wildcardIndex = query.indexOf(_extra.slideObjects.WILDCARD_CHARACTER);
-            if (wildcardIndex > -1) {
+                switch (type) {
 
-                // There is a wildcard character in the query.
+                    case _extra.GLOBAL_WILDCARD_CHARACTER:
+                        return _extra.slideObjects.projectSlideObjectNames;
 
-                // The following comments are written as if the query passed is is: My_@_Box
+                    case _extra.WILDCARD_CHARACTER :
 
-                // The part of the query before the wildcard character: My_
-                var start = query.substr(0,wildcardIndex),
-                // The part of the query after the wildcard character: _Box
-                    end = query.substr(wildcardIndex + 1, query.length - 1),
+                        var slide = _extra.slideManager.currentSlideDOMElement,
+                            list = [];
 
-                    slide = _extra.slideManager.currentSlideDOMElement,
-                    id,
-                    list = [],
-                    child;
-
-                for (var i = 0; i < slide.childNodes.length; i += 1) {
-                    child = slide.childNodes[i];
-                    id = child.id;
-
-                    // Check if this slide objects's name matches the first part of the passed in query.
-                    if (id.substr(0,start.length) === start) {
-
-                        // Now check if it matches the last part.
-                        if (id.substr(id.length - end.length, id.length - 1) === end) {
-
-                            // The query matches, so we'll add this child to the list of display objects we'll return.
-                            if (returnProxies) {
-
-                                list.push(_extra.slideObjects.getSlideObjectProxy(id));
-
-                            } else {
-
-                                list.push(id);
-
-                            }
-
+                        for (var i = 0; i < slide.childNodes.length; i += 1) {
+                            list.push(slide.childNodes[i].id);
                         }
 
-                    }
+                        return list;
+
                 }
 
-                // If we have found no matches, then return nothing.
-                if (list.length === 0) {
-                    list = null;
-                }
+                return null;
 
-                return list;
             }
 
-            // Endpoint if no wildcard was passed in.
-            return null;*/
+            function convertToProxies (list) {
+
+                // If a list of proxies was wanted, not a list of names
+                if (!list || !returnProxies) {
+                    return list;
+                }
+
+                var proxyList = [];
+
+                for (var i = 0; i < list.length; i += 1) {
+
+                    proxyList.push(_extra.slideObjects.getSlideObjectProxy(list[i]));
+
+                }
+
+                return proxyList;
+
+            }
+
+            return entryPoint();
 
         },
         "getNativeSlideObjectByName": function (name) {
@@ -247,35 +220,4 @@ _extra.registerModule("slideObjectManager_software", ["generalDataManager", "Cal
 
     };
 
-    /*_extra.slideObjectManager = {
-        "types": {
-            "CLOSE_PATH":4,
-            "CLICK_BOX":13,
-            "HIGHLIGHT_BOX":14,
-            "CAPTION":19,
-            "TEXT_ENTRY_BOX":24,
-            "TEXT_ENTRY_BOX_SUBMIT_BUTTON":75,
-            "BUTTON":177
-        },
-        "projectTypeCallback":new _extra.classes.Callback()
-    };
-
-    return function () {
-        var pd = _extra.dataManager.projectSlideObjectData,
-            c = _extra.slideObjectManager.projectTypeCallback,
-            slideObjectName,
-            slideObjectData;
-
-        for (slideObjectName in pd) {
-
-            if (pd.hasOwnProperty(slideObjectName)) {
-
-                //_extra.log(pd);
-                slideObjectData = pd[slideObjectName];
-
-                c.sendToCallback(slideObjectData.type, slideObjectData);
-
-            }
-        }
-    };*/
 },_extra.CAPTIVATE);

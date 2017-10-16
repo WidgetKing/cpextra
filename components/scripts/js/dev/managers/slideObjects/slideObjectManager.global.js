@@ -75,14 +75,26 @@ _extra.registerModule("slideObjectManager_global", ["slideObjectManager_software
 
     _extra.slideObjects.unloadSlideObjectsFromOtherSlides = function () {
 
+        var proxy;
+
         // Run through the list of slide object proxies and unload them
         for (var slideObjectName in slideObjectProxies) {
             if (slideObjectProxies.hasOwnProperty(slideObjectName)) {
 
-                if (!_extra.slideManager.hasSlideObjectOnSlide(slideObjectName, _extra.slideManager.currentSceneNumber,
+                if (!_extra.slideManager.hasSlideObjectOnSlide(
+                    slideObjectName,
+                    _extra.slideManager.currentSceneNumber,
                     _extra.slideManager.currentSlideNumber)) {
 
-                    slideObjectProxies[slideObjectName].unload();
+                    proxy = slideObjectProxies[slideObjectName];
+
+                    if (proxy && proxy.unload) {
+                        proxy.unload();
+                    } else {
+                        _extra.log("Slide object proxy '" + slideObjectName +
+                                   "' was not loaded correctly.");
+                    }
+
                     delete slideObjectProxies[slideObjectName];
 
                 }

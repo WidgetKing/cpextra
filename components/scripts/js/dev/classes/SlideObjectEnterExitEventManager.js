@@ -41,7 +41,6 @@ _extra.registerModule("SlideObjectEnterExitEventManager", function () {
 
             // Make the replacement
             this.dispatcher = dispatcher;
-
             // If we haven't been given a null dispatcher, start listening to it.
             if (this.dispatcher) {
                 isInitialized = this.dispatcher.isInitialized;

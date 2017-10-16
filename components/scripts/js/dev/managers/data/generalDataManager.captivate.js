@@ -3,29 +3,53 @@ _extra.registerModule("generalDataManager", ["softwareInterfacesManager", "dataT
 
     "use strict";
 
+    var slideObjectDatas = {};
+
     _extra.dataManager = {
 
         "getSlideObjectDataByName": function (slideObjectName) {
 
-            // TODO: Slide object datas are accessed constantly. It may be more efficient to maintain a list of data proxies than createa new one each time.
-
-            var data = {
-                "base": _extra.captivate.allSlideObjectsData[slideObjectName]
-            };
-
-            if (data.base) {
-                data.container = _extra.captivate.allSlideObjectsData[slideObjectName + "c"];
-                if (!data.container) {
-                    _extra.log("Could not find container data for: " + slideObjectName);
-                    _extra.log(data);
-                }
-                return _extra.factories.createSlideObjectData(slideObjectName, data,
-                                                              _extra.dataTypes.convertSlideObjectType(data.base.type, slideObjectName));
+            if (!slideObjectDatas.hasOwnProperty(slideObjectName)) {
+                slideObjectDatas[slideObjectName] = _extra.dataManager.
+                                                    createSlideObjectData(slideObjectName);
             }
-            return null;
+
+            return slideObjectDatas[slideObjectName];
+
         },
 
+        "createSlideObjectData": function (slideObjectName) {
 
+            var type,
+                data = {
+                    "base": _extra.captivate.allSlideObjectsData[slideObjectName]
+                };
+
+            if (!data.base) {
+                return null;
+            }
+
+            data.container = _extra.dataManager.getContainerData(slideObjectName);
+
+            type = _extra.dataTypes.convertSlideObjectType(data.base.type, slideObjectName);
+
+            return _extra.factories.createSlideObjectData(slideObjectName, data, type);
+
+        },
+
+        "getContainerData": function (slideObjectName) {
+            var data = _extra.captivate.allSlideObjectsData[slideObjectName + "c"];
+
+            if (!data) {
+                data = _extra.captivate.allSlideObjectsData[slideObjectName + "sha"];
+            }
+
+            if (!data) {
+                _extra.log("Could not find container data for: " + slideObjectName);
+            }
+
+            return data;
+        },
 
         "getSlideObjectTypeByName": function (slideObjectName) {
 
