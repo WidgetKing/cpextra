@@ -503,6 +503,10 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
             }
         }
 
+        // If we do not clear now, the next slide will fail to generate new state datas.
+        // Which means the upperDIV will be from the previous slide, not from the current version of the slide.
+        this._data.clearStateDatas();
+
     };
 
     _extra.registerClass("BaseSlideObjectProxy", BaseSlideObjectProxy, _extra.CAPTIVATE);

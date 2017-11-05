@@ -214,7 +214,6 @@ _extra.registerModule("EventMediator", function () {
         }
 
         function loopAdd(a, event, callback) {
-
             for (var i = 0; i < a.length; i += 1) {
 
                 a[i].addEventListener(event, callback);

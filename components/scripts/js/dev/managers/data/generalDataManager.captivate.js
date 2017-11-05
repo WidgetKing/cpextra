@@ -21,23 +21,68 @@ _extra.registerModule("generalDataManager", ["softwareInterfacesManager", "dataT
         "createSlideObjectData": function (slideObjectName) {
 
             var type,
-                data = {
-                    "base": _extra.captivate.allSlideObjectsData[slideObjectName]
-                };
+                base,
+                data,
+                container;
 
-            if (!data.base) {
+            base = _extra.captivate.allSlideObjectsData[slideObjectName];
+
+            if (!base) {
+
                 return null;
+
+            } else if (_extra.dataManager.isContainerData(slideObjectName, base)) {
+
+                // Start the method again with the correct name;
+                slideObjectName = _extra.dataManager.removeContainerSuffix(slideObjectName);
+                return _extra.dataManager.createSlideObjectData(slideObjectName);
+
             }
 
-            data.container = _extra.dataManager.getContainerData(slideObjectName);
+            type = _extra.dataTypes.convertSlideObjectType(base.type, slideObjectName);
+            container = _extra.dataManager.getContainerData(slideObjectName, type);
 
-            type = _extra.dataTypes.convertSlideObjectType(data.base.type, slideObjectName);
+            data = {
+                "base":base,
+                "container": container
+            };
 
             return _extra.factories.createSlideObjectData(slideObjectName, data, type);
 
         },
 
-        "getContainerData": function (slideObjectName) {
+        "isContainerData": function (name, data) {
+
+            var nonSuffixName = _extra.dataManager.removeContainerSuffix(name);
+
+            if (data.hasOwnProperty("b") &&
+                nonSuffixName !== name &&
+                _extra.captivate.allSlideObjectsData.hasOwnProperty(nonSuffixName)) {
+
+                return true;
+
+            }
+
+            return false;
+        },
+
+        "removeContainerSuffix": function (name) {
+
+            var suffix = "c", // TODO: Make this work for Short Answer questions TEBs as well
+                startIndex = name.length - suffix.length,
+                endOfName = name.substring(startIndex, name.length);
+
+            if (endOfName === suffix) {
+                return name.substring(0, startIndex);
+            }
+
+            return name;
+
+        },
+
+        "getContainerData": function (slideObjectName, type) {
+
+            // TODO: Change this so that 'type' is passed into this function, and the searching for container data is based on type. (Short answer type = "sha")
             var data = _extra.captivate.allSlideObjectsData[slideObjectName + "c"];
 
             if (!data) {

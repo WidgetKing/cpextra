@@ -134,6 +134,14 @@ _extra.registerModule("BaseSlideObjectDataProxy", function () {
         // Set public variable so we can keep track of whether this is the first time or not.
         this._stateDatas = stateDatas;
 
+        if (!this._initialStateData) {
+
+            _extra.log("Tried to find state data for '" + this.name +
+                       "', but _initialStateData has not been found");
+
+            return stateDatas;
+        }
+
         if (!this._initialStateData.states || this._initialStateData.states.length <= 1) {
 
             // This object does not have any states.
@@ -166,6 +174,10 @@ _extra.registerModule("BaseSlideObjectDataProxy", function () {
         }
 
         return stateDatas;
+    };
+
+    BaseSlideObjectData.prototype.clearStateDatas = function () {
+        this._stateDatas = null;
     };
 
     BaseSlideObjectData.prototype.hasState = function (stateName) {
