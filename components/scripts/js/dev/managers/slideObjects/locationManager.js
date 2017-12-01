@@ -12,6 +12,18 @@ _extra.registerModule("locationManager", ["slideObjectManager_software"], functi
     _extra.slideObjects.locationManager = {
 
         "isPositionedByPercentage": function (data) {
+
+            var result = _extra.slideObjects.locationManager.getLocation(data, "l");
+
+            if (result) {
+                return result.indexOf("%") > -1;
+            }
+
+            return false;
+        },
+
+        "getLocation": function (data, property) {
+
             if (data.responsiveCSS) {
 
                 var currentWidthCSS = data.responsiveCSS[_extra.captivate.getResponsiveProjectWidth()];
@@ -19,11 +31,12 @@ _extra.registerModule("locationManager", ["slideObjectManager_software"], functi
                 if (currentWidthCSS) {
                     // If the value is something like 35%, then we know it's positioned according to percentage.
                     // Otherwise it's positioned according to pixels.
-                    return currentWidthCSS.l.indexOf("%") > -1;
+                    return currentWidthCSS[property];
                 }
             }
 
             return false;
+
         },
 
         "getOriginalX": function (data) {
@@ -32,7 +45,11 @@ _extra.registerModule("locationManager", ["slideObjectManager_software"], functi
                 "boundsProperty":"minX",
                 "frameLength": _extra.captivate.getResponsiveProjectWidth,
                 "actualFrameLength": _extra.captivate.getProjectWidth,
-                "calculateReducedPercentageLocation": _extra.captivate.isResponsive
+                "calculateReducedPercentageLocation": _extra.captivate.isResponsive,
+                "location": function () {
+                    var result = _extra.slideObjects.locationManager.getLocation(data, "l");
+                    return _extra.w.parseFloat(result) / 100;
+                }
             });
         },
 
@@ -40,7 +57,11 @@ _extra.registerModule("locationManager", ["slideObjectManager_software"], functi
             return getOriginalLocation({
                 "nativeController":data,
                 "boundsProperty":"minY",
-                "calculateReducedPercentageLocation": false
+                "calculateReducedPercentageLocation": false,
+                "location": function () {
+                    var result = _extra.slideObjects.locationManager.getLocation(data, "t");
+                    return _extra.w.parseFloat(result) / 100;
+                }
             });
         }
 
@@ -48,17 +69,18 @@ _extra.registerModule("locationManager", ["slideObjectManager_software"], functi
 
     function getOriginalLocation (d) {
 
-        var value = d.nativeController.bounds[d.boundsProperty];
-
+        // The following is if it IS responsive
         if (d.calculateReducedPercentageLocation &&
             _extra.slideObjects.locationManager.isPositionedByPercentage(d.nativeController) &&
             d.frameLength() > d.actualFrameLength()) {
 
-            return value * (d.actualFrameLength() / d.frameLength());
+            return d.location() * d.actualFrameLength();
 
         }
 
-        return value;
+        // Non-reponsive
+        // OR Responsive with pixel percentage
+        return d.nativeController.bounds[d.boundsProperty];
 
     }
 

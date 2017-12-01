@@ -170,6 +170,16 @@ function initExtra(topWindow) {
     _extra.STORYLINE = "storyline";
 
 
+    ////////////////////////////////
+    ////////// End of trial
+    /*var today = new Date();
+    //today.setHours(0,0,0,0);
+    var trialEnd = new Date("12-17-2017");
+    if (trialEnd <= today) {
+        abort();
+        return;
+    }*/
+
     //////////////
     ///// Extra Pre-detection
     //////////////

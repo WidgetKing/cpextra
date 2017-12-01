@@ -39,6 +39,9 @@ describe("A test suite for _extra.slideObjects.locationManager", function () {
                 "getProjectWidth": function() {
                     return 500;
                 }
+            },
+            "w":{
+                "parseFloat":parseFloat
             }
         };
 
@@ -81,7 +84,7 @@ describe("A test suite for _extra.slideObjects.locationManager", function () {
             resultX = _extra.slideObjects.locationManager.getOriginalX(data),
             resultY = _extra.slideObjects.locationManager.getOriginalY(data);
 
-        expect(resultX).toBe(25);
+        expect(resultX).toBe(250); // half of 500, the width
 
         // Height is not compressed, so it should remain at is original value
         expect(resultY).toBe(100);
