@@ -19,6 +19,11 @@ _extra.registerModule("createSlideObjectProxy",["factoryManager"], function () {
             case _extra.dataTypes.slideObjects.VIDEO :
                 return new _extra.classes.VideoProxy(element, data);
 
+            case _extra.dataTypes.slideObjects.BUTTON :
+            case _extra.dataTypes.slideObjects.CLICK_BOX:
+                return new _extra.classes.ButtonProxy(element, data);
+
+
             default :
                 return new _extra.classes.BaseSlideObjectProxy(element, data);
 

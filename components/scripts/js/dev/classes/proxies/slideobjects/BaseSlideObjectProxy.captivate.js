@@ -94,7 +94,7 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
 
         // Private Variables that are public because we can't get around it
         this._data = data;
-        this._focusDiv = element;
+        this._focusDiv = _extra.w.document.body;//element;
         this._model = _extra.slideObjects.model;
         this._currentStateData = data.getDataForState(this.state);
         this._offsetX = 0;

@@ -16,6 +16,7 @@ _extra.registerModule("CustomEvent", function () {
         return evt;
     }
 
+
     CustomEvent.prototype = Event.prototype;
 
     _extra.registerClass("CustomEvent", CustomEvent);
@@ -27,14 +28,14 @@ _extra.registerModule("CustomEvent", function () {
 
     // We put it here, because eventManager has dependencies which might cause loops.
 
-    _extra.createEvent = function(name) {
+    _extra.createEvent = function(name, params) {
         if (_extra.isIE) {
 
-            return new _extra.classes.CustomEvent(name);
+            return new _extra.classes.CustomEvent(name, params);
 
         } else {
 
-            return new _extra.w.Event(name);
+            return new _extra.w.Event(name, params);
 
         }
     };

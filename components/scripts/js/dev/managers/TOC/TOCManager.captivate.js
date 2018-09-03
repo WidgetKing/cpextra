@@ -18,7 +18,7 @@ _extra.registerModule("TOCManager", ["softwareInterfacesManager","slideManager_s
             if (slideData) {
                 slideData.complete = true;
             }
-
+_extra.log("MARKING : " + index + " AS COMPLETE");
             // Complete for TOC
             markTOCEntryComplete(index);
 

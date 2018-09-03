@@ -15,7 +15,8 @@ describe("A test suite for _extra.slideObjects.locationManager", function () {
         return {
             "responsiveCSS":{
                 "1000":{
-                    "l":"50%"
+                    "l":"50%",
+                    "t":"10%"
                 }
             },
             "bounds":{
@@ -33,10 +34,13 @@ describe("A test suite for _extra.slideObjects.locationManager", function () {
             },
             "captivate": {
                 "isResponsive":true,
-                getResponsiveProjectWidth: function () {
+                "getResponsiveProjectWidth": function () {
                     return 1000;
                 },
                 "getProjectWidth": function() {
+                    return 500;
+                },
+                "getProjectHeight": function() {
                     return 500;
                 }
             },
@@ -87,7 +91,7 @@ describe("A test suite for _extra.slideObjects.locationManager", function () {
         expect(resultX).toBe(250); // half of 500, the width
 
         // Height is not compressed, so it should remain at is original value
-        expect(resultY).toBe(100);
+        expect(resultY).toBe(50);
 
     });
 });

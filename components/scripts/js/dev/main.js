@@ -19,6 +19,7 @@ function initExtra(topWindow) {
 
     "use strict";
 
+
     // We initially create the _extra interface as a variable. We do not immediately add it to the window as
     // the window object could either be a widget iframe window, OR it could be the Captivate window if CpExtra
     // is loaded headlessly. Once we have worked out which it is, we will add _extra to the window.
@@ -139,10 +140,7 @@ function initExtra(topWindow) {
     }
 
 
-
-
     createLoggingMethods(_extra);
-
 
     if (isProjectWindow(topWindow)) {
         // If the window we get right at the start is the project window, then this is most likely a headless project.
@@ -174,7 +172,7 @@ function initExtra(topWindow) {
     ////////// End of trial
     /*var today = new Date();
     //today.setHours(0,0,0,0);
-    var trialEnd = new Date("12-17-2017");
+    var trialEnd = new Date("08-23-2018");
     if (trialEnd <= today) {
         abort();
         return;

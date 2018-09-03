@@ -55,9 +55,10 @@ _extra.registerModule("locationManager", ["slideObjectManager_software"], functi
 
         "getOriginalY": function (data) {
             return getOriginalLocation({
+                "actualFrameLength": _extra.captivate.getProjectHeight,
                 "nativeController":data,
                 "boundsProperty":"minY",
-                "calculateReducedPercentageLocation": false,
+                "calculateReducedPercentageLocation": _extra.captivate.isResponsive,
                 "location": function () {
                     var result = _extra.slideObjects.locationManager.getLocation(data, "t");
                     return _extra.w.parseFloat(result) / 100;
@@ -71,12 +72,15 @@ _extra.registerModule("locationManager", ["slideObjectManager_software"], functi
 
         // The following is if it IS responsive
         if (d.calculateReducedPercentageLocation &&
-            _extra.slideObjects.locationManager.isPositionedByPercentage(d.nativeController) &&
-            d.frameLength() > d.actualFrameLength()) {
+            _extra.slideObjects.locationManager.isPositionedByPercentage(d.nativeController)) {
+
+            //if (d.frameLength() > d.actualFrameLength()) {
 
             return d.location() * d.actualFrameLength();
 
         }
+
+
 
         // Non-reponsive
         // OR Responsive with pixel percentage
