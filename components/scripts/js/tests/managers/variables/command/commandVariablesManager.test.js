@@ -216,6 +216,9 @@
                 "states":{
                     "change":function () {}
                 }
+            },
+            "animationManager":{
+                "matchEntryToEffect":function () {}
             }
         };
     });

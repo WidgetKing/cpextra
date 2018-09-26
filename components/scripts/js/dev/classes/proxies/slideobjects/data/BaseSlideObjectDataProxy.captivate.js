@@ -54,6 +54,9 @@ _extra.registerModule("BaseSlideObjectDataProxy", function () {
         get endFrame() {
             return this._data.base.to;
         },
+        get slideName() {
+            return this._data.base.apsn;
+        },
         get type() {
             return this._type;
         },

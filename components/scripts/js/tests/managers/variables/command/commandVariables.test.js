@@ -86,6 +86,9 @@ describe("A test suite for _extra.commandVariables", function () {
                 "events":{
 
                 }
+            },
+            "animationManager":{
+
             }
         };
 

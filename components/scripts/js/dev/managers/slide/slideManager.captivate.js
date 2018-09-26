@@ -17,6 +17,7 @@ _extra.registerModule("slideManager_software", ["softwareInterfacesManager", "Ca
 
     _extra.slideManager = {
         "_slideDatas": [[], []],
+        "_slideDatasById": {},
         "slideNames": [[], []],
         "numSlides": _extra.captivate.numSlides,
         "currentInternalSlideId":null,
@@ -125,10 +126,13 @@ _extra.registerModule("slideManager_software", ["softwareInterfacesManager", "Ca
         // which nests slides inside of scenes.
         // We use the second index because in Storyline the first index is reserved for certain hidden slides, and the
         // 'first' scene where you can place content is saved into the second index.
-        _extra.slideManager._slideDatas[1].push({
+        var formattedData = {
             "base":tempBaseData,
             "container":tempContainerData
-        });
+        };
+
+        _extra.slideManager._slideDatas[1].push(formattedData);
+        _extra.slideManager._slideDatasById[slideID] = formattedData;
         // Same goes for down here
         _extra.slideManager.slideNames[1].push(tempBaseData.lb);
     });

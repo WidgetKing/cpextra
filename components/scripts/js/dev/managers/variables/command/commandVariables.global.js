@@ -517,7 +517,6 @@ _extra.registerModule("commandVariables_global", ["processCommandVariableRegistr
             }
         },
 
-
         "SetCursor": {
             "commandName":"setCursor",
             "updateData":updateDataTechniques.parametersToQueryString,
@@ -596,6 +595,32 @@ _extra.registerModule("commandVariables_global", ["processCommandVariableRegistr
                 }
             }
 
+        },
+
+        ///////////////////////////////////////////////////////////////////////
+        /////////////// ANIMATIONS
+        ///////////////////////////////////////////////////////////////////////
+
+        "MatchEntryToEffect": {
+            "commandName": "matchEntryToEffect",
+            "updateData": function (data, slideObject1, slideObject2, number) {
+                data.slideObject1 = slideObject1;
+                data.slideObject2 = slideObject2;
+                data.number = number;
+            },
+            "parameterHandler": handlers.sendParametersAsParameters,
+            "parseSet": parseSets.MP.SOR1_SOR2_NR,
+            "parseSetData": {
+                "query":undefined, // Changed in the updateData method
+                "string":undefined, //  // Changed in the updateData method
+                "output":_extra.animationManager.matchEntryToEffect,
+                "SOR2": {
+                    "noQueries": true
+                },
+                "NR": {
+                    "default":1
+                }
+            }
         }
 
     });

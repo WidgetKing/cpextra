@@ -112,6 +112,13 @@ _extra.registerModule("slideManager_global",["slideManager_software"],function()
         return null;
     };
 
+    _extra.slideManager.getSlideDataFromId = function (slideId) {
+        if (slideId) {
+            return new _extra.classes.SlideDataProxy(_extra.slideManager._slideDatasById[slideId]);
+        }
+        return null;
+    };
+
 
     /**
      * Converts a slide name into a slide index.
