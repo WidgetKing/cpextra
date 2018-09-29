@@ -18,7 +18,10 @@
 
             beforeEach(function () {
                 window._extra = {
-                    "log": jasmine.createSpy("_extra.log")
+                    "log": jasmine.createSpy("_extra.log"),
+                    "debugging":{
+                        "mode":true
+                    }
                 };
                 dataTypes();
                 module();

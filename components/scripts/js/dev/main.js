@@ -19,7 +19,6 @@ function initExtra(topWindow) {
 
     "use strict";
 
-
     // We initially create the _extra interface as a variable. We do not immediately add it to the window as
     // the window object could either be a widget iframe window, OR it could be the Captivate window if CpExtra
     // is loaded headlessly. Once we have worked out which it is, we will add _extra to the window.

@@ -11,6 +11,7 @@ _extra.registerModule("dataTypeConverters",["globalSlideObjectTypes"], function 
 
     _extra.dataTypes.convertSlideObjectType = function (cpType, name) {
 
+
         var soTypes = _extra.dataTypes.slideObjects;
 
         switch (cpType) {
@@ -88,11 +89,16 @@ _extra.registerModule("dataTypeConverters",["globalSlideObjectTypes"], function 
                 return soTypes.UNKNOWN;
 
             default :
-                if (cpType !== undefined) {
+
+                if (_extra.debugging.mode && cpType !== undefined) {
                     _extra.log(name + " has unknown type: " + cpType);
                 }
+
                 return soTypes.UNKNOWN;
+
         }
+
+
     };
 
 }, _extra.CAPTIVATE);

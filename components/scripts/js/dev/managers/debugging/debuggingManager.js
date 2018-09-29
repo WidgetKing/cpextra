@@ -11,6 +11,8 @@ _extra.registerModule("debuggingManager", function () {
 
     _extra.debugging = {
 
+        "mode": false,
+
         "log":function (message) {
 
             if (_extra.console) {
@@ -62,5 +64,11 @@ _extra.registerModule("debuggingManager", function () {
         }
 
     };
+
+
+    // These assignments ensure that we don't get a freed script error in Edge or IE when we send a
+    // logging message.
+    _extra.log = _extra.debugging.log;
+    _extra.error = _extra.debugging.error;
 
 });
