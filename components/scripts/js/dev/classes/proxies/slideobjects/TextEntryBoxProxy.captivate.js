@@ -62,7 +62,7 @@ _extra.registerModule("TextEntryBoxProxy", ["BaseSlideObjectProxy"], function ()
                 // This if statement prevents potential recursion
                 if (this._inputField.value !== value) {
                     this._inputField.value = value;
-                    // The above code does not automatically update the linked variable, we have to do that manually.
+                    // The above code does not automatically update the linked variable, we initExtra have to do that manually.
                     _extra.variableManager.setVariableValue(this.data.variable, value);
                 }
             } else {

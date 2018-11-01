@@ -11,7 +11,7 @@
     "use strict";
 
     /*
-    * Copyright Infosemantics 2016
+    * Copyright Infosemantics 2018
     *
     * Permission is extended to owners of legitimate licences of this product to use this software in their projects,
     * whether they be commercial or otherwise. However, you may not sell, share, or pass on this software to be used
@@ -40,14 +40,6 @@
         jr = "components/scripts/js/dev/",
         jsCaptivateSources = [jr + "main.js",
                      jr + "**/!(*.storyline.js)"],
-                     /*jr + "classes/callback.js",
-                     jr + "managers/variables/generalVariableManager.captivate.js",
-                     jr + "managers/variables/localStorageVariableManager.js",
-                     jr + "managers/data/generalDataManager.js",
-                     jr + "managers/slide/generalSlideManager.js",
-                     jr + "managers/slideObjects/generalSlideObjectManager.js",
-                     jr + "managers/behaviour/textBoxBehaviourManager.js",
-                     jr + "classes/variableChangeMonitor.js"],*/
         jsStorylineSources = [jr + "main.js",
                      jr + "**/!(*.captivate.js)"],
         sr = "components/swf/",
@@ -82,7 +74,7 @@
                " * Written By: Tristan Ward\n" +
                " * Company: Infosemantics\n" +
                " * Licence: See licence document provided with CpExtra purchase\n" +
-               " * Copyright: Tristan Ward 2017\n" +
+               " * Copyright: Tristan Ward 2018\n" +
                " */\n";
     }
 
