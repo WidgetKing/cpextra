@@ -25,6 +25,10 @@ _extra.registerModule("movieStatusManager", ["softwareInterfacesManager", "varia
         "isCurrentFrameWithinRange": function (startFrame, endFrame) {
             return _extra.movieStatus.currentFrame <= endFrame &&
                 _extra.movieStatus.currentFrame >= startFrame;
+        },
+
+        "convertMillisecondToFrame": function (millisecond) {
+            return _extra.w.Math.floor(millisecond * _extra.movieStatus.FPS / 1E3)
         }
 
     };

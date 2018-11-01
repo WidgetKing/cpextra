@@ -125,6 +125,22 @@ _extra.registerModule("BaseSlideObjectDataProxy", function () {
             }
 
             return this._stateDatas;
+        },
+        get effects() {
+
+            if (!this._effects) {
+
+                var slideData = _extra.slideManager.getSlideDataFromId(this.slideName);
+
+                if (slideData.hasEffects) {
+                    this._effects = slideData.effects.getEffectsFor(this.name);
+                } else {
+                    this._effects = [];
+                }
+
+            }
+
+            return this._effects;
         }
     };
 

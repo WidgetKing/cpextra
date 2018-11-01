@@ -16,20 +16,39 @@ _extra.registerModule("SlideEffectsDataProxy", [], function () {
     }
 
     SlideEffectsDataProxy.prototype = {
-
+        get animationList () {
+            return this._animationList;
+        }
     };
 
     SlideEffectsDataProxy.prototype.getEffectsFor = function (slideObjectName) {
 
-        var effects = [];
+        var effects = [],
+            that = this;
 
-        for (var obj in this._animationData) {
-            if (this._animationData.hasOwnProperty(obj)) {
+        function createEffectData(data, effectName) {
 
-                var effectData = this._animationData[obj];
+            for (var listIndex = 0; listIndex < that._animationList.length; listIndex += 1) {
+                var animation = that._animationList[listIndex];
+
+                if (animation[1] === effectName) {
+                    return new _extra.classes.EffectDataProxy(data, effectName, listIndex, that);
+                }
+
+            }
+            return null;
+        }
+
+
+
+        for (var name in this._animationData) {
+            if (this._animationData.hasOwnProperty(name)) {
+
+                var effectData = this._animationData[name];
 
                 if (effectData.a3 === slideObjectName) {
-                    effects.push(new _extra.classes.EffectDataProxy(effectData));
+                    effects.push(createEffectData(effectData, name));
+                    effects.push(new _extra.classes.EffectDataProxy(effectData, name, this._animationData));
                 }
 
             }
