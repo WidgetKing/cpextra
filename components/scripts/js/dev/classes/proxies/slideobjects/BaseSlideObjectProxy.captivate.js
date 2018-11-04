@@ -214,9 +214,20 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
 
         this._internalLockFocus = function () {
             // Only lock focus if everything is already loaded.
+            var $div,
+                that = this;
+
             if (this._currentStateData.isInitialized) {
 
-                _extra.$(this._focusDiv).on('keydown', this._focusHandler).focus();
+                $div = _extra.$(this._focusDiv);
+
+                if ($div.hasOwnProperty("on")) {
+                    $div.on('keydown', this._focusHandler).focus();
+
+                // if using older version of jQuery
+                } else {
+                    $div.bind('keydown', that._focusHandler).focus();
+                }
 
             }
 
@@ -232,7 +243,16 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
         };
 
         this._internalUnlockFocus = function () {
-            _extra.$(this._focusDiv).off('keydown', this._focusHandler);
+            var $div = _extra.$(this._focusDiv);
+            if ($div.hasOwnProperty("off")) {
+
+                $div.off('keydown', this._focusHandler);
+
+            } else {
+
+                $div.unbind('keydown', this._focusHandler);
+
+            }
         };
     };
 
