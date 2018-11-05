@@ -189,6 +189,15 @@
 
     });
 
+    gulp.task("copyEffects", function () {
+
+        return gulp.src("components/scripts/xml/Effects/**")
+            .pipe(greplace("$$VERSION_NUMBER$$",jsonPackage.version))
+            .pipe(greplace("$$BUILD_NUMBER$$",buildNumber))
+            .pipe(gulp.dest("builds/development/Effects"));
+
+    });
+
     gulp.task("compileWidget", ["compileWidgetDescription"], function () {
 
         return gulp.src("builds/development/wdgt_source/**")
@@ -198,9 +207,15 @@
     });
 
     gulp.task("moveFilesToProduction", function () {
+
+        // Effects
+        gulp.src("builds/development/Effects/**")
+            .pipe(gulp.dest("builds/production/Effects"));
+
+        // Widget Zip
         return gulp.src("builds/development/wdgt_source/**")
-                        //.pipe(gzip("CpExtra.wdgt"))
                         .pipe(gulp.dest("builds/production/wdgt_source"));
+
     });
 
     gulp.task("uglifyProductionCode", function () {
@@ -211,7 +226,7 @@
 
     });
 
-    gulp.task("compileWidgetForProduction", ["compileWidgetDescription", "moveFilesToProduction", "uglifyProductionCode"], function () {
+    gulp.task("compileWidgetForProduction", ["compileWidgetDescription", "copyEffects", "moveFilesToProduction", "uglifyProductionCode"], function () {
 
         gulp.src("builds/production/wdgt_source/**")
                         .pipe(gzip("Infosemantics_CpExtra.wdgt"))

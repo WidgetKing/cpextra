@@ -1,0 +1,79 @@
+<!--
+ * Captivate Extra - Effect
+ * Version: $$VERSION_NUMBER$$
+ * Build: $$BUILD_NUMBER$$
+ * Written By: Tristan Ward
+ * Company: Infosemantics
+ * Licence: See licence document provided with CpExtra purchase
+ * Copyright: Tristan Ward 2018
+-->
+
+<Motion duration="60" xmlns="fl.motion.*" xmlns:geom="flash.geom.*" xmlns:filters="flash.filters.*">
+	<source>
+		<Source frameRate="30" x="176.95" y="189.5" scaleX="0.994" scaleY="0.993" rotation="0" elementType="movie clip" symbolName="Text caption">
+			<dimensions>
+				<geom:Rectangle left="-87.95" top="-32" width="175.95" height="64"/>
+			</dimensions>
+			<transformationPoint>
+				<geom:Point x="0.5" y="0.5"/>
+			</transformationPoint>
+		</Source>
+	</source>
+
+	<effect_config>
+
+		<config_item  display_name="Frame Label:">
+			<effect_property type="number" property_value="ALPHA" default_value="1" valid_range="{{1,9999}}"  increment= "1" modifiers= "{offset:100,multiplier:1}">
+			</effect_property>
+		</config_item>
+
+		<config_item display_name="Jump on Effect:">
+			<effect_property type="list" property_value="JUMP_ON" default_value="101">
+				<list_items>
+					<list_item name="Entry" value="101">
+					</list_item>
+					<list_item name="Exit" value="102">
+					</list_item>
+				</list_items>
+			</effect_property>
+		</config_item>
+
+	</effect_config>
+
+    <!--
+
+    This fist keyframe is the one that specifies what KIND of special effect we have created.
+    101 will be associated with the GotoLabel effect.
+    The data on frame 11 is what frame label the CpMate should jump the animation to
+    The data on frame 100 is whether the frame jump should happen at the start of the effect or at the end
+
+    -->
+
+	<Keyframe index="0">
+		<tweens>
+			<SimpleEase ease="0"/>
+		</tweens>
+		<color>
+			<Color alphaMultiplier="101"/>
+		</color>
+	</Keyframe>
+
+    <Keyframe index="1"> <!-- Translates to frame 11 -->
+        <tweens>
+            <SimpleEase ease="0"/>
+        </tweens>
+        <color>
+            <Color alphaMultiplier="ALPHA"/>
+        </color>
+    </Keyframe>
+
+	<Keyframe index="9"> <!-- Translates to frame 100 -->
+		<tweens>
+			<SimpleEase ease="0"/>
+		</tweens>
+        <color>
+            <Color alphaMultiplier="JUMP_ON"/>
+        </color>
+	</Keyframe>
+
+</Motion>
