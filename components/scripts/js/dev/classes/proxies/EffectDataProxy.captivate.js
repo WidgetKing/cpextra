@@ -26,7 +26,24 @@ _extra.registerModule("EffectDataProxy", [], function () {
         get duration() { // In miliseconds
             return this._data.a6;
         },
-        get start() {
+        /*
+         * Note for start millisecond
+         * This is the start millisecond for the SLIDE.
+         * For example:
+         * startMillisecond = 1000;
+         * slideObject.start = 0;
+         * AND
+         * startMillisecond = 1000
+         * slideObject.start = 500;
+         *
+         * In both the above examples the effect will start ONE SECOND into the slide.
+         * That the slide object the effect is attached to starts at a different point
+         * does not influence the timing.
+         *
+         * Other slides in the course will not bump this number.
+         */
+        get startMillisecond() {
+
             var listData = this._slideData.animationList[this._listIndex];
             if (listData[1] === this.name) {
                 return listData[0];
@@ -34,8 +51,93 @@ _extra.registerModule("EffectDataProxy", [], function () {
                 _extra.error("In effect '" + this.name +"' our animation list index has lost sync with the actual animation. Have we added something to the animation list which has changed this effect's index?");
                 return null;
             }
+
+        },
+        get startFrame() {
+            return millisecondToFrameNumber(this.startMillisecond);
+        },
+
+
+        get endMillisecond() {
+            return this.startMillisecond + this.duration;
+        },
+
+        get endFrame() {
+            return millisecondToFrameNumber(this.endMillisecond);
+        },
+
+
+        get animationProperty() {
+
+            if (!this._animationProperty) {
+
+                // Example:
+                // this.name            = "SlideObjectx"
+                // this.slideObjectName = "SlideObject"
+
+                this._animationProperty = this.name.substring(this.slideObjectName.length, this.name.length);
+
+            }
+
+            return this._animationProperty;
+        },
+        get frames() {
+
+            if (!this._frames) {
+                this._frames = createFramesObject(this);
+            }
+
+            return this._frames;
+
         }
     };
+
+    function millisecondToFrameNumber (millisecond) {
+        return _extra.w.Math.floor(millisecond * _extra.captivate.FPS / 1000);
+        // cp.getCpInfoOriginalFPS()
+    }
+
+    function createFramesObject (that) {
+
+        var isPercentageMarker = true,
+            percentageMarker = 0,
+            data = that._data,
+            frames = {};
+
+        if (!data.b6) {
+            return {};
+        }
+
+        for (var i = 0; i < data.b6.length; i += 1) {
+
+            if (isPercentageMarker) {
+                percentageMarker = data.b6[i];
+            } else {
+                frames[percentageMarker] = createIndividualFrameData(percentageMarker, data.b6[i], that);
+            }
+
+            isPercentageMarker = !isPercentageMarker;
+
+        }
+
+        return frames;
+
+    }
+
+    function createIndividualFrameData (percent, value, that) {
+
+        percent = percent / 100;
+
+        var millisecond = _extra.w.Math.floor(that.startMillisecond + (that.duration * percent)),
+            frame = millisecondToFrameNumber(millisecond);
+
+        return {
+            "value":value,
+            "percentage":percent,
+            "millisecond": millisecond,
+            "frame":frame
+        };
+    }
 
 
     _extra.registerClass("EffectDataProxy", EffectDataProxy, _extra.CAPTIVATE);

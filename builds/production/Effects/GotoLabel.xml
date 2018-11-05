@@ -1,15 +1,16 @@
-<!--
- * Captivate Extra - Effect
- * Version: 1.4.1
- * Build: 9987
- * Written By: Tristan Ward
- * Company: Infosemantics
- * Licence: See licence document provided with CpExtra purchase
- * Copyright: Tristan Ward 2018
--->
-
 <Motion duration="60" xmlns="fl.motion.*" xmlns:geom="flash.geom.*" xmlns:filters="flash.filters.*">
-	<source>
+
+    <!--
+     * Captivate Extra - Effect
+     * Version: 1.4.1
+     * Build: 9987
+     * Written By: Tristan Ward
+     * Company: Infosemantics
+     * Licence: See licence document provided with CpExtra purchase
+     * Copyright: Tristan Ward 2018
+    -->
+
+    <source>
 		<Source frameRate="30" x="176.95" y="189.5" scaleX="0.994" scaleY="0.993" rotation="0" elementType="movie clip" symbolName="Text caption">
 			<dimensions>
 				<geom:Rectangle left="-87.95" top="-32" width="175.95" height="64"/>

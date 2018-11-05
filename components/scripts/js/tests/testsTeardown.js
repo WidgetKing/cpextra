@@ -53,7 +53,7 @@
     callModules(["Callback","BaseSlideObjectDataProxy","TextEntryBoxDataProxy","SlideDataProxy","BaseSlideObjectProxy",
     "SlideObjectStateManager", "StateDataProxy", "ModelListener", "Model", "EventMediator", "DoubleClickHandler",
     "EventDispatcher", "CustomEvent", "PlaybarProxy", "InterruptedClickEventHandler", "VariableEventManager",
-    "VariableEventProxy", "SlideObjectEnterExitEventManager", "SlideObjectQuestionDataProxy", "AlertProxy"]);
+    "VariableEventProxy", "SlideObjectEnterExitEventManager", "SlideObjectQuestionDataProxy", "AlertProxy", "EffectDataProxy"]);
 
     delete window._extra;
 }());
