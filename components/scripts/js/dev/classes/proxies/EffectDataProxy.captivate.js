@@ -77,6 +77,13 @@ _extra.registerModule("EffectDataProxy", [], function () {
 
                 this._animationProperty = this.name.substring(this.slideObjectName.length, this.name.length);
 
+                // At this point it's still possible there will be a suffix like: "x_1"
+                var underscoreIndex = this._animationProperty.indexOf("_");
+
+                if (underscoreIndex > 0) {
+                    this._animationProperty = this._animationProperty.substring(0, underscoreIndex);
+                }
+
             }
 
             return this._animationProperty;
@@ -102,7 +109,7 @@ _extra.registerModule("EffectDataProxy", [], function () {
         var isPercentageMarker = true,
             percentageMarker = 0,
             data = that._data,
-            frames = {};
+            frames = [];
 
         if (!data.b6) {
             return {};
@@ -113,7 +120,7 @@ _extra.registerModule("EffectDataProxy", [], function () {
             if (isPercentageMarker) {
                 percentageMarker = data.b6[i];
             } else {
-                frames[percentageMarker] = createIndividualFrameData(percentageMarker, data.b6[i], that);
+                frames.push(createIndividualFrameData(percentageMarker, data.b6[i], that));
             }
 
             isPercentageMarker = !isPercentageMarker;

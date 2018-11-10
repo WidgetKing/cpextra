@@ -48,7 +48,6 @@ _extra.registerModule("SlideEffectsDataProxy", [], function () {
 
                 if (effectData.a3 === slideObjectName) {
                     effects.push(createEffectData(effectData, name));
-                    effects.push(new _extra.classes.EffectDataProxy(effectData, name, this._animationData));
                 }
 
             }

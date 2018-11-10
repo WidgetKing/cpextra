@@ -70,12 +70,21 @@ describe("A test suite for classes/proxies.EffectDataProxy", function () {
 
     it("should identify the animation property", function () {
 
+        // ---- Test 1
+
         effect = createBasicEffect({
             "a3":"slideObject"
         }, "slideObjectalphaMultiplier");
 
         expect(effect.animationProperty).toBe("alphaMultiplier");
 
+        // ---- Test 2 (With suffix "_1")
+
+        effect = createBasicEffect({
+            "a3":"slideObject"
+        }, "slideObjectalphaMultiplier_1");
+
+        expect(effect.animationProperty).toBe("alphaMultiplier");
     });
 
     it("should get the start millisecond and frame", function () {
@@ -135,9 +144,28 @@ describe("A test suite for classes/proxies.EffectDataProxy", function () {
             ]
         }, "effectName", 0);
 
-        expect(effect.frames["0"].value).toBe(101);
-        expect(effect.frames["11"].value).toBe(1099);
-        expect(effect.frames["100"].value).toBe(102);
+        expect(effect.frames).toEqual(jasmine.objectContaining(
+            [
+                {
+                    "value":101,
+                    "percentage":0,
+                    "millisecond":NaN,
+                    "frame":NaN
+                },
+                {
+                    "value":1099,
+                    "percentage":0.11,
+                    "millisecond":NaN,
+                    "frame":NaN
+                },
+                {
+                    "value":102,
+                    "percentage":1,
+                    "millisecond":NaN,
+                    "frame":NaN
+                }
+            ]
+        ));
 
     });
 
@@ -161,9 +189,10 @@ describe("A test suite for classes/proxies.EffectDataProxy", function () {
             ]
         }, "effectName", 0);
 
-        expect(effect.frames["0"].frame).toBe(30);
-        expect(effect.frames["50"].frame).toBe(45);
-        expect(effect.frames["100"].frame).toBe(60);
+        expect(effect.frames[0].frame).toBe(30);
+        expect(effect.frames[1].frame).toBe(45);
+        expect(effect.frames[2].frame).toBe(60);
+
 
     });
 

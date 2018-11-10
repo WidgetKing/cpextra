@@ -5,42 +5,31 @@
  * Time: 7:17 PM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("animationManager", [], function () {
+_extra.registerModule("animationManager", ["slideObjectManager_global", "globalSlideObjectTypes"], function () {
 
     "use strict";
 
-    _extra.animationManager = {
+    function init () {
+        createAnimationManagerObject();
+        _extra.slideObjects.enteredSlideChildObjectsCallbacks
+              .addCallback(_extra.dataTypes.slideObjects.WEB_OBJECT, respondToNewAnimation);
+    }
 
-        // called by the xcmndMatchEntryToEffect command variable
-        "matchEntryToEffect": function (target, source, indexOfEffect) {
-
-            function entryPoint () {
-
-                var effectData = getEffectData();
-                if (!effectData) {
-                    // Add error here
-                    return;
-                }
+    function createAnimationManagerObject () {
+        _extra.animationManager = {
 
 
-            }
+        };
+    }
 
-            function getEffectData () {
-                var sourceData = _extra.dataManager.getSlideObjectDataByName(source),
-                    sourceSlideData = _extra.slideManager.getSlideDataFromId(sourceData.slideName);
+    function respondToNewAnimation (animation) {
 
-                if (!sourceSlideData.hasEffects) {
-                    return false;
-                }
+        _extra.animationManager.cpMate.parseAnimation(animation);
 
+    }
 
-                _extra.log(sourceSlideData.effects.getEffectsFor(source));
-            }
+    init();
 
-            entryPoint();
-        }
-
-    };
 
 
     /*

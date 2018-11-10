@@ -26,9 +26,10 @@ _extra.registerModule("globalSlideObjectTypes",function () {
             "MOUSE_CLICK":      13,
             "CLICK_BOX":        14,
             "REVIEW_AREA":      15
+        },
+        "effects":{
+            "ALPHA":"alphaMultiplier"
         }
     };
-    /*_extra.slideObjectsTypes = {
 
-    };*/
 });
