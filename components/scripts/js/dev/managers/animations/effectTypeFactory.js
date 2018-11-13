@@ -5,7 +5,7 @@
  * Time: 11:11 AM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("effectTypeRegister", ["animationManager"], function () {
+_extra.registerModule("effectTypeFactory", ["animationManager"], function () {
 
     "use strict";
 
@@ -146,8 +146,6 @@ _extra.registerModule("effectTypeRegister", ["animationManager"], function () {
 
                 formatInstance(instance);
 
-                _extra.animationManager.registerWithEffectTimeKeeper(instance);
-
                 return instance;
 
             }
@@ -164,8 +162,21 @@ _extra.registerModule("effectTypeRegister", ["animationManager"], function () {
             }
 
             function formatInstance (instance) {
-                instance.startFrame = data.effect.frames[data.startFrame].frame;
-                instance.endFrame = data.effect.frames[data.endFrame].frame;
+
+                instance.startFrame = data.effect.frames[data.startIndex].frame;
+                instance.endFrame = data.effect.frames[data.endIndex].frame;
+                instance.slideNumber = data.effect.slideNumber;
+                instance.slideObjectName = data.effect.slideObjectName;
+                instance.isSlideBased = true;
+
+                if (!instance.enter) {
+                    _extra.error("Effect manager has not defined a 'enter' method as expected");
+                }
+
+                if (!instance.exit) {
+                    _extra.error("Effect manager has not defined a 'exit' method as expected");
+                }
+
             }
 
 

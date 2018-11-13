@@ -5,21 +5,81 @@
  * Time: 9:28 AM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("cpMateAnimationManager", ["animationManager", "generalDataManager"], function () {
+_extra.registerModule("animationParser", ["animationManager", "generalDataManager"], function () {
 
     "use strict";
 
     // This is a marker used to tell us when we have got to the end of a parameter's properties
     // Sure, it doesn't look great, but you work with what you've got when all you can store is numbers.
-    var NINE_NINES = 999999999;
+    var END_SIGNAL = 999999;
 
     function init () {
-        defineCpMateAnimationManagerObject();
-    }
 
-    function defineCpMateAnimationManagerObject () {
+        _extra.animationManager.END_SIGNAL = END_SIGNAL;
 
+        _extra.animationManager.getValidEffect =  function (animationName) {
+
+            var data;
+
+            function init () {
+
+                data = _extra.dataManager.getSlideObjectDataByName(animationName);
+
+                if (!data.effects || data.effects.length === 0) {
+                    return null;
+                }
+
+                for (var i = 0; i < data.effects.length; i += 1) {
+
+                    if (isValidEffect(data.effects[i])) {
+                        return data.effects[i];
+                    }
+
+                }
+
+                return null;
+
+            }
+
+            function isValidEffect (effect) {
+
+                if (effect.animationProperty !== _extra.dataTypes.effects.ALPHA) {
+                    return false;
+                }
+
+                for (var i = 0; i < effect.frames.length; i += 1) {
+
+                    if (effect.frames[i].value > 100) {
+                        return true;
+                    }
+
+                }
+
+                return null;
+
+            }
+
+
+            return init();
+
+        };
+
+
+
+        _extra.animationManager.parseAnimation = function (name) {
+
+            var index = 0;
+
+            while (index !== null) {
+                // parseEffectFrom will either return nothing
+                // OR it will return the last index
+                index = parseEffectFrom(name, index);
+            }
+        };
+/*
         _extra.animationManager.cpMate = {
+
+            "END_SIGNAL": END_SIGNAL,
 
             "getCpMateEffect": function (animationName) {
 
@@ -81,7 +141,7 @@ _extra.registerModule("cpMateAnimationManager", ["animationManager", "generalDat
                 }
             }
 
-        };
+        };*/
 
     }
 
@@ -92,7 +152,7 @@ _extra.registerModule("cpMateAnimationManager", ["animationManager", "generalDat
 
         function init () {
 
-            effect = _extra.animationManager.cpMate.getCpMateEffect(name);
+            effect = _extra.animationManager.getValidEffect(name);
 
             if (!effect) {
                 return null;
@@ -110,7 +170,11 @@ _extra.registerModule("cpMateAnimationManager", ["animationManager", "generalDat
                 return null;
             }
 
-            _extra.animationManager.effectTypes.createEffectManager(name, data);
+            // Create and register with timekeeper so we can notify the effect manager
+            // of when it has entered and exited the timeline
+            var instance = _extra.animationManager.effectTypes.createEffectManager(name, data);
+            _extra.animationManager.registerEffectWithTimeKeeper(instance);
+
             return data.endIndex + 1;
         }
 
@@ -160,7 +224,7 @@ _extra.registerModule("cpMateAnimationManager", ["animationManager", "generalDat
 
                 value = effect.frames[i].value;
 
-                if (value === NINE_NINES) {
+                if (value === END_SIGNAL) {
                     _extra.error("EE001");
                     return;
                 } else {
@@ -170,10 +234,10 @@ _extra.registerModule("cpMateAnimationManager", ["animationManager", "generalDat
             }
 
             // frame[i] should now be the index AFTER the final parameter
-            // We expect this to be 999999999 to confirm the end of the effect
+            // We expect this to be the same value as END_SIGNAL to confirm the end of the effect
             // If it is not, then the effect has been set up incorrectly
             // Or another alpha effect is overlapping this one on the timeline.
-            if (effect.frames[i].value !== NINE_NINES) {
+            if (!effect.frames[i] || effect.frames[i].value !== END_SIGNAL) {
                 // Invalidate
                 _extra.error("EE001");
                 return;

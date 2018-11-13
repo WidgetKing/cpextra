@@ -82,7 +82,7 @@
             <SimpleEase ease="0"/>
         </tweens>
         <color>
-            <Color alphaMultiplier="999999999"/> <!-- Nine nines signal the end of the effect data -->
+            <Color alphaMultiplier="999999"/> <!-- Nine nines signal the end of the effect data -->
         </color>
     </Keyframe>
 

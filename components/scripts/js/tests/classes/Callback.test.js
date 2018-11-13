@@ -148,4 +148,42 @@ describe("A suite for testing the callback class", function() {
         expect(forEachSpy.calls.argsFor(1)).toEqual(["foobar", spy1]);
 
     });
+
+    it("should use addCallbackToFront() to put our callback at the start of the cue", function () {
+
+        var spy1 = jasmine.createSpy("spy1").and.callFake(function () {
+                callOrder.push("spy1");
+            }),
+            spy2 = jasmine.createSpy("spy2").and.callFake(function () {
+                callOrder.push("spy2");
+            }),
+            callOrder = [];
+
+        cb.addCallback("foobar", spy1);
+        cb.addCallbackToFront("foobar", spy2);
+        cb.sendToCallback("foobar", "*");
+
+        expect(callOrder).toEqual(["spy2", "spy1"]);
+
+
+    });
+
+    it("should use removeIndex() to stop all callbacks in a certain index", function () {
+
+        var spy1 = jasmine.createSpy("spy1"),
+            spy2 = jasmine.createSpy("spy2");
+
+        cb.addCallback("index", spy1);
+        cb.addCallback("index", spy2);
+
+        cb.removeIndex("index");
+
+        cb.sendToCallback("index", "foobar");
+
+        expect(spy1).not.toHaveBeenCalled();
+        expect(spy2).not.toHaveBeenCalled();
+
+        expect(cb.hasCallbackFor("index")).toBe(false);
+
+    });
 });

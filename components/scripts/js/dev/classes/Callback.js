@@ -14,23 +14,35 @@ _extra.registerModule("Callback", function () {
 
         this.data = {};
 
-        this.addCallback = function (index, callback, overwritable) {
+        function validateDataIndex (index, that) {
+            if (!that.data[index]) {
 
-            // If this is the first callback we're adding.
-            if (!this.data[index]) {
-
-                this.data[index] = {
+                that.data[index] = {
                     "overwritable": null,
                     "regular": []
                 };
 
             }
 
+        }
+
+        this.addCallback = function (index, callback, overwritable) {
+
+            // If this is the first callback we're adding.
+            validateDataIndex(index, this);
+
             if (overwritable) {
                 this.data[index].overwritable = callback;
             } else {
                 this.data[index].regular.push(callback);
             }
+        };
+
+        this.addCallbackToFront = function (index, callback) {
+            // If this is the first callback we're adding.
+            validateDataIndex(index, this);
+
+            this.data[index].regular.unshift(callback);
         };
 
         this.hasCallbackFor = function (index) {
@@ -120,6 +132,10 @@ _extra.registerModule("Callback", function () {
 
                 }
             }
+        };
+
+        this.removeIndex = function(index) {
+            delete this.data[index];
         };
 
         this.clear = function () {

@@ -84,6 +84,10 @@ _extra.registerModule("EventDispatcher", function () {
 
         };
 
+        this.hasListenerFor = function (event) {
+            return listeners.hasOwnProperty(event) && listeners[event].length > 0;
+        };
+
         this.dispatchEvent = function (event) {
 
             var eventListeners = listeners[event.type];

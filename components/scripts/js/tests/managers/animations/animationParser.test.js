@@ -5,15 +5,15 @@
  * Time: 9:32 AM
  * To change this template use File | Settings | File Templates.
  */
-describe("A test suite for _extra.animationManager.cpMate", function () {
+describe("A test suite for _extra.animationManager animation parser", function () {
 
     "use strict";
 
-    var module = unitTests.getModule("cpMateAnimationManager"),
+    var module = unitTests.getModule("animationParser"),
         dataTypes = unitTests.getModule("globalSlideObjectTypes"),
         slideObjectData,
         effectTypes,
-        NINE_NINES = 999999999;
+        END_SIGNAL;
 
     function createEffect (name, frames) {
         slideObjectData[name] = {
@@ -41,42 +41,31 @@ describe("A test suite for _extra.animationManager.cpMate", function () {
                     "getEffectType": function (type) {
                         return effectTypes[type];
                     }
-                }
+                },
+                "registerEffectWithTimeKeeper":jasmine.createSpy()
             },
             "dataManager":{
                 "getSlideObjectDataByName": function (name) {
                     return slideObjectData[name];
                 }
             },
-            "error": jasmine.createSpy("_extra.error")
+            "error": jasmine.createSpy("_extra.error"),
+            "log": function () {
+
+            }
         };
 
         dataTypes();
         module();
+
+        END_SIGNAL = _extra.animationManager.END_SIGNAL;
     });
 
     afterEach(function () {
         delete window._extra;
     });
 
-    it("should define _extra.animationManager.cpMate", function () {
-        expect(_extra.animationManager.cpMate).toBeDefined();
-    });
-
-    it("should use getCpMateEffects to accurately detect whether object contains effect", function () {
-
-        /*
-
-         "0":{
-         "value":101
-         },
-         "1":{
-         "value":888
-         },
-         "100":{
-         "value":NINE_NINES
-         }
-         */
+    it("should use getValidEffect to accurately detect whether object contains effect", function () {
 
         // ---- Test 1
         slideObjectData.isNotAlpha = {
@@ -94,14 +83,14 @@ describe("A test suite for _extra.animationManager.cpMate", function () {
                         },
                         {
                             "percentage":100,
-                            "value":NINE_NINES
+                            "value":END_SIGNAL
                         }
                     ]
                 }
             ]
         };
 
-        expect(_extra.animationManager.cpMate.getCpMateEffect("isNotAlpha")).toBe(null);
+        expect(_extra.animationManager.getValidEffect("isNotAlpha")).toBe(null);
 
         // ---- Test 2
         slideObjectData.isAlphaButNotValid = {
@@ -122,7 +111,7 @@ describe("A test suite for _extra.animationManager.cpMate", function () {
             ]
         };
 
-        expect(_extra.animationManager.cpMate.getCpMateEffect("isAlphaButNotValid")).toBe(null);
+        expect(_extra.animationManager.getValidEffect("isAlphaButNotValid")).toBe(null);
 
         // ---- Test 3
 
@@ -141,13 +130,13 @@ describe("A test suite for _extra.animationManager.cpMate", function () {
                         },
                         {
                             "percentage":100,
-                            "value":NINE_NINES
+                            "value":END_SIGNAL
                         }
                     ]
                 }
             ]
         };
-        expect(_extra.animationManager.cpMate.getCpMateEffect("valid")).toBe(slideObjectData.valid.effects[0]);
+        expect(_extra.animationManager.getValidEffect("valid")).toBe(slideObjectData.valid.effects[0]);
 
     });
 
@@ -168,11 +157,11 @@ describe("A test suite for _extra.animationManager.cpMate", function () {
                 "value":888
             },
             {
-                "value":NINE_NINES
+                "value":END_SIGNAL
             }
         ]);
 
-        _extra.animationManager.cpMate.parseAnimation("type101");
+        _extra.animationManager.parseAnimation("type101");
 
         expect(_extra.animationManager.effectTypes.createEffectManager)
               .toHaveBeenCalledWith("type101", jasmine.objectContaining({
@@ -201,17 +190,19 @@ describe("A test suite for _extra.animationManager.cpMate", function () {
                 "value":333
             },
             {
-                "value":NINE_NINES
+                "value":END_SIGNAL
             }
         ]);
 
-        _extra.animationManager.cpMate.parseAnimation("type111");
+        _extra.animationManager.parseAnimation("type111");
 
         expect(_extra.animationManager.effectTypes.createEffectManager)
               .toHaveBeenCalledWith("type111", jasmine.objectContaining({
                 "type":111,
                 "parameters": [222, 333]
             }));
+
+        expect(_extra.animationManager.registerEffectWithTimeKeeper).toHaveBeenCalled();
 
     });
 
@@ -238,11 +229,11 @@ describe("A test suite for _extra.animationManager.cpMate", function () {
                 "value":333
             },
             {
-                "value":NINE_NINES
+                "value":END_SIGNAL
             }
         ]);
 
-        _extra.animationManager.cpMate.parseAnimation("type111");
+        _extra.animationManager.parseAnimation("type111");
 
         expect(_extra.error).toHaveBeenCalledWith("EE001");
         expect(_extra.animationManager.effectTypes.createEffectManager).not.toHaveBeenCalled();
@@ -258,14 +249,14 @@ describe("A test suite for _extra.animationManager.cpMate", function () {
             // Number of parameters is correct
             // but we should never see nine nines before the end of the effect.
             {
-                "value":NINE_NINES
+                "value":END_SIGNAL
             },
             {
-                "value":NINE_NINES
+                "value":END_SIGNAL
             }
         ]);
 
-        _extra.animationManager.cpMate.parseAnimation("type111");
+        _extra.animationManager.parseAnimation("type111");
 
         expect(_extra.error).toHaveBeenCalledWith("EE001");
         expect(_extra.animationManager.effectTypes.createEffectManager).not.toHaveBeenCalled();
@@ -302,7 +293,7 @@ describe("A test suite for _extra.animationManager.cpMate", function () {
             },
             // End
             {
-                "value":NINE_NINES
+                "value":END_SIGNAL
             },
             // Captivate Alpha effect
             {
@@ -321,7 +312,7 @@ describe("A test suite for _extra.animationManager.cpMate", function () {
             },
             // End
             {
-                "value":NINE_NINES
+                "value":END_SIGNAL
             },
             // Captivate Alpha effect
             {
@@ -329,7 +320,7 @@ describe("A test suite for _extra.animationManager.cpMate", function () {
             }
         ]);
 
-        _extra.animationManager.cpMate.parseAnimation("types101and102");
+        _extra.animationManager.parseAnimation("types101and102");
 
         expect(_extra.error).not.toHaveBeenCalled();
         expect(_extra.animationManager.effectTypes.createEffectManager.calls.count()).toBe(2);

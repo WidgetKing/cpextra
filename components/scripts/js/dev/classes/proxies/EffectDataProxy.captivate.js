@@ -23,6 +23,9 @@ _extra.registerModule("EffectDataProxy", [], function () {
         get slideObjectName(){
             return this._data.a3;
         },
+        get slideNumber() {
+            return _extra.dataManager.getSlideObjectDataByName(this.slideObjectName).slideNumber;
+        },
         get duration() { // In miliseconds
             return this._data.a6;
         },

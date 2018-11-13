@@ -17,6 +17,14 @@ describe("A test suite for _extra.animationManager", function () {
             "classes":unitTests.classes,
             "slideObjects":{
                 "enteredSlideChildObjectsCallbacks": new unitTests.classes.Callback()
+            },
+            "timekeeper":{
+                "addWatch":jasmine.createSpy(),
+                "removeWatch":jasmine.createSpy()
+            },
+            "slideManager":{
+                "currentSlideNumber":0,
+                "enterSlideCallback": new unitTests.classes.Callback()
             }
         };
 
@@ -34,16 +42,30 @@ describe("A test suite for _extra.animationManager", function () {
         expect(_extra.animationManager).toBeDefined();
     });
 
-    it("should send animation on to _extra.animationManager.parseCpMateEffects if valid", function () {
+    it("should send animation on to _extra.animationManager.parseAnimation", function () {
 
-        _extra.animationManager.cpMate = {
-            "parseAnimation": jasmine.createSpy()
-        };
+        _extra.animationManager.parseAnimation = jasmine.createSpy();
 
         _extra.slideObjects.enteredSlideChildObjectsCallbacks
               .sendToCallback(_extra.dataTypes.slideObjects.WEB_OBJECT, "foobar");
 
-        expect(_extra.animationManager.cpMate.parseAnimation).toHaveBeenCalledWith("foobar");
+        expect(_extra.animationManager.parseAnimation).toHaveBeenCalledWith("foobar");
+
+    });
+
+    it("should unload watchers when moving to another slide", function () {
+
+        // ---- Part 1 (add watch)
+        var effectManager = {};
+        _extra.slideManager.currentSlideNumber = 1;
+        _extra.animationManager.registerEffectWithTimeKeeper(effectManager);
+        expect(_extra.timekeeper.addWatch).toHaveBeenCalledWith(effectManager);
+
+        // ---- Part 2 (remove watch when entering new slide)
+        _extra.slideManager.currentSlideNumber = 2;
+        _extra.slideManager.enterSlideCallback.sendToCallback("*", "0.2");
+
+        expect(_extra.timekeeper.removeWatch).toHaveBeenCalledWith(effectManager);
 
     });
 });

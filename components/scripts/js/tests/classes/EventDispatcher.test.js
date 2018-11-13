@@ -77,4 +77,14 @@ describe("A test suite for the EventDispatcher class", function () {
         expect(h2).not.toHaveBeenCalled();
 
     });
+
+    it("should allow us to detect if there are any events listening for a particular type", function () {
+
+        this.eventDispatcher.addEventListener("event", this.h);
+        expect(this.eventDispatcher.hasListenerFor("event")).toBe(true);
+
+        this.eventDispatcher.removeEventListener("event", this.h);
+        expect(this.eventDispatcher.hasListenerFor("event")).toBe(false);
+
+    });
 });

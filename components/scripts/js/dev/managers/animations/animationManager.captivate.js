@@ -9,73 +9,68 @@ _extra.registerModule("animationManager", ["slideObjectManager_global", "globalS
 
     "use strict";
 
+    var effectManagers = [],
+        currentSlide;
+
     function init () {
         createAnimationManagerObject();
+
+        // Listen for new slide
+        // Our reason for doing this is so that we can unload an effect managers.
+        _extra.slideManager.enterSlideCallback.addCallbackToFront("*", onEnterSlide);
+        // Listen for web objects on new slide
         _extra.slideObjects.enteredSlideChildObjectsCallbacks
-              .addCallback(_extra.dataTypes.slideObjects.WEB_OBJECT, respondToNewAnimation);
+              .addCallback(_extra.dataTypes.slideObjects.WEB_OBJECT, function (animation) {
+
+                _extra.animationManager.parseAnimation(animation);
+
+            });
     }
 
     function createAnimationManagerObject () {
         _extra.animationManager = {
 
+            "registerEffectWithTimeKeeper":function (effectManager) {
+
+                _extra.timekeeper.addWatch(effectManager);
+                // Add to list of effect managers so that we can remove the watcher
+                // when we move to a new slide.
+                effectManagers.push(effectManager);
+
+            }
 
         };
     }
 
-    function respondToNewAnimation (animation) {
 
-        _extra.animationManager.cpMate.parseAnimation(animation);
 
+    ///////////////////////////////////////////////////////////////////////
+    /////////////// For manager unloading
+    ///////////////////////////////////////////////////////////////////////
+
+    function onEnterSlide () {
+        if (currentSlide !== _extra.slideManager.currentSlideNumber) {
+            unloadManagers();
+            currentSlide = _extra.slideManager.currentSlideNumber;
+        }
     }
+
+    function unloadManagers () {
+
+        for (var i = 0; i < effectManagers.length; i += 1) {
+
+            _extra.timekeeper.removeWatch(effectManagers[i]);
+
+        }
+
+        effectManagers = [];
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////
+    /////////////// Start entry point
+    ///////////////////////////////////////////////////////////////////////
 
     init();
 
-
-
-    /*
-     cp.D.Slide5317.g4
-
-     var animationMenu = cp.D.Slide5317.g4.a2;
-     var animationList = cp.D.Slide5317.g4.a1;
-
-     function copyAnimation (sourceAnimationName, newAnimationName, suffix) {
-
-     var animationData = animationMenu[sourceAnimationName];
-
-     if (!animationData) {
-
-     _extra.log("Failed to locate animation named: " + sourceAnimationName);
-     return;
-
-     }
-
-     var newAnimationData = $.extend(true, {}, animationData);
-
-     newAnimationData.a3 = newAnimationName;
-
-     var animationID = newAnimationName + suffix;
-
-     animationMenu[animationID] = newAnimationData;
-
-     animationList.push([
-     33,
-     animationID
-     ]);
-
-     var objectData =
-     cp.D[newAnimationName + "c"];
-
-     objectData.JSONEffectData = true;
-
-
-     }
-
-     copyAnimation ("Shape_1x", "Shape_2", "x");
-     copyAnimation ("Shape_1y", "Shape_2", "y");
-
-     copyAnimation("Shape_1x", "Shape_3", "x");
-     copyAnimation("Shape_1y", "Shape_3", "y");
-
-     animationMenu;
-     */
 }, _extra.CAPTIVATE);

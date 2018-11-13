@@ -9,7 +9,8 @@ describe("A test suite for _extra.animationManager.effectTypes", function () {
 
     "use strict";
 
-    var module = unitTests.getModule("effectTypeRegister");
+    var module = unitTests.getModule("effectTypeFactory"),
+        timekeeper = unitTests.getModule("timekeeper");
 
     function createEffectData (data) {
         if (!data.type) {
@@ -34,11 +35,21 @@ describe("A test suite for _extra.animationManager.effectTypes", function () {
                 }
             ];
         }
-        if (!data.startFrame) {
-            data.startFrame = 0;
+        if (!data.startIndex) {
+            data.startIndex = 0;
         }
-        if (!data.endFrame) {
-            data.endFrame = 2;
+        if (!data.endIndex) {
+            data.endIndex = 2;
+        }
+        if (!data.enter) {
+            data.enter = function () {
+
+            };
+        }
+        if (!data.exit) {
+            data.exit = function () {
+
+            };
         }
 
         return data;
@@ -48,13 +59,14 @@ describe("A test suite for _extra.animationManager.effectTypes", function () {
         window._extra = {
             "classes":unitTests.classes,
             "animationManager": {
-                "registerWithEffectTimeKeeper":jasmine.createSpy()
+
             },
             "error": jasmine.createSpy("_extra.error"),
             "w":window
         };
 
         module();
+        timekeeper();
     });
 
     afterEach(function () {
@@ -72,6 +84,14 @@ describe("A test suite for _extra.animationManager.effectTypes", function () {
         var type = {
             "type":101,
             "class": function () {
+
+                this.enter = function () {
+
+                };
+
+                this.exit = function () {
+
+                };
 
             },
             "parameters":[]
@@ -122,6 +142,14 @@ describe("A test suite for _extra.animationManager.effectTypes", function () {
 
         function MyEffectClass() {
             called = true;
+
+            this.enter = function () {
+
+            };
+
+            this.exit = function () {
+
+            };
         }
 
         _extra.animationManager.effectTypes.registerEffectType({
@@ -139,17 +167,12 @@ describe("A test suite for _extra.animationManager.effectTypes", function () {
 
         expect(instance.constructor).toEqual(MyEffectClass);
         expect(called).toBe(true);
-        expect(_extra.animationManager.registerWithEffectTimeKeeper).toHaveBeenCalledWith(instance);
-
-        // ---- Setup
-        _extra.animationManager.registerWithEffectTimeKeeper.calls.reset();
 
         // ---- Test 2 (an error)
         _extra.animationManager.effectTypes.createEffectManager("name", createEffectData({
             "type":102
         }));
         expect(_extra.error).toHaveBeenCalled();
-        expect(_extra.animationManager.registerWithEffectTimeKeeper).not.toHaveBeenCalled();
 
     });
 
@@ -162,6 +185,14 @@ describe("A test suite for _extra.animationManager.effectTypes", function () {
             EffectClass = function (par) {
                 called = true;
                 sentParameter = par;
+
+                this.enter = function () {
+
+                };
+
+                this.exit = function () {
+
+                };
             };
 
         _extra.animationManager.effectTypes.registerEffectType({
@@ -202,6 +233,14 @@ describe("A test suite for _extra.animationManager.effectTypes", function () {
             EffectClass = function (par1, par2) {
                 parameter1 = par1;
                 parameter2 = par2;
+
+                this.enter = function () {
+
+                };
+
+                this.exit = function () {
+
+                };
             };
 
         _extra.animationManager.effectTypes.registerEffectType({
@@ -235,7 +274,7 @@ describe("A test suite for _extra.animationManager.effectTypes", function () {
 
     });
 
-    it("should specify the start and end frames", function () {
+    it("should format the instance to fit the timekeeper interface", function () {
 
         var parameter1;
 
@@ -244,6 +283,14 @@ describe("A test suite for _extra.animationManager.effectTypes", function () {
             "type":101,
             "class": function (par1) {
                 parameter1 = par1;
+
+                this.enter = function () {
+
+                };
+
+                this.exit = function () {
+
+                };
             },
             "parameters":[
                 {
@@ -260,6 +307,8 @@ describe("A test suite for _extra.animationManager.effectTypes", function () {
 
         var instance = _extra.animationManager.effectTypes.createEffectManager("name", createEffectData({
             "effect":{
+                "slideNumber":1,
+                "slideObjectName":"slideObjectName",
                 "frames":[
                     {
                         "frame":30
@@ -272,14 +321,18 @@ describe("A test suite for _extra.animationManager.effectTypes", function () {
                     }
                 ]
             },
-            "startFrame":0,
-            "endFrame":2
+            "startIndex":0,
+            "endIndex":2
         }));
 
         expect(instance.startFrame).toEqual(30);
         expect(instance.endFrame).toEqual(60);
+        expect(instance.slideObjectName).toBe("slideObjectName");
 
         expect(parameter1).toBe("foo");
+
+        expect(_extra.error).not.toHaveBeenCalled();
+        expect(_extra.timekeeper.conformsToInterface(instance)).toBe(true);
 
     });
 

@@ -111,6 +111,15 @@ _extra.registerModule("slideManager_software", ["softwareInterfacesManager", "Ca
             }
 
             return false;
+        },
+        "getSlideNumberById": function (slideID) {
+            for (var i = 0; i < slideIds.length; i += 1) {
+
+                if (slideIds[i] === slideID) {
+                    return i;
+                }
+
+            }
         }
     };
 
