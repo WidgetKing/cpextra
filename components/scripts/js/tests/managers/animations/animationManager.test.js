@@ -25,12 +25,16 @@ describe("A test suite for _extra.animationManager", function () {
             "slideManager":{
                 "currentSlideNumber":0,
                 "enterSlideCallback": new unitTests.classes.Callback()
+            },
+            "cpMate": {
+                "broadcastTo": jasmine.createSpy("cpMate.broadcastTo")
             }
         };
 
         dataTypes();
         module();
 
+        _extra.animationManager.parseAnimation = jasmine.createSpy();
 
     });
 
@@ -43,8 +47,6 @@ describe("A test suite for _extra.animationManager", function () {
     });
 
     it("should send animation on to _extra.animationManager.parseAnimation", function () {
-
-        _extra.animationManager.parseAnimation = jasmine.createSpy();
 
         _extra.slideObjects.enteredSlideChildObjectsCallbacks
               .sendToCallback(_extra.dataTypes.slideObjects.WEB_OBJECT, "foobar");
@@ -66,6 +68,20 @@ describe("A test suite for _extra.animationManager", function () {
         _extra.slideManager.enterSlideCallback.sendToCallback("*", "0.2");
 
         expect(_extra.timekeeper.removeWatch).toHaveBeenCalledWith(effectManager);
+
+    });
+
+    it("should broadcast to cpMate when to unload", function () {
+
+        _extra.slideManager.currentSlideNumber = 1;
+        _extra.slideObjects.enteredSlideChildObjectsCallbacks
+            .sendToCallback(_extra.dataTypes.slideObjects.WEB_OBJECT, "foobar");
+
+
+        _extra.slideManager.currentSlideNumber = 2;
+        _extra.slideManager.enterSlideCallback.sendToCallback("*", "0.2");
+
+        expect(_extra.cpMate.broadcastTo).toHaveBeenCalledWith("foobar", jasmine.anything());
 
     });
 });

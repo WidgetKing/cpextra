@@ -10,6 +10,7 @@ _extra.registerModule("animationManager", ["slideObjectManager_global", "globalS
     "use strict";
 
     var effectManagers = [],
+        webObjects = [],
         currentSlide;
 
     function init () {
@@ -22,6 +23,7 @@ _extra.registerModule("animationManager", ["slideObjectManager_global", "globalS
         _extra.slideObjects.enteredSlideChildObjectsCallbacks
               .addCallback(_extra.dataTypes.slideObjects.WEB_OBJECT, function (animation) {
 
+                webObjects.push(animation);
                 _extra.animationManager.parseAnimation(animation);
 
             });
@@ -50,22 +52,28 @@ _extra.registerModule("animationManager", ["slideObjectManager_global", "globalS
 
     function onEnterSlide () {
         if (currentSlide !== _extra.slideManager.currentSlideNumber) {
-            unloadManagers();
+
+            unload();
+
             currentSlide = _extra.slideManager.currentSlideNumber;
+
         }
     }
 
-    function unloadManagers () {
+    function unload() {
 
-        for (var i = 0; i < effectManagers.length; i += 1) {
+        effectManagers.forEach(function (e) {
+            _extra.timekeeper.removeWatch(e);
+        });
 
-            _extra.timekeeper.removeWatch(effectManagers[i]);
+        webObjects.forEach(function (wo) {
+            _extra.cpMate.broadcastTo(wo, {
+                "action":"unload",
+                "parameters":[]
+            });
+        });
 
-        }
-
-        effectManagers = [];
     }
-
 
     ///////////////////////////////////////////////////////////////////////
     /////////////// Start entry point

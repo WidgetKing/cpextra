@@ -2,8 +2,8 @@
 
     <!--
      * Captivate Extra - Effect
-     * Version: 1.4.1
-     * Build: 9987
+     * Version: 1.5.0
+     * Build: 10436
      * Written By: Tristan Ward
      * Company: Infosemantics
      * Licence: See licence document provided with CpExtra purchase
@@ -59,7 +59,7 @@
 		</color>
 	</Keyframe>
 
-    <Keyframe index="1"> <!-- Translates to frame 11 -->
+    <Keyframe index="1">
         <tweens>
             <SimpleEase ease="0"/>
         </tweens>
@@ -68,7 +68,7 @@
         </color>
     </Keyframe>
 
-	<Keyframe index="9"> <!-- Translates to frame 100 -->
+	<Keyframe index="2">
 		<tweens>
 			<SimpleEase ease="0"/>
 		</tweens>
@@ -76,5 +76,14 @@
             <Color alphaMultiplier="JUMP_ON"/>
         </color>
 	</Keyframe>
+
+    <Keyframe index="10">
+        <tweens>
+            <SimpleEase ease="0"/>
+        </tweens>
+        <color>
+            <Color alphaMultiplier="999999"/> <!-- Nine nines signal the end of the effect data -->
+        </color>
+    </Keyframe>
 
 </Motion>
