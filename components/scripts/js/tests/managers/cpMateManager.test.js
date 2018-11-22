@@ -13,7 +13,14 @@ describe("A test suite for _extra.cpMate", function () {
 
     beforeEach(function () {
         window._extra = {
-            "classes":unitTests.classes
+            "classes":unitTests.classes,
+            "captivate":{
+                "eventDispatcher": new unitTests.classes.EventDispatcher(),
+                "events":{
+                    "MOVIE_RESUME":"movie_resume",
+                    "MOVIE_PAUSE":"movie_pause"
+                }
+            }
         };
 
         module();

@@ -5,7 +5,7 @@
  * Time: 2:12 PM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("cpMateManager", [], function () {
+_extra.registerModule("cpMateManager", ["softwareInterfacesManager"], function () {
 
     "use strict";
 
@@ -22,5 +22,22 @@ _extra.registerModule("cpMateManager", [], function () {
             callback.sendToCallback(slideObjectName, parameters);
         }
     };
+
+    ///////////////////////////////////////////////////////////////////////
+    /////////////// Pause / Resume handling
+    ///////////////////////////////////////////////////////////////////////
+    _extra.captivate.eventDispatcher.addEventListener(_extra.captivate.events.MOVIE_PAUSE, function () {
+        _extra.cpMate.broadcastTo("*", {
+            "action":"moviePause",
+            "parameters":[]
+        });
+    });
+
+    _extra.captivate.eventDispatcher.addEventListener(_extra.captivate.events.MOVIE_RESUME, function () {
+        _extra.cpMate.broadcastTo("*", {
+            "action":"movieResume",
+            "parameters":[]
+        });
+    });
 
 });
