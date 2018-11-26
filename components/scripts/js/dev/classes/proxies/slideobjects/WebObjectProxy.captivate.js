@@ -11,10 +11,12 @@ _extra.registerModule("WebObjectProxy", ["BaseSlideObjectProxy"], function () {
 
     function WebObjectProxy(element, data) {
 
+        // Call super constructor
+        _extra.classes.BaseSlideObjectProxy.call(this, element, data);
 
         if (_extra.captivate.useWidget7) {
 
-            this.element = _extra.w.document.getElementById("re-linkageNamec");
+            this.element = _extra.w.document.getElementById("re-" + this.name + "c");
 
         } else {
 
@@ -22,8 +24,6 @@ _extra.registerModule("WebObjectProxy", ["BaseSlideObjectProxy"], function () {
 
         }
 
-        // Call super constructor
-        _extra.classes.BaseSlideObjectProxy.call(this, element, data);
 
     }
 
@@ -35,6 +35,7 @@ _extra.registerModule("WebObjectProxy", ["BaseSlideObjectProxy"], function () {
         },
         set: function (value) {
 
+            try {
             this._border = value;
 
             if (value) {
@@ -42,6 +43,9 @@ _extra.registerModule("WebObjectProxy", ["BaseSlideObjectProxy"], function () {
                 this.element.style.overflow = "hidden";
             } else {
                 this.element.style.border = "1px";
+            }
+            } catch (e) {
+                console.log(this.element);
             }
 
         }
