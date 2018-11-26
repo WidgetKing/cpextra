@@ -184,6 +184,12 @@ _extra.registerModule("WebObjectProxy", ["BaseSlideObjectProxy"], function () {
 
     WebObjectProxy.prototype.unload = function() {
 
+        // Inform CpMate animations they need to unload
+        _extra.cpMate.broadcastTo(this.name, {
+            "action":"unload",
+            "parameters":[]
+        });
+
         this.iframe = null;
         this.element = null;
 

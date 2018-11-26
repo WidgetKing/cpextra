@@ -68,7 +68,7 @@ _extra.registerModule("animationManager", ["slideObjectManager_global", "globalS
 
         webObjects.forEach(function (wo) {
             _extra.cpMate.broadcastTo(wo, {
-                "action":"unload",
+                "action":"exitslide",
                 "parameters":[]
             });
         });
