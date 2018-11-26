@@ -26,6 +26,9 @@ describe("A test suite for _extra.preferenceManager", function () {
         spyOn(dummyObject,"disable");
 
         window._extra = {
+            "debugging":{
+                "debug": jasmine.createSpy()
+            },
             "variableManager":{
                 "getVariableValue":function (varName) {
                     return variables[varName];
@@ -142,6 +145,24 @@ describe("A test suite for _extra.preferenceManager", function () {
         variables.xprefdisallowed = 2;
         callback();
         expect(dummyObject.update).toHaveBeenCalledWith(2);
+
+    });
+
+    it("should allow you to define a default value", function () {
+
+        delete variables.no_variable;
+
+        var object = {
+            "enable": jasmine.createSpy("object.enable"),
+            "disable": jasmine.createSpy("object.disable"),
+            "default":true
+        };
+
+        var result = _extra.preferenceManager.registerPreferenceModule("no_variable", object);
+
+        expect(result).toBe(false);
+        expect(object.enable).toHaveBeenCalledWith(true);
+        expect(object.disable).not.toHaveBeenCalled();
 
     });
 

@@ -23,6 +23,9 @@ _extra.registerModule("createSlideObjectProxy",["factoryManager"], function () {
             case _extra.dataTypes.slideObjects.CLICK_BOX:
                 return new _extra.classes.ButtonProxy(element, data);
 
+            case _extra.dataTypes.slideObjects.WEB_OBJECT :
+                return new _extra.classes.WebObjectProxy(element, data);
+
 
             default :
                 return new _extra.classes.BaseSlideObjectProxy(element, data);

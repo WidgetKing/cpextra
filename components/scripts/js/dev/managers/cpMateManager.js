@@ -15,8 +15,8 @@ _extra.registerModule("cpMateManager", ["softwareInterfacesManager"], function (
         "register": function (slideObjectName, listener) {
             callback.addCallback(slideObjectName, listener);
         },
-        "deregister": function (slideObjectName) {
-            callback.removeIndex(slideObjectName);
+        "deregister": function (slideObjectName, listener) {
+            callback.removeCallback(slideObjectName, listener);
         },
         "broadcastTo": function (slideObjectName, parameters) {
             callback.sendToCallback(slideObjectName, parameters);
@@ -39,5 +39,6 @@ _extra.registerModule("cpMateManager", ["softwareInterfacesManager"], function (
             "parameters":[]
         });
     });
+
 
 });

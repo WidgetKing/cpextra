@@ -219,6 +219,9 @@
             },
             "animationManager":{
                 "matchEntryToEffect":function () {}
+            },
+            "debugging":{
+                "debug": jasmine.createSpy()
             }
         };
     });

@@ -118,6 +118,9 @@ _extra.registerModule("BaseSlideObjectDataProxy", function () {
         get audioID() {
             return this._data.base.ia;
         },
+        get zIndex() {
+            return this._data.base.zIndex;
+        },
         get stateDatas () {
 
             // If this is the first time we've called this method for this instance.

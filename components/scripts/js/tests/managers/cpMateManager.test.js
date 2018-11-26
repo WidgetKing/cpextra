@@ -61,7 +61,7 @@ describe("A test suite for _extra.cpMate", function () {
         var spy = jasmine.createSpy("spy");
 
         _extra.cpMate.register("Web_1", spy);
-        _extra.cpMate.deregister("Web_1");
+        _extra.cpMate.deregister("Web_1", spy);
         _extra.cpMate.broadcastTo("Web_1", {});
 
         expect(spy).not.toHaveBeenCalled();

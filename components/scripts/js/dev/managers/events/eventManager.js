@@ -97,7 +97,9 @@ _extra.registerModule("eventManager", ["EventMediator", "EventDispatcher", "slid
             "AUDIO_ENDED": "audioended",
             "AUDIOENDED": "audioended",
             "AUDIO_END": "audioended",
-            "AUDIOEND": "audioended"
+            "AUDIOEND": "audioended",
+            "LOADED": "loaded",
+            "ERROR": "error"
         }
     };
 
