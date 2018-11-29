@@ -35,6 +35,8 @@ _extra.registerModule("PlaybarProxy", function () {
 
         this.update = function () {
 
+            console.log("update");
+
             // If we've already loaded everything
             if (_extra.slideManager && _extra.cssManager) {
 
@@ -103,6 +105,12 @@ _extra.registerModule("PlaybarProxy", function () {
             // correctly. We'll update this.
             // Also, every time you resize, Captivate creates a new playbar div. What's up with that?
             _extra.w.addEventListener("resize", getPlaybarElements);
+
+            if (_extra.captivate.playIcon) {
+
+                _extra.captivate.playIcon.addEventListener("click", getPlaybarElements);
+
+            }
 
             getPlaybarElements();
 

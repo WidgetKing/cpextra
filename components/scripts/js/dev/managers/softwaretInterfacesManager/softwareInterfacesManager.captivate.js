@@ -45,6 +45,7 @@ _extra.registerModule("softwareInterfacesManager", function () {
         "allSlideObjectsData":_extra.w.cp.model.data,
         "movie":_extra.w.cp.movie,
         "playbar": new _extra.classes.PlaybarProxy(),
+        "playIcon":_extra.w.document.getElementById("playImage"),
         "variableManager": _extra.w.cp.variablesManager,
         "isResponsive": _extra.w.cp.responsive,
         "projectContainer": _extra.w.cp.projectContainer,
