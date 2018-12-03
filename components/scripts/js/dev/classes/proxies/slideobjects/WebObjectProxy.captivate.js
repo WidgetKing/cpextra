@@ -11,12 +11,11 @@ _extra.registerModule("WebObjectProxy", ["BaseSlideObjectProxy"], function () {
 
     function WebObjectProxy(element, data) {
 
-        // Call super constructor
-        _extra.classes.BaseSlideObjectProxy.call(this, element, data);
-
+        // THIS MUST BE DONE BEFORE CALLING THE SUPER CONSTRUCTOR
+        // Otherwise the border property below will run first without access to this.element
         if (_extra.captivate.useWidget7) {
 
-            this.element = _extra.w.document.getElementById("re-" + this.name + "c");
+            this.element = _extra.w.document.getElementById("re-" + data.name + "c");
 
         } else {
 
@@ -24,6 +23,8 @@ _extra.registerModule("WebObjectProxy", ["BaseSlideObjectProxy"], function () {
 
         }
 
+        // Call super constructor
+        _extra.classes.BaseSlideObjectProxy.call(this, element, data);
 
     }
 
@@ -35,7 +36,6 @@ _extra.registerModule("WebObjectProxy", ["BaseSlideObjectProxy"], function () {
         },
         set: function (value) {
 
-            try {
             this._border = value;
 
             if (value) {
@@ -43,9 +43,6 @@ _extra.registerModule("WebObjectProxy", ["BaseSlideObjectProxy"], function () {
                 this.element.style.overflow = "hidden";
             } else {
                 this.element.style.border = "1px";
-            }
-            } catch (e) {
-                console.log(this.element);
             }
 
         }
