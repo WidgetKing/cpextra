@@ -361,7 +361,7 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
                 if (currentValue) {
 
                     // ENABLE
-                    that._currentStateData.setAttribute("pointer-events", "auto");
+                    that._currentStateData.editCSS("pointer-events", "auto");
                     // We used to accomplish this with adding and removing classes
                     // but for some reason in responsive output when assigning this to
                     // an object set to display for rest of project it caused a crash.
@@ -370,7 +370,7 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
                 } else {
 
                     // DISABLE
-                    that._currentStateData.setAttribute("pointer-events", "none");
+                    that._currentStateData.editCSS("pointer-events", "none");
                     //that._currentStateData.addClass("extra-mouse-disabled");
 
                 }

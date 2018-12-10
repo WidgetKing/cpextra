@@ -37,7 +37,7 @@ _extra.registerModule("xprefRemoveWebObjectOutline", ["slideObjectManager_global
 
         },
 
-        "default":true
+        "default":false
 
     });
 

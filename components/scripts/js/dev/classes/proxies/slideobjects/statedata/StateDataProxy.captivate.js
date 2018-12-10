@@ -20,6 +20,7 @@ _extra.registerModule("StateDataProxy", ["softwareInterfacesManager"], function 
 
         if (data) {
 
+
             this._data = data;
             this.slideObjects = [];
 
