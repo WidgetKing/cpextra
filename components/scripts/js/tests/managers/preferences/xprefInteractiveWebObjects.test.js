@@ -5,11 +5,11 @@
  * Time: 10:13 AM
  * To change this template use File | Settings | File Templates.
  */
-describe("A test suite for preference variable xprefRemoveWebObjectOutline", function () {
+describe("A test suite for preference variable xprefInteractiveWebObjects", function () {
 
     "use strict";
 
-    var module = unitTests.getModule("xprefRemoveWebObjectOutline"),
+    var module = unitTests.getModule("xprefInteractiveWebObjects"),
         xprefRemoveWebObjectOutline,
         slideObjects;
 
@@ -72,7 +72,7 @@ describe("A test suite for preference variable xprefRemoveWebObjectOutline", fun
         }
 
         slideObjects.slideObjectName = {
-            "border":true
+            "interactive":false
         };
 
         xprefRemoveWebObjectOutline.enable();
@@ -80,7 +80,7 @@ describe("A test suite for preference variable xprefRemoveWebObjectOutline", fun
         // ---- Test
         send("slideObjectName");
 
-        expect(slideObjects.slideObjectName.border).toBe(false);
+        expect(slideObjects.slideObjectName.interactive).toBe(true);
 
     });
 });

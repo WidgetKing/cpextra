@@ -5,7 +5,7 @@
  * Time: 9:59 AM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("xprefRemoveWebObjectOutline", ["slideObjectManager_global", "preferenceManager"], function () {
+_extra.registerModule("xprefInteractiveWebObjects", ["slideObjectManager_global", "preferenceManager"], function () {
 
     "use strict";
 
@@ -15,13 +15,13 @@ _extra.registerModule("xprefRemoveWebObjectOutline", ["slideObjectManager_global
 
         if (slideObject) {
 
-            slideObject.border = false;
+            slideObject.interactive = true;
 
         }
 
     }
 
-    _extra.preferenceManager.registerPreferenceModule("RemoveWebObjectOutline", {
+    _extra.preferenceManager.registerPreferenceModule("InteractiveWebObjects", {
 
         "enable": function () {
 
@@ -37,7 +37,7 @@ _extra.registerModule("xprefRemoveWebObjectOutline", ["slideObjectManager_global
 
         },
 
-        "default":false
+        "default":true
 
     });
 

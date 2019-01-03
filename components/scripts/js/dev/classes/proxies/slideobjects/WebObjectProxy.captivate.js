@@ -30,19 +30,23 @@ _extra.registerModule("WebObjectProxy", ["BaseSlideObjectProxy"], function () {
 
     _extra.registerClass("WebObjectProxy", WebObjectProxy, "BaseSlideObjectProxy", _extra.CAPTIVATE);
 
-    _extra.w.Object.defineProperty(WebObjectProxy.prototype, "border", {
+    _extra.w.Object.defineProperty(WebObjectProxy.prototype, "interactive", {
         get: function () {
-            return this._border;
+            return this._interactive;
         },
         set: function (value) {
 
-            this._border = value;
+            this._interactive = value;
+
+            if (!this._currentStateData.primaryObject.upperDIV) {
+                return;
+            }
 
             if (value) {
-                this.element.style.border = "0px";
-                this.element.style.overflow = "hidden";
+                // Allow click events to go through the upper div and into the iframe
+                this._currentStateData.primaryObject.upperDIV.style.pointerEvents = "none";
             } else {
-                this.element.style.border = "1px";
+                this._currentStateData.primaryObject.upperDIV.style.pointerEvents = "auto";
             }
 
         }
@@ -55,11 +59,8 @@ _extra.registerModule("WebObjectProxy", ["BaseSlideObjectProxy"], function () {
 
         this.iframe = _extra.w.document.getElementById("myFrame_" + this.name + "c");
 
-        // Only now will the border style be set in stone, so we need to hide it now.
-        this.border = this.border;
+        this.interactive = this.interactive;
 
-        // Allow click events to go through the upper div and into the iframe
-        this._currentStateData.primaryObject.upperDIV.style.pointerEvents = "none";
 
         this.handleLoadedEvent();
 
