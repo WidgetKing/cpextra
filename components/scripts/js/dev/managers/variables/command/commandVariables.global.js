@@ -200,6 +200,10 @@ _extra.registerModule("commandVariables_global", ["processCommandVariableRegistr
 
         "Show": commandDatas.createBasicSlideObjectData("show", _extra.slideObjects.show),
 
+        "HideNonContentDivs": commandDatas.createBasicSlideObjectData("hide", _extra.slideObjects.hideNonContentDivs),
+
+        "ShowNonContentDivs": commandDatas.createBasicSlideObjectData("show", _extra.slideObjects.showNonContentDivs),
+
         ////////////////////////////////
         ////////// Interaction Enable/Disable
         "Enable": commandDatas.createBasicSlideObjectData("enable", _extra.slideObjects.enable),

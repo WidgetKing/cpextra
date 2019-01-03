@@ -44,6 +44,9 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
         get state() {
             return this._data.currentStateName;
         },
+        get visibility() {
+            return this._visibility;
+        },
 
         get x() {
             return this._currentStateData.x + this._offsetX;
@@ -107,6 +110,7 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
         this._interruptedClickEventHandler = new _extra.classes.InterruptedClickEventHandler(this._eventMediator, this.name);
         this._originalX = this._currentStateData.originalX;
         this._originalY = this._currentStateData.originalY;
+        this._visibility = new _extra.classes.SlideObjectVisibilityManager(this, this._currentStateData);
 
     };
 
@@ -152,6 +156,7 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
 
             // Change the event listeners from the DOM elements of the previous state to the one of this state.
             that._eventMediator.swap(futureStateData);
+            that._visibility.updateStateData(futureStateData);
             that._stateEndManager.setCurrentDispatcher(futureStateData);
             //that._interruptedClickEventHandler.stateHasChanged();
 
@@ -483,6 +488,7 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
         this._eventMediator.swap(null);
         this._stateEndManager.setCurrentDispatcher(null);
         this._modelListener.unload();
+        this._visibility = null;
         this.lockFocus = false;
         this._interruptedClickEventHandler.unload();
         if (this._internalInitializationHandler) {

@@ -58,6 +58,12 @@ _extra.registerModule("slideObjectManager_software", ["generalDataManager", "Cal
         "show":function (slideObjectName) {
             _extra.captivate.api.show(slideObjectName);
         },
+        "hideNonContentDivs":function (slideObjectName) {
+            _extra.slideObjects.getSlideObjectByName(slideObjectName).visibility.nonContentDivs = false;
+        },
+        "showNonContentDivs":function (slideObjectName) {
+            _extra.slideObjects.getSlideObjectByName(slideObjectName).visibility.nonContentDivs = true;
+        },
         "enable":function (slideObjectName) {
             _extra.captivate.api.enable(slideObjectName);
         },
