@@ -5,7 +5,7 @@
  * Time: 3:39 PM
  * To change this template use File | Settings | File Templates.
  */
-fdescribe("A test suite for _extra.utils", function () {
+describe("A test suite for _extra.utils", function () {
 
     "use strict";
 

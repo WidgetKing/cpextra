@@ -18,7 +18,7 @@ _extra.registerModule("SlideObjectStateManager", function () {
 
         this.slideObject = slideObject;
         this.data = data;
-        this.mainDIV = _extra.captivate.projectContainer; // TODO: CHANGE THIS FOR STORYLINE!
+        this.mainDIV = _extra.captivate.projectContainer;
 
 
 
@@ -27,10 +27,24 @@ _extra.registerModule("SlideObjectStateManager", function () {
         ///////////////////////////////////////////////////////////////////////
         /////////////// Util Methods
         ///////////////////////////////////////////////////////////////////////
-        function isManagedState(stateName) {
+
+        /**
+         * Currently there are two ways a state could be a mouse event state.
+         * 1: This state is using CpExtra to display on mouseover or rollover.
+         * 2: This is a Captivate Button which has a RollOver or Down state.
+         * @param stateName
+         * @returns {boolean}
+         */
+        function isMouseEventState(stateName) {
 
             var mouseEventDetails,
                 managedStateName;
+
+            // Captivate's native button 'RollOver' and 'Down' would count as 'managed states'
+            // This allows us to have a variable state along with the native rollover and down states
+            if (stateName === "RollOver" || stateName === "Down") {
+                return true;
+            }
 
             for (var mouseEvent in data) {
                 if (data.hasOwnProperty(mouseEvent)) {
@@ -270,10 +284,11 @@ _extra.registerModule("SlideObjectStateManager", function () {
         ///////////////////////////////////////////////////////////////////////
         this.onStateChangeCallback =  function (details) {
             // If this is not a state that we are automatically switching to...
-            if (!isManagedState(details.stateName)) {
+            if (!isMouseEventState(details.stateName)) {
                 // Then we should switch back to this state as the 'normal' state.
                 previousNormalState = details.stateName;
             }
+
         };
 
         _extra.slideObjects.states.changeCallback.addCallback(slideObject.name, this.onStateChangeCallback);

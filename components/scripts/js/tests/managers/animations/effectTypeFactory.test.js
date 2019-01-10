@@ -274,7 +274,7 @@ describe("A test suite for _extra.animationManager.effectTypes", function () {
 
     });
 
-    it("should format the instance to fit the timekeeper interface", function () {
+    it("should format the instance to fulfill the timekeeper interface", function () {
 
         var parameter1;
 
