@@ -161,6 +161,17 @@ _extra.registerModule("slideManager_global",["slideManager_software"],function()
         return false;
     };
 
+    _extra.slideManager.gotoSlideAndPlay = function (sceneIndex, slideIndex) {
+
+        var result = _extra.slideManager.gotoSlide(sceneIndex, slideIndex);
+
+        // And play
+        _extra.captivate.variables.cpCmndResume = 1;
+
+        return result;
+
+    };
+
     // TODO: Make this work for multiple scenes
     _extra.slideManager.enactFunctionOnSlides = function (query, method) {
 

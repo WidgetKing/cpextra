@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <widgetUpdate>
 
-	<latestVersion versionNumber="1.4.1">
-		<description>A critical update is available</description>
+	<latestVersion versionNumber="1.4.2">
+		<description>A bugfix update is available</description>
         <!--<feature type="major">Headless loading - Install CpExtra directly into Captivate</feature>
         <feature type="major">#syntax - @sytnax for the whole project</feature>
         <feature type="major">xinfoEventTarget - Tells you which slide object dispatched an event</feature>
@@ -10,7 +10,9 @@
         <feature type="major">Use variables with Open URL or File action</feature>
         <feature type="minor">videoended and audioended events</feature>
         <feature type="minor">xprefMultichoiceRolloverColor</feature>-->
-        <feature type="bugfix">Many bugfixes that caused white screens</feature>
+        <feature type="bugfix">Fixed issue where Edge and Internet Explorer would freeze when entering slides with rarely occurring object types (such as knowledge check slides).</feature>
+        <feature type="bugfix">Fixed issue where xprefDisablePlaybarScrubbing would not work in projects where the play icon had to be clicked first.</feature>
+        <feature type="bugfix">Fixed various issues with tab recognition.</feature>
 	</latestVersion>
 	
 	<lastMajorVersion versionNumber="1.4.1">
@@ -22,7 +24,7 @@
         <feature type="major">Use variables with Open URL or File action</feature>
         <feature type="minor">videoended and audioended events</feature>
         <feature type="minor">xprefMultichoiceRolloverColor</feature>-->
-        <feature type="bugfix">Many bugfixes that caused white screens</feature>
+        <feature type="bugfix">Many bugs that caused white screens fixed</feature>
     </lastMajorVersion>
 	
 	<lastCriticalVersion versionNumber="1.4.1">
@@ -34,7 +36,7 @@
         <feature type="major">Use variables with Open URL or File action</feature>
         <feature type="minor">videoended and audioended events</feature>
         <feature type="minor">xprefMultichoiceRolloverColor</feature>-->
-        <feature type="bugfix">Many bugfixes that caused white screens</feature>
+        <feature type="bugfix">Many bugs that caused white screens fixed</feature>
 	</lastCriticalVersion>
 	
 	<updateURL>http://www.infosemantics.com.au/adobe-captivate-widgets/widget-updates</updateURL>

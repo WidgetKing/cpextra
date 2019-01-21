@@ -476,7 +476,6 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
     ///////////////////////////////////////////////////////////////////////
 
     BaseSlideObjectProxy.prototype.changeState = function (stateName) {
-        console.log("Changing state of " + this.name + " to " + stateName);
         _extra.slideObjects.states.change(this.name, stateName);
     };
 

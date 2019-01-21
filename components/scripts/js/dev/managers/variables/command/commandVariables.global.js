@@ -361,6 +361,30 @@ _extra.registerModule("commandVariables_global", ["processCommandVariableRegistr
             }
         },
 
+        "GotoSlide": {
+            "commandName": "gotoSlide",
+            "updateData": updateDataTechniques.parameterToQuery,
+            "parseSet": parseSets.SP.CD.SLR,
+            "parseSetData": {
+                "query":undefined,
+                "output":function (slideNumber) {
+                    _extra.slideManager.gotoSlide(slideNumber - 1);
+                }
+            }
+        },
+
+        "GotoSlideAndPlay": {
+            "commandName": "gotoSlideAndPlay",
+            "updateData": updateDataTechniques.parameterToQuery,
+            "parseSet": parseSets.SP.CD.SLR,
+            "parseSetData": {
+                "query":undefined,
+                "output":function (slideNumber) {
+                    _extra.slideManager.gotoSlideAndPlay(slideNumber - 1);
+                }
+            }
+        },
+
         ////////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////
         //////////////////// ADVANCED COMMAND VARIABLES (over one parameter)
