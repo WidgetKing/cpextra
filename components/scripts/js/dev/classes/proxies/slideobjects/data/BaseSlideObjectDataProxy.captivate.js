@@ -147,6 +147,34 @@ _extra.registerModule("BaseSlideObjectDataProxy", function () {
             }
 
             return this._effects;
+        },
+
+        /**
+         * The text surrounded by html tags allowing it to be styled as it appeared in Captivate.
+         *
+         * Note: This is only available in responsive.
+         * Note: This is only available on Shapes, Captions and Buttons. But I'm too lazy to go make data
+         * classes for all those.
+         *
+         * @returns {string} The text + HTML tags
+         */
+        get htmlText() {
+            return this._data.base.vt;
+        },
+
+        /**
+         * The text that was typed into this object in Captivate's design environment.
+         * This text is unstyled. If you want the HTML tags that give this text the same style they
+         * had in Captivate then use the htmlText property.
+         *
+         * Note: This is only available in responsive.
+         * Note: This is only available on Shapes, Captions and Buttons. But I'm too lazy to go make data
+         * classes for all those.
+         *
+         * @returns {string} The text included in this object.
+         */
+        get text() {
+            return _extra.$(this.htmlText).text();
         }
     };
 
