@@ -65,6 +65,19 @@ _extra.registerModule("WebObjectProxy", ["BaseSlideObjectProxy"], function () {
         this.handleLoadedEvent();
 
 
+        // Listen for document click (emitted from CpMate) Then reflect it to the document
+        // This is mostly to allow the YAK pause menu to still appear when we tap the screen while
+        // an animation is playing
+        var that = this;
+
+        ["click", "touchstart", "touchend"].forEach(function (event) {
+            that.addEventListener(event, function (e) {
+
+                document.dispatchEvent(e);
+
+            });
+        });
+
 
 
 
