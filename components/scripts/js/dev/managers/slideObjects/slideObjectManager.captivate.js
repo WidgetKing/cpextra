@@ -82,7 +82,8 @@ _extra.registerModule("slideObjectManager_software", ["generalDataManager", "Cal
         },
         "removeSuffix":function (name, suffix) {
 
-            if (name.substr(name.length - suffix.length, name.length) === suffix) {
+            if (name &&
+                name.substr(name.length - suffix.length, name.length) === suffix) {
                 name= name.substr(0, name.length - suffix.length);
             }
 

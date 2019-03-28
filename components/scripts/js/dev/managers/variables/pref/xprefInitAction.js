@@ -5,14 +5,31 @@
  * Time: 2:21 PM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("xprefInitAction", ["slideManager_global"], function () {
+_extra.registerModule("xprefInitAction", ["slideManager_global", "preferenceManager"], function () {
 
     "use strict";
 
     // This variable calls an action right at the start of the movie, no matter whether that movie starts
     // on the first slide, or jumps into the middle due to self-paced learning/LMS/whatever
     var VARIABLE_NAME = "xprefInitAction";
+	var hasXPrefInitBeenCalled = false;
 
+	////////////////////////////////////////
+	////// assistant methods
+	function callAllMethodsInArray (array) {
+
+		array.forEach(function (method) {
+
+			method();
+
+		})
+
+	}
+	
+
+	////////////////////////////////////////
+	////// entry point
+	
     function entryPoint () {
 
         _extra.slideManager.enterSlideCallback.removeCallback("*", entryPoint);
@@ -30,8 +47,30 @@ _extra.registerModule("xprefInitAction", ["slideManager_global"], function () {
 
         }
 
+		// Callbacks wanting to execute after
+		// xprefInitAction
+		hasXPrefInitBeenCalled = true;
+		callAllMethodsInArray(callbacks);
+		// Unload
+		callbacks = null;
+		
     }
 
     _extra.slideManager.enterSlideCallback.addCallback("*", entryPoint);
 
+	////////////////////////////////////////
+	////// Call after xprefInit
+	// Used by xprefStartSlide
+	var callbacks = [];
+
+	_extra.preferenceManager.callAfterXprefInitAction = function (method) {
+
+		if (hasXPrefInitBeenCalled) {
+			method();
+		} else {
+			callbacks.push(method);
+		}
+
+	}
+	
 });

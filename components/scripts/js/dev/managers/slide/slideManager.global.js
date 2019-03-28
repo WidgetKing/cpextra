@@ -172,12 +172,19 @@ _extra.registerModule("slideManager_global",["slideManager_software"],function()
 
     };
 
+	_extra.slideManager.querySlides = function (query) {
+
+        if (_extra.isQuery(query)) 
+			return _extra.queryList(query, _extra.slideManager.slideNames[1]);
+
+	}
+
     // TODO: Make this work for multiple scenes
     _extra.slideManager.enactFunctionOnSlides = function (query, method) {
 
         if (_extra.isQuery(query)) {
 
-            var list = _extra.queryList(query, _extra.slideManager.slideNames[1]);
+            var list = _extra.slideManager.querySlides(query)
 
             if (list) {
 

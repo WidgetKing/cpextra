@@ -327,7 +327,6 @@
 
 
     ////////// DEFAULT
-    gulp.task("default",["updateCaptivateTests","updateStorylineTests","moveVersionJSON","compileWidget","connect","watch","test-dev"]);
+    gulp.task("default",["updateCaptivateTests","updateStorylineTests","moveVersionJSON","compileWidget","connect","watch"]);//,"test-dev"]);
 
 }());
-

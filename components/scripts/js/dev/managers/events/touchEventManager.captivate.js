@@ -24,6 +24,7 @@ _extra.registerModule("touchEventManager", ["eventManager","slideObjectManager_g
 
     function onTouchEnd(event) {
 
+try {
         var slideObject = _extra.slideObjects.getSlideObjectByDIV(event.target);
 
         if (slideObject && _extra.slideObjects.states.doesSlideObjectHaveDownState(slideObject.name)) {
@@ -32,7 +33,10 @@ _extra.registerModule("touchEventManager", ["eventManager","slideObjectManager_g
             slideObject.dispatchEvent(_extra.eventManager.events.MOUSE_UP);
 
         }
-
+} catch (err) {
+  _extra.log(event.target);
+  _extra.log("ERROR HERE2!");
+}
 
     }
 
