@@ -19,14 +19,24 @@ _extra.registerModule(
       update: function(query) {
         _extra.preferenceManager.callAfterXprefInitAction(function() {
 
+          try {
           var slideName;
 
           if (_extra.isQuery(query)) {
-            slideName = _extra.slideManager.querySlides(query)[0];
+            
+            var result = _extra.slideManager.querySlides(query);
+
+            if (result) {
+              slideName = result[0];
+            }
+
           } else {
             slideName = query;
           }
 
+    } catch (e) {
+      console.log("Error in xprefInitAction");
+    }
             if (slideName) _extra.slideManager.gotoSlideAndPlay(slideName);
 
         });

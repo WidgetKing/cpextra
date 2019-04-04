@@ -25,11 +25,11 @@ _extra.registerModule("xprefInitAction", ["slideManager_global", "preferenceMana
 		})
 
 	}
-	
+
 
 	////////////////////////////////////////
 	////// entry point
-	
+
     function entryPoint () {
 
         _extra.slideManager.enterSlideCallback.removeCallback("*", entryPoint);
@@ -47,13 +47,13 @@ _extra.registerModule("xprefInitAction", ["slideManager_global", "preferenceMana
 
         }
 
-		// Callbacks wanting to execute after
-		// xprefInitAction
-		hasXPrefInitBeenCalled = true;
-		callAllMethodsInArray(callbacks);
-		// Unload
-		callbacks = null;
-		
+  		// Callbacks wanting to execute after
+  		// xprefInitAction
+  		hasXPrefInitBeenCalled = true;
+  		callAllMethodsInArray(callbacks);
+  		// Unload
+  		callbacks = null;
+
     }
 
     _extra.slideManager.enterSlideCallback.addCallback("*", entryPoint);
@@ -72,5 +72,5 @@ _extra.registerModule("xprefInitAction", ["slideManager_global", "preferenceMana
 		}
 
 	}
-	
+
 });

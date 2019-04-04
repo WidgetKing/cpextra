@@ -51,7 +51,6 @@ _extra.registerModule("Callback", function () {
 
         this.sendToCallback = function (index,parameter) {
             var returnValue,
-                tempReturnValue,
                 data = this.data[index];
 
             if (data) {
@@ -64,17 +63,18 @@ _extra.registerModule("Callback", function () {
                 // Trigger regular callbacks
                 var a = data.regular;
 
-                for (var i = 0; i < a.length; i += 1) {
+                a.forEach(function (value) {
 
                     // If the callback returns a value, then we'll return it at the end (assuming noting overrides it before then)
-                    tempReturnValue = a[i](parameter);
+                    var tempReturnValue = value(parameter);
 
                     if (tempReturnValue !== undefined) {
                         returnValue = tempReturnValue;
                     }
 
-                }
+              });
             }
+
 
             return returnValue;
         };
