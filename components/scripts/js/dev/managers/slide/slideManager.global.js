@@ -174,7 +174,7 @@ _extra.registerModule("slideManager_global",["slideManager_software"],function()
 
 	_extra.slideManager.querySlides = function (query) {
 
-        if (_extra.isQuery(query)) 
+        if (_extra.isQuery(query))
 			return _extra.queryList(query, _extra.slideManager.slideNames[1]);
 
 	}
@@ -241,6 +241,7 @@ _extra.registerModule("slideManager_global",["slideManager_software"],function()
         _extra.slideManager.currentSlideID = currentSlideID;
 
         if (_extra.slideManager.currentSceneSlideNumber !== -1) {
+
             // Notify all callbacks registered as universal (or "*")
             _extra.slideManager.enterSlideCallback.sendToCallback("*", currentSlideID);
 

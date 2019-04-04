@@ -11,6 +11,8 @@ _extra.registerModule("WebObjectProxy", ["BaseSlideObjectProxy"], function () {
 
     function WebObjectProxy(element, data) {
 
+      this._isLoaded = false;
+
         // THIS MUST BE DONE BEFORE CALLING THE SUPER CONSTRUCTOR
         // Otherwise the border property below will run first without access to this.element
         if (_extra.captivate.useWidget7) {
@@ -184,6 +186,8 @@ _extra.registerModule("WebObjectProxy", ["BaseSlideObjectProxy"], function () {
         onIframeReady(_extra.w.$(this.iframe),
             function () {
 
+                that._isLoaded = true;
+
                 that.dispatchEvent(_extra.eventManager.events.LOADED);
 
             },
@@ -213,4 +217,9 @@ _extra.registerModule("WebObjectProxy", ["BaseSlideObjectProxy"], function () {
 
     };
 
+    _extra.w.Object.defineProperty(WebObjectProxy.prototype,"isLoaded", {
+        get: function() {
+            return this._isLoaded;
+        }
+    });
 }, _extra.CAPTIVATE);

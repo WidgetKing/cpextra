@@ -61,7 +61,11 @@ _extra.registerModule("Callback", function () {
                 }
 
                 // Trigger regular callbacks
-                var a = data.regular;
+				if (!data.regular) return;
+
+				// Copy the array, so we don't skip over indexes if 
+				// callbacks are removed using removeCallback()
+                var a = data.regular.concat();
 
                 a.forEach(function (value) {
 

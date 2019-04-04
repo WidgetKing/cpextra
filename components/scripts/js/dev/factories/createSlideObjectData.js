@@ -24,6 +24,9 @@ _extra.registerModule("createSlideObjectData", ["factoryManager"], function () {
             case _extra.dataTypes.slideObjects.IMAGE :
                 return new _extra.classes.ImageDataProxy(name, data, type);
 
+            case _extra.dataTypes.slideObjects.WEB_OBJECT :
+                return new _extra.classes.WebObjectDataProxy(name, data, type);
+
             default :
                 return new _extra.classes.BaseSlideObjectDataProxy(name, data, type);
 

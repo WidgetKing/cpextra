@@ -186,4 +186,27 @@ describe("A suite for testing the callback class", function() {
         expect(cb.hasCallbackFor("index")).toBe(false);
 
     });
+
+	it("should not skip over callbacks (due to other callbacks being removed)", function () {
+
+		// 1: SETUP
+		var spy1 = jasmine.createSpy("spy1").and.callFake(function () {
+			cb.removeCallback("*", spy1);
+		})
+		var spy2 = jasmine.createSpy("spy2");
+		var spy3 = jasmine.createSpy("spy3");
+
+		// 2: TEST
+		cb.addCallback("*", spy1);
+		cb.addCallback("*", spy2);
+		cb.addCallback("*", spy3);
+
+		cb.sendToCallback("*", "anything");
+
+		// 3: ASSERT
+		expect(spy1).toHaveBeenCalled();
+		expect(spy2).toHaveBeenCalled();
+		expect(spy3).toHaveBeenCalled();
+
+	});
 });
