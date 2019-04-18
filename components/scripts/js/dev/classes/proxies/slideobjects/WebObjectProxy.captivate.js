@@ -75,8 +75,22 @@ _extra.registerModule("WebObjectProxy", ["BaseSlideObjectProxy"], function () {
         ["click", "touchstart", "touchend"].forEach(function (event) {
             that.addEventListener(event, function (e) {
 
-                document.dispatchEvent(e);
+				// This gets around an occasional error where 
+				// a touches array is expected when a 'touchstart' or 'touchend' event
+				// is dispatched on the document.
+				// Not including this causes this error:
+				//
+				// Uncaught TypeError: Cannot read property 'length' of undefined
+				//     at HTMLDocument.e (eval at e (CPXHRLoader.js:37), <anonymous>:24:429)
+				//         at Object.eval [as callback] (eval at l (eval at e (CPXHRLoader.js:37)), <anonymous>:1:968)
+				//             at Object.s [as touchend] (eval at l (eval at e (CPXHRLoader.js:37)), <anonymous>:1:509)
+				//                 at e.dispatchEvent (eval at l (eval at e (CPXHRLoader.js:37)), <anonymous>:1:2007)
+				//                     at e.dispatchEvent (eval at l (eval at e (CPXHRLoader.js:37)), <anonymous>:1:2178)
+				//                         at HTMLDocument.n (Infosemantics_CpMate.js:1)
+				e.touches = [];
 
+				// Dispatch to document
+                document.dispatchEvent(e);
             });
         });
 

@@ -96,7 +96,11 @@ _extra.registerModule("EventDispatcher", function () {
 
                 for (var i = 0; i < eventListeners.length; i += 1) {
 
-                    eventListeners[i](event);
+                    try {
+					eventListeners[i](event);
+					} catch (e) {
+						console.log(e);
+					}
 
                 }
 
