@@ -66,11 +66,12 @@ _extra.registerModule("enterTimelineCallback", ["hookManager", "slideObjectManag
 
         var slideObject = _extra.slideObjects.getSlideObjectByName(slideObjectName);
 
-        if (!_extra.slideObjects.enterTimelineCallback.hasCallbackFor(slideObjectName)) {
+        if (slideObject && !_extra.slideObjects.enterTimelineCallback.hasCallbackFor(slideObjectName)) {
 
             removeHandler(slideObject);
 
         }
+
 
     });
 

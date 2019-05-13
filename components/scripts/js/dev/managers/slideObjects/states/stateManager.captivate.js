@@ -5,9 +5,14 @@
  * Time: 7:18 AM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("stateManager_software",["Callback","slideObjectManager_global"],function () {
+_extra.registerModule("stateManager_software",["Callback","slideObjectManager_global", "CallbackTriggerBox"],function () {
     "use strict";
 
+	////////////////////////////////////////
+	////// Variables
+	var callbackTriggerBox = new _extra.classes.CallbackTriggerBox(_extra.slideObjects.enterTimelineCallback);
+
+                        
     ///////////////////////////////////////////////////////////////////////
     /////////////// Replace Native Change State Method
     ///////////////////////////////////////////////////////////////////////
@@ -56,20 +61,15 @@ _extra.registerModule("stateManager_software",["Callback","slideObjectManager_gl
                 // Bug voidance
                 if (_extra.slideManager.isSlideObjectOnSlideAndNotInTimeline(slideObjectName)) {
 
-                    var callback = function () {
-
-                        changeState();
-                        _extra.slideObjects.enterTimelineCallback.removeCallback(slideObjectName, callback);
-
-                    };
-
-                    _extra.slideObjects.enterTimelineCallback.addCallback(slideObjectName, callback, true);
+					callbackTriggerBox.add(slideObjectName, changeState);
 
                 } else {
 
+					callbackTriggerBox.remove(slideObjectName);
                     changeState();
 
                 }
+
             });
         },
         "fixMissingMouseOutIssue":function (internalStateData, nameProperty) {
