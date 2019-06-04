@@ -1,11 +1,24 @@
 /*global _extra*/
-_extra.registerModule("generalDataManager", ["softwareInterfacesManager", "dataTypeConverters", "createSlideObjectData"], function () {
+_extra.registerModule("generalDataManager", ["utils", "softwareInterfacesManager", "dataTypeConverters", "createSlideObjectData"], function () {
 
     "use strict";
 
     var slideObjectDatas = {};
 
     _extra.dataManager = {
+
+		"getSlideObjectDataByQuery": function (query) {
+		
+			var list = _extra.slideObjects.projectSlideObjectNames;
+			var result = _extra.queryList(
+				query, list, "@"
+			)
+
+			if (result === null) return null;
+
+			return _extra.utils.map(_extra.dataManager.createSlideObjectData, result);
+
+		},
 
         "getSlideObjectDataByName": function (slideObjectName) {
 

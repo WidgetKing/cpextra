@@ -62,6 +62,31 @@ _extra.registerModule("utils", function() {
 
   _extra.utils = {
     __: {},
+    map: curry(2, function(method, data) {
+      return _extra.utils.callByType(data, {
+        array: function() {
+          var returnArray = [];
+
+          _extra.utils.forEach(data, function(item) {
+            var result = method(item);
+            returnArray.push(result);
+          });
+
+          return returnArray;
+        },
+
+        object: function() {
+          var returnObject = {};
+
+          _extra.utils.forEach(data, function(key, item) {
+            var result = method(item);
+            returnObject[key] = result;
+          });
+
+          return returnObject;
+        }
+      });
+    }),
     identity: function(value) {
       return value;
     },
@@ -114,6 +139,7 @@ _extra.registerModule("utils", function() {
       }
     },
     callByType: function(parameter, methods) {
+      if (_extra.utils.isNil(parameter)) return null;
       switch (typeof parameter) {
         case "string":
           return _extra.utils.callIfDefined(methods.string, parameter);
@@ -226,13 +252,11 @@ _extra.registerModule("utils", function() {
 
       return a;
     }),
-	  length: function (array) {
-
-	  	return array.length;
-
-	  },
+    length: function(array) {
+      return array.length;
+    },
     without: curry(2, function(remove, a) {
-		var l;
+      var l;
       var array = a.concat();
 
       for (var i = 0, l = array.length; i < l; i++) {
