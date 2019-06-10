@@ -1,12 +1,13 @@
-describe("xprefEnsureWebObjectLoad", function() {
+fdescribe("xprefEnsureCpMateLoad", function() {
   ////////////////////////////////////////
   ////// variables
 
-  var module = unitTests.getModule("xprefEnsureWebObjectLoad");
+  var module = unitTests.getModule("xprefEnsureCpMateLoad");
   var utils = unitTests.getModule("utils");
   var preferenceObject;
   var slideObjects;
   var slideObjectDatas;
+	var listenForNotification_input;
 
   ////////////////////////////////////////
   ////// assist methods
@@ -38,8 +39,13 @@ describe("xprefEnsureWebObjectLoad", function() {
       removeEventListener: jasmine.createSpy(
         "slideObject.removeEventListener()"
       ),
+		name:name,
       callHandler: function(event) {
-        listener[event]();
+        if (listener.hasOwnProperty(event)) {
+          listener[event]();
+        } else {
+          console.log("could not find mock event: " + event);
+        }
       }
     };
   }
@@ -49,12 +55,25 @@ describe("xprefEnsureWebObjectLoad", function() {
   beforeEach(function() {
     slideObjectDatas = {};
     slideObjects = {};
+	  listenForNotification_input = {};
 
     addSlideObjectProxy("foobar");
     addSlideObjectDataProxy("foobar");
+    addSlideObjectProxy("foo");
+    addSlideObjectDataProxy("foo");
+    addSlideObjectProxy("bar");
+    addSlideObjectDataProxy("bar");
 
     window._extra = {
       classes: unitTests.classes,
+
+		cpMate: {
+			listenForNotification: function (slideObjectName, listener) {
+
+				listenForNotification_input[slideObjectName] = listener;
+
+			}
+		},
 
       movie: {
         pause: jasmine.createSpy("movie.pause()"),
@@ -106,17 +125,72 @@ describe("xprefEnsureWebObjectLoad", function() {
   it("should register the xprefEnsureWebObjectLoad variable", function() {
     expect(
       _extra.preferenceManager.registerPreferenceModule
-    ).toHaveBeenCalledWith("EnsureWebObjectLoad", jasmine.any(Object));
+    ).toHaveBeenCalledWith("EnsureCpMateLoad", jasmine.any(Object));
 
     expect(preferenceObject).toBeDefined();
   });
 
-  describe("preferenceObject.enable", function() {
+  describe("preferenceObject.enable()", function() {
     it("should listen for web objects", function() {});
   });
 
-  describe("preferenceObject.disable", function() {
+  describe("preferenceObject.disable()", function() {
     it("should stop listening for web objects", function() {});
+  });
+
+  describe("preferenceObject.update()", function() {
+    it("should pause with objects that match list", function() {
+      // 1: SETUP
+      var list = "foobar";
+
+      // 2: TEST
+      preferenceObject.update(list);
+      onNewWebObject("foobar");
+      slideObjects.foobar.callHandler("enter");
+
+      // 3: ASSERT
+      expect(_extra.movie.pause).toHaveBeenCalled();
+    });
+
+    it("should NOT pause with objects that don't match the list", function() {
+      // 1: SETUP
+      var list = "not_foobar";
+
+      // 2: TEST
+      preferenceObject.update(list);
+      onNewWebObject("foobar");
+      slideObjects.foobar.callHandler("enter");
+
+      // 3: ASSERT
+      expect(_extra.movie.pause).not.toHaveBeenCalled();
+    });
+
+    it("should allow multiple items in the list", function() {
+      // 1: SETUP
+      var list = "foo, bar";
+
+      // 2: TEST
+      preferenceObject.update(list);
+      onNewWebObject("bar");
+      slideObjects.bar.callHandler("enter");
+
+      // 3: ASSERT
+      expect(_extra.movie.pause).toHaveBeenCalled();
+    });
+
+    it("should pause with objects that match query", function() {
+      // 1: SETUP
+      var list = "foo@";
+
+      // 2: TEST
+      preferenceObject.update(list);
+      onNewWebObject("foobar");
+      slideObjects.foobar.callHandler("enter");
+
+      // 3: ASSERT
+      expect(_extra.movie.pause).toHaveBeenCalled();
+    });
+
   });
 
   ////////////////////////////////////////
@@ -124,6 +198,7 @@ describe("xprefEnsureWebObjectLoad", function() {
   describe("onNewWebObject()", function() {
     it("should pause the movie when the web object has not yet loaded", function() {
       // 1: SETUP
+      preferenceObject.update("foobar");
       onNewWebObject("foobar");
       // 2: TEST
       slideObjects.foobar.callHandler("enter");
@@ -137,11 +212,12 @@ describe("xprefEnsureWebObjectLoad", function() {
 
     it("should resume playing the movie when the web object loads", function() {
       // 1: SETUP
+      preferenceObject.update("foobar");
       onNewWebObject("foobar");
 
       // 2: TEST
       slideObjects.foobar.callHandler("enter");
-      slideObjects.foobar.callHandler("loaded");
+		listenForNotification_input["foobar"]("animationready")
 
       // 3: ASSERT
       expect(_extra.movie.play).toHaveBeenCalled();

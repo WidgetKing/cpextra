@@ -12,6 +12,7 @@ _extra.registerModule("WebObjectProxy", ["BaseSlideObjectProxy"], function () {
     function WebObjectProxy(element, data) {
 
       this._isLoaded = false;
+		this._hasCpMate = false;
 
         // THIS MUST BE DONE BEFORE CALLING THE SUPER CONSTRUCTOR
         // Otherwise the border property below will run first without access to this.element
@@ -66,6 +67,7 @@ _extra.registerModule("WebObjectProxy", ["BaseSlideObjectProxy"], function () {
 
         this.handleLoadedEvent();
 
+		// this.handleCpMate();
 
         // Listen for document click (emitted from CpMate) Then reflect it to the document
         // This is mostly to allow the YAK pause menu to still appear when we tap the screen while
@@ -121,6 +123,39 @@ _extra.registerModule("WebObjectProxy", ["BaseSlideObjectProxy"], function () {
         */
     };
 
+	/**
+	 * Handling CpMate includes the following things.
+	 * 	 - Detect whether CpMate exists and update this.hasCpMate to match.
+	 *   - Detect when the animations are ready to play.
+	 */
+	WebObjectProxy.prototype.handleCpMate = function () {
+		
+		var that = this;
+
+		// Check if has CpMate. (This might not work with 100% success)
+		this._hasCpMate = _extra.cpMate.hasRegistered(this.name);
+
+		// It's possible CpMate hasn't registered yet. So we'll continue
+		_extra.cpMate.listenForNotification(this.name, function (notification) {
+
+			// If we get here, then the WebObject 100% has CpMate.
+			that._hasCpMate = true;
+
+			switch (notification) {
+			
+				case "animationready":
+
+					console.log("ANIMATION READY in: " + that.name);
+					break;
+
+				default:
+					_extra.log(that.name + " received an unexpected notification '" + notification + "'");
+					break;
+			
+			}
+		})
+
+	};
 
     WebObjectProxy.prototype.handleLoadedEvent = function () {
 
@@ -234,6 +269,12 @@ _extra.registerModule("WebObjectProxy", ["BaseSlideObjectProxy"], function () {
     _extra.w.Object.defineProperty(WebObjectProxy.prototype,"isLoaded", {
         get: function() {
             return this._isLoaded;
+        }
+    });
+
+    _extra.w.Object.defineProperty(WebObjectProxy.prototype,"hasCpMate", {
+        get: function() {
+            return this._hasCpMate;
         }
     });
 }, _extra.CAPTIVATE);

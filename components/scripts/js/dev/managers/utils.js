@@ -118,6 +118,22 @@ _extra.registerModule("utils", function() {
       return val1 === val2;
     }),
 
+    gt: curry(2, function(var1, val2) {
+      return val1 > val2;
+    }),
+
+    lt: curry(2, function(var1, val2) {
+      return val1 < val2;
+    }),
+
+    gte: curry(2, function(var1, val2) {
+      return val1 >= val2;
+    }),
+
+    lte: curry(2, function(var1, val2) {
+      return val1 <= val2;
+    }),
+
     isNil: function(value) {
       return (
         value === "" ||
@@ -178,6 +194,19 @@ _extra.registerModule("utils", function() {
         list.push(itemToAdd);
       }
     },
+
+    indexOf: curry(2, function(item, list) {
+      return _extra.utils.callByType(list, {
+        string: function(string) {
+          return string.indexOf(item);
+        }
+      });
+    }),
+
+    includes: curry(2, function(item, list) {
+      return _extra.utils.indexOf(item, list) > -1;
+    }),
+
     pipe: function() {
       var argumentsArray = Array.prototype.slice.call(arguments);
       return function(input) {
@@ -190,6 +219,18 @@ _extra.registerModule("utils", function() {
         );
       };
     },
+    ////////////////////////////////////////
+    ////// Array
+    head: function(array) {
+      return array[0];
+    },
+
+    last: function(array) {
+      return array[array.length - 1];
+    },
+
+    ////////////////////////////////////////
+    ////// Conditionals
     ifElse: function(predicate, trueF, falseF) {
       return function() {
         if (predicate.apply(null, arguments)) {
@@ -206,12 +247,22 @@ _extra.registerModule("utils", function() {
     unless: function(predicate, method) {
       return _extra.utils.ifElse(predicate, _extra.utils.identity, method);
     },
+
+    cond: curry(2, function(conditions, input) {
+      for (var i = 0; i < conditions.length; i += 1) {
+        if (conditions[i][0](input)) return conditions[i][1](input);
+      }
+    }),
+
     T: function() {
       return true;
     },
     F: function() {
       return false;
     },
+    and: curry(3, function(predicate1, predicate2, input) {
+      return predicate1(input) && predicate2(input);
+    }),
     forEachUntil: curry(3, function(predicate, loop, list) {
       return _extra.utils.callByType(list, {
         array: function() {
@@ -238,13 +289,39 @@ _extra.registerModule("utils", function() {
       });
     }),
 
+    complement: function(method) {
+      return function() {
+        return !method.apply(null, arguments);
+      };
+    },
     ////////////////////////////////////////
     ////// Array Methods
     any: curry(2, function(predicate, list) {
+      for (var i = 0; i < list.length; i += 1) {
+        if (predicate(list[i])) return true;
+      }
+      return false;
+    }),
+
+    all: curry(2, function(predicate, list) {
+      for (var i = 0; i < list.length; i += 1) {
+        if (!predicate(list[i])) return false;
+      }
+      return true;
+    }),
+
+    allPass: curry(2, function(tests, obj) {
       return _extra.utils.pipe(
-        _extra.utils.forEachUntil(_extra.utils.identity, predicate),
-        _extra.utils.when(_extra.utils.isNil, _extra.utils.F)
-      )(list);
+        _extra.utils.map(_extra.utils.apply([obj])),
+        _extra.utils.all(_extra.utils.equals(true))
+      )(tests);
+    }),
+
+    anyPass: curry(2, function(tests, obj) {
+      return _extra.utils.pipe(
+        _extra.utils.map(_extra.utils.apply([obj])),
+        _extra.utils.any(_extra.utils.equals(true))
+      )(tests);
     }),
 
     append: curry(2, function(value, array) {
@@ -255,6 +332,9 @@ _extra.registerModule("utils", function() {
     length: function(array) {
       return array.length;
     },
+    indexEquals: curry(3, function(index, matches, array) {
+      return array[index] === matches;
+    }),
     without: curry(2, function(remove, a) {
       var l;
       var array = a.concat();
@@ -265,6 +345,89 @@ _extra.registerModule("utils", function() {
         }
       }
       return array;
+    }),
+
+    ////////////////////////////////////////
+    ////// String Methods
+    split: curry(2, function(key, string) {
+      return string.split(key);
+    }),
+
+    removeWhiteSpace: function(string) {
+      // Remove spaces from value string
+      return string.replace(/\s+/g, "");
+    },
+
+    startsWith: curry(2, function(start, string) {
+      return string.substring(0, start.length) === start;
+    }),
+
+    endsWith: curry(2, function(end, string) {
+      return (
+        string.substring(string.length - end.length, string.length) === end
+      );
+    }),
+
+    matchesQuery: curry(3, function(queryIcon, query, input) {
+      var headStartsWith = _extra.utils.pipe(
+        _extra.utils.last,
+        _extra.utils.endsWith
+      );
+
+      var lastEndsWith = _extra.utils.pipe(
+        _extra.utils.head,
+        _extra.utils.startsWith
+      );
+
+      // Input: "f@bar"
+      return _extra.utils.pipe(
+        // ["f", "bar"]
+        _extra.utils.split(queryIcon),
+        // If the array is over 1 length
+        // then we must have a query icon present
+        _extra.utils.ifElse(
+          // Checking the array length is what we expect
+          _extra.utils.pipe(
+            _extra.utils.length,
+            _extra.utils.equals(2)
+          ),
+
+          // So from here on out we are left with
+          // something like: ["f", "bar"]
+          // built from: "f@bar"
+
+          //
+          //
+          // NOW START BUILDING THE PREDICATES
+          //
+          //
+
+          _extra.utils.pipe(
+            _extra.utils.cond([
+              // ["", "bar"]
+              [_extra.utils.indexEquals(0, ""), headStartsWith],
+              // ["foo", ""]
+              [_extra.utils.indexEquals(1, ""), lastEndsWith],
+              [
+                // ["f","bar"]
+                _extra.utils.pipe(
+                  _extra.utils.length,
+                  _extra.utils.equals(2)
+                ),
+                _extra.utils.and(lastEndsWith, headStartsWith)
+              ]
+            ]),
+
+            //
+            //
+            // RUN PREDICATE OVER INPUT PARAMETER
+            //
+            //
+            _extra.utils.apply([input])
+          ),
+          _extra.utils.F
+        )
+      )(query);
     })
   };
 });
