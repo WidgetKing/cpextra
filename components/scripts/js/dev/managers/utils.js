@@ -241,12 +241,12 @@ _extra.registerModule("utils", function() {
       };
     },
 
-    when: function(predicate, method) {
+    when: curry(2, function(predicate, method) {
       return _extra.utils.ifElse(predicate, method, _extra.utils.identity);
-    },
-    unless: function(predicate, method) {
+    }),
+    unless: curry(2, function(predicate, method) {
       return _extra.utils.ifElse(predicate, _extra.utils.identity, method);
-    },
+    }),
 
     cond: curry(2, function(conditions, input) {
       for (var i = 0; i < conditions.length; i += 1) {

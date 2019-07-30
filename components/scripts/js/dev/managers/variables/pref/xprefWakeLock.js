@@ -209,10 +209,12 @@ _extra.registerModule(
     var preferenceData = {
       enable: function() {
         _extra.w.addEventListener("mousedown", enableNoSleep);
+        _extra.w.addEventListener("touchstart", enableNoSleep);
       },
 
       disable: function() {
         _extra.w.removeEventListener("mousedown", enableNoSleep);
+        _extra.w.removeEventListener("touchstart", enableNoSleep);
         noSleep.disable();
       },
 

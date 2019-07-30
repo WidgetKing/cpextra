@@ -1,6 +1,6 @@
 _extra.registerModule(
   "xprefEnsureCpMateLoad",
-  ["slideObjectManager_global", "utils", "whiteSpaceManager"],
+  ["movie", "slideObjectManager_global", "utils", "whiteSpaceManager"],
   function() {
     "use strict";
     ////////////////////////////////////////
@@ -10,12 +10,26 @@ _extra.registerModule(
     var R = _extra.utils;
     var enabled = false;
     var waitList = [];
+    var pauseReasons = _extra.movie.reasonsForPause;
+    var loadingScreen = _extra.captivate.api("blockUserInteraction");
 
     // Default is NOTHING is CpMate
     var matchesNameList = R.equals(false);
 
     ////////////////////////////////////////
     ////// assist functions
+    var unlessLastPauseReason = R.unless(
+      R.pipe(
+        function() {
+          // We place this inside a function rather than R.always
+          // because R.always() will not update to the latest
+          // reasonForPause
+          return _extra.movie.lastReasonForPause;
+        },
+        R.equals(_extra.movie.reasonsForPause.CPCMNDPAUSE)
+      )
+    );
+
     function listen() {
       callback.addCallback(
         _extra.dataTypes.slideObjects.WEB_OBJECT,
@@ -23,6 +37,34 @@ _extra.registerModule(
       );
     }
 
+    var pause = unlessLastPauseReason(function() {
+      _extra.movie.pause(pauseReasons.XPREFENSURECPMATELOAD);
+    });
+
+    var play = unlessLastPauseReason(_extra.movie.play);
+
+    ////////////////////////////////////////
+    ////// Handle Loading Start/End
+
+    var blockUI = function() {
+      loadingScreen.style.display = "block";
+      loadingScreen.style.zIndex = 1e4;
+    };
+
+    var unblockUI = function() {
+      loadingScreen.style.display = "none";
+      loadingScreen.style.zIndex = -1e4;
+    };
+
+    var handleLoadStart = R.pipe(
+      R.tap(blockUI),
+      R.tap(pause)
+    );
+
+    var handleLoadEnd = R.pipe(
+      R.tap(unblockUI),
+      R.tap(play)
+    );
     /**
      * Takes a string which is...
      * EITHER a @syntax query
@@ -85,7 +127,7 @@ _extra.registerModule(
         R.append(slideObjectName),
         R.tap(setWaitList),
         // Pause the movie
-        _extra.movie.pause
+        handleLoadStart
       )(getWaitList());
     };
 
@@ -93,17 +135,17 @@ _extra.registerModule(
       return R.pipe(
         R.without([slideObjectName]),
         R.tap(setWaitList),
-		  // GOT HERE:
-		  // When we uncomment the below we get a maximum call stack exceeded error
-		  //
+        // GOT HERE:
+        // When we uncomment the below we get a maximum call stack exceeded error
+        //
         R.when(
           // Condition: List empty
           R.pipe(
             R.length,
             R.equals(0)
           ),
-          // Play the movie
-          _extra.movie.play
+          // // Play the movie
+          handleLoadEnd
         )
       )(getWaitList());
     };
