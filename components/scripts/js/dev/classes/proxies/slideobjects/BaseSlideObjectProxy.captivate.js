@@ -221,6 +221,7 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
 
                 $div = _extra.$(this._focusDiv);
 
+				console.log("Internal lock focus: " + that.name);
                 if ($div.hasOwnProperty("on")) {
                     $div.on('keydown', this._focusHandler).focus();
 
@@ -236,6 +237,7 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
         this._focusHandler = function (e) {
 
             if (e.keyCode === 9) {
+				console.log("Tab pressed");
                 e.preventDefault();
                 _extra.$(that._focusDiv).focus();
             }

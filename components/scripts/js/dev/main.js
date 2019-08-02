@@ -169,11 +169,11 @@ function initExtra(topWindow) {
 
     ////////////////////////////////
     ////////// End of trial
-    /*var today = new Date();
+    var today = new Date();
     //today.setHours(0,0,0,0);
-    var trialEnd = new Date("08-23-2018");
+    /*var trialEnd = new Date("08-30-2019");
     if (trialEnd <= today) {
-        abort();
+        abort("trialPeriodEnded");
         return;
     }*/
 

@@ -35,8 +35,6 @@ _extra.registerModule("PlaybarProxy", function () {
 
         this.update = function () {
 
-            console.log("update");
-
             // If we've already loaded everything
             if (_extra.slideManager && _extra.cssManager) {
 
