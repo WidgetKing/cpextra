@@ -15,7 +15,16 @@ _extra.registerModule("enterTimelineCallback", ["hookManager", "slideObjectManag
     var handlers = {};
 
     function addHandler(slideObject, handler) {
+
+		if (!slideObject) {
+		
+			console.log("Inside enterTimelineCallback module's addHandler method: Could not find slide object with name: " + slideObjectName);
+			return;
+			
+		}
+
         slideObject.addEventListener(_extra.eventManager.events.ENTER, handler);
+		
         handlers[slideObject.name] = handler;
     }
 
@@ -47,6 +56,8 @@ _extra.registerModule("enterTimelineCallback", ["hookManager", "slideObjectManag
     _extra.addHookBefore(_extra.slideObjects.enterTimelineCallback, "addCallback", function (slideObjectName) {
 
         var slideObject = _extra.slideObjects.getSlideObjectByName(slideObjectName);
+
+
         var enterTimelineHandler = function () {
             _extra.slideObjects.enterTimelineCallback.sendToCallback(slideObjectName);
         };

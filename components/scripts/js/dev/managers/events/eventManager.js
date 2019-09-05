@@ -11,6 +11,7 @@ _extra.registerModule("eventManager", ["EventMediator", "EventDispatcher", "slid
     var eventMediators = {},
         isMobile = 'ontouchstart' in _extra.w.document.documentElement;
 
+
     _extra.eventManager = {
 
         "useTouchEvents": isMobile,
