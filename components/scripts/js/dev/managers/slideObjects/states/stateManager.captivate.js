@@ -12,7 +12,7 @@ _extra.registerModule("stateManager_software",["Callback","slideObjectManager_gl
 	////// Variables
 	var callbackTriggerBox = new _extra.classes.CallbackTriggerBox(_extra.slideObjects.enterTimelineCallback);
 
-                        
+
     ///////////////////////////////////////////////////////////////////////
     /////////////// Replace Native Change State Method
     ///////////////////////////////////////////////////////////////////////
@@ -85,6 +85,7 @@ _extra.registerModule("stateManager_software",["Callback","slideObjectManager_gl
 
                     if (slideObject) {
 
+                      return;
                         var actualStateData = slideObject.data.getStateDataByInternalIndex(internalStateIndex);
 
                         // If so, then we'll dispatch a MOUSE_OUT event for xcmndAddEventListener to hear.

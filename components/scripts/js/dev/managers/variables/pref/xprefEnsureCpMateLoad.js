@@ -1,6 +1,6 @@
 _extra.registerModule(
   "xprefEnsureCpMateLoad",
-  ["movie", "slideObjectManager_global", "utils", "whiteSpaceManager"],
+  ["movie", "slideObjectManager_global", "utils", "loadingScreenManager", "whiteSpaceManager"],
   function() {
     "use strict";
     ////////////////////////////////////////
@@ -11,7 +11,6 @@ _extra.registerModule(
     var enabled = false;
     var waitList = [];
     var pauseReasons = _extra.movie.reasonsForPause;
-    var loadingScreen = _extra.captivate.api("blockUserInteraction");
 
     // Default is NOTHING is CpMate
     var matchesNameList = R.equals(false);
@@ -46,25 +45,16 @@ _extra.registerModule(
     ////////////////////////////////////////
     ////// Handle Loading Start/End
 
-    var blockUI = function() {
-      loadingScreen.style.display = "block";
-      loadingScreen.style.zIndex = 1e4;
-    };
-
-    var unblockUI = function() {
-      loadingScreen.style.display = "none";
-      loadingScreen.style.zIndex = -1e4;
-    };
-
     var handleLoadStart = R.pipe(
-      R.tap(blockUI),
-      R.tap(pause)
+      _extra.loadingScreenManager.on,
+      pause
     );
 
     var handleLoadEnd = R.pipe(
-      R.tap(unblockUI),
-      R.tap(play)
+      _extra.loadingScreenManager.off,
+      play
     );
+
     /**
      * Takes a string which is...
      * EITHER a @syntax query

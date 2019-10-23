@@ -8,7 +8,7 @@ _extra.registerModule("generalDataManager", ["utils", "softwareInterfacesManager
     _extra.dataManager = {
 
 		"getSlideObjectDataByQuery": function (query) {
-		
+
 			var list = _extra.slideObjects.projectSlideObjectNames;
 			var result = _extra.queryList(
 				query, list, "@"
@@ -169,9 +169,14 @@ _extra.registerModule("generalDataManager", ["utils", "softwareInterfacesManager
 
                 slideObject = _extra.captivate.allSlideObjectsData[name];
 
+                //if (slideObject.uid === uid || doesIDBelongToState(uid, slideObject)) {
                 if (slideObject.uid === uid) {
 
+                  if (slideObject.dn) {
                     return slideObject.dn;
+                  } /*else if (slideObject.mdi) {
+                    return slideObject.mdi.substr(0, slideObject.mdi.length - 1)
+                  }*/
 
                 }
 
@@ -180,7 +185,28 @@ _extra.registerModule("generalDataManager", ["utils", "softwareInterfacesManager
 
         return null;
     }
+/*
+    function doesIDBelongToState(uid, slideObject) {
 
+      var result = false;
+
+      if (slideObject.stl) {
+        slideObject.stl.forEach(function (stateData) {
+          if (stateData.stsi) {
+            stateData.stsi.forEach(function (stateUID) {
+
+              if (stateUID === uid) {
+                result = true;
+              }
+
+            });
+          }
+        })
+      }
+
+      return result;
+    }
+    */
     //_extra.log(_extra.dataManager.getSlideObjectDataByName("Text_Entry_Box_1"));
     /*_extra.m = _extra.X.cp.model;
     _extra.X._extra.captivate.allSlideObjectsData = _extra.m;
