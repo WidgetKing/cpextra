@@ -1,6 +1,6 @@
 {
   "name": "captivateextra",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "buildNumber": 10040,
   "description": "An extension for Adobe Captivate which adds extra features, streamlines day-to-day workflows and fixes certain bugs or unexpected behaviours inside of Captivate. ONLY WORKS FOR HTML EXPORT!",
   "main": "index.js",
