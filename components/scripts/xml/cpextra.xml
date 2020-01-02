@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <widgetUpdate>
 
-	<latestVersion versionNumber="1.4.1">
-		<description>A critical update is available</description>
+	<latestVersion versionNumber="1.4.3">
+		<description>An update is available</description>
         <!--<feature type="major">Headless loading - Install CpExtra directly into Captivate</feature>
         <feature type="major">#syntax - @sytnax for the whole project</feature>
         <feature type="major">xinfoEventTarget - Tells you which slide object dispatched an event</feature>
@@ -10,9 +10,9 @@
         <feature type="major">Use variables with Open URL or File action</feature>
         <feature type="minor">videoended and audioended events</feature>
         <feature type="minor">xprefMultichoiceRolloverColor</feature>-->
-        <feature type="bugfix">Many bugfixes that caused white screens</feature>
+        <feature type="bugfix">Fixed bug with videoended event</feature>
 	</latestVersion>
-	
+
 	<lastMajorVersion versionNumber="1.4.1">
         <description>A critical update is available</description>
         <!--<feature type="major">Headless loading - Install CpExtra directly into Captivate</feature>
@@ -24,7 +24,7 @@
         <feature type="minor">xprefMultichoiceRolloverColor</feature>-->
         <feature type="bugfix">Many bugfixes that caused white screens</feature>
     </lastMajorVersion>
-	
+
 	<lastCriticalVersion versionNumber="1.4.1">
         <description>A critical update is available</description>
         <!--<feature type="major">Headless loading - Install CpExtra directly into Captivate</feature>
@@ -36,7 +36,7 @@
         <feature type="minor">xprefMultichoiceRolloverColor</feature>-->
         <feature type="bugfix">Many bugfixes that caused white screens</feature>
 	</lastCriticalVersion>
-	
+
 	<updateURL>http://www.infosemantics.com.au/adobe-captivate-widgets/widget-updates</updateURL>
-	
+
 </widgetUpdate>
