@@ -230,6 +230,19 @@ fdescribe("A test suite for _extra.utils", function() {
     });
   });
 
+  describe("_extra.utils.message()", function() {
+    it("should curry correctly", function() {
+      // 1: SETUP
+      spyOn(console, "log");
+
+      // 2: TEST
+      var a = _extra.utils.message("hello");
+      a();
+
+      // 3: ASSERT
+      expect(console.log).toHaveBeenCalledWith("hello");
+    });
+  });
   describe("_extra.utils.split()", function() {
     it("should split a string into an array based on the input key", function() {
       // 1: SETUP

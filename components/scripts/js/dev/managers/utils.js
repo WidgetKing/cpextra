@@ -39,6 +39,10 @@ _extra.registerModule("utils", function() {
 
     function innerCurry(params, args) {
       var argumentsArray = Array.prototype.slice.call(args);
+		// If we have a length of zero, then the method was invoked without
+		// sending in a parameter. But for the sake of expected behavior
+		// we'll add one in here
+		if (argumentsArray.length <= 0) argumentsArray.push(undefined)
       params = mergeParams(params, argumentsArray);
 
       if (getTrueParamsLength(params) >= numParams) {

@@ -13,3 +13,4 @@ components/legacy
 CaptivateExtra.iml
 coverage
 _dev.iml
+*.swp

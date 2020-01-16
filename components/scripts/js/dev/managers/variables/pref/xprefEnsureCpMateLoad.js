@@ -1,6 +1,12 @@
 _extra.registerModule(
   "xprefEnsureCpMateLoad",
-  ["movie", "slideObjectManager_global", "utils", "loadingScreenManager", "whiteSpaceManager"],
+  [
+    "movie",
+    "slideObjectManager_global",
+    "utils",
+    "loadingScreenManager",
+    "whiteSpaceManager"
+  ],
   function() {
     "use strict";
     ////////////////////////////////////////
@@ -25,7 +31,9 @@ _extra.registerModule(
           // reasonForPause
           return _extra.movie.lastReasonForPause;
         },
-        R.equals(_extra.movie.reasonsForPause.CPCMNDPAUSE)
+        R.equals(
+          _extra.movie.reasonsForPause.REASON_THAT_PREVENTS_CPMATE_LOAD_PAUSING
+        )
       )
     );
 
@@ -40,7 +48,9 @@ _extra.registerModule(
       _extra.movie.pause(pauseReasons.XPREFENSURECPMATELOAD);
     });
 
-    var play = unlessLastPauseReason(_extra.movie.play);
+    var play = unlessLastPauseReason(function() {
+      _extra.movie.play();
+    });
 
     ////////////////////////////////////////
     ////// Handle Loading Start/End
@@ -123,6 +133,7 @@ _extra.registerModule(
 
     var removeFromWaitList = function(slideObjectName) {
       return R.pipe(
+        _extra.utils.message("Got to removeFromWaitList"),
         R.without([slideObjectName]),
         R.tap(setWaitList),
         // GOT HERE:
@@ -202,6 +213,7 @@ _extra.registerModule(
               // Don't react to the wrong notification
               R.equals("animationready"),
               R.pipe(
+                _extra.utils.message("Animation threw 'animationready'"),
                 R.always(slideObject.name),
                 removeFromWaitList
               )

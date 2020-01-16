@@ -1,4 +1,4 @@
-fdescribe("xprefEnsureCpMateLoad", function() {
+describe("xprefEnsureCpMateLoad", function() {
   ////////////////////////////////////////
   ////// variables
 

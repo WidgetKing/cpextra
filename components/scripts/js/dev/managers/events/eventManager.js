@@ -100,7 +100,8 @@ _extra.registerModule("eventManager", ["EventMediator", "EventDispatcher", "slid
             "AUDIO_END": "audioended",
             "AUDIOEND": "audioended",
             "LOADED": "loaded",
-            "ERROR": "error"
+            "ERROR": "error",
+			"ANIMATION_READY":"animationready"
         }
     };
 

@@ -11,12 +11,11 @@ _extra.registerModule(
 
     _extra.movie = {
       pause: function(reasonForPause) {
-
-		  // Parameter default.
+        // Parameter default.
         if (!reasonForPause)
           reasonForPause = _extra.movie.reasonsForPause.CPCMNDPAUSE;
-		  
-		  // Pause
+
+        // Pause
         _extra.captivate.api.movie.pause(reasonForPause);
         // Previously we did this by setting the  cpCmndPause variable
         // Now we're trying the above way so that we can set the reason
@@ -51,6 +50,7 @@ _extra.registerModule(
         BAD_ORIENTATION: 15,
         WK_EXIT_FULL_SCREEN: 16,
         ACTION_CHOICE: 17,
+        REASON_THAT_PREVENTS_CPMATE_LOAD_PAUSING: 98,
         XPREFENSURECPMATELOAD: 99
       }
     };
