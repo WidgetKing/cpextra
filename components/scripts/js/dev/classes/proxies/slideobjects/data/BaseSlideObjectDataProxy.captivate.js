@@ -36,6 +36,9 @@ _extra.registerModule("BaseSlideObjectDataProxy", function () {
         get data() {
             return this._data;
         },
+		get accessibilityText() {
+			return this._data.container.accstr;
+		},
         get originalX() {
             return this._data.container.b[0];
         },
