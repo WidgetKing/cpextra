@@ -9,6 +9,7 @@ _extra.registerModule("slideManager_software", ["softwareInterfacesManager", "Ca
 
     "use strict";
 
+
     var slideIds = _extra.captivate.model.data.project_main.slides.split(","),
         tempBaseData,
         hasDoCPInitHook = false,

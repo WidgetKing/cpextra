@@ -60,7 +60,7 @@ _extra.registerModule("errors", ["debuggingManager"], function () {
 
         "PE001": function (variableName) {
             return "Tried to access explicitly defined variable <b>$$" + variableName + "$$</b>." +
-                   "<br/>However, thre is no variable of the name <b>" + variableName + "</b>." +
+                   "<br/>However, there is no variable of the name <b>" + variableName + "</b>." +
                    "<br/>To correct this issue please check that you have spelled the variable's name correctly.";
         },
 
