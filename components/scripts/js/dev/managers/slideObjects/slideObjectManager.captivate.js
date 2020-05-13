@@ -58,6 +58,12 @@ _extra.registerModule("slideObjectManager_software", ["generalDataManager", "Cal
         "show":function (slideObjectName) {
             _extra.captivate.api.show(slideObjectName);
         },
+        "hideNonContentDivs":function (slideObjectName) {
+            _extra.slideObjects.getSlideObjectByName(slideObjectName).visibility.nonContentDivs = false;
+        },
+        "showNonContentDivs":function (slideObjectName) {
+            _extra.slideObjects.getSlideObjectByName(slideObjectName).visibility.nonContentDivs = true;
+        },
         "enable":function (slideObjectName) {
             _extra.captivate.api.enable(slideObjectName);
         },
@@ -76,7 +82,8 @@ _extra.registerModule("slideObjectManager_software", ["generalDataManager", "Cal
         },
         "removeSuffix":function (name, suffix) {
 
-            if (name.substr(name.length - suffix.length, name.length) === suffix) {
+            if (name &&
+                name.substr(name.length - suffix.length, name.length) === suffix) {
                 name= name.substr(0, name.length - suffix.length);
             }
 

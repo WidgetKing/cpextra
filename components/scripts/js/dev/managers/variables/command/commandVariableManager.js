@@ -109,6 +109,9 @@ _extra.registerModule("commandVariableManager",["variableManager","stateManager_
                 var value = _extra.variableManager.getVariableValue(variableName);
                 var parameters = _extra.variableManager.prepareParameters(value);
 
+                _extra.debugging.debug("Variable changed: " + variableName);
+                _extra.debugging.debug("           Value: " + value);
+
                 if (parameters) {
 
                     variableMetadata.parameterHandler(parameters, variableMetadata.callback);
@@ -125,11 +128,13 @@ _extra.registerModule("commandVariableManager",["variableManager","stateManager_
         ///////////////////////////////////////////////////////////////////////
         // We will now go through all the command variables and set them up.
         function registerVariable (variableName) {
+
             if (_extra.variableManager.hasVariable(variableName)) {
 
                 listenForCommandVariableChange(variableName, _extra.variableManager.commandVariables[variableSuffix]);
 
             }
+
         }
 
         // We will now go through all the command variables and set them up.

@@ -112,6 +112,13 @@ _extra.registerModule("slideManager_global",["slideManager_software"],function()
         return null;
     };
 
+    _extra.slideManager.getSlideDataFromId = function (slideId) {
+        if (slideId) {
+            return new _extra.classes.SlideDataProxy(_extra.slideManager._slideDatasById[slideId]);
+        }
+        return null;
+    };
+
 
     /**
      * Converts a slide name into a slide index.
@@ -154,12 +161,30 @@ _extra.registerModule("slideManager_global",["slideManager_software"],function()
         return false;
     };
 
+    _extra.slideManager.gotoSlideAndPlay = function (sceneIndex, slideIndex) {
+
+        var result = _extra.slideManager.gotoSlide(sceneIndex, slideIndex);
+
+        // And play
+        _extra.captivate.variables.cpCmndResume = 1;
+
+        return result;
+
+    };
+
+	_extra.slideManager.querySlides = function (query) {
+
+        if (_extra.isQuery(query))
+			return _extra.queryList(query, _extra.slideManager.slideNames[1]);
+
+	}
+
     // TODO: Make this work for multiple scenes
     _extra.slideManager.enactFunctionOnSlides = function (query, method) {
 
         if (_extra.isQuery(query)) {
 
-            var list = _extra.queryList(query, _extra.slideManager.slideNames[1]);
+            var list = _extra.slideManager.querySlides(query)
 
             if (list) {
 
@@ -216,6 +241,7 @@ _extra.registerModule("slideManager_global",["slideManager_software"],function()
         _extra.slideManager.currentSlideID = currentSlideID;
 
         if (_extra.slideManager.currentSceneSlideNumber !== -1) {
+
             // Notify all callbacks registered as universal (or "*")
             _extra.slideManager.enterSlideCallback.sendToCallback("*", currentSlideID);
 

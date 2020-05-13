@@ -11,6 +11,7 @@ _extra.registerModule("eventManager", ["EventMediator", "EventDispatcher", "slid
     var eventMediators = {},
         isMobile = 'ontouchstart' in _extra.w.document.documentElement;
 
+
     _extra.eventManager = {
 
         "useTouchEvents": isMobile,
@@ -97,7 +98,10 @@ _extra.registerModule("eventManager", ["EventMediator", "EventDispatcher", "slid
             "AUDIO_ENDED": "audioended",
             "AUDIOENDED": "audioended",
             "AUDIO_END": "audioended",
-            "AUDIOEND": "audioended"
+            "AUDIOEND": "audioended",
+            "LOADED": "loaded",
+            "ERROR": "error",
+			"ANIMATION_READY":"animationready"
         }
     };
 

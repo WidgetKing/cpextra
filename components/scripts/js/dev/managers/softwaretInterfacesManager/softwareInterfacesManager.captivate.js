@@ -43,6 +43,7 @@ _extra.registerModule("softwareInterfacesManager", function () {
         "eventDispatcher":_extra.w.cpAPIEventEmitter,
         "model":_extra.w.cp.model,
         "allSlideObjectsData":_extra.w.cp.model.data,
+        "useWidget7": _extra.w.cp.model.data.project_main.useWidgetVersion7,
         "movie":_extra.w.cp.movie,
         "playbar": new _extra.classes.PlaybarProxy(),
         "playIcon":_extra.w.document.getElementById("playImage"),

@@ -12,6 +12,7 @@ _extra.registerModule("queryManager", function () {
     _extra.WILDCARD_CHARACTER = "@";
     _extra.GLOBAL_WILDCARD_CHARACTER = "#";
 
+	// TODO: Replace with _extra.utils.matchQuery()
     _extra.queryList = function(query, list, wildcard) {
 
         if (!wildcard) {

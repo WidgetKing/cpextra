@@ -200,6 +200,10 @@ _extra.registerModule("commandVariables_global", ["processCommandVariableRegistr
 
         "Show": commandDatas.createBasicSlideObjectData("show", _extra.slideObjects.show),
 
+        "HideNonContentDivs": commandDatas.createBasicSlideObjectData("hide", _extra.slideObjects.hideNonContentDivs),
+
+        "ShowNonContentDivs": commandDatas.createBasicSlideObjectData("show", _extra.slideObjects.showNonContentDivs),
+
         ////////////////////////////////
         ////////// Interaction Enable/Disable
         "Enable": commandDatas.createBasicSlideObjectData("enable", _extra.slideObjects.enable),
@@ -354,6 +358,30 @@ _extra.registerModule("commandVariables_global", ["processCommandVariableRegistr
             "parseSetData": {
                 "query":undefined, // Changed in the updateData method
                 "output":_extra.TOCManager.completeSlide
+            }
+        },
+
+        "GotoSlide": {
+            "commandName": "gotoSlide",
+            "updateData": updateDataTechniques.parameterToQuery,
+            "parseSet": parseSets.SP.CD.SLR,
+            "parseSetData": {
+                "query":undefined,
+                "output":function (slideNumber) {
+                    _extra.slideManager.gotoSlide(slideNumber - 1);
+                }
+            }
+        },
+
+        "GotoSlideAndPlay": {
+            "commandName": "gotoSlideAndPlay",
+            "updateData": updateDataTechniques.parameterToQuery,
+            "parseSet": parseSets.SP.CD.SLR,
+            "parseSetData": {
+                "query":undefined,
+                "output":function (slideNumber) {
+                    _extra.slideManager.gotoSlideAndPlay(slideNumber - 1);
+                }
             }
         },
 
@@ -517,7 +545,6 @@ _extra.registerModule("commandVariables_global", ["processCommandVariableRegistr
             }
         },
 
-
         "SetCursor": {
             "commandName":"setCursor",
             "updateData":updateDataTechniques.parametersToQueryString,
@@ -596,6 +623,32 @@ _extra.registerModule("commandVariables_global", ["processCommandVariableRegistr
                 }
             }
 
+        },
+
+        ///////////////////////////////////////////////////////////////////////
+        /////////////// ANIMATIONS
+        ///////////////////////////////////////////////////////////////////////
+
+        "MatchEntryToEffect": {
+            "commandName": "matchEntryToEffect",
+            "updateData": function (data, slideObject1, slideObject2, number) {
+                data.slideObject1 = slideObject1;
+                data.slideObject2 = slideObject2;
+                data.number = number;
+            },
+            "parameterHandler": handlers.sendParametersAsParameters,
+            "parseSet": parseSets.MP.SOR1_SOR2_NR,
+            "parseSetData": {
+                "query":undefined, // Changed in the updateData method
+                "string":undefined, //  // Changed in the updateData method
+                "output":_extra.animationManager.matchEntryToEffect,
+                "SOR2": {
+                    "noQueries": true
+                },
+                "NR": {
+                    "default":1
+                }
+            }
         }
 
     });

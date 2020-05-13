@@ -676,6 +676,90 @@ _extra.registerModule("parameterParseSets", ["parameterParser", "variableManager
             },
 
             ///////////////////////////////////////////////////////////////////////
+            /////////////// Slide Object + Slide Object
+            ///////////////////////////////////////////////////////////////////////
+            "SOR1_SOR2": function (p) {
+
+                function entryPoint () {
+
+                    validateData();
+
+                    var slideObjects1 = getArrayOfResults(p.SOR1),
+                        slideObjects2 = getArrayOfResults(p.SOR2);
+
+                    applyToSlideObjects(slideObjects1, slideObjects2);
+
+                }
+
+                function validateData () {
+                    validateDataBlock(p, "SOR1", "slideObject1", "query");
+                    validateDataBlock(p, "SOR2", "slideObject2", "query");
+                }
+
+                function getArrayOfResults(testSet) {
+
+                    var a = [];
+
+                    testSet.output = function (slideObject) {
+                        a.push(slideObject);
+                    };
+
+                    parseSets.SP.CD.SOR(testSet);
+
+                    return a;
+                }
+
+                function applyToSlideObjects (set1, set2) {
+
+                    for (var i = 0; i < set1.length; i += 1) {
+                        var slideObject1 = set1[i];
+
+                        for (var j = 0; j < set2.length; j += 1) {
+                            var slideObject2 = set2[j];
+
+                            p.output(slideObject1, slideObject2);
+
+                        }
+
+                    }
+
+                }
+
+
+
+                entryPoint();
+
+            },
+
+            ///////////////////////////////////////////////////////////////////////
+            /////////////// Slide Object + Slide Object + Number
+            ///////////////////////////////////////////////////////////////////////
+            "SOR1_SOR2_NR": function (p) {
+
+                function entryPoint () {
+                    validateDataBlock(p, "NR", "number", "number");
+
+                    var number = getSingleParameter(p.NR, parseSets.SP.CD.NR);
+
+                    sendNumberToOutput(number);
+                }
+
+                function sendNumberToOutput (number) {
+
+                    var output = p.output;
+
+                    p.output = function (slideObject1, slideObject2) {
+                        output(slideObject1, slideObject2, number);
+                    };
+
+                    parseSets.MP.SOR1_SOR2(p);
+
+                }
+
+                entryPoint();
+            },
+
+            ///////////////////////////////////////////////////////////////////////
             /////////////// Interactive Object + Criteria
             ///////////////////////////////////////////////////////////////////////
             "INT_CRI": function (p) {

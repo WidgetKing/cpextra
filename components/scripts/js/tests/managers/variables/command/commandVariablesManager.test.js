@@ -216,6 +216,12 @@
                 "states":{
                     "change":function () {}
                 }
+            },
+            "animationManager":{
+                "matchEntryToEffect":function () {}
+            },
+            "debugging":{
+                "debug": jasmine.createSpy()
             }
         };
     });

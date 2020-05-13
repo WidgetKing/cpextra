@@ -33,7 +33,6 @@ _extra.registerModule("touchEventManager", ["eventManager","slideObjectManager_g
 
         }
 
-
     }
 
     // Apparently haven't found a reliable way to detect when the browser is using touch events.

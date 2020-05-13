@@ -9,6 +9,8 @@ _extra.registerModule("whiteSpaceManager", ["variableManager"], function () {
 
     "use strict";
 
+	// TODO: Replace this with _extra.utils.removeWhiteSpace
+	// Currently that method does not implement the replace commas
     _extra.variableManager.safelyRemoveWhiteSpace = function (value, replaceCommas) {
         // Remove spaces from value string
         //return value.replace(/\s+/g,'');

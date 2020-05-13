@@ -85,6 +85,7 @@ _extra.registerModule("dataTypeConverters",["globalSlideObjectTypes"], function 
             case 111 : // kCPOTScoringResult
             case 112 : // kCPOTScoringResultItem
             case 10088 : // kCPOTStageAnswerLabel
+            case 683 : // kCPOTFlexBoxBackgroundItem
             case "radio" :
                 return soTypes.UNKNOWN;
 

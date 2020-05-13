@@ -275,6 +275,9 @@ _extra.registerModule("EventMediator", function () {
                 case "rollout":
                     return _extra.eventManager.events.MOUSE_OUT;
 
+				// case "click":
+				// 	return "touchcancel";
+
                 default :
                     return event;
             }

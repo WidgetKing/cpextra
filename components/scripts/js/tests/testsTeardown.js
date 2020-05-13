@@ -50,10 +50,10 @@
     // through some code
     window._extra.w = window;
 
-    callModules(["Callback","BaseSlideObjectDataProxy","TextEntryBoxDataProxy","SlideDataProxy","BaseSlideObjectProxy",
+    callModules(["Callback","BaseSlideObjectDataProxy","TextEntryBoxDataProxy","SlideDataProxy","BaseSlideObjectProxy", "CallbackTriggerBox",
     "SlideObjectStateManager", "StateDataProxy", "ModelListener", "Model", "EventMediator", "DoubleClickHandler",
     "EventDispatcher", "CustomEvent", "PlaybarProxy", "InterruptedClickEventHandler", "VariableEventManager",
-    "VariableEventProxy", "SlideObjectEnterExitEventManager", "SlideObjectQuestionDataProxy", "AlertProxy"]);
+    "VariableEventProxy", "SlideObjectEnterExitEventManager", "SlideObjectQuestionDataProxy", "AlertProxy", "EffectDataProxy", "SlideObjectVisibilityHandler"]);
 
     delete window._extra;
 }());

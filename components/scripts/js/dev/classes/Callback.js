@@ -14,17 +14,22 @@ _extra.registerModule("Callback", function () {
 
         this.data = {};
 
-        this.addCallback = function (index, callback, overwritable) {
+        function validateDataIndex (index, that) {
+            if (!that.data[index]) {
 
-            // If this is the first callback we're adding.
-            if (!this.data[index]) {
-
-                this.data[index] = {
+                that.data[index] = {
                     "overwritable": null,
                     "regular": []
                 };
 
             }
+
+        }
+
+        this.addCallback = function (index, callback, overwritable) {
+
+            // If this is the first callback we're adding.
+            validateDataIndex(index, this);
 
             if (overwritable) {
                 this.data[index].overwritable = callback;
@@ -33,13 +38,19 @@ _extra.registerModule("Callback", function () {
             }
         };
 
+        this.addCallbackToFront = function (index, callback) {
+            // If this is the first callback we're adding.
+            validateDataIndex(index, this);
+
+            this.data[index].regular.unshift(callback);
+        };
+
         this.hasCallbackFor = function (index) {
             return this.data[index] !== undefined;
         };
 
         this.sendToCallback = function (index,parameter) {
             var returnValue,
-                tempReturnValue,
                 data = this.data[index];
 
             if (data) {
@@ -50,19 +61,24 @@ _extra.registerModule("Callback", function () {
                 }
 
                 // Trigger regular callbacks
-                var a = data.regular;
+				if (!data.regular) return;
 
-                for (var i = 0; i < a.length; i += 1) {
+				// Copy the array, so we don't skip over indexes if 
+				// callbacks are removed using removeCallback()
+                var a = data.regular.concat();
+
+                a.forEach(function (value) {
 
                     // If the callback returns a value, then we'll return it at the end (assuming noting overrides it before then)
-                    tempReturnValue = a[i](parameter);
+                    var tempReturnValue = value(parameter);
 
                     if (tempReturnValue !== undefined) {
                         returnValue = tempReturnValue;
                     }
 
-                }
+              });
             }
+
 
             return returnValue;
         };
@@ -120,6 +136,10 @@ _extra.registerModule("Callback", function () {
 
                 }
             }
+        };
+
+        this.removeIndex = function(index) {
+            delete this.data[index];
         };
 
         this.clear = function () {

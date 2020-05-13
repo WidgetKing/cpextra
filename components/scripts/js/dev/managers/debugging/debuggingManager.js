@@ -22,6 +22,13 @@ _extra.registerModule("debuggingManager", function () {
             }
 
         },
+        "debug":function (message) {
+
+            if (_extra.preferences.debugMode) {
+                _extra.console.log(message);
+            }
+
+        },
         "error":function (message) {
 
             var errorNumber;

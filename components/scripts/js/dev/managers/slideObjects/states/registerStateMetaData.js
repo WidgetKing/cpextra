@@ -65,7 +65,7 @@ _extra.registerModule("registerStateMetaData",["slideObjectManager_global", "Sli
         if (slideObjectProxy) {
             currentSlideStateManagers[slideObjectName] = new _extra.classes.SlideObjectStateManager(slideObjectProxy, data);
         } else {
-            _extra.error("Could not find slideObjectProxy for '" + slideObjectName + "' in the registerStateMetaData module.")
+            _extra.error("Could not find slideObjectProxy for '" + slideObjectName + "' in the registerStateMetaData module.");
         }
 
 

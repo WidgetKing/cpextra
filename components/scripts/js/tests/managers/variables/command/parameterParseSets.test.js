@@ -27,6 +27,8 @@ describe("A test suite for the parameterParseSets", function () {
 
         slideObjects = {
             "slideObject":true,
+            "slideObject1":true,
+            "slideObject2":true,
             "syntax1":true,
             "syntax2":true,
             "interactiveObject":true,
@@ -1393,6 +1395,92 @@ describe("A test suite for the parameterParseSets", function () {
             expect(getOutput).not.toHaveBeenCalled();
             expect(setOutput).not.toHaveBeenCalled();
             expect(_extra.error).toHaveBeenCalledWith("CV006", "slideObject", jasmine.anything());
+
+        });
+
+    });
+
+    describe("A test suite for MD.SOR1_SOR2", function () {
+
+        beforeEach(function () {
+            testSet = _extra.variableManager.parseSets.MP.SOR1_SOR2;
+            testData = {
+                "output":dummy
+            };
+        });
+
+        it("should send data to output", function () {
+
+            testData.slideObject1 = "slideObject1";
+            testData.slideObject2 = "slideObject2";
+
+            testSet(testData);
+
+            expect(dummy).toHaveBeenCalledWith("slideObject1", "slideObject2");
+
+        });
+
+        it("should iterate over @syntax", function () {
+
+            testData.slideObject1 = "syntax@";
+            testData.slideObject2 = "slideObject2";
+
+            testSet(testData);
+
+            expect(dummy).toHaveBeenCalledWith("syntax1", "slideObject2");
+            expect(dummy).toHaveBeenCalledWith("syntax2", "slideObject2");
+
+        });
+
+        it("should iterate over two instances of @syntax", function () {
+
+            testData.slideObject1 = "syntax@";
+            testData.slideObject2 = "syntax@";
+
+            testSet(testData);
+
+            expect(dummy).toHaveBeenCalledWith("syntax1", "syntax1");
+            expect(dummy).toHaveBeenCalledWith("syntax1", "syntax2");
+            expect(dummy).toHaveBeenCalledWith("syntax2", "syntax1");
+            expect(dummy).toHaveBeenCalledWith("syntax2", "syntax2");
+
+        });
+
+        it("should not iterate over second index if we have turned off @syntax", function () {
+
+            testData.slideObject1 = "syntax@";
+            testData.slideObject2 = "syntax@";
+            testData.SOR2 = {
+                "noQueries": true
+            };
+
+            testSet(testData);
+
+            expect(_extra.error).toHaveBeenCalledWith("CV004", "syntax@");
+            expect(dummy).not.toHaveBeenCalled();
+
+        });
+
+    });
+
+    describe("A test suite for MD.SOR1_SOR2_NUM", function () {
+
+        beforeEach(function () {
+            testSet = _extra.variableManager.parseSets.MP.SOR1_SOR2_NR;
+            testData = {
+                "output":dummy
+            };
+        });
+
+        it("should send data to output", function () {
+
+            testData.slideObject1 = "slideObject1";
+            testData.slideObject2 = "slideObject2";
+            testData.number = 3;
+
+            testSet(testData);
+
+            expect(dummy).toHaveBeenCalledWith("slideObject1", "slideObject2", 3);
 
         });
 

@@ -11,6 +11,7 @@ _extra.registerModule("SlideDataProxy", function () {
 
     function SlideDataProxy(data) {
         this._data = data;
+        this._effects = null;
     }
 
     SlideDataProxy.prototype = {
@@ -44,6 +45,24 @@ _extra.registerModule("SlideDataProxy", function () {
         },
         set complete(value) {
             this._data.base.v = value;
+        },
+        get hasEffects() {
+            return this._data.base.hasOwnProperty("g4");
+        },
+        get effects() {
+            if (!this._effects && this.hasEffects) {
+                this._effects = new _extra.classes.SlideEffectsDataProxy(this._data.base.g4);
+            }
+            return this._effects;
+        },
+        get startFrame () {
+            return this._data.base.from;
+        },
+        get endFrame () {
+            return this._data.base.to;
+        },
+        get number() {
+            return _extra.slideManager.getSlideNumberById(this.id);
         }
     };
 

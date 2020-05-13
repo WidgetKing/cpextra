@@ -36,6 +36,9 @@ _extra.registerModule("BaseSlideObjectDataProxy", function () {
         get data() {
             return this._data;
         },
+		get accessibilityText() {
+			return this._data.container.accstr;
+		},
         get originalX() {
             return this._data.container.b[0];
         },
@@ -53,6 +56,12 @@ _extra.registerModule("BaseSlideObjectDataProxy", function () {
         },
         get endFrame() {
             return this._data.base.to;
+        },
+        get slideName() {
+            return this._data.base.apsn;
+        },
+        get slideNumber() {
+            return _extra.slideManager.getSlideDataFromId(this.slideName).number;
         },
         get type() {
             return this._type;
@@ -112,6 +121,9 @@ _extra.registerModule("BaseSlideObjectDataProxy", function () {
         get audioID() {
             return this._data.base.ia;
         },
+        get zIndex() {
+            return this._data.base.zIndex;
+        },
         get stateDatas () {
 
             // If this is the first time we've called this method for this instance.
@@ -122,6 +134,50 @@ _extra.registerModule("BaseSlideObjectDataProxy", function () {
             }
 
             return this._stateDatas;
+        },
+        get effects() {
+
+            if (!this._effects) {
+
+                var slideData = _extra.slideManager.getSlideDataFromId(this.slideName);
+
+                if (slideData.hasEffects) {
+                    this._effects = slideData.effects.getEffectsFor(this.name);
+                } else {
+                    this._effects = [];
+                }
+
+            }
+
+            return this._effects;
+        },
+
+        /**
+         * The text surrounded by html tags allowing it to be styled as it appeared in Captivate.
+         *
+         * Note: This is only available in responsive.
+         * Note: This is only available on Shapes, Captions and Buttons. But I'm too lazy to go make data
+         * classes for all those.
+         *
+         * @returns {string} The text + HTML tags
+         */
+        get htmlText() {
+            return this._data.base.vt;
+        },
+
+        /**
+         * The text that was typed into this object in Captivate's design environment.
+         * This text is unstyled. If you want the HTML tags that give this text the same style they
+         * had in Captivate then use the htmlText property.
+         *
+         * Note: This is only available in responsive.
+         * Note: This is only available on Shapes, Captions and Buttons. But I'm too lazy to go make data
+         * classes for all those.
+         *
+         * @returns {string} The text included in this object.
+         */
+        get text() {
+            return _extra.$(this.htmlText).text();
         }
     };
 

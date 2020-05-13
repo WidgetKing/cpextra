@@ -136,6 +136,9 @@ describe("A test suite for testing the SlideObjectStateManager class", function 
                     "CLICK": "click",
                     "DOUBLE_CLICK": "dbl_click"
                 }
+            },
+            "debugging": {
+                "debug": jasmine.createSpy("_extra.debugging.debug")
             }
         };
 
@@ -262,6 +265,38 @@ describe("A test suite for testing the SlideObjectStateManager class", function 
         expect(this.slideObject.state).toBe("x_thirdState");
 
         _extra.variableManager.setVariableValue("testVar2",4);
+        expect(this.slideObject.state).toBe("Normal");
+
+    });
+
+    it("should identify native captivate 'RollOver' or 'Down' states as 'Managed States'.", function () {
+
+        create(this.slideObject, {
+            "n":{
+                "x_firstState":{
+                    "trueVariable":false
+                }/*,
+                "x_secondState":{
+                    "trueVariable":false
+                },
+                "x_thirdState":{
+                    "trueVariable":5
+                }*/
+            }
+        });
+
+        expect(this.slideObject.state).toBe("Normal");
+
+        this.slideObject.changeState("RollOver");
+        this.slideObject.changeState("Down");
+
+        _extra.variableManager.setVariableValue("trueVariable", false);
+        expect(this.slideObject.state).toBe("x_firstState");
+
+        this.slideObject.changeState("RollOver");
+        this.slideObject.changeState("Down");
+
+        _extra.variableManager.setVariableValue("trueVariable", true);
         expect(this.slideObject.state).toBe("Normal");
 
     });

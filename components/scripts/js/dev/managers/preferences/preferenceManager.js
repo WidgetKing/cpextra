@@ -34,30 +34,59 @@ _extra.registerModule("preferenceManager", ["variableManager", "parameterParser"
             // What the name for the variable that manages this behaviour should look like.
             var preferenceVariable = preferenceVariablePrefix + preferenceVariableSuffix;
 
+            function enable (value) {
+
+                if (!preferenceInfo.enabled) {
+
+                    preferenceInfo.enable(value);
+                    preferenceInfo.enabled = true;
+
+                }
+
+                // If an update method has been provided, we'll call that with the value.
+                if (preferenceInfo.update) {
+                    preferenceInfo.update(value);
+                }
+
+            }
+
+            function disable () {
+
+                if (preferenceInfo.enabled) {
+                    preferenceInfo.disable();
+                    preferenceInfo.enabled = false;
+                }
+
+            }
+
             function onPreferenceVariableChange () {
 
                 var value = _extra.variableManager.getVariableValue(preferenceVariable);
 
                 if (_extra.variableManager.parse.boolean(value)) {
 
-                    if (!preferenceInfo.enabled) {
-                        preferenceInfo.enable(value);
-                        preferenceInfo.enabled = true;
-                    }
+                    enable(value);
 
-                    // If an update method has been provided, we'll call that with the value.
-                    if (preferenceInfo.update) {
-                        preferenceInfo.update(value);
-                    }
 
                 } else {
 
-                    if (preferenceInfo.enabled) {
-                        preferenceInfo.disable();
-                        preferenceInfo.enabled = false;
+                    disable();
+
+                }
+            }
+
+            function checkDefault () {
+
+                if (preferenceInfo.hasOwnProperty("default")) {
+
+                    if (preferenceInfo.default) {
+                        enable(preferenceInfo.default);
+                    } else {
+                        disable();
                     }
 
                 }
+
             }
 
             // Now check to see if a variable has been defined to manage this behaviour. If it has, then we will save this
@@ -67,6 +96,9 @@ _extra.registerModule("preferenceManager", ["variableManager", "parameterParser"
                 // Check to see if the behaviour variable has been defined with an underscore at the front of its name.
                 preferenceVariable = "_" + preferenceVariable;
                 if (!_extra.variableManager.hasVariable(preferenceVariable)) {
+
+                    checkDefault();
+
                     // Show the behaviour module that there is no variable defined to manage the behaviour and it is therefore
                     // unneccesary to instantiate.
                     return false;

@@ -21,7 +21,19 @@ _extra.registerModule("slideObjectHideShowListener", ["slideObjectManager_global
             // If there are details for this particular function, then we want to do something when that function is called.
             _extra.addHookAfter(details.location, details.name, function (slideObjectName) {
 
-                //_extra.log(slideObjectName);
+/*
+                var slideObject = _extra.slideObjects.getSlideObjectByName(slideObjectName);
+
+                if (event === "show") {
+
+                    slideObject.visibility.nonContentDivs = false;
+
+                } else if (event === "hide") {
+
+                    slideObject.visibility.nonContentDivs = true;
+
+                }
+*/
 
             });
 

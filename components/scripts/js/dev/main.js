@@ -181,7 +181,6 @@ function initExtra(topWindow) {
     ///// Extra Pre-detection
     //////////////
 
-
     if (_extra.w.X !== undefined) {
 
         abort("X");

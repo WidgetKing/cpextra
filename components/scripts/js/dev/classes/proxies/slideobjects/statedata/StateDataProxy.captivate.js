@@ -20,6 +20,7 @@ _extra.registerModule("StateDataProxy", ["softwareInterfacesManager"], function 
 
         if (data) {
 
+
             this._data = data;
             this.slideObjects = [];
 
@@ -153,7 +154,8 @@ _extra.registerModule("StateDataProxy", ["softwareInterfacesManager"], function 
 
             } else {
 
-                formattedData = this.formatDataBySlideObjectData(_extra.dataManager.getSlideObjectDataByID(uid));
+              var slideObjectData = _extra.dataManager.getSlideObjectDataByID(uid);
+                formattedData = this.formatDataBySlideObjectData(slideObjectData);
 
             }
 

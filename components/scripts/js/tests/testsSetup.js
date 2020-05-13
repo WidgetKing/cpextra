@@ -50,7 +50,11 @@
                             }
                         },
                         "model": {
-
+                            "data":{
+                                "project_main":{
+                                    "useWidgetVersion7": true
+                                }
+                            }
                         },
                         "movie":{
                             "stage": {
