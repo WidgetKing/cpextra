@@ -4,6 +4,10 @@
   "buildNumber": 10313,
   "description": "An extension for Adobe Captivate which adds extra features, streamlines day-to-day workflows and fixes certain bugs or unexpected behaviours inside of Captivate. ONLY WORKS FOR HTML EXPORT!",
   "main": "index.js",
+  "scripts": {
+    "docs:build": "vuepress build docs",
+    "docs:dev": "vuepress dev docs"
+  },
   "repository": {
     "type": "git",
     "url": "?.git"
@@ -26,10 +30,12 @@
     "gulp-util": "^3.0.6",
     "gulp-zip": "^3.0.2",
     "jasmine-core": "^2.3.4",
+    "vuepress": "^1.4.0",
     "karma": "^0.13.22",
     "karma-chrome-launcher": "^0.2.3",
     "karma-coverage": "^0.5.2",
     "karma-ie-launcher": "^0.2.0",
     "karma-jasmine": "^0.3.8"
-  }
+  },
+  "dependencies": {}
 }
