@@ -1,6 +1,6 @@
 ---
 home: true
-heroImage: img/cpextra_logo.png
+heroImage: /img/cpextra_logo.png
 actionText: Get Started
 actionLink: /getting-started/
 features:
