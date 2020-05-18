@@ -1,6 +1,6 @@
 ---
 home: true
-heroImage: /img/cpextra_logo.png
+heroImage: img/cpextra-logo.png
 actionText: Get Started
 actionLink: /getting-started/
 features:
@@ -15,4 +15,4 @@ features:
 footer: All rights reserved Infosemantics | Copyright 2020-present Infosemantics
 ---
 
-This is my CpExtra vuepress site
+Please be aware that this widge has many features and can therefore at times be complex to use. Adobe Captivate users desiring to incorpoarte this widget into their projects should already be familiar with the basics of navigating the Captivate interface, and know how to use Variables and Advanced Actions.

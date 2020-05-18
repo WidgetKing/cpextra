@@ -5,7 +5,7 @@ module.exports = {
     port: 9090,
     // theme: "default-prefers-color-scheme",
     themeConfig: {
-        sidebarDepth: 2,
+        sidebarDepth: 1,
         displayAllHeaders: true,
         // defaultTheme: "dark",
         nav: [
@@ -14,6 +14,7 @@ module.exports = {
                 text: "Getting Started",
                 link: "/getting-started/basic-concepts/"
             },
+            { text: "Features", link: "/features/" },
             { text: "Variables", link: "/variables/about/" },
             {
                 text: "Buy",
@@ -24,8 +25,8 @@ module.exports = {
 
         sidebar: {
             "/getting-started/": [
-                "basic-concepts/",
                 "installation/",
+                "basic-concepts/",
                 "previewing/"
             ],
             "/variables/": ["about/", "command/", "preference/", "info/"]
