@@ -12,7 +12,7 @@ module.exports = {
             { text: "Home", link: "/" },
             {
                 text: "Getting Started",
-                link: "/getting-started/basic-concepts/"
+                link: "/getting-started/installation/"
             },
             { text: "Features", link: "/features/" },
             { text: "Variables", link: "/variables/about/" },
@@ -25,8 +25,8 @@ module.exports = {
 
         sidebar: {
             "/getting-started/": [
-                "installation/",
-                "basic-concepts/"
+                "installation",
+                "basic-concepts"
             ],
             "/variables/": ["about/", "command/", "preference/", "info/"]
         }

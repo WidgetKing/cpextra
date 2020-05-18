@@ -1,4 +1,4 @@
-# Variables
+# About Variables
 In this section we will explain CpExtra's command/preference/info variables.
 
 ::: tip About variable prefixes
