@@ -6,9 +6,9 @@ windows:
       layout: main-vertical
       panes: 
         - vim
-        - gulp test-dev
+          #- gulp test-dev
   - server:
       layout: even-horizontal
       panes:
         - npm run docs:dev
-        - gulp
+          #- gulp
