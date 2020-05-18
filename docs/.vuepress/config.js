@@ -2,7 +2,6 @@ module.exports = {
   title: "CpExtra Help",
   description: "The Captivate multi-tool",
   base: "/cpextra/",
-  port: 9090,
   // theme: "default-prefers-color-scheme",
   themeConfig: {
     sidebarDepth: 2,
@@ -17,26 +16,27 @@ module.exports = {
         link:
           "https://www.infosemantics.com.au/?q=adobe-captivate-widgets/cpextra"
       }
-    ],
+    ]
 
-    sidebar: {
-      "/variables/": [
-        {
-          title: "Command Variables",
-          path: "/command-variables/",
-          collapsable: false,
-          sidebarDepth: 1,
-          children: []
-        },
-        {
-          title: "Preference Variables",
-          path: "/preference-variables/",
-          collapsable: false,
-          sidebarDepth: 1,
-          children: []
-        }
-      ]
-    }
+    // sidebar: {
+    //   "/variables/": [
+    //     {
+    //       title: "Command Variables",
+    //       path: "/command/",
+    //       collapsable: false,
+    //       sidebarDepth: 1,
+    //       children: []
+    //     },
+    //     {
+    //       title: "Preference Variables",
+    //       path: "/preference/",
+    //       collapsable: false,
+    //       sidebarDepth: 1,
+    //       children: []
+    //     }
+    //   ]
+    // }
+	  
   },
 
   plugins: [
