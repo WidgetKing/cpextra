@@ -26,8 +26,7 @@ module.exports = {
         sidebar: {
             "/getting-started/": [
                 "installation/",
-                "basic-concepts/",
-                "previewing/"
+                "basic-concepts/"
             ],
             "/variables/": ["about/", "command/", "preference/", "info/"]
         }

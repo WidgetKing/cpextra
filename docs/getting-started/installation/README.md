@@ -98,4 +98,55 @@ We've been doing this since *Captivate 9*.
 
 ## Widget Installation
 
+When you insert CpExtra as a widget, it will appear on the Captivate timeline. Once the published Captivate movie enters that part of the timeline the CpExtra code will run activate. Even once you move out of that slide CpExtra will continue to work. So you **do not** just put a CpExtra widget on the slides you want to use CpExtra features.
 
+Therefore, you would put CpExtra on the first or second slide. Of your project.
+
+::: tip Pros
+- If you share your .cptx with another Captivate developer, CpExtra will still be included.
+- The widget properties interface includes a notification to tell you when a new version of CpExtra has been released.
+:::
+
+::: danger Cons
+- LMS reloading and Self-Paced learning may cause your Captivate project to start mid-way through the course. This does not give the CpExtra code a chance to run. Any slides using CpExtra features will not act as expected.
+- When using the 'preview next 3 slides' option in Captivate, unless one of those three slides is the one with CpExtra, then CpExtra features will not work.
+- You will have to insert the CpExtra widget into every project that you desire to use CpExtra features in.
+- If you don't preview the project from a server or local host server, the browser may stop the CpExtra code from executing as it believes there is a security issue. This not because the code is insecure, it's just part of the way the browser treats any code running in an iframe element.
+:::
+
+### Instructions for importing
+
+1. In your Captivate project choose Insert > Widget
+2. Browse to the Infosemantics_CpExtra.wdgt file and select it.
+3. The Widget will be inserted into Captivate, showing the Widget Properties window. You click 'OK' to this window. Clicking 'Cancel' will prevent the widget from importing.
+4. The CpExtra widget will now appear on the slide.
+
+### Where should the CpExtra widget be placed?
+
+Some place the CpExtra widget on the first slide of their project, but this is not considered best practice. The most computationally intensive part of the Captivate export is the initial setup. Placing CpExtra on the first slide may possibly add to that load.
+
+Our personal recommendation is to:
+1. Make the first slide of the project last for one or more seconds and display a loading message.
+2. Insert CpExtra on the *second* slide of the project. This slide should be at least one second in duration.
+
+### Viewing the exported project
+
+As stated above, projects using the CpExtra widget must always be viewed from a server or local host server. 
+
+Therefore, after you have published a project you can not freely navigate to the export folder and view the output. This would be running the export from your file system which causes the browser to apply a different set of restrictions to the content. To safely view this export, you would need to set up a local host server on your computer or upload the export to a web server and view it from there.
+
+Additionally, certain preview options in Captivate will generate a local host server on the fly for you to view the content, while others will not.
+
+#### Previewing in Responsive Projects
+
+Any preview method will work. Just remember that Preview > Next 3 Slides must include the slide with CpExtra.
+
+When you publish a project an alert box will appear at the end of the process asking if you want to view the output. You may accept this with confidence, as Captivate will generate a local host server for you to view the output.
+
+#### Previewing in Regular Projects
+
+Choose Preview > HTML5 in Browser
+
+::: tip
+You will not run into any of these previewing headaches if you load CpExtra heedlessly.
+:::
