@@ -15,4 +15,6 @@ features:
 footer: All rights reserved Infosemantics | Copyright 2020-present Infosemantics
 ---
 
-Please be aware that this widge has many features and can therefore at times be complex to use. Adobe Captivate users desiring to incorpoarte this widget into their projects should already be familiar with the basics of navigating the Captivate interface, and know how to use Variables and Advanced Actions.
+CpExtra is compatible with Captivate versions 9 and up.
+
+Please be aware that this library has many features and can therefore at times require a certain amount of technical expertise to use. Adobe Captivate users desiring to incorpoarte this widget into their projects should already be familiar with the basics of navigating the Captivate interface, and know how to use Variables and Advanced Actions.

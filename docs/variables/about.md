@@ -63,3 +63,46 @@ In that case, define the CpExtra variable with an '\_' in front of its name. For
 CpExtra will still recognize it, and it will sort to the top of your list of variables.
 :::
 
+## Data types
+Data comes in different types. For example:
+
+- Numbers
+- Strings (A fancy way of saying: Letters and words!)
+- Boolean (yes or no)
+
+Usually an action only makes sense if applied to a particular data type.
+
+For example: xcmndRound takes a number like 3.456 and rounds it to the nearest number: 3. Would it make sense to try and round a string such as 'french fries' to it's nearest number? No, the data type is wrong.
+
+Usually this is not something you need to worry about as CpExtra will imply the data type from what you write. But it is good to know a few bits of information about data types.
+
+### Numbers
+This counts as whole numbers (like: 2, 4, 53, 1800) and floating point numbers (1.2, 333.3333, 3.14).
+
+However, if you're writing numbers higher than a thousand **do not** include commas like: 1,234,567. Remove the commas instead: 1234567
+
+### String
+Note that when making an assignment to a command variable, CpExtra will remove all space characters. So something like: 
+
+<img :src="$withBase('/img/xcmndalert-with-spaces.png')" alt="assign xcmndAlert with Hello World! How Are You!">
+
+Will effectively become:
+
+<img :src="$withBase('/img/xcmndalert-no-spaces.png')" alt="assign xcmndAlert with HelloWorld!HowAreYou!">
+
+To get around this, use square brackets [].
+[See this page for more information.](./special-behaviour.html#for-string-values)
+
+### Boolean
+A positive boolean value can be written out in several ways:
+- true
+- yes
+- 1
+
+A negative boolean value can be written as follows:
+- false
+- no
+- 0
+
+All are equally valid.
+

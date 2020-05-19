@@ -13,6 +13,13 @@ While CpExtra can be loaded into Captivate as a widget, we do not consider CpExt
 3. At runtime widgets usually added some kind of visual interaction (the learning interactions for example). CpExtra does not. It runs invisibly in the background.
 Instead, we consider CpExtra to be a **library**. In programing circles a library is considered as a collection of scripts which automate frequently performed tasks. We feel this is a more accurate description of what CpExtra does for Captivate.
 
+## CpExtra is HTML5 ONLY
+Captivate exports to several formats. CpExtra is only compatible with HTML5 export. There are no plans to make it work with swf export.
+
+::: tip
+Considering the [Flash Player end of life](https://www.adobe.com/products/flashplayer/end-of-life.html) plan, you would need to have a very good reason for developing a swf export course at this point in time.
+:::
+
 ## How do I make CpExtra do something?
 CpExtra does not have an interface. You send orders to CpExtra in one of the following ways:
 

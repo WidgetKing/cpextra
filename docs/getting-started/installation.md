@@ -30,6 +30,7 @@ Headless loading installs CpExtra into the Captivate program files. This means w
 
 ### Video Instructions
 
+
 <iframe width="560" height="315" src="https://www.youtube.com/embed/i-px1CkiDHM" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> 
 
 ### Written Instructions
@@ -98,9 +99,9 @@ We've been doing this since *Captivate 9*.
 
 ## Widget Installation
 
-When you insert CpExtra as a widget, it will appear on the Captivate timeline. Once the published Captivate movie enters that part of the timeline the CpExtra code will run activate. Even once you move out of that slide CpExtra will continue to work. So you **do not** just put a CpExtra widget on the slides you want to use CpExtra features.
+When you insert CpExtra as a widget, it will appear on the Captivate timeline. Once the published Captivate movie enters that part of the timeline the CpExtra code will activate. Even when you move out of that slide, CpExtra will continue to work. So you **do not** just put a CpExtra widget on the slides you want to use CpExtra features.
 
-Therefore, you would put CpExtra on the first or second slide. Of your project.
+While the widget has a presence on the stage while you are making edits in Captivate, once in the HTML5 export the widget will be invisible. So you don't need to worry about hiding it.
 
 ::: tip Pros
 - If you share your .cptx with another Captivate developer, CpExtra will still be included.
