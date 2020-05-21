@@ -1,29 +1,29 @@
-const {pipe, curry, __} = require("ramda"),
-karmaServer = curry(require("karma").Server),
-    {log, colors} = require("gulp-util")
-    karmaParseConfig = curry(require("karma/lib/config").parseConfig),
-    configFile = __dirname + '/karma.conf.js';
+const { pipe, curry, __ } = require("ramda"),
+    karmaServer = curry(require("karma").Server),
+    { log, colors } = require("gulp-util"),
+    pc = require("karma/lib/config").parseConfig,
+    karmaParseConfig = curry(pc),
+    configFile = __dirname + "/karma.conf.js";
 
 const exit = curry(function(done, exitCode) {
-   log("Karma has exited with " + colors.red(exitCode)) 
+    log("Karma has exited with " + colors.red(exitCode));
     done();
     process.exit(exitCode);
 });
 
 function run(initialConfig, done) {
-
-    pipe(karmaParseConfig(configFile), karmaServer(__, exit(done)))(initialConfig);
-
-} 
-
-
-
+    pipe(
+        karmaParseConfig(configFile),
+        karmaServer(__, exit(done))
+    )(initialConfig);
+}
 
 /////// EXPORTS
-exports.runSingleTest = (done) => run({singleRun: true, autoWatch: false}, done);
+exports.runSingleTest = done =>
+    run({ singleRun: true, autoWatch: false }, done);
 
-exports.runContinualTests = (done) => run({singleRun: false, autoWatch: true}, done);
-
+exports.runContinualTests = done =>
+    run({ singleRun: false, autoWatch: true }, done);
 
 /*
   function runKarma(configFilePath, options, cb) {

@@ -9,12 +9,12 @@ const { series } = require("gulp"),
 ///////////////// UNIT TESTS
 /////////////////////////////////
 // exports.runContinualTests = karmaServer.runContinualTests;
-// exports.runSingleTest = karmaServer.runSingleTest;
+exports.runSingleTest = karmaServer.runSingleTest;
 
-exports.test = (done) => {
+// exports.test = (done) => {
 
-    log(generateCopyright())
+//     log(generateCopyright())
 
-    done();
-}
+//     done();
+// }
 // exports.default = series(test, test2)

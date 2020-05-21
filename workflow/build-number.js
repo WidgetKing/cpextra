@@ -12,14 +12,13 @@ exports.getCurrent = () => buildNumber;
 exports.inc = () => {
     buildNumber += 1;
 
-    gulp
-      .src("./package.json")
-      .pipe(
-        gjsoneditor({
-          buildNumber: buildNumber
-        })
-      )
-      .pipe(gulp.dest("./"));
+    gulp.src("./package.json")
+        .pipe(
+            gjsoneditor({
+                buildNumber: buildNumber
+            })
+        )
+        .pipe(gulp.dest("./"));
 
     return buildNumber;
-  }
+};

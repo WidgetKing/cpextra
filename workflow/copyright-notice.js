@@ -1,27 +1,27 @@
 const buildNumber = require("./build-number.js");
 
-  exports.generate = function () {
+exports.generate = function() {
     return (
-      "/**\n" +
-      " * Captivate Extra\n" +
-      " * Version: " +
-      buildNumber.getCurrentVersion() +
-      "\n" +
-      " * Build: " +
-      buildNumber.getCurrent() +
-      "\n" +
-      " * Written By: Tristan Ward\n" +
-      " * Company: Infosemantics\n" +
-      " * Licence: See licence document provided with CpExtra purchase\n" +
-      " * Copyright: Tristan Ward 2020\n" +
-      " * " +
-      getNoSleepCopywriteNotice() +
-      "\n" +
-      " */\n"
+        "/**\n" +
+        " * Captivate Extra\n" +
+        " * Version: " +
+        buildNumber.getCurrentVersion() +
+        "\n" +
+        " * Build: " +
+        buildNumber.getCurrent() +
+        "\n" +
+        " * Written By: Tristan Ward\n" +
+        " * Company: Infosemantics\n" +
+        " * Licence: See licence document provided with CpExtra purchase\n" +
+        " * Copyright: Tristan Ward 2020\n" +
+        " * " +
+        getNoSleepCopywriteNotice() +
+        "\n" +
+        " */\n"
     );
-  }
+};
 
-  function getNoSleepCopywriteNotice() {
+function getNoSleepCopywriteNotice() {
     return `
  *	COPYRIGHT NOTICE FOR THE NO-SLEEP JAVASCRIPT LIBRARY
  *
@@ -47,4 +47,4 @@ const buildNumber = require("./build-number.js");
  *	LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
  *	OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  *	WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.`;
-  }
+}
