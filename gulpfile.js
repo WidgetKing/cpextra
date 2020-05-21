@@ -1,18 +1,20 @@
 const { series } = require("gulp"),
-    gutil = require("gulp-util"),
-    karmaServer = require("karma").Server;
+    { log } = require("gulp-util"),
+    buildNumber = require("./workflow/build-number"),
+    karmaServer = require("./workflow/karma-server"),
+    generateCopyright = require("./workflow/copyright-notice.js").generate;
 
-function test(done) {
-    new karmaServer ({
-        configFile: __dirname + '/karma.conf.js',
-        singleRun: true
-    }, done).start();
+
+/////////
+///////////////// UNIT TESTS
+/////////////////////////////////
+// exports.runContinualTests = karmaServer.runContinualTests;
+// exports.runSingleTest = karmaServer.runSingleTest;
+
+exports.test = (done) => {
+
+    log(generateCopyright())
+
+    done();
 }
-
-function test2(cb) {
-    gutil.log("Another trace")
-    cb();
-}
-
-exports.test = test;
-exports.default = series(test, test2)
+// exports.default = series(test, test2)
