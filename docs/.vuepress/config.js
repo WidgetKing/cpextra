@@ -30,7 +30,7 @@ module.exports = {
 				"faq",
 				"changelog"
             ],
-            "/variables/": ["about", "special-behaviour", "command", "preference", "info"]
+            "/variables/": ["about", "special-behaviour", "event-listeners", "command", "preference", "info"]
         }
     },
 

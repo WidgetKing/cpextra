@@ -94,12 +94,12 @@ To get around this, use square brackets [].
 [See this page for more information.](./special-behaviour.html#for-string-values)
 
 ### Boolean
-A positive boolean value can be written out in several ways:
+A *positive* boolean value can be written out in several ways:
 - true
 - yes
 - 1
 
-A negative boolean value can be written as follows:
+A *negative* boolean value can be written as follows:
 - false
 - no
 - 0
