@@ -1,14 +1,14 @@
-const buildNumber = require("./build-number.js");
+const version = require("./version.js");
 
 exports.generate = function() {
     return (
         "/**\n" +
         " * Captivate Extra\n" +
         " * Version: " +
-        buildNumber.getCurrentVersion() +
+        version.getCurrentVersion() +
         "\n" +
         " * Build: " +
-        buildNumber.getCurrent() +
+        version.getCurrent() +
         "\n" +
         " * Written By: Tristan Ward\n" +
         " * Company: Infosemantics\n" +

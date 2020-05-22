@@ -68,148 +68,148 @@
   //////////////////////////////////////
   ///////// KARMA
   //////////////////////////////////////
-  function getCopywriteNotice() {
-    return (
-      "/**\n" +
-      " * Captivate Extra\n" +
-      " * Version: " +
-      versionNumber +
-      "\n" +
-      " * Build: " +
-      buildNumber +
-      "\n" +
-      " * Written By: Tristan Ward\n" +
-      " * Company: Infosemantics\n" +
-      " * Licence: See licence document provided with CpExtra purchase\n" +
-      " * Copyright: Tristan Ward 2020\n" +
-      " * " +
-      getNoSleepCopywriteNotice() +
-      "\n" +
-      " */\n"
-    );
-  }
+  // function getCopywriteNotice() {
+  //   return (
+  //     "/**\n" +
+  //     " * Captivate Extra\n" +
+  //     " * Version: " +
+  //     versionNumber +
+  //     "\n" +
+  //     " * Build: " +
+  //     buildNumber +
+  //     "\n" +
+  //     " * Written By: Tristan Ward\n" +
+  //     " * Company: Infosemantics\n" +
+  //     " * Licence: See licence document provided with CpExtra purchase\n" +
+  //     " * Copyright: Tristan Ward 2020\n" +
+  //     " * " +
+  //     getNoSleepCopywriteNotice() +
+  //     "\n" +
+  //     " */\n"
+  //   );
+  // }
 
-  function getNoSleepCopywriteNotice() {
-    return `
- *	COPYRIGHT NOTICE FOR THE NO-SLEEP JAVASCRIPT LIBRARY
- *
- *	The MIT License (MIT)
- *	
- *	Copyright (c) Rich Tibbett
- *	
- *	Permission is hereby granted, free of charge, to any person obtaining
- *	a copy of this software and associated documentation files (the
- *		"Software"), to deal in the Software without restriction, including
- *	without limitation the rights to use, copy, modify, merge, publish,
- *		distribute, sublicense, and/or sell copies of the Software, and to
- *	permit persons to whom the Software is furnished to do so, subject to
- *	the following conditions:
- *	
- *	The above copyright notice and this permission notice shall be
- *	included in all copies or substantial portions of the Software.
- *		
- *		THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- *	EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *	MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- *	NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
- *	LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
- *	OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
- *	WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.`;
-  }
+  // function getNoSleepCopywriteNotice() {
+  //   return `
+ // *	COPYRIGHT NOTICE FOR THE NO-SLEEP JAVASCRIPT LIBRARY
+ // *
+ // *	The MIT License (MIT)
+ // *	
+ // *	Copyright (c) Rich Tibbett
+ // *	
+ // *	Permission is hereby granted, free of charge, to any person obtaining
+ // *	a copy of this software and associated documentation files (the
+ // *		"Software"), to deal in the Software without restriction, including
+ // *	without limitation the rights to use, copy, modify, merge, publish,
+ // *		distribute, sublicense, and/or sell copies of the Software, and to
+ // *	permit persons to whom the Software is furnished to do so, subject to
+ // *	the following conditions:
+ // *	
+ // *	The above copyright notice and this permission notice shall be
+ // *	included in all copies or substantial portions of the Software.
+ // *		
+ // *		THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ // *	EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ // *	MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ // *	NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+ // *	LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ // *	OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ // *	WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.`;
+  // }
 
   //////////////////////////////////////
   ///////// KARMA
   //////////////////////////////////////
-  function runKarma(configFilePath, options, cb) {
-    configFilePath = path.resolve(configFilePath);
+  // function runKarma(configFilePath, options, cb) {
+  //   configFilePath = path.resolve(configFilePath);
 
-    var log = gutil.log,
-      colours = gutil.colors,
-      config = karmaParseConfig(configFilePath, {}),
-      server;
+  //   var log = gutil.log,
+  //     colours = gutil.colors,
+  //     config = karmaParseConfig(configFilePath, {}),
+  //     server;
 
-    Object.keys(options).forEach(function(key) {
-      config[key] = options[key];
-    });
+  //   Object.keys(options).forEach(function(key) {
+  //     config[key] = options[key];
+  //   });
 
-    server = new karma.Server(config, function(exitCode) {
-      log("Karma has exited with " + colours.red(exitCode));
-      cb();
-      process.exit(exitCode);
-    });
-    server.start();
-  }
+  //   server = new karma.Server(config, function(exitCode) {
+  //     log("Karma has exited with " + colours.red(exitCode));
+  //     cb();
+  //     process.exit(exitCode);
+  //   });
+  //   server.start();
+  // }
 
-  gulp.task("test", function(cb) {
-    runKarma(
-      karmaConfig,
-      {
-        autoWatch: false,
-        singleRun: true
-      },
-      cb
-    );
-  });
+  // gulp.task("test", function(cb) {
+  //   runKarma(
+  //     karmaConfig,
+  //     {
+  //       autoWatch: false,
+  //       singleRun: true
+  //     },
+  //     cb
+  //   );
+  // });
 
-  gulp.task("test-dev", function(cb) {
-    runKarma(
-      karmaConfig,
-      {
-        autoWatch: true,
-        singleRun: false
-      },
-      cb
-    );
-  });
+  // gulp.task("test-dev", function(cb) {
+  //   runKarma(
+  //     karmaConfig,
+  //     {
+  //       autoWatch: true,
+  //       singleRun: false
+  //     },
+  //     cb
+  //   );
+  // });
 
   //////////////////////////////////////
   ///////// TASKS
   //////////////////////////////////////
 
-  function iterateBuildNumber() {
-    buildNumber += 1;
+  // function iterateBuildNumber() {
+  //   buildNumber += 1;
 
-    gulp
-      .src("./package.json")
-      .pipe(
-        gjsoneditor({
-          buildNumber: buildNumber
-        })
-      )
-      .pipe(gulp.dest("./"));
+  //   gulp
+  //     .src("./package.json")
+  //     .pipe(
+  //       gjsoneditor({
+  //         buildNumber: buildNumber
+  //       })
+  //     )
+  //     .pipe(gulp.dest("./"));
 
-    return buildNumber;
-  }
+  //   return buildNumber;
+  // }
 
-  function concatFiles(glob, fileName, destination) {
-    return gulp
-      .src(glob)
-      .pipe(gconcat(fileName))
-      .pipe(greplace("$$VERSION_NUMBER$$", jsonPackage.version))
-      .pipe(greplace("$$BUILD_NUMBER$$", buildNumber))
-      .pipe(uglify())
-      .pipe(gulp.dest(destination));
-  }
+  // function concatFiles(glob, fileName, destination) {
+  //   return gulp
+  //     .src(glob)
+  //     .pipe(gconcat(fileName))
+  //     .pipe(greplace("$$VERSION_NUMBER$$", jsonPackage.version))
+  //     .pipe(greplace("$$BUILD_NUMBER$$", buildNumber))
+  //     .pipe(uglify())
+  //     .pipe(gulp.dest(destination));
+  // }
 
-  gulp.task("iterateBuildNumber", function() {
-    gutil.log("Build Number: " + iterateBuildNumber());
-  });
+  // gulp.task("iterateBuildNumber", function() {
+  //   gutil.log("Build Number: " + iterateBuildNumber());
+  // });
 
-  gulp.task("compileCaptivateJS", function() {
-    return concatFiles(
-      jsCaptivateSources,
-      captivateExtraDevFileName,
-      captivateExtraDevLocation
-    );
-  });
+  // gulp.task("compileCaptivateJS", function() {
+  //   return concatFiles(
+  //     jsCaptivateSources,
+  //     captivateExtraDevFileName,
+  //     captivateExtraDevLocation
+  //   );
+  // });
 
-  gulp.task("compileStorylineJS", function() {
-    return concatFiles(
-      jsStorylineSources,
-      storylineExtraDevFileName,
-      storylineExtraDevLocation
-    );
-  });
+  // gulp.task("compileStorylineJS", function() {
+  //   return concatFiles(
+  //     jsStorylineSources,
+  //     storylineExtraDevFileName,
+  //     storylineExtraDevLocation
+  //   );
+  // });
 
   gulp.task("moveVersionJSON", function() {
     return gulp

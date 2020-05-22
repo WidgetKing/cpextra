@@ -7,7 +7,7 @@
         spec="0.1b" jsClass='CaptivateExtraWidgetInit' sandbox='true' width='10' height='10'
         xmlns="http://openajax.org/metadata"> 
   
-    <javascript src="scripts/captivate_extra.js"/> 
+    <javascript src="scripts/Infosemantics_CpExtra.js"/> 
   
     <content type='fragment'> 
     <![CDATA[ 
