@@ -102,7 +102,7 @@ exports.compileProductionEverything = series(
     copyDevJSToProduction
 );
 
-exports.test = copyDevJSToProduction;
+exports.test = copySWFIntoWidgetFolder;
 // gulp.task("compileWidget", ["compileWidgetDescription"], function() {
 //   return gulp
 //     .src("builds/development/wdgt_source/**")

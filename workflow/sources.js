@@ -10,7 +10,7 @@ exports.devWidgetFolderGlob = "builds/development/wdgt_source/**";
 
 ///// FILE NAMES
 exports.compiledCpExtraFileName = "Infosemantics_CpExtra.js";
-exports.widgetPropertieSWFName = "Infosemantics_CPExtra_AS3.swf";
+exports.widgetPropertieSWFName = "Infosemantics_CPExtra_AS3";
 exports.widgetFileName = "Infosemantics_CpExtra.wdgt";
 
 ///// DIRECTORIES

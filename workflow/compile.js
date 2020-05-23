@@ -48,9 +48,9 @@ exports.copyAndRename = (file, destination, newName, done) => {
         .on("end", done);
 };
 exports.zipFolder = (globToZip, destination, zipName, done) => {
-return gulp
+    return gulp
         .src(globToZip)
         .pipe(gzip(zipName))
         .pipe(gulp.dest(destination))
         .on("end", done);
-}
+};
