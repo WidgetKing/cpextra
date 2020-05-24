@@ -25,7 +25,6 @@
     greplace = require("gulp-replace"),
     grename = require("gulp-rename"),
     gflatmap = require("gulp-flatmap"),
-    gplumber = require("gulp-plumber"),
     ginsert = require("gulp-insert"),
     gglob = require("glob"),
     uglify = require("gulp-uglify"),
@@ -211,161 +210,161 @@
   //   );
   // });
 
-  gulp.task("moveVersionJSON", function() {
-    return gulp
-      .src(versionJSONSource)
-      .pipe(greplace("$$VERSION_NUMBER$$", jsonPackage.version))
-      .pipe(greplace("$$BUILD_NUMBER$$", buildNumber))
-      .pipe(gulp.dest(versionJSONDestination));
-  });
+  // gulp.task("moveVersionJSON", function() {
+  //   return gulp
+  //     .src(versionJSONSource)
+  //     .pipe(greplace("$$VERSION_NUMBER$$", jsonPackage.version))
+  //     .pipe(greplace("$$BUILD_NUMBER$$", buildNumber))
+  //     .pipe(gulp.dest(versionJSONDestination));
+  // });
 
-  gulp.task("moveSWFOutput", ["moveVersionJSON"], function() {
-    return gulp
-      .src(swfSources)
-      .pipe(gulp.dest("builds/development/wdgt_source/swf"));
-  });
+  // gulp.task("moveSWFOutput", ["moveVersionJSON"], function() {
+  //   return gulp
+  //     .src(swfSources)
+  //     .pipe(gulp.dest("builds/development/wdgt_source/swf"));
+  // });
 
-  gulp.task("compileWidgetDescription", function() {
-    return gulp
-      .src("components/scripts/xml/description.xml")
-      .pipe(greplace("$$VERSION_NUMBER$$", jsonPackage.version))
-      .pipe(gulp.dest("builds/development/wdgt_source"));
-  });
+  // gulp.task("compileWidgetDescription", function() {
+  //   return gulp
+  //     .src("components/scripts/xml/description.xml")
+  //     .pipe(greplace("$$VERSION_NUMBER$$", jsonPackage.version))
+  //     .pipe(gulp.dest("builds/development/wdgt_source"));
+  // });
 
-  gulp.task("copyEffects", function() {
-    return gulp
-      .src("components/scripts/xml/Effects/**")
-      .pipe(greplace("$$VERSION_NUMBER$$", jsonPackage.version))
-      .pipe(greplace("$$BUILD_NUMBER$$", buildNumber))
-      .pipe(gulp.dest("builds/development/Effects"));
-  });
+  // gulp.task("copyEffects", function() {
+  //   return gulp
+  //     .src("components/scripts/xml/Effects/**")
+  //     .pipe(greplace("$$VERSION_NUMBER$$", jsonPackage.version))
+  //     .pipe(greplace("$$BUILD_NUMBER$$", buildNumber))
+  //     .pipe(gulp.dest("builds/development/Effects"));
+  // });
 
-  gulp.task("compileWidget", ["compileWidgetDescription"], function() {
-    return gulp
-      .src("builds/development/wdgt_source/**")
-      .pipe(gzip("Infosemantics_CpExtra.wdgt"))
-      .pipe(gulp.dest("builds/development"));
-  });
+  // gulp.task("compileWidget", ["compileWidgetDescription"], function() {
+  //   return gulp
+  //     .src("builds/development/wdgt_source/**")
+  //     .pipe(gzip("Infosemantics_CpExtra.wdgt"))
+  //     .pipe(gulp.dest("builds/development"));
+  // });
 
-  gulp.task("moveFilesToProduction", function() {
-    // Effects
-    gulp
-      .src("builds/development/Effects/**")
-      .pipe(gulp.dest("builds/production/Effects"));
+  // gulp.task("moveFilesToProduction", function() {
+  //   // Effects
+  //   gulp
+  //     .src("builds/development/Effects/**")
+  //     .pipe(gulp.dest("builds/production/Effects"));
 
-    // Widget Zip
-    return gulp
-      .src("builds/development/wdgt_source/**")
-      .pipe(gulp.dest("builds/production/wdgt_source"));
-  });
+  //   // Widget Zip
+  //   return gulp
+  //     .src("builds/development/wdgt_source/**")
+  //     .pipe(gulp.dest("builds/production/wdgt_source"));
+  // });
 
-  gulp.task("uglifyProductionCode", function() {
-    return gulp
-      .src("builds/development/wdgt_source/html5/scripts/captivate_extra.js")
-      .pipe(uglify())
-      .pipe(gulp.dest("builds/production/wdgt_source/html5/scripts"));
-  });
+  // gulp.task("uglifyProductionCode", function() {
+  //   return gulp
+  //     .src("builds/development/wdgt_source/html5/scripts/captivate_extra.js")
+  //     .pipe(uglify())
+  //     .pipe(gulp.dest("builds/production/wdgt_source/html5/scripts"));
+  // });
 
-  gulp.task(
-    "compileWidgetForProduction",
-    [
-      "compileWidgetDescription",
-      "copyEffects",
-      "moveFilesToProduction",
-      "uglifyProductionCode"
-    ],
-    function() {
-      gulp
-        .src("builds/production/wdgt_source/**")
-        .pipe(gzip("Infosemantics_CpExtra.wdgt"))
-        .pipe(gulp.dest("builds/production"));
+  // gulp.task(
+  //   "compileWidgetForProduction",
+  //   [
+  //     "compileWidgetDescription",
+  //     "copyEffects",
+  //     "moveFilesToProduction",
+  //     "uglifyProductionCode"
+  //   ],
+  //   function() {
+  //     gulp
+  //       .src("builds/production/wdgt_source/**")
+  //       .pipe(gzip("Infosemantics_CpExtra.wdgt"))
+  //       .pipe(gulp.dest("builds/production"));
 
-      return gulp
-        .src("builds/production/wdgt_source/html5/scripts/captivate_extra.js")
-        .pipe(
-          grename({
-            basename: "Infosemantics_CpExtra"
-          })
-        )
-        .pipe(ginsert.prepend(getCopywriteNotice()))
-        .pipe(gulp.dest("builds/production"));
-    }
-  );
+  //     return gulp
+  //       .src("builds/production/wdgt_source/html5/scripts/captivate_extra.js")
+  //       .pipe(
+  //         grename({
+  //           basename: "Infosemantics_CpExtra"
+  //         })
+  //       )
+  //       .pipe(ginsert.prepend(getCopywriteNotice()))
+  //       .pipe(gulp.dest("builds/production"));
+  //   }
+  // );
 
   //////////////////////////////////////
   ///////// UPDATING TEST FILES
   //////////////////////////////////////
 
-  function updateOnGlob(glob, devFile) {
-    function getDirectoryPath(path) {
-      var lastSlash = path.lastIndexOf("/");
-      return path.substring(0, lastSlash);
-    }
+  //function updateOnGlob(glob, devFile) {
+  //  function getDirectoryPath(path) {
+  //    var lastSlash = path.lastIndexOf("/");
+  //    return path.substring(0, lastSlash);
+  //  }
 
-    function getFileName(path) {
-      var lastSlash = path.lastIndexOf("/");
-      var lastDot = path.lastIndexOf(".");
-      return path.substring(lastSlash + 1, lastDot);
-    }
+  //  function getFileName(path) {
+  //    var lastSlash = path.lastIndexOf("/");
+  //    var lastDot = path.lastIndexOf(".");
+  //    return path.substring(lastSlash + 1, lastDot);
+  //  }
 
-    var stream, filePath, directoryPath, fileName;
+  //  var stream, filePath, directoryPath, fileName;
 
-    // Get list of files matching glob
-    gglob(glob, {}, function(er, files) {
-      // Loop through file list
-      for (var i = 0; i < files.length; i += 1) {
-        filePath = files[i];
-        fileName = getFileName(filePath);
-        directoryPath = getDirectoryPath(filePath);
+  //  // Get list of files matching glob
+  //  gglob(glob, {}, function(er, files) {
+  //    // Loop through file list
+  //    for (var i = 0; i < files.length; i += 1) {
+  //      filePath = files[i];
+  //      fileName = getFileName(filePath);
+  //      directoryPath = getDirectoryPath(filePath);
 
-        // DEBUGGING: Trace list of files
-        //gutil.log(directoryPath);
+  //      // DEBUGGING: Trace list of files
+  //      //gutil.log(directoryPath);
 
-        // Rename the javascript file to either the widget or the headless name
-        stream = gulp
-          .src(devFile)
-          .pipe(
-            grename({
-              basename: fileName
-            })
-          )
-          // Save the new version over the currently located CpExtra instance
-          .pipe(gulp.dest(directoryPath))
-          .pipe(gconnect.reload());
-      }
-    });
+  //      // Rename the javascript file to either the widget or the headless name
+  //      stream = gulp
+  //        .src(devFile)
+  //        .pipe(
+  //          grename({
+  //            basename: fileName
+  //          })
+  //        )
+  //        // Save the new version over the currently located CpExtra instance
+  //        .pipe(gulp.dest(directoryPath))
+  //        .pipe(gconnect.reload());
+  //    }
+  //  });
 
-    return stream;
-  }
+  //  return stream;
+  //}
 
-  gulp.task("moveCaptivateJSToDevRoot", function() {
-    return gulp
-      .src(captivateExtraDevLocation + "/" + captivateExtraDevFileName)
-      .pipe(
-        grename({
-          basename: headlessCaptivateBaseFileName
-        })
-      )
-      .pipe(gulp.dest(captivateExtraDevRoot));
-  });
+  // gulp.task("moveCaptivateJSToDevRoot", function() {
+  //   return gulp
+  //     .src(captivateExtraDevLocation + "/" + captivateExtraDevFileName)
+  //     .pipe(
+  //       grename({
+  //         basename: headlessCaptivateBaseFileName
+  //       })
+  //     )
+  //     .pipe(gulp.dest(captivateExtraDevRoot));
+  // });
 
-  gulp.task(
-    "updateCaptivateTests",
-    ["compileCaptivateJS", "moveCaptivateJSToDevRoot"],
-    function() {
-      return updateOnGlob(
-        "tests/output/**/@(captivate_extra.js|Infosemantics_CpExtra.js)",
-        captivateExtraDevLocation + "/" + captivateExtraDevFileName
-      );
-    }
-  );
+  // gulp.task(
+  //   "updateCaptivateTests",
+  //   ["compileCaptivateJS", "moveCaptivateJSToDevRoot"],
+  //   function() {
+  //     return updateOnGlob(
+  //       "tests/output/**/@(captivate_extra.js|Infosemantics_CpExtra.js)",
+  //       captivateExtraDevLocation + "/" + captivateExtraDevFileName
+  //     );
+  //   }
+  // );
 
-  gulp.task("updateStorylineTests", ["compileStorylineJS"], function() {
-    return updateOnGlob(
-      "tests/output/**/storyline_extra.js",
-      storylineExtraDevLocation + "/" + storylineExtraDevFileName
-    );
-  });
+  // gulp.task("updateStorylineTests", ["compileStorylineJS"], function() {
+  //   return updateOnGlob(
+  //     "tests/output/**/storyline_extra.js",
+  //     storylineExtraDevLocation + "/" + storylineExtraDevFileName
+  //   );
+  // });
 
   ///// WATCHES
   // TO CANCEL A TASK RUNNING ON THE COMMAND LINE, HIT: Ctrl + c

@@ -1,6 +1,7 @@
 const { pipe, curry, __ } = require("ramda"),
     karmaServer = curry(require("karma").Server),
-    { log, colors } = require("gulp-util"),
+    log = require("fancy-log"),
+    colors = require("ansi-colors"),
     pc = require("karma/lib/config").parseConfig,
     karmaParseConfig = curry(pc),
     configFile = __dirname + "/karma.conf.js";

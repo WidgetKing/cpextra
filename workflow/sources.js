@@ -7,6 +7,8 @@ exports.cpExtraModulesForCaptivate = [
 ];
 
 exports.devWidgetFolderGlob = "builds/development/wdgt_source/**";
+exports.effectsSourceFolderGlob = "components/scripts/xml/Effects/**";
+exports.testsCpExtraGlob = "tests/output/**/@(captivate_extra.js|Infosemantics_CpExtra.js)";
 
 ///// FILE NAMES
 exports.compiledCpExtraFileName = "Infosemantics_CpExtra.js";
@@ -15,11 +17,14 @@ exports.widgetFileName = "Infosemantics_CpExtra.wdgt";
 
 ///// DIRECTORIES
 exports.productionOutputDirectory = "builds/production";
+exports.productionEffectsOutputDirectory = "builds/production/Effects";
+exports.testDirectory = "tests/output";
 
 exports.devOutputDirectory = "builds/development";
 exports.devOutputWidgetJSDirectory = "builds/development/wdgt_source/html5/scripts";
 exports.devOutputWidgetSWFDirectory = "builds/development/wdgt_source/swf"
 exports.devOutputWidgetRoot = "builds/development/wdgt_source";
+
 
 ///// FILES PLUS DIRECTORIES
 exports.devOutputCompiledCpExtra = exports.devOutputDirectory + "/" + exports.compiledCpExtraFileName;

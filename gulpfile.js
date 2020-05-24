@@ -1,8 +1,9 @@
-const { series } = require("gulp"),
-    { log } = require("gulp-util"),
+const { watch, series } = require("gulp"),
     compile = require("./workflow/compile"),
     version = require("./workflow/version"),
     sources = require("./workflow/sources"),
+    updateTests = require("./workflow/update-tests"),
+    testServer = require("./workflow/test-server"),
     karmaServer = require("./workflow/karma-server"),
     generateCopyright = require("./workflow/copyright-notice.js").generate;
 
@@ -73,12 +74,6 @@ function copyWidgetDescriptionXML(done) {
     );
 }
 
-exports.compileJSOutput = series(
-    incrementBuildNumber,
-    compileJSModulesAndStoreInDevBuilds,
-    copyCompiledCpExtraIntoWidgetFolder
-);
-
 function zipWidgetAndPlaceInProduction(done) {
     compile.zipFolder(
         sources.devWidgetFolderGlob,
@@ -87,6 +82,28 @@ function zipWidgetAndPlaceInProduction(done) {
         done
     );
 }
+
+function copyEffectsIntoProduction(done) {
+    compile.copy(
+        sources.effectsSourceFolderGlob,
+        sources.productionEffectsOutputDirectory,
+        done
+    );
+}
+
+function updateAllTests(done) {
+    updateTests.updateGlob(
+        sources.testsCpExtraGlob,
+        sources.devOutputCompiledCpExtra,
+        done
+    );
+}
+
+exports.compileJSOutput = series(
+    incrementBuildNumber,
+    compileJSModulesAndStoreInDevBuilds,
+    copyCompiledCpExtraIntoWidgetFolder
+);
 
 exports.compileProductionWidget = series(
     exports.compileJSOutput,
@@ -99,20 +116,23 @@ exports.compileProductionWidget = series(
 
 exports.compileProductionEverything = series(
     exports.compileProductionWidget,
-    copyDevJSToProduction
+    copyDevJSToProduction,
+    copyEffectsIntoProduction
 );
 
-exports.test = copySWFIntoWidgetFolder;
-// gulp.task("compileWidget", ["compileWidgetDescription"], function() {
-//   return gulp
-//     .src("builds/development/wdgt_source/**")
-//     .pipe(gzip("Infosemantics_CpExtra.wdgt"))
-//     .pipe(gulp.dest("builds/development"));
-// });
-// exports.test = (done) => {
+function watchModulesCompileAndUpdateTests() {
+    watch(
+        sources.cpExtraModulesForCaptivate,
+        {
+            ignoreInitial: false
+        },
+        function(done) {
+            // Executes when files are changes
+            exports.compileJSOutput(() => updateAllTests(done));
+        }
+    );
+}
 
-//     log(generateCopyright())
+exports.test2 = testServer.start
+exports.watch = watchModulesCompileAndUpdateTests;
 
-//     done();
-// }
-// exports.default = series(test, test2)

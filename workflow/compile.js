@@ -2,9 +2,10 @@ const { replaceBuildAndVersionNumberPlaceholders } = require("./version.js"),
     gulp = require("gulp"),
     gzip = require("gulp-zip"),
     grename = require("gulp-rename"),
-    { log } = require("gulp-util"),
+    ginsert = require("gulp-insert"),
     gconcat = require("gulp-concat"),
-    version = require("./version");
+    copyright = require("./copyright-notice.js");
+version = require("./version");
 uglify = require("gulp-uglify");
 
 exports.globIntoFile = (glob, fileName, destination, done) => {
@@ -16,6 +17,7 @@ exports.globIntoFile = (glob, fileName, destination, done) => {
             .pipe(version.replaceBuildPlaceholder())
             .pipe(version.replaceVersionPlaceholder())
             .pipe(uglify())
+            .pipe(ginsert.prepend(copyright.generate()))
             .pipe(gulp.dest(destination))
             .on("end", done)
     );

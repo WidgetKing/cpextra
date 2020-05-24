@@ -2,8 +2,8 @@
 
     <!--
      * Captivate Extra - Effect
-     * Version: 1.5.0
-     * Build: 10313
+     * Version: $$VERSION_NUMBER$$
+     * Build: $$BUILD_NUMBER$$
      * Written By: Tristan Ward
      * Company: Infosemantics
      * Licence: See licence document provided with CpExtra purchase

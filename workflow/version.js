@@ -1,5 +1,5 @@
 const { inc } = require("ramda"),
-    { log } = require("gulp-util"),
+    log = require("fancy-log"),
     gjsoneditor = require("gulp-json-editor"),
     packageJSON = require("../package.json"),
     greplace = require("gulp-replace"),

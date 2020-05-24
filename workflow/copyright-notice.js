@@ -8,7 +8,7 @@ exports.generate = function() {
         version.getCurrentVersion() +
         "\n" +
         " * Build: " +
-        version.getCurrent() +
+        version.getCurrentBuild() +
         "\n" +
         " * Written By: Tristan Ward\n" +
         " * Company: Infosemantics\n" +
