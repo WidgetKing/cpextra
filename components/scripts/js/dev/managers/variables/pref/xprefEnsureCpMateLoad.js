@@ -133,7 +133,6 @@ _extra.registerModule(
 
     var removeFromWaitList = function(slideObjectName) {
       return R.pipe(
-        _extra.utils.message("Got to removeFromWaitList"),
         R.without([slideObjectName]),
         R.tap(setWaitList),
         // GOT HERE:
@@ -213,7 +212,6 @@ _extra.registerModule(
               // Don't react to the wrong notification
               R.equals("animationready"),
               R.pipe(
-                _extra.utils.message("Animation threw 'animationready'"),
                 R.always(slideObject.name),
                 removeFromWaitList
               )

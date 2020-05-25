@@ -42,7 +42,7 @@ See the video below as an example:
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/ORGM1DqBNlY" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-## About Parameters
+## About parameters
 
 Some commands only require one piece of information. For example, xcmndHide only needs one piece of information to work: The name of a Captivate slide object.
 
@@ -96,14 +96,14 @@ For command variables where only one parameter is required, providing multiple p
 For example, running:
 
 ```
-Assign xcmndHide with SmartShape_1
-Assign xcmndHide with SmartShape_2
+Assign | xcmndHide with SmartShape_1
+Assign | xcmndHide with SmartShape_2
 ```
 
 Could be accomplished in one line of code by using parameters like so:
 
 ```
-Assign xcmndHide with SmartShape_1, SmartShape_2
+Assign | xcmndHide with SmartShape_1, SmartShape_2
 ```
 :::
 
@@ -119,7 +119,7 @@ CpExtra tries to interpret when you want to use variables. For example, lets say
 If you ran:
 
 ```
-Assign xcmndHide with ObjectToHide
+Assign | xcmndHide with ObjectToHide
 ```
 
 Then CpExtra would look to the value of the ObjectToHide **variable**, discover it is 'SmartShape_1' and then proceed to hide SmartShape_1.
@@ -131,22 +131,28 @@ But now suppose you had the following set-up:
 Now when you run:
 
 ```
-Assign xcmndHide with ObjectToHide
+Assign | xcmndHide with ObjectToHide
 ```
 
 What will be hidden?
 - If CpExtra thinks ObjectToHide is pointing to the **slide object**, that will be hidden.
-- If CpExtra thinks ObjectToHide is pointing to the **variable**, then SmartShape_1 will be hidden.
+- If CpExtra thinks ObjectToHide is pointing to the **variable**, then SmartShape\_1 will be hidden.
 
-In this particular case CpExtra will assume this is a variable and hide SmartShape_1. But let's say we wanted to hide the slide object called ObjectToHide instead?
+In this particular case CpExtra will assume this is a variable and hide SmartShape\_1. But let's say we wanted to hide the slide object called ObjectToHide instead?
 
 Then we can write the following:
 
 ```
-Assign xcmndHide with [ObjectToHide]
+Assign | xcmndHide with [ObjectToHide]
 ```
 
 When CpExtra sees square brackets, it knows this MUST be a string and NOT a variable.
+
+::: tip White space
+White space characters include spaces and tabs. CpExtra automatically removes whitespace characters when an assignment is made to a variable. However, this sometimes causes unintended behaviour, as can be seen with the [xcmndAlert](../command.html#xcmndalert) and the [xcmndCompleteSlide](../command.html#xcmndcompleteslide) variables.
+
+Square brackets allow you to get around this as any white space inside the brackets will be maintained. See the above command variable's help to see examples of this.
+:::
 
 ::: tip Why didn't you use quotation marks instead?
 Because Captivate has a nasty habit of removing quotation marks and therefore causing unexpected behaviour.
@@ -157,7 +163,7 @@ Because Captivate has a nasty habit of removing quotation marks and therefore ca
 Conversely if you came across a situation where you absolutely wanted a variable's value to be used as a parameter you can explicitly state that by surrounding the parameter with dollar signs. Here's an example:
 
 ```
-Assign xcmndAddEventListener with $$SLIDE_OBJECT$$, $$EVENT$$, $$ACTION$$, $$CRITERIA$$
+Assign | xcmndAddEventListener with $$SLIDE_OBJECT$$, $$EVENT$$, $$ACTION$$, $$CRITERIA$$
 ```
 
 Here we see all four parameters are gaining their value from variables.
@@ -166,8 +172,8 @@ Here we see all four parameters are gaining their value from variables.
 Do not try to define more than one parameter with a variable. For example this **would not work**:
 
 ```
-Assign ALL_PARAMETERS with SmartShape_1, click, Button_1, success
-Assign xcmndAddEventListener with $$ALL_PARAMETERS$$
+Assign | ALL_PARAMETERS with SmartShape_1, click, Button_1, success
+Assign | xcmndAddEventListener with $$ALL_PARAMETERS$$
 ```
 :::
 
@@ -176,21 +182,22 @@ Assign xcmndAddEventListener with $$ALL_PARAMETERS$$
 Conversely, double-dollar variables CAN be used as part of a parameter. For example, let's say we wanted to use xcmndAlert to send us a message saying what the current value of the variable **My_Var** is. We could write:
 
 ```
-Assign xcmndAlert with My_Var: $$My_Var$$
+Assign | xcmndAlert with My_Var: $$My_Var$$
 ```
 
 Assuming the value of **My_Var** is **Hello World!** we would see:
 
-** INSERT IMAGE HERE **
+<img :src="$withBase('/img/alert-my-var-no-space.png')" alt="Alert box displaying: MyVar:Hello World!">
 
 Notice how we've lost the space between the colon and the variable value? We can fix this by mixing square brackets and double dollar signs together like so:
 
 ```
-Assign xcmndAlert with [My_Var: $$My_Var$$]
+Assign | xcmndAlert with [My_Var: $$My_Var$$]
 ```
 
 Here's what we get:
-** INSERT IMAGE HERE**
+
+<img :src="$withBase('/img/alert-my-var-with-space.png')" alt="Alert box displaying: MyVar: Hello World!">
 
 :::
 
@@ -205,7 +212,7 @@ Say you had the following set-up:
 What would you expect the following code to do?
 
 ```
-Assign xcmndRound with var_to_round
+Assign | xcmndRound with var_to_round
 ```
 
 Logically, nothing. var_to_round's value is not a number. However, if you checked var_number's value after running the above action you would find that it is now: 4
