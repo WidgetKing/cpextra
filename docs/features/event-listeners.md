@@ -25,3 +25,8 @@ But before we get too much further there is one other thing we need to talk abou
 ## Triggering one action from another
 Captivate does not allow you to chain Advanced Actions. You can only execute one at a time. CpExtra allows you to trigger one Advanced Action from another using the **xcmndCallActionOn** command variable.
 
+# Event List
+
+## click
+
+## doubleclick

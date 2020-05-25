@@ -30,7 +30,8 @@ module.exports = {
 				"faq",
 				"changelog"
             ],
-            "/variables/": ["about", "special-behaviour", "event-listeners", "command", "preference", "info"]
+            "/variables/": ["about", "special-behaviour", "command", "preference", "info"],
+            "/features/": ["about", "smart-states", "variable-prefixes", "replace-var-in-url", "event-listeners"]
         }
     },
 
