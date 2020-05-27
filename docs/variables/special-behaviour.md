@@ -61,9 +61,9 @@ Many CpExtra command variables require more than one parameter. Some require up 
 
 For example: Here's how we outline the parameters for xcmndChangeState:
 
-| (1) Slide Object Name                  | (2) State Name                                    |
-| -------------------------------------- | ------------------------------------------------- |
-| The slide object containing the states | The name of the state that should be made visible |
+| (1) Slide Object Name                                                           | (2) State Name                                    |
+| --------------------------------------                                          | ------------------------------------------------- |
+| The slide object whose state you wish to change (@syntax and #syntax available) | The name of the state that should be made visible |
 
 The first row will list the expected data type of the parameter. The second row provides a description of how that parameter is used to carry out the action. [Learn more about data types here.](./about.html#data-type)
 
@@ -179,7 +179,7 @@ Assign | xcmndAddEventListener with $$ALL_PARAMETERS$$
 
 ::: tip Variable values as part of a parameter
 
-Conversely, double-dollar variables CAN be used as part of a parameter. For example, let's say we wanted to use xcmndAlert to send us a message saying what the current value of the variable **My_Var** is. We could write:
+Conversely, **for certain parameters** double-dollar variables can be used as **part** of a parameter. For example, let's say we wanted to use xcmndAlert to send us a message saying what the current value of the variable **My_Var** is. We could write:
 
 ```
 Assign | xcmndAlert with My_Var: $$My_Var$$

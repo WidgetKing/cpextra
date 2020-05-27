@@ -43,6 +43,14 @@ Assign | xcmndCallActionOn with Button_1, success
 
 xcmndCallActionOn will then trigger the action that was associated with Button\_1's success criteria. If that's an Advanced Action then we have successfully called one Advanced Action from another!
 
+:::tip Note 
+To trigger an action in this way the Interactive Object **does not** need to be on the current slide. It just needs to be present *somewhere* in the movie.
+
+A good practice is to include a slide in the course which is never seen by the learners. This can not be accomplished by hiding the slide inside of Captivate, because hidden slides are not included in the final export. Rather, you'll have to make it so the slide is skipped over by the course playback.
+
+Also, to keep things clean, label the button/smart shape the same as its name. This helps you find the object should you need to locate it again in the future.
+:::
+
 Now that we understand how CpExtra triggers actions (namely, that you first need to set up a button (or other Interactive Object) and associate one of its criteria with that action) we can now explain Event Listeners.
 
 ## Creating an event listener
