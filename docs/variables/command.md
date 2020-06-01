@@ -434,7 +434,71 @@ Assign | xcmndFloor with MyVar@
 
 ## xcmndFlushStorage
 
+### Parameters
+| (1) Variable Name                                                                                |
+| ---------------------------------------------------------------------------                      |
+| Name of the local/session storage variable whose records (special keywords: Local, Session, All) |
+
+### Description
+Assigning **xcmndFlushStorage** the name if a storage variable will clear that variable's value from the browser **and** prevent that variable's value from being saved to storage for the duration of the current project.
+
+[Click here to learn more about storage variables.](../features/variable-prefixes.html#ls-for-local-storage)
+
+When building interactions using local storage variables you may at some times want to see what the project will look like to someone who has never viewed it before. It can be difficult to do that however, because your browser will record the variable's values from previous sessions. **xcmndFlushStorage** allows you to wipe a variable's records from storage. Therefore, the NEXT time you view the project, you will see what the learner sees on their first time through.
+
+To flush a single variable, assign its variable name:
+
+```
+Assign | xcmndFlushStorage with [ls_localStorageVariable]
+```
+::: warning Common issue with assigning a direct variable name
+[Please see this page](./special-behaviour.html#unexpected-behaviour-of-variable-names) for an explanation of an issue that happens when you assign a direct variable name to another variable.
+
+It is due to this issue that we make the above assignment using brackets.
+:::
+
+You can flush multiple variables with a comma delimited list:
+```
+Assign | xcmndFlushStorage with ls_localStorageVariable, ss_sessionStorageVariable
+```
+
+xcmndFlushStorage also recognizes the keyword **Local**. Assigning this will **clear all local storage variables (the ones starting with LS_)
+
+```
+Assign | xcmndFlushStorage with Local
+```
+
+In the same way, assigning the **Session** keyword will flush all session storage variables (the ones starting with SS_)
+
+```
+Assign | xcmndFlushStorage with Session
+```
+
+If, on the other hand, you wanted to clear all storage variables irrespective of type, you can assign the **All** keyword.
+
+```
+Assign | xcmndFlushStorage with All
+```
+
+### See Also
+- [Local and Session storage help](../features/variable-prefixes.html#ls-for-local-storage)
+
 ## xcmndHeight
+
+### Parameters
+| (1) Variable name                                                        | (2) Slide Object Name                      |
+| ----------------------------------------------------------------         | ---------------------                      |
+| The variable that will store the slide object's height to be read later. | Slide Object whose height you want to know |
+
+### Description
+Reads the height of the slide object specified by the second parameter and assigns that number to the variable defined in the first parameter.
+
+At this time there is no 'set mode' for xcmndHeight. It can only read height not change it.
+
+Height is read in pixels.
+
+### See Also
+- [xcmndWidth](#xcmndWidth)
 
 ## xcmndHide
 
@@ -706,3 +770,18 @@ Assign the name of a slide object to show that object. The usage is exactly the 
 -   [xcmndHide](#xcmndHide)
 
 ## xcmndWidth
+
+### Parameters
+| (1) Variable name                                                       | (2) Slide Object Name                     |
+| ----------------------------------------------------------------        | ---------------------                     |
+| The variable that will store the slide object's width to be read later. | Slide Object whose width you want to know |
+
+### Description
+Reads the width of the slide object specified by the second parameter and assigns that number to the variable defined in the first parameter.
+
+At this time there is no 'set mode' for xcmndWidth. It can only read height not change it.
+
+Width is read in pixels.
+
+### See Also
+- [xcmndHeight](#xcmndHeight)
