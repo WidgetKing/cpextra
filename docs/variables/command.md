@@ -94,43 +94,100 @@ The **fourth parameter** allows you to specify which of the interactive object's
 ### Parameters
 
 | (1) Text Entry Box Name                                                              |
-| -----------------------------------------------------------------                    |
+| ------------------------------------------------------------------------------------ |
 | The text entry box you want to stop using xcmndPreventTabOut's special functionality |
 
 ### Description
+
 This command variable exists purely to turn of **xcmndPreventTabOut's** functionality. Please see that variable's help for more information.
 
 ### See Also
-- [xcmndPrevenTabOut](#xcmndPreventTabOut)
+
+-   [xcmndPrevenTabOut](#xcmndPreventTabOut)
 
 ## xcmndCallActionOn
 
 ### Parameters
 
-| (1) Interactive Object Name                              | (2) Criteria                     |
+| (1) Interactive Object Name                              | (2) Criteria (default: success)  |
 | -------------------------------------------------------- | -------------------------------- |
 | Name of slide object that holds a success/failure action | Which action you wish to trigger |
 
 ### Description
+
 This command variable was created so that you could chain Advanced Actions, by calling one from another. [This page explains the reasons why Advanced Action chaining needs to be set up this way](../features/event-listeners.html#triggering-one-action-from-another)
+
+If you have a button named **Button_1** and you desire its **success** action to run, you can do so with the following code:
+
+```
+Assign | xcmndCallActionOn with Button_1, success
+```
+
+If we don't define the second parameter, xcmndCallAction on will assume we want to trigger the success action (which in practice is often the case).
+
+So the code below is effectively the same as the code above.
+
+```
+Assign | xcmndCallActionOn with Button_1
+```
 
 ::: tip Criteria types
 Most interactive objects come with two criteria types:
-- success
-- failures
+
+-   success
+-   failures
 
 However, text entry boxes come with a third criteria:
-- onfocuslost
+
+-   onfocuslost
 
 Although not common, you can still trigger a text entry box's onfocuslost criteria like so:
 
 ```
 Assign | xcmndCallActionOn with Text_Entry_Box_1, onfocuslost
 ```
+
 :::
 
-
 ## xcmndCeil
+
+### Parameters
+
+| (1) Variable Name                                                         |
+| ------------------------------------------------------------------------- |
+| Name of the variable whose value should be rounded up (@syntax available) |
+
+### Description
+
+Assign the name of a variable. CpExtra will then read that variable's value, **round it up** to the nearest whole number, and then assign the rounded number back into the variable.
+
+#### Examples
+
+-   3.3 will be rounded to 4
+-   6.6 will be rounded to 7
+-   1.5 will be rounded to 2
+
+To run xcmndCeil on multiple variables at once, you could assign a comma delimited list:
+
+```
+Assign | xcmndCeil with MyVar1, MyVar2, MyVar
+```
+
+You could also use assign an @syntax query and xcmndCeil will be run over all matching variables.
+
+```
+Assign | xcmndCeil with MyVar@
+```
+
+::: warning Common issue with assigning a direct variable name
+[Please see this page](./special-behaviour.html#unexpected-behaviour-of-variable-names) for an explanation of an issue that happens when you assign a direct variable name to another variable.
+:::
+
+### See Also
+
+-   [xcmndRound](#xcmndRound)
+-   [xcmndRoundTo](#xcmndRoundTo)
+-   [xcmndFloor](#xcmndFloor)
 
 ## xcmndChangeState
 
@@ -337,6 +394,44 @@ If an object's mouse events have been disabled with [xcmndDisableMouseEvents](#x
 
 ## xcmndFloor
 
+### Parameters
+
+| (1) Variable Name                                                           |
+| --------------------------------------------------------------------------- |
+| Name of the variable whose value should be rounded down (@syntax available) |
+
+### Description
+
+Assign the name of a variable. CpExtra will then read that variable's value, **round it down** to the nearest whole number, and then assign the rounded number back into the variable.
+
+#### Examples
+
+-   3.3 will be rounded to 3
+-   6.6 will be rounded to 6
+-   1.5 will be rounded to 1
+
+To run xcmndCeil on multiple variables at once, you could assign a comma delimited list:
+
+```
+Assign | xcmndFloor with MyVar1, MyVar2, MyVar
+```
+
+You could also use assign an @syntax query and xcmndCeil will be run over all matching variables.
+
+```
+Assign | xcmndFloor with MyVar@
+```
+
+::: warning Common issue with assigning a direct variable name
+[Please see this page](./special-behaviour.html#unexpected-behaviour-of-variable-names) for an explanation of an issue that happens when you assign a direct variable name to another variable.
+:::
+
+### See Also
+
+-   [xcmndRound](#xcmndRound)
+-   [xcmndRoundTo](#xcmndRoundTo)
+-   [xcmndCeil](#xcmndCeil)
+
 ## xcmndFlushStorage
 
 ## xcmndHeight
@@ -385,7 +480,7 @@ Assign | xcmndHide with SmartShape_1, SmartShape_2, SmartShape_3
 ### Parameters
 
 | (1) Text Entry Box Name                                             |
-| -----------------------------------------------------------------   |
+| ------------------------------------------------------------------- |
 | The text entry box you want to evaluate when pressing the 'tab' key |
 
 ### Description
@@ -393,6 +488,7 @@ Assign | xcmndHide with SmartShape_1, SmartShape_2, SmartShape_3
 The TAB key is used in many software as an accessibility feature, allowing the user to navigate from one input field to another without using a mouse. This is true of the browser that displays the Captivate export. This feature can cause some unexpected behaviour.
 
 For example, let's say you're building a software simulation where you are trying to simulate the above mentioned behaviour. Namely, you want the learner to:
+
 1. Select a text entry box
 2. Enter a string
 3. Press TAB to move to the next box
@@ -417,13 +513,147 @@ Only one text entry box at a time can be enabled with xcmndPreventTabOut's speci
 
 ## xcmndRandom
 
+| (1) Variable Name                           | (2) Number (default: 1)        | (3) Number (default: 0)       |
+| ---                                         | ---                            | ---                           |
+| Name of variable to assign random number to | Highest number in random range | Lowest number in random range |
+
+### Description
+Generates a random number and assigns it to the variable specified by the first parameter.
+
+### When only the first parameter is provided
+A random **decimal number** between 0 and 1 will be generated.
+
+### When both first and second parameters are provided
+A random **whole number** between 0 and the number specified in the second parameter will be generated.
+
+### When all three parameters are provided
+A random **whole number** between the third (lowest) and second (highest) number will be generated.
+
 ## xcmndRemoveEventListener
+
+### Parameters
+
+| (1) Slide Object Name                                       | (2) Event                                                                | (3) Interactive Object Name                              | (4) Criteria (default: success)  |
+| ----------------------------------------------------------- | ------------------------------------------------------------------------ | -------------------------------------------------------- | -------------------------------- |
+| Name of slide object that you want to listen to an event on | Name of [event](../../features/events-list) that you want to listen for. | Name of slide object that holds a success/failure action | Which action you wish to trigger |
+
+### Description
+Removes and event listener from a slide object.
+
+-   [See this page to learn more about event listeners](../../features/event-listeners)
+-   [This page contains the list of available events](../../features/events-list)
+
+### See Also
+- [xcmndAddEventListener](#xcmndAddEventListener)
 
 ## xcmndReset
 
+### Parameters
+
+| (1) Variable Name                                                                                  |
+| -------------------------------------------------------------------------------------------------- |
+| Name of the variable whose value should be reset to its initial value (@syntax available)          |
+
+### Description
+Resets variables to their initial value (As specified in the Project > Variables dialog).
+
+Let's say you had a form interaction with many text entry boxes linked to the following variables:
+- firstname_field_form
+- lastname_field_form
+- gender_field_form
+- employer_field_form
+- paymentmethod_field_form
+
+The learner will interact with the slide, entering information into each field. Later, they may want to return to the slide and perform the form interaction again. This means you'll need to reset it to its initial state.
+
+You could reset firstname_field_form to its original value by running:
+
+```
+Assign | xcmndReset with firstname_field_form
+```
+
+To be more efficient, you could reset all the variables in the interaction with one @syntax assignment:
+
+```
+Assign | xcmndReset with @_field_form
+```
+
 ## xcmndRound
 
+### Parameters
+
+| (1) Variable Name                                                                                  |
+| -------------------------------------------------------------------------------------------------- |
+| Name of the variable whose value should be rounded to the nearest whole number (@syntax available) |
+
+### Description
+
+Assign the name of a variable. CpExtra will then read that variable's value, **round it to the nearest whole number**, and then assign the rounded number back into the variable.
+
+#### Examples
+
+-   3.3 will be rounded to 3
+-   6.6 will be rounded to 7
+-   1.5 will be rounded to 2
+
+To run xcmndRound on multiple variables at once, you could assign a comma delimited list:
+
+```
+Assign | xcmndRound with MyVar1, MyVar2, MyVar
+```
+
+You could also use assign an @syntax query and xcmndCeil will be run over all matching variables.
+
+```
+Assign | xcmndRound with MyVar@
+```
+
+::: warning Common issue with assigning a direct variable name
+[Please see this page](./special-behaviour.html#unexpected-behaviour-of-variable-names) for an explanation of an issue that happens when you assign a direct variable name to another variable.
+:::
+
+### See Also
+
+-   [xcmndRoundTo](#xcmndRoundTo)
+-   [xcmndFloor](#xcmndFloor)
+-   [xcmndCeil](#xcmndCeil)
+
 ## xcmndRoundTo
+
+| (1) Variable Name                                                      | (2) Number               | (3) String (default: nearest)                                    |
+| --------------------------------------------------                     | ---------                | -----------                                                      |
+| Name of the variable whose value should be rounded (@syntax available) | Number of decimal points | Either **up** or **down** to indicate the direction of rounding. |
+
+### Description
+Rounds to a set number of decimal places. The second parameter determines the number of decimal places.
+
+For example, if you had a variable called **MyVar** with the value 6.6666666. Running the following...
+
+```
+Assign | xcmndRoundTo with MyVar, 2
+```
+
+...will change the value of **MyVar** to: **6.67*.
+
+Whereas, if you had run...
+
+```
+Assign | xcmndRoundTo with MyVar, 4
+```
+
+...**MyVar** would then change to: **6.6667**
+
+The optional **third parameter** allows you to designate whether xcmndRoundTo should always round up or down.
+
+So running this...
+
+```
+Assign | xcmndRoundTo with MyVar, 2, down
+```
+
+..would change MyVar to: **6.66**
+
+By default if no third parameter is set, xcmndRoundTo will round to which ever number is closest.
 
 ## xcmndScore
 
@@ -465,9 +695,9 @@ Currently browsers do not support this feature on mobile devices. The technology
 
 ### Parameters
 
-| (1) Slide Object Name                                            |
-| ---------------------------------------------------------------- |
-| The slide object you want to show. @syntax and #syntax available |
+| (1) Slide Object Name                                              |
+| ----------------------------------------------------------------   |
+| The slide object you want to show. (@syntax and #syntax available) |
 
 Assign the name of a slide object to show that object. The usage is exactly the same as xcmndHide.
 
