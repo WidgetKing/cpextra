@@ -58,10 +58,78 @@ All variables are *case sensitive*. *xcmndhide* is not the same variable as *xcm
 ::: tip
 All CpExtra variables start with *x* (For e*X*tra). Therefore, when picking a variable from a drop down list the CpExtra variables will appear down the bottom.
 
-Let's say however that there is a particular CpExtra variable you use all the time and you'd like the convenience of it storting to the *top* of the variable list.
+Let's say however that there is a particular CpExtra variable you use all the time and you'd like the convenience of it appearing at the *top* of the variable list.
 In that case, define the CpExtra variable with an '\_' in front of its name. For example: *_xcmndHide*
 CpExtra will still recognize it, and it will sort to the top of your list of variables.
 :::
+
+## Interacting with Variables
+By making **assignments** to variables, you inform CpExtra of what action you desire it to take.
+
+Assignments can be made through actions or advanced actions.
+
+### Actions
+When in Captivate you add a button and configure what happens when it is clicked you pick from a list of *actions*. They include things such as:
+- Continue
+- Go To The Previous Slide
+- Go To The Next Slide
+- Jump To Slide
+- and so on...
+
+When you to trigger one of CpExtra's commands, you would pick the **Assign** action.
+
+IMAGE HERE
+
+From the **Assign:** drop down would pick a CpExtra variable (you would already have defined it under Project > Variables). Then in the **With:** field you would enter your instruction to CpExtra.
+
+For example, if you wanted to hide all the objects in the project who's name starts with 'SmartShape_', you'd open the **Assign:** drop down an pick xcmndHide, then in the **With:** field: SmartShape_#
+
+IMAGE HERE
+
+::: note
+For the sake of simplicity of writing this document, whenever we refer to an assignment to a variable, we will write it out using the format below:
+
+```
+Assign | \<VARIABLE\> with \<VALUE\>
+```
+
+For example, the assignment pictured above would be written out:
+
+```
+Assign | xcmndHide with SmartShape_#
+```
+:::
+
+### Advanced Actions
+Sometimes to get the behaviour you require, you need more than one action. This is where you define an Advanced Action. Advanced Actions allow you to trigger a series of actions one after the other. The actions you can trigger are the kind you can trigger on a button's success action.
+
+Once again the **Assign** action is available. The **Expression** action might some times also prove to be useful, but in this documentation we will always use Assign.
+
+The Assign action works differently in an Advanced Action. After picking the assign action a drop down will appear allowing you to choose the variable that will receive the assignment. After picking that variable the next drop down will allow you to choose what to assign. However, you will first be faced with a choice: variable or literal.
+
+IMAGE HERE
+
+Choosing **variable** will present you with another list of variables to choose from. When this action is run, Captivate will read the value of this variable, and assign it to the original variable.
+
+Choosing **literal** will present you with a field where you can enter a string of text.
+
+While you may at some times have reason to use the **variable** option, we find that 99% of the time we write our instructions in literals. So, **in this documentation we will assume you are always making literal assignments**.
+
+So if you were to convert the following into an Advanced Action:
+
+```
+Assign | xcmndHide with SmartShape_#
+```
+
+From this drop down you would choose: **literal**
+
+IMAGE HERE
+
+Then type **SmartShape_#** into the field.
+
+IMAGE HERE
+
+Tap ENTER and you're done!
 
 ## Data types
 Data comes in different types. For example:
