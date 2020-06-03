@@ -63,7 +63,7 @@ In that case, define the CpExtra variable with an '\_' in front of its name. For
 CpExtra will still recognize it, and it will sort to the top of your list of variables.
 :::
 
-## Interacting with Variables
+## Interacting with variables
 By making **assignments** to variables, you inform CpExtra of what action you desire it to take.
 
 Assignments can be made through actions or advanced actions.
@@ -78,19 +78,19 @@ When in Captivate you add a button and configure what happens when it is clicked
 
 When you to trigger one of CpExtra's commands, you would pick the **Assign** action.
 
-IMAGE HERE
+<img :src="$withBase('/img/action-assign.png')" alt="defining xcmndHide">
 
 From the **Assign:** drop down would pick a CpExtra variable (you would already have defined it under Project > Variables). Then in the **With:** field you would enter your instruction to CpExtra.
 
 For example, if you wanted to hide all the objects in the project who's name starts with 'SmartShape_', you'd open the **Assign:** drop down an pick xcmndHide, then in the **With:** field: SmartShape_#
 
-IMAGE HERE
+<img :src="$withBase('/img/action-assign-xcmndhide.png')" alt="defining xcmndHide">
 
-::: note
+::: tip Note
 For the sake of simplicity of writing this document, whenever we refer to an assignment to a variable, we will write it out using the format below:
 
 ```
-Assign | \<VARIABLE\> with \<VALUE\>
+Assign | <VARIABLE> with <VALUE>
 ```
 
 For example, the assignment pictured above would be written out:
@@ -107,7 +107,7 @@ Once again the **Assign** action is available. The **Expression** action might s
 
 The Assign action works differently in an Advanced Action. After picking the assign action a drop down will appear allowing you to choose the variable that will receive the assignment. After picking that variable the next drop down will allow you to choose what to assign. However, you will first be faced with a choice: variable or literal.
 
-IMAGE HERE
+<img :src="$withBase('/img/advanced-action-variable-literal.png')" alt="defining xcmndHide">
 
 Choosing **variable** will present you with another list of variables to choose from. When this action is run, Captivate will read the value of this variable, and assign it to the original variable.
 
@@ -123,11 +123,11 @@ Assign | xcmndHide with SmartShape_#
 
 From this drop down you would choose: **literal**
 
-IMAGE HERE
+<img :src="$withBase('/img/advanced-action-variable-literal.png')" alt="defining xcmndHide">
 
 Then type **SmartShape_#** into the field.
 
-IMAGE HERE
+<img :src="$withBase('/img/advanced-action-assign-xcmndhide.png')" alt="defining xcmndHide">
 
 Tap ENTER and you're done!
 

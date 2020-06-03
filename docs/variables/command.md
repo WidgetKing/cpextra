@@ -103,7 +103,7 @@ This command variable exists purely to turn of **xcmndPreventTabOut's** function
 
 ### See Also
 
--   [xcmndPrevenTabOut](#xcmndPreventTabOut)
+-   [xcmndPreventTabOut](#xcmndpreventtabout)
 
 ## xcmndCallActionOn
 
@@ -185,9 +185,9 @@ Assign | xcmndCeil with MyVar@
 
 ### See Also
 
--   [xcmndRound](#xcmndRound)
--   [xcmndRoundTo](#xcmndRoundTo)
--   [xcmndFloor](#xcmndFloor)
+-   [xcmndRound](#xcmndround)
+-   [xcmndRoundTo](#xcmndroundto)
+-   [xcmndFloor](#xcmndfloor)
 
 ## xcmndChangeState
 
@@ -310,7 +310,7 @@ Assign xcmndDisable a slide object name, a list of names, or an @syntax query to
 
 ### See also
 
--   [xcmndEnable](#xcmndEnable)
+-   [xcmndEnable](#xcmndenable)
 
 ## xcmndDisableMouseEvents
 
@@ -339,7 +339,7 @@ Assign | xcmndDisableMouseEvents with Button_top
 
 The next time you click on Button_top it will completely ignore the mouse click. Button_bottom will then respond to the click because it wasn't blocked by Button_top.
 
-xcmndDisableMouseEvents is quite different to [xcmndDisable](#xcmndDisable). With xcmndDisable the slide objects will still hear mouse events (such as through xcmndAddEventListener), but they will not respond to them.
+xcmndDisableMouseEvents is quite different to [xcmndDisable](#xcmnddisable). With xcmndDisable the slide objects will still hear mouse events (such as through xcmndAddEventListener), but they will not respond to them.
 
 ::: warning Regarding xcmndAddEventListener
 
@@ -374,11 +374,11 @@ xcmndDisableMouseEvents requires a CSS style which is part of the HTML5 standard
 
 ### Description
 
-The opposite of [xcmndDisable](#xcmndDisable). It enables an interactive object after it has been disabled.
+The opposite of [xcmndDisable](#xcmnddisable). It enables an interactive object after it has been disabled.
 
 ### See also
 
--   [xcmndDisable](#xcmndDisable)
+-   [xcmndDisable](#xcmnddisable)
 
 ## xcmndEnableMouseEvents
 
@@ -428,9 +428,9 @@ Assign | xcmndFloor with MyVar@
 
 ### See Also
 
--   [xcmndRound](#xcmndRound)
--   [xcmndRoundTo](#xcmndRoundTo)
--   [xcmndCeil](#xcmndCeil)
+-   [xcmndRound](#xcmndround)
+-   [xcmndRoundTo](#xcmndroundto)
+-   [xcmndCeil](#xcmndceil)
 
 ## xcmndFlushStorage
 
@@ -498,7 +498,7 @@ At this time there is no 'set mode' for xcmndHeight. It can only read height not
 Height is read in pixels.
 
 ### See Also
-- [xcmndWidth](#xcmndWidth)
+- [xcmndWidth](#xcmndwidth)
 
 ## xcmndHide
 
@@ -559,7 +559,7 @@ For example, let's say you're building a software simulation where you are tryin
 
 On step 3 you may wish to evaluate the text entered in step 2 to ensure it is correct. To do so you may set up the text entry box's shortcut field to evaluate when pressing the Tab key.
 
-SHOW IMAGE HERE
+<img :src="$withBase('/img/teb-tab.png')" alt="defining xcmndHide">
 
 However, in practice what will happen when you test this is the TAB key will move keyboard focus to the next input element (perhaps the browser search bar) rather than triggering the text entry box's evaluation. This is a timing issue. The keyboard focus leaves the text entry box before the keyboard event is registered on the text entry box.
 
@@ -571,9 +571,12 @@ Assign | xcmndPreventTabOut with MyTextEntryBox
 
 This stops the TAB key shifting keyboard focus for this object. Therefore, the text entry box picks up that the tab key was pressed and evaluation happens as expected. Captivate will then trigger the text entry box's success or failure criteria.
 
-::: note
+::: tip Note
 Only one text entry box at a time can be enabled with xcmndPreventTabOut's special behaviour.
 :::
+
+### See Also
+- [xcmndAllowTabOut](#xcmndallowtabout)
 
 ## xcmndRandom
 
@@ -608,7 +611,7 @@ Removes and event listener from a slide object.
 -   [This page contains the list of available events](../../features/events-list)
 
 ### See Also
-- [xcmndAddEventListener](#xcmndAddEventListener)
+- [xcmndAddEventListener](#xcmndaddeventListener)
 
 ## xcmndReset
 
@@ -678,9 +681,9 @@ Assign | xcmndRound with MyVar@
 
 ### See Also
 
--   [xcmndRoundTo](#xcmndRoundTo)
--   [xcmndFloor](#xcmndFloor)
--   [xcmndCeil](#xcmndCeil)
+-   [xcmndRoundTo](#xcmndroundto)
+-   [xcmndFloor](#xcmndfloor)
+-   [xcmndCeil](#xcmndceil)
 
 ## xcmndRoundTo
 
@@ -767,7 +770,7 @@ Assign the name of a slide object to show that object. The usage is exactly the 
 
 ### See also
 
--   [xcmndHide](#xcmndHide)
+-   [xcmndHide](#xcmndhide)
 
 ## xcmndWidth
 
@@ -784,4 +787,4 @@ At this time there is no 'set mode' for xcmndWidth. It can only read height not 
 Width is read in pixels.
 
 ### See Also
-- [xcmndHeight](#xcmndHeight)
+- [xcmndHeight](#xcmndheight)

@@ -22,5 +22,5 @@ States can also be renamed. This means you can change an existing state into a s
 
 To do this you need to enter the object's state view by selecting the object and tapping the **state view** button.
 
-IMAGE HERE
+<img :src="$withBase('/img/smart-state-state-view.png')" alt="defining xcmndHide">
 
