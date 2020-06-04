@@ -1,6 +1,7 @@
 # Info Variables
 This is the info variables readme.
 
+## xinfoBuild
 ## xinfoEventTarget
 ## xinfoProjectElapsedSeconds
 ## xinfoProjectElapsedMinutes
@@ -9,5 +10,4 @@ This is the info variables readme.
 ## xinfoProjectTotalMinutes
 ## xinfoProjectTotalHours
 ## xinfoVersion
-## xinfoBuild
 
