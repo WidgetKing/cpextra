@@ -6,7 +6,7 @@ Below are some common questions regarding CpExtra.
 All versions of Captivate from version 9 onward should work. We always keep CpExtra up to date with the latest versions.
 
 ## Which web browsers are supported?
-All modern browsers are supported as long as the support HTML5. The only reasonably 'modern' browser you are likely to run into issues with is **Internet Explorer**.
+All modern HTML5-compatible browsers are supported. The only HTML5 browser you are likely to run into issues with is **Internet Explorer**.
 
 The following features do not work in Internet Explorer because it does not implement the required web standards.
 
