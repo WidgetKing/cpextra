@@ -435,11 +435,13 @@ Assign | xcmndFloor with MyVar@
 ## xcmndFlushStorage
 
 ### Parameters
+
 | (1) Variable Name                                                                                |
-| ---------------------------------------------------------------------------                      |
-| Name of the local/session storage variable whose records (special keywords: Local, Session, All) |
+| ------------------------------------------------------------------------------------------------ |
+| Name of the local/session storage variable whose records (special keywords: local, session, all) |
 
 ### Description
+
 Assigning **xcmndFlushStorage** the name if a storage variable will clear that variable's value from the browser **and** prevent that variable's value from being saved to storage for the duration of the current project.
 
 [Click here to learn more about storage variables.](../features/variable-prefixes.html#ls-for-local-storage)
@@ -451,6 +453,7 @@ To flush a single variable, assign its variable name:
 ```
 Assign | xcmndFlushStorage with [ls_localStorageVariable]
 ```
+
 ::: warning Common issue with assigning a direct variable name
 [Please see this page](./special-behaviour.html#unexpected-behaviour-of-variable-names) for an explanation of an issue that happens when you assign a direct variable name to another variable.
 
@@ -458,17 +461,18 @@ It is due to this issue that we make the above assignment using brackets.
 :::
 
 You can flush multiple variables with a comma delimited list:
+
 ```
 Assign | xcmndFlushStorage with ls_localStorageVariable, ss_sessionStorageVariable
 ```
 
-xcmndFlushStorage also recognizes the keyword **Local**. Assigning this will **clear all local storage variables (the ones starting with LS_)
+xcmndFlushStorage also recognizes the keyword **Local**. Assigning this will \*\*clear all local storage variables (the ones starting with LS\_)
 
 ```
 Assign | xcmndFlushStorage with Local
 ```
 
-In the same way, assigning the **Session** keyword will flush all session storage variables (the ones starting with SS_)
+In the same way, assigning the **Session** keyword will flush all session storage variables (the ones starting with SS\_)
 
 ```
 Assign | xcmndFlushStorage with Session
@@ -481,16 +485,19 @@ Assign | xcmndFlushStorage with All
 ```
 
 ### See Also
-- [Local and Session storage help](../features/variable-prefixes.html#ls-for-local-storage)
+
+-   [Local and Session storage help](../features/variable-prefixes.html#ls-for-local-storage)
 
 ## xcmndHeight
 
 ### Parameters
+
 | (1) Variable name                                                        | (2) Slide Object Name                      |
-| ----------------------------------------------------------------         | ---------------------                      |
+| ------------------------------------------------------------------------ | ------------------------------------------ |
 | The variable that will store the slide object's height to be read later. | Slide Object whose height you want to know |
 
 ### Description
+
 Reads the height of the slide object specified by the second parameter and assigns that number to the variable defined in the first parameter.
 
 At this time there is no 'set mode' for xcmndHeight. It can only read height not change it.
@@ -498,7 +505,8 @@ At this time there is no 'set mode' for xcmndHeight. It can only read height not
 Height is read in pixels.
 
 ### See Also
-- [xcmndWidth](#xcmndwidth)
+
+-   [xcmndWidth](#xcmndwidth)
 
 ## xcmndHide
 
@@ -531,13 +539,166 @@ Assign | xcmndHide with SmartShape_1, SmartShape_2, SmartShape_3
 
 ### See Also
 
--   [xcmndShow](#xcmndShow)
+-   [xcmndShow](#xcmndshow)
 
 ## xcmndMaxScore
 
+### Parameters
+
+#### [Get Mode](./about.html#get-and-set-mode)
+
+| (1) Variable Name                                      | (2) Interactive Object                                         |
+| ------------------------------------------------------ | -------------------------------------------------------------- |
+| The variable you wish to record the object's max score | The quiz reporting object who's maximum score you want to read |
+
+#### [Set Mode](./about.html#get-and-set-mode)
+
+| (1) Interactive Object                                           | (2) Number OR Variable Name                                   |
+| ---------------------------------------------------------------- | ------------------------------------------------------------- |
+| The quiz reporting object who's maximum score you want to change | The number that should become this object's new maximum score |
+
+### Description
+
+This is a variable with a get and set mode. To learn more about interacting with these variables, [please see this part of the help.](./about.html#get-and-set-mode)
+
+This variable is similar to **xcmndScore**. Except that instead of changing the interactive object's quiz score **xcmndMaxScore** changes what the quiz considers the interactive object's maximum score. In other words, how many points the interactive object must report before its considered 100% successful.
+
+Within Captivate, the maximum score is set when you select the interactive object, open the properties panel, scroll under the Actions subsection and expand the Reporting menu.
+
+IMAGE HERE
+
+In the above screenshot, the interactive object is shown to have a max score of 10 points. If we wanted to change that to twenty points, we could do so with the following code (assuming this object's name is **InteractiveObject**)
+
+```
+Assign | xcmndMaxScore with InteractiveObject, 20
+```
+
+Why would you ever want to change the max score? Because LMSs do not accept scores of over 100%. If you had an interactive where the normal score is **ten**, but if the learner gives an exceptional answer you want to score **twenty**, then to give the higher score but ensure the total course does not report over 100% we would write the following:
+
+```
+Assign | xcmndScore with InteractiveObject, 20
+Assign | xcmndMaxScore with InteractiveObject, 20
+```
+
+Conversely, xcmndMaxScore's get mode could be used to detect what the Interactive Object's maximum score is considered to be. The following code reads the InteractiveObject's maximum score and then sets that object's score to its highest' possible score.
+
+```
+Assign | xcmndMaxScore with MyVar, InteractiveObject
+Assign | xcmndScore with InteractiveObject, MyVar
+```
+
+::: tip
+The above behaviour could also be achieved with xcmndScore's **max** keyword.
+
+```
+Assign | xcmndScore with InteractiveObject, max
+```
+
+:::
+
+### See Also
+
+-   [xcmndScore](#xcmndscore)
+
 ## xcmndPosX
 
+### Parameters
+
+#### [Get Mode](./about.html#get-and-set-mode)
+
+| (1) Variable Name                                                | (2) Slide Object                                            |
+| ---------------------------------------------------------------- | ----------------------------------------------------------- |
+| The variable you wish to record the object's horizontal position | The slide object who's horizontal position you want to read |
+
+#### [Set Mode](./about.html#get-and-set-mode)
+
+| (1) Slide Object                                                                  | (2) Number OR Variable Name                                         |
+| --------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| The slide object who's horizontal position you want to change (@syntax available) | The number that should become this object's new horizontal position |
+
+### Description
+
+This is a variable with a get and set mode. To learn more about interacting with these variables, [please see this part of the help.](./about.html#get-and-set-mode)
+
+In **set mode** this variable allows you to set how many pixels from the left of the slide the object should appear. The following code would cause an object named SmartShape_1 to **immediately** move ten pixels from the left of the stage.
+
+```
+Assign | xcmndPosX with SmartShape_1, 10
+```
+
+@syntax also works. Say you had three objects on slide:
+
+- SmartShape_1
+- SmartShape_2
+- SmartShape_3
+
+You could move all three with the following line of code:
+
+```
+Assign | xcmndPosX with SmartShape_@, 10
+```
+
+**Get mode** allows you to read the current horizontal position into a variable. If you wanted to move SmartShape_1 to the same horizontal position as SmartShape_2, you could do so with the following code:
+
+```
+Assign | xcmndPosX with MyVar, SmartShape_2
+Assign | xcmndPosX with SmartShape_2, MyVar 
+```
+
+::: warning Responsive Projects
+xcmndPosX and xcmndPosY still try to work in responsive projects, but due to the fluid stage it is a lot more difficult to make the variable work as expected. Therefore, we suggest avoiding the use of xcmndPosX and xcmndPosY in responsive projects if at all possible.
+:::
+
+### See Also
+- [xcmndPosX](#xcmndposy)
+
 ## xcmndPosY
+
+### Parameters
+
+#### [Get Mode](./about.html#get-and-set-mode)
+
+| (1) Variable Name                                              | (2) Slide Object                                          |
+| -------------------------------------------------------------- | --------------------------------------------------------- |
+| The variable you wish to record the object's vertical position | The slide object who's vertical position you want to read |
+
+#### [Set Mode](./about.html#get-and-set-mode)
+
+| (1) Slide Object                                                                | (2) Number OR Variable Name                                       |
+| ------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| The slide object who's vertical position you want to change (@syntax available) | The number that should become this object's new vertical position |
+
+### Description
+
+This is a variable with a get and set mode. To learn more about interacting with these variables, [please see this part of the help.](./about.html#get-and-set-mode)
+
+In **set mode** this variable allows you to set how many pixels from the top of the slide the object should appear. The following code would cause an object named SmartShape_1 to **immediately** move ten pixels from the top of the stage.
+
+```
+Assign | xcmndPosY with SmartShape_1, 10
+```
+
+@syntax also works. Say you had three objects on slide:
+
+- SmartShape_1
+- SmartShape_2
+- SmartShape_3
+
+You could move all three with the following line of code:
+
+```
+Assign | xcmndPosY with SmartShape_@, 10
+```
+
+**Get mode** allows you to read the current vertical position into a variable. If you wanted to move SmartShape_1 to the same vertical position as SmartShape_2, you could do so with the following code:
+
+```
+Assign | xcmndPosY with MyVar, SmartShape_2
+Assign | xcmndPosY with SmartShape_2, MyVar 
+```
+::: warning Responsive Projects
+xcmndPosX and xcmndPosY still try to work in responsive projects, but due to the fluid stage it is a lot more difficult to make the variable work as expected. Therefore, we suggest avoiding the use of xcmndPosX and xcmndPosY in responsive projects if at all possible.
+:::
 
 ## xcmndPreventTabOut
 
@@ -576,24 +737,29 @@ Only one text entry box at a time can be enabled with xcmndPreventTabOut's speci
 :::
 
 ### See Also
-- [xcmndAllowTabOut](#xcmndallowtabout)
+
+-   [xcmndAllowTabOut](#xcmndallowtabout)
 
 ## xcmndRandom
 
 | (1) Variable Name                           | (2) Number (default: 1)        | (3) Number (default: 0)       |
-| ---                                         | ---                            | ---                           |
+| ------------------------------------------- | ------------------------------ | ----------------------------- |
 | Name of variable to assign random number to | Highest number in random range | Lowest number in random range |
 
 ### Description
+
 Generates a random number and assigns it to the variable specified by the first parameter.
 
 ### When only the first parameter is provided
+
 A random **decimal number** between 0 and 1 will be generated.
 
 ### When both first and second parameters are provided
+
 A random **whole number** between 0 and the number specified in the second parameter will be generated.
 
 ### When all three parameters are provided
+
 A random **whole number** between the third (lowest) and second (highest) number will be generated.
 
 ## xcmndRemoveEventListener
@@ -605,31 +771,35 @@ A random **whole number** between the third (lowest) and second (highest) number
 | Name of slide object that you want to listen to an event on | Name of [event](../../features/events-list) that you want to listen for. | Name of slide object that holds a success/failure action | Which action you wish to trigger |
 
 ### Description
+
 Removes and event listener from a slide object.
 
 -   [See this page to learn more about event listeners](../../features/event-listeners)
 -   [This page contains the list of available events](../../features/events-list)
 
 ### See Also
-- [xcmndAddEventListener](#xcmndaddeventListener)
+
+-   [xcmndAddEventListener](#xcmndaddeventListener)
 
 ## xcmndReset
 
 ### Parameters
 
-| (1) Variable Name                                                                                  |
-| -------------------------------------------------------------------------------------------------- |
-| Name of the variable whose value should be reset to its initial value (@syntax available)          |
+| (1) Variable Name                                                                         |
+| ----------------------------------------------------------------------------------------- |
+| Name of the variable whose value should be reset to its initial value (@syntax available) |
 
 ### Description
+
 Resets variables to their initial value (As specified in the Project > Variables dialog).
 
 Let's say you had a form interaction with many text entry boxes linked to the following variables:
-- firstname_field_form
-- lastname_field_form
-- gender_field_form
-- employer_field_form
-- paymentmethod_field_form
+
+-   firstname_field_form
+-   lastname_field_form
+-   gender_field_form
+-   employer_field_form
+-   paymentmethod_field_form
 
 The learner will interact with the slide, entering information into each field. Later, they may want to return to the slide and perform the form interaction again. This means you'll need to reset it to its initial state.
 
@@ -688,10 +858,11 @@ Assign | xcmndRound with MyVar@
 ## xcmndRoundTo
 
 | (1) Variable Name                                                      | (2) Number               | (3) String (default: nearest)                                    |
-| --------------------------------------------------                     | ---------                | -----------                                                      |
+| ---------------------------------------------------------------------- | ------------------------ | ---------------------------------------------------------------- |
 | Name of the variable whose value should be rounded (@syntax available) | Number of decimal points | Either **up** or **down** to indicate the direction of rounding. |
 
 ### Description
+
 Rounds to a set number of decimal places. The second parameter determines the number of decimal places.
 
 For example, if you had a variable called **MyVar** with the value 6.6666666. Running the following...
@@ -700,7 +871,7 @@ For example, if you had a variable called **MyVar** with the value 6.6666666. Ru
 Assign | xcmndRoundTo with MyVar, 2
 ```
 
-...will change the value of **MyVar** to: **6.67*.
+...will change the value of **MyVar** to: \*_6.67_.
 
 Whereas, if you had run...
 
@@ -723,6 +894,77 @@ Assign | xcmndRoundTo with MyVar, 2, down
 By default if no third parameter is set, xcmndRoundTo will round to which ever number is closest.
 
 ## xcmndScore
+
+### Parameters
+
+#### [Get Mode](./about.html#get-and-set-mode)
+
+| (1) Variable Name                                  | (2) Interactive Object                                 |
+| -------------------------------------------------- | ------------------------------------------------------ |
+| The variable you wish to record the object's score | The quiz reporting object who's score you want to read |
+
+#### [Set Mode](./about.html#get-and-set-mode)
+
+| (1) Interactive Object                                   | (2) Number OR Variable Name                                                  |
+| -------------------------------------------------------- | -----------------------------------------------------                        |
+| The quiz reporting object who's score you want to change | The number that should become this object's new score (special keyword: max) |
+
+### Description
+
+This is a variable with a get and set mode. To learn more about interacting with these variables, [please see this part of the help.](./about.html#get-and-set-mode)
+
+**Set mode** allows you to change the score than an object will report to the quiz. This enables conditional scoring, where an object might report a score in between 0 and it's maximum score.
+
+For example, say you have a button set to report to the quiz. This button is called **SubmitButton**. When clicked it will add four points to the quiz score.
+
+IMAGE HERE
+
+However, this button may be linked to an interaction such as the following:
+
+IMAGE HERE
+
+Let's say there was a correct answer for each text entry box. If the learner enters the correct first name, last name, email and password then SubmitButton can safely report four points to the quiz.
+
+However, what if they enter the email field incorrectly? Perhaps then you want SubmitButton to report 3 points instead of the maximum 4. Under those conditions you could change SubmitButton's score by using xcmndScore in set mode with the following code:
+
+```
+Assign | xcmndScore with SubmitButton, 3
+```
+
+In the real world, you will probably want to change SubmitButton's score based on the value of a variable.
+
+For example, you may have a variable called **InteractionScore** who's starting value is 0. You use an Advanced Action to check the what is written in each text box. If it is correct you increment InteractionScore by 1. After checking each text box you can update SubmitButton's score to the value of the InteractionScore variable with the following code:
+
+```
+Assign | xcmndScore with SubmitButton, InteractionScore
+```
+
+::: warning Over and under reporting
+You can set an object's score to be any number. Even a number lower than zero or higher than what was set in Captivate. However, it is important to keep in mind the following points:
+
+1. LMSs usually record course success in percentage. If a course reports a score of higher than 100% most LMSs do not know how to handle that situation and may react in unexpected ways. Increasing a button's score from 10 to 100 may cause the overall score of the course to peak over 100%.
+2. Similarly, LMSs do not generally know how to handle negative scores. 
+   
+So for both circumstances we recommend checking the percentage score of the course on the last slide, and if it is higher than 100% or lower than 0%, use xcmndScore to adjust a particular object's score to bring everything within the boundaries of 0% and 100%.
+:::
+
+::: tip The max keyword
+To set an object to its maximum high score you can use the 'max' keyword like so:
+
+```
+Assign | xcmndScore with SubmitButton, max
+```
+:::
+
+Using **get mode** you can also read an interactive object's score. If you wanted to record SubmitButton's score into a variable called MyVar you could do so with the following code:
+
+```
+Assign | xcmndScore with MyVar, SubmitButton
+```
+
+### See Also
+
+-   [xcmndMaxScore](#xcmndmaxscore)
 
 ## xcmndSetCursor
 
@@ -763,7 +1005,7 @@ Currently browsers do not support this feature on mobile devices. The technology
 ### Parameters
 
 | (1) Slide Object Name                                              |
-| ----------------------------------------------------------------   |
+| ------------------------------------------------------------------ |
 | The slide object you want to show. (@syntax and #syntax available) |
 
 Assign the name of a slide object to show that object. The usage is exactly the same as xcmndHide.
@@ -775,11 +1017,13 @@ Assign the name of a slide object to show that object. The usage is exactly the 
 ## xcmndWidth
 
 ### Parameters
+
 | (1) Variable name                                                       | (2) Slide Object Name                     |
-| ----------------------------------------------------------------        | ---------------------                     |
+| ----------------------------------------------------------------------- | ----------------------------------------- |
 | The variable that will store the slide object's width to be read later. | Slide Object whose width you want to know |
 
 ### Description
+
 Reads the width of the slide object specified by the second parameter and assigns that number to the variable defined in the first parameter.
 
 At this time there is no 'set mode' for xcmndWidth. It can only read height not change it.
@@ -787,4 +1031,5 @@ At this time there is no 'set mode' for xcmndWidth. It can only read height not 
 Width is read in pixels.
 
 ### See Also
-- [xcmndHeight](#xcmndheight)
+
+-   [xcmndHeight](#xcmndheight)

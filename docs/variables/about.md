@@ -174,3 +174,68 @@ A *negative* boolean value can be written as follows:
 
 All are equally valid.
 
+## Get and set mode
+Certain command variables have GET and SET modes. These variables include:
+
+- xcmndScore (relating to an object's score in the quiz)
+- xcmndPosX (relating to an object's horizontal position on the slide)
+- xcmndPosY (relating to an object's vertical position on the slide)
+
+These variables have something in common. Sometimes you want to READ (or **get**)an object's score/x position/y position to help you make calculations. Other times you want to WRITE (or **set**) an object's score/x position/y position.
+
+For example, let's say you had two slide objects:
+
+- SmartShape_1
+- SmartShape_2
+
+IMAGE HERE
+
+We also have a variable called: **MyVar**
+
+You want to move SmartShape_1 over to the right so that it has the same x position (horizontal position) as SmartShape_2. You can do all this with the **xcmndPosX** variable in the following way:
+
+```
+Assign | xcmndPosX with MyVar, SmartShape_2
+Assign | xcmndPosX with SmartShape_1, MyVar
+```
+
+Here's what these two lines of code are doing: 
+
+1. Get SmartShape_2's current x position and save it into the variable MyVar.
+2. Set SmartShape_1's x position to be equal to MyVar.
+
+The first line shows xcmndPosX in get mode. The second shows xcmndPosX in set mode.
+
+How does xcmndPosX know whether to use get or set mode? By detecting what **data types** have been assigned to which **parameters**
+
+**Get mode** is used if...
+- Parameter 1 is a variable
+- Parameter 2 is a slide object
+
+```
+Assign | xcmndPosX with MyVar, SmartShape_2
+```
+
+**Set mode** is used if...
+- Parameter 1 is a slide object
+- Parameter 2 is a variable
+
+```
+Assign | xcmndPosX with SmartShape_1, MyVar
+```
+
+The modes become easier to understand if we imagine an equals sign between the parameters. If I wrote:
+
+```
+MyVar = SmartShape_2's x position.
+```
+
+We'd expect SmartShape_2's x position to be recorded in our MyVar variable. A get operation.
+
+However, if I wrote: 
+
+```
+SmartShape_1's x position = MyVar
+```
+
+We'd expect SmartShape_1's x position to *change*, becoming equal to MyVar. A set operation.
