@@ -188,7 +188,7 @@ For example, let's say you had two slide objects:
 - SmartShape_1
 - SmartShape_2
 
-IMAGE HERE
+<img :src="$withBase('/img/get-set-smartshape.png')" alt="SmartShape_1 SmartShape_2">
 
 We also have a variable called: **MyVar**
 

@@ -565,7 +565,7 @@ This variable is similar to **xcmndScore**. Except that instead of changing the 
 
 Within Captivate, the maximum score is set when you select the interactive object, open the properties panel, scroll under the Actions subsection and expand the Reporting menu.
 
-IMAGE HERE
+<img :src="$withBase('/img/max-score.png')" alt="A button's score set to 10">
 
 In the above screenshot, the interactive object is shown to have a max score of 10 points. If we wanted to change that to twenty points, we could do so with the following code (assuming this object's name is **InteractiveObject**)
 
@@ -917,11 +917,11 @@ This is a variable with a get and set mode. To learn more about interacting with
 
 For example, say you have a button set to report to the quiz. This button is called **SubmitButton**. When clicked it will add four points to the quiz score.
 
-IMAGE HERE
+<img :src="$withBase('/img/score-submit-button.png')" alt="A button's score set to 10">
 
 However, this button may be linked to an interaction such as the following:
 
-IMAGE HERE
+<img :src="$withBase('/img/score-interaction.png')" alt="A button's score set to 10">
 
 Let's say there was a correct answer for each text entry box. If the learner enters the correct first name, last name, email and password then SubmitButton can safely report four points to the quiz.
 
