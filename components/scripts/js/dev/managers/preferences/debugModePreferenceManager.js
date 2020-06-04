@@ -24,7 +24,7 @@ _extra.registerModule("debugModePreferenceManager", ["preferenceManager", "debug
     if (!_extra.preferenceManager.registerPreferenceModule("DebugMode", preferenceModuleInfo)) {
 
         // If we are here, the variable has not been set, so we'll create a default value
-        preferenceModuleInfo.disable();
+        preferenceModuleInfo.enable();
 
 
     } else if (!preferenceModuleInfo.enabled) {
