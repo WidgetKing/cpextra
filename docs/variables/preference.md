@@ -139,38 +139,133 @@ To give this background transparency, assign xprefMultichoiceRolloverOpacity wit
 
 ### Parameters
 
-| Expected Value | Default Value |
-| -------------- | ------------- |
-| Boolean        | False         |
+| (1) Boolean (default: false)                                                        |
+| ------------------------------------                                                |
+| Whether text entry boxes will always display the value of their associated variable |
+| (1) Boolean (default: false)                                                        |
+| ------------------------------------                                                |
+| Whether text entry boxes will always display the value of their associated variable |
 
 ### Description
+All text entry boxes (or TEBs) have a **linked variable**, which can be found here:
+
+IMAGE HERE
+
+Any text the learner types into the TEB will be saved in that variable.
+
+However, TEBs also have **default text**, which is entered here:
+
+IMAGE HERE
+
+If you entered text into a TEB, then moved to another slide, then back to the slide with the TEB, what text would you expect to appear? The **linked variable text** or the **default text**.
+
+Captivate's default behaviour is to show the **default text**, which is not always what developers or learners expect to happen. If you had an interaction using TEBs where you wrote out a lot of information in a form, after exiting that slide and returning many learners would be frustrated to find all the information they had painstakingly written out had been erased.
+
+Fortunately, by setting xprefPreventTEBOverwrite to true, TEBs will always show their linked variable value instead of the default text.
+
+### See Also
+- [xprefTEBUpdateFromVariable](xpreftebupdatefromvariable)
 
 ## xprefTEBUpdateFromVariable
 
 ### Parameters
 
-| Expected Value | Default Value |
-| -------------- | ------------- |
-| Boolean        | False         |
+| (1) Boolean (default: false)                                                                  |
+| ------------------------------------                                                          |
+| Whether text entry boxes will automatically display the latest value of their linked variable |
 
 ### Description
+Text entry boxes (or TEBs) all have a linked variable.
+
+IMAGE HERE
+
+Enter text into the TEB and the variable will update. However, this does not work both ways. By default, if you change the value of the linked variable the TEB's text will not update to show that change.
+
+Setting xprefTEBUpdateFromVariable to true will ensure all TEBs update to display the current value of their linked variable.
+
+### See Also
+- [xprefPreventTEBOverwrite](#xprefpreventteboverwrite)
 
 ## xprefUseDoubleDigitElapsedTimeValues
 
 ### Parameters
 
-| Expected Value | Default Value |
-| -------------- | ------------- |
-| Boolean        | False         |
+| (1) String (default: none)                                                                                    |
+| ------------------------------------                                                                          |
+| Which increments of time **(hours, minutes, seconds)** should total time info variables display double digits |
 
 ### Description
+xprefUseDoubleDigitTotalTimeValues has a special relationship with the following info variables:
+- [xinfoProjectTotalSeconds](./info.html#xinfoprojecttotalseconds)
+- [xinfoProjectTotalMinutes](./info.html#xinfoprojecttotalminutes)
+- [xinfoProjectTotalHours](./info.html#xinfoprojecttotalhours)
+
+These variables are typically used to create custom playbars.
+
+Each variable will display a number between 0 and 59. When the time is between 0-9 the variable will display one digit. When it is between 10-59 the variable displays two digits. This might cause the playbar clock to continually change size, which may be distracting.
+
+The way to get around this is to have digits 0-9 show a '0' in front of their values (like: 00, 01, 02, 03, ...). You may wish this to happen when displaying seconds but not for minutes. xprefUseDoubleDigitTotalTimeValues gives you this flexibility.
+
+The default is: None. Which looks like so:
+
+IMAGE HERE
+
+To make double digits appear for the minutes and seconds value you'd assign: 
+
+```
+Assign |xprefUseDoubleDigitTotalTimeValues with Minutes, Seconds
+```
+
+IMAGE HERE
+
+The three valid values are:
+- Hours
+- Minutes
+- Seconds
+
+### See Also
+- [xprefUseDoubleDigitElapsedTimeValues](#xprefusedoubledigitelapsedtimevalues)
+- [xinfoProjectTotalSeconds](./info.html#xinfoprojecttotalseconds)
+- [xinfoProjectTotalMinutes](./info.html#xinfoprojecttotalminutes)
+- [xinfoProjectTotalHours](./info.html#xinfoprojecttotalhours)
 
 ## xprefUseDoubleDigitTotalTimeValues
 
-### Parameters
-
-| Expected Value | Default Value |
-| -------------- | ------------- |
-| Boolean        | False         |
+| (1) String (default: none)                                                                                      |
+| ------------------------------------                                                                            |
+| Which increments of time **(hours, minutes, seconds)** should elapsed time info variables display double digits |
 
 ### Description
+xprefUseDoubleDigitElapsedTimeValues has a special relationship with the following info variables:
+- [xinfoProjectElapsedSeconds](./info.html#xinfoprojectelapsedseconds)
+- [xinfoProjectElapsedMinutes](./info.html#xinfoprojectelapsedminutes)
+- [xinfoProjectElapsedHours](./info.html#xinfoprojectelapsedhours)
+
+These variables are typically used to create custom playbars.
+
+Each variable will display a number between 0 and 59. When the time is between 0-9 the variable will display one digit. When it is between 10-59 the variable displays two digits. This might cause the playbar clock to continually change size, which may be distracting.
+
+The way to get around this is to have digits 0-9 show a '0' in front of their values (like: 00, 01, 02, 03, ...). You may wish this to happen when displaying seconds but not for minutes. xprefUseDoubleDigitElapsedTimeValues gives you this flexibility.
+
+The default is: None. Which looks like so:
+
+IMAGE HERE
+
+To make double digits appear for the minutes and seconds value you'd assign: 
+
+```
+Assign |xprefUseDoubleDigitElapsedTimeValues with Minutes, Seconds
+```
+
+IMAGE HERE
+
+The three valid values are:
+- Hours
+- Minutes
+- Seconds
+
+### See Also
+- [xprefUseDoubleDigitTotalTimeValues](#xprefusedoubledigittotaltimevalues)
+- [xinfoProjectElapsedSeconds](./info.html#xinfoprojectelapsedseconds)
+- [xinfoProjectElapsedMinutes](./info.html#xinfoprojectelapsedminutes)
+- [xinfoProjectElapsedHours](./info.html#xinfoprojectelapsedhours)
