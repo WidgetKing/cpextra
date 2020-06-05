@@ -1,18 +1,18 @@
 # About Variables
-In this section we will explain CpExtra's command/preference/info variables.
+In this section we will explain CpExtra's **Command Variables**, **Preference Variables** and **Info Variables**.
 
 ::: tip About variable prefixes
-Some CpExtra features allow you to create variables with special abilities by giving them a special prefex. Such as variables with the prefix *ls_* saving their values to local storage.
-We do not discuss these features here. Instead, they are discussed under the features page.
+Some CpExtra features allow you to create variables with special abilities by giving them a special prefex. For example, variables with the prefix *ls_* save their values to local storage in the user's browser.
+We discuss those features under the **Features** page.
 :::
 
 ## Variable types
 CpExtra breaks its variables into three catagories.
 
 ### Command Variables
-These are the most frequently used variable type. Each variable represents an 'action' or command. When you assign a value to these variables, CpExtra read that value and act upon it.
+These are the most frequently used variable type. Each variable represents an 'action' or 'command'. When you assign a value to these variables, CpExtra reads that value and acts upon it.
 
-For example, if you assign xcmndHide with 'SmartShape_1' CpExtra will search the project for an object name 'SmartShape\_1' and hide it.
+For example, if you assign **xcmndHide** with **SmartShape_1** CpExtra will search the project for an object name **SmartShape\_1** and hide that object.
 
 <img :src="$withBase('/img/define-xcmndhide.png')" alt="defining xcmndHide">
 
@@ -25,14 +25,14 @@ Examples of commonly used command variables include:
 ### Preference Variables
 Preferences are behaviors you want to persist for the whole project. Usually, you'll set them once and forget about them. That said, you can change them again once they are set.
 
-Usually you'll give a preference variable its initial value in the Project > Variables... dialog.
+Usually you'll give a preference variable its initial value in the **Project > Variables...** dialog.
 
 Examples of commonly used command variables include:
 - xprefDisablePlaybarScrubbing
 - xprefInitAction
 
 ### Info Variables
-CpExtra exposes information through these variable's values. Much like how Captivate exposes the number of the current slide through the cpInfoCurrentSlide variable. You do NOT change these variable's values.
+CpExtra exposes information through these variable's values. Much like how Captivate exposes the number of the current slide through the **cpInfoCurrentSlide** system variable. These variables are READ-ONLY and their values cannot be changed.
 
 Commonly used info variables include:
 - xinfoEventTarget
@@ -40,27 +40,28 @@ Commonly used info variables include:
 - xinfoProjectElapsedSeconds
 
 ## How do you create variables?
-To use a CpExtra command/preference/info variable you must first define it.
+To use a CpExtra command, preference or info variable you must first define it.
 
-For example, *xcmndHide* is probably CpExtra's most frequently used command variable. To define it in Captivate:
-1. Go to Project > Variables...
-2. Click: *Add New*
-3. Write the name of the variable (in this example: xcmndHide)
+For example, *xcmndHide* is probably CpExtra's most frequently used command variable. 
+To define it in Captivate:
+1. Go to **Project > Variables...**
+2. Click: **Add New**
+3. Write the name of the variable (in this example: **xcmndHide**)
 
 <img :src="$withBase('/img/assign-xcmndhide.png')" alt="assigning to xcmndHide">
 
-4. If you're defining a preference variable, you'll probably want to give it an initial value in the *Value:* field. For other variable types, giving the variable an initial value will not cause any behaviour.
+4. If you're defining a preference variable, you'll probably want to give it an initial value in the **Value:** field. For other variable types, giving the variable an initial value will not cause any behaviour.
 
 ::: danger
-All variables are *case sensitive*. *xcmndhide* is not the same variable as *xcmndHide*. CpExtra ignores variables with incorrect capitalisation.
+All variables are *case sensitive*. **xcmndhide** is not the same variable as **xcmndHide**. CpExtra ignores variables with incorrect capitalisation.
 :::
 
 ::: tip
-All CpExtra variables start with *x* (For e*X*tra). Therefore, when picking a variable from a drop down list the CpExtra variables will appear down the bottom.
+All CpExtra variables start with the letter **x** (for e**X**tra). Therefore, when picking a variable from a drop down list the CpExtra variables will appear down the bottom.
 
 Let's say however that there is a particular CpExtra variable you use all the time and you'd like the convenience of it appearing at the *top* of the variable list.
-In that case, define the CpExtra variable with an '\_' in front of its name. For example: *_xcmndHide*
-CpExtra will still recognize it, and it will sort to the top of your list of variables.
+In that case, define the CpExtra variable with an underscore character like this '\_' in front of its name. For example: **_xcmndHide**
+CpExtra will still recognize it, and it will conveniently sort to the top of your list of variables.
 :::
 
 ## Interacting with variables
@@ -80,9 +81,9 @@ When you to trigger one of CpExtra's commands, you would pick the **Assign** act
 
 <img :src="$withBase('/img/action-assign.png')" alt="defining xcmndHide">
 
-From the **Assign:** drop down would pick a CpExtra variable (you would already have defined it under Project > Variables). Then in the **With:** field you would enter your instruction to CpExtra.
+From the **Assign:** drop-down select a CpExtra variable (that you would already have defined under **Project > Variables**). Then in the **With:** field enter your instruction to CpExtra.
 
-For example, if you wanted to hide all the objects in the project who's name starts with 'SmartShape_', you'd open the **Assign:** drop down an pick xcmndHide, then in the **With:** field: SmartShape_#
+For example, if you wanted to hide all the objects in the project who's name starts with **SmartShape_**, you'd open the **Assign:** drop down an pick **xcmndHide**, then in the **With:** field enter the text string **SmartShape_#**.
 
 <img :src="$withBase('/img/action-assign-xcmndhide.png')" alt="defining xcmndHide">
 
@@ -101,11 +102,11 @@ Assign | xcmndHide with SmartShape_#
 :::
 
 ### Advanced Actions
-Sometimes to get the behaviour you require, you need more than one action. This is where you define an Advanced Action. Advanced Actions allow you to trigger a series of actions one after the other. The actions you can trigger are the kind you can trigger on a button's success action.
+Sometimes to get the behaviour you require, you need more than one action. This is where you define an **Advanced Action**. These allow you to trigger a series of actions one after the other. The actions you can trigger are the kind you can trigger on a button's **Success** action.
 
-Once again the **Assign** action is available. The **Expression** action might some times also prove to be useful, but in this documentation we will always use Assign.
+The **Assign** action is probably the easiest way to give a variable its value. The **Expression** action might sometimes also prove to be useful, but it's a little more complicated so in this documentation we will always use **Assign**.
 
-The Assign action works differently in an Advanced Action. After picking the assign action a drop down will appear allowing you to choose the variable that will receive the assignment. After picking that variable the next drop down will allow you to choose what to assign. However, you will first be faced with a choice: variable or literal.
+The **Assign** action works differently in an **Advanced Action** than it does in single actions that can be selected from the **Properties** panel. In the **Advanced Actions** dialog, after picking the **Assign** action a drop down will appear allowing you to choose the name of the variable that will receive the assignment. After picking that variable the next drop down will allow you to choose what value to assign. However, you will first be faced with a choice: Assign the value of another **variable** or a **literal** value.
 
 <img :src="$withBase('/img/advanced-action-variable-literal.png')" alt="defining xcmndHide">
 
@@ -113,9 +114,9 @@ Choosing **variable** will present you with another list of variables to choose 
 
 Choosing **literal** will present you with a field where you can enter a string of text.
 
-While you may at some times have reason to use the **variable** option, we find that 99% of the time we write our instructions in literals. So, **in this documentation we will assume you are always making literal assignments**.
+While you may at some times have reason to use the **variable** option, we find that 99% of the time we write our instructions in **literals**. So, in this documentation we will assume you are always making literal assignments.
 
-So if you were to convert the following into an Advanced Action:
+This being the case, if you were to convert the following into an **Advanced Action**:
 
 ```
 Assign | xcmndHide with SmartShape_#
@@ -129,7 +130,7 @@ Then type **SmartShape_#** into the field.
 
 <img :src="$withBase('/img/advanced-action-assign-xcmndhide.png')" alt="defining xcmndHide">
 
-Tap ENTER and you're done!
+Tap **ENTER** and you're done!
 
 ## Data types
 Data comes in different types. For example:
@@ -140,9 +141,9 @@ Data comes in different types. For example:
 
 Usually an action only makes sense if applied to a particular data type.
 
-For example: xcmndRound takes a number like 3.456 and rounds it to the nearest number: 3. Would it make sense to try and round a string such as 'french fries' to it's nearest number? No, the data type is wrong.
+For example: **xcmndRound** takes a number like **3.456** and rounds it to the nearest number: **3**. Would it make sense to try and round a string such as 'french fries' to it's nearest number? No, the data type is wrong (and you can never have too many french fries).
 
-Usually this is not something you need to worry about as CpExtra will imply the data type from what you write. But it is good to know a few bits of information about data types.
+Usually this is not something you need to worry about as CpExtra will imply the data type from what you write. But it is still good to know a little about data types.
 
 ### Numbers
 This counts as whole numbers (like: 2, 4, 53, 1800) and floating point numbers (1.2, 333.3333, 3.14).
@@ -192,7 +193,7 @@ For example, let's say you had two slide objects:
 
 We also have a variable called: **MyVar**
 
-You want to move SmartShape_1 over to the right so that it has the same x position (horizontal position) as SmartShape_2. You can do all this with the **xcmndPosX** variable in the following way:
+You want to move **SmartShape_1** over to the right so that it has the same x position (horizontal position) as **SmartShape_2**. You can do all this with the **xcmndPosX** variable in the following way:
 
 ```
 Assign | xcmndPosX with MyVar, SmartShape_2
@@ -201,12 +202,12 @@ Assign | xcmndPosX with SmartShape_1, MyVar
 
 Here's what these two lines of code are doing: 
 
-1. Get SmartShape_2's current x position and save it into the variable MyVar.
-2. Set SmartShape_1's x position to be equal to MyVar.
+1. Get **SmartShape_2**'s current x position and save it into the variable **MyVar**.
+2. Set **SmartShape_1**'s x position to be equal to **MyVar**.
 
-The first line shows xcmndPosX in get mode. The second shows xcmndPosX in set mode.
+The first line shows **xcmndPosX** in *get* mode. The second shows **xcmndPosX** in *set* mode.
 
-How does xcmndPosX know whether to use get or set mode? By detecting what **data types** have been assigned to which **parameters**
+How does **xcmndPosX** know whether to use *get* or *set* mode? By detecting what **data types** have been assigned to which **parameters**
 
 **Get mode** is used if...
 - Parameter 1 is a variable
@@ -230,7 +231,7 @@ The modes become easier to understand if we imagine an equals sign between the p
 MyVar = SmartShape_2's x position.
 ```
 
-We'd expect SmartShape_2's x position to be recorded in our MyVar variable. A get operation.
+We'd expect **SmartShape_2**'s x position to be recorded in our **MyVar** variable. A get operation.
 
 However, if I wrote: 
 
@@ -238,4 +239,4 @@ However, if I wrote:
 SmartShape_1's x position = MyVar
 ```
 
-We'd expect SmartShape_1's x position to *change*, becoming equal to MyVar. A set operation.
+We'd expect **SmartShape_1**'s x position to *change*, becoming equal to **MyVar**. This is how a set operation works.

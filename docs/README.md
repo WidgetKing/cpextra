@@ -15,6 +15,6 @@ features:
 footer: All rights reserved Infosemantics | Copyright 2020-present Infosemantics
 ---
 
-CpExtra is compatible with Captivate versions 9 and up.
+CpExtra is compatible with all Adobe Captivate versions from Captivate 9 onward.
 
-Please be aware that this library has many features and can therefore at times require a certain amount of technical expertise to use. Adobe Captivate users desiring to incorpoarte this widget into their projects should already be familiar with the basics of navigating the Captivate interface, and know how to use Variables and Advanced Actions.
+Please be aware that since CpExtra is actually a JavaScript library with a multitude of features it can therefore at times require a certain amount of technical expertise to use. Adobe Captivate users desiring to incorpoarte CpExtra into their projects should already be familiar with the basics of navigating the Captivate interface, and know how to use Variables and Advanced Actions.  This is because CpExtra features are usually set up and configured via Captivate's existing user interface and dialogs, especially the Advanced Actions dialog.
