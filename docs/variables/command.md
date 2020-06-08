@@ -131,7 +131,7 @@ This command variable exists purely to turn of **xcmndPreventTabOut**'s function
 
 ### Description
 
-This command variable was created so that you could 'daisy chain' **Advanced Actions** by calling one action from another. [This page explains the reasons why Advanced Action chains need to be set up this way](../features/event-listeners.html#triggering-one-action-from-another)
+This command variable was created to allow Captivate developers to 'daisy chain' **Advanced Actions** by calling one action from another, something not possible by default in Captivate. [This page explains the reasons why Advanced Action chains need to be set up this way](../features/event-listeners.html#triggering-one-action-from-another)
 
 Example: If you have a button named **Button_1** and you desire its **success** action to run, you can do so with the following code:
 
@@ -177,21 +177,21 @@ Note that there can be no spaces in the name of the run-time event when you spec
 
 ### Description
 
-Assign the name of a variable. CpExtra will then read that variable's value, **round it up** to the nearest whole number, and then assign the rounded number back into the variable.
+This **Command Variable** takes another variable's decimal number (e.g. 1.23), rounds it up to the nearest whole number, and then re-assigns the new rounded number value back to the same variable.  This is a very useful solution for situations where you are doing math that results in a number followed by several decimals, but where the next highest whole number is required.
 
 #### Examples
 
--   3.3 will be rounded to 4
--   6.6 will be rounded to 7
--   1.5 will be rounded to 2
+-   3.3 will be rounded up to 4
+-   6.6 will be rounded up to 7
+-   1.5 will be rounded up to 2
 
-To run xcmndCeil on multiple variables at once, you could assign a comma delimited list:
+You can run **xcmndCeil** on multiple variables at once by simply assigning a comma delimited list as its value as follows:
 
 ```
 Assign | xcmndCeil with MyVar1, MyVar2, MyVar
 ```
 
-You could also use assign an @syntax query and xcmndCeil will be run over all matching variables.
+If you were to assign the value of **xcmndCeil** as an **@syntax** query, then all variables with a name that match the query would be reassigned with values rounded up to the nearest whole number.
 
 ```
 Assign | xcmndCeil with MyVar@
@@ -213,26 +213,26 @@ Assign | xcmndCeil with MyVar@
 
 | (1) Slide Object Name                                                           | (2) State Name                                    |
 | ------------------------------------------------------------------------------- | ------------------------------------------------- |
-| The slide object whose state you wish to change (@syntax and #syntax available) | The name of the state that should be made visible |
+| The slide object whose **Object State** you wish to change. (**@syntax** or **#syntax** can also be used to specify the object name.) | The name of the **Object State** that should be made active. |
 
 ### Description
 
-Change the state of a slide object. You will need to define the state beforehand.
+This **Command Variable** changes the **Object State** of a slide object to another state already defined for that object. 
 
-If had a shape called **SmartShape_1** and you gave it a new state called **MyNewState**, you can change SmartShape_1 to MyNewState with the following:
+Example: To assign a shape called **SmartShape_1** with a new state called **MyNewState**, use the following code:
 
 ```
 Assign | xcmndChangeState with SmartShape_1, MyNewState
 ```
 
-:::tip Why wouldn't I just use Captivate's change state action?
-For one, xcmndChangeState can use @syntax, allowing you to change the state of multiple objects with one assignment.
+:::tip Why not just use Captivate's default Change State action?
+For one, **xcmndChangeState** can use **@syntax** or **#syntax** to change the state of multiple objects with a single variable assignment.
 
-Secondly, xcmndChangeState allows you to use variables to dynamically pick the object or state you wish to change. For example, you could use [xinfoEventTarget](./info.html#xinfoeventtarget) to change the state of an object you just clicked.
+Secondly, **xcmndChangeState** allows you to use other variables to dynamically select the object or state you wish to change. For example, you could use [xinfoEventTarget](./info.html#xinfoeventtarget) to change the state of an object the user just clicked.
 :::
 
 ::: tip Pssst!
-Have you tried CpExtra's [Smart States](../../features/smart-states)? They're really good.
+Have you tried CpExtra's [Smart States](../../features/smart-states)? They're really good time savers for developers.
 :::
 
 ### See also
@@ -245,33 +245,42 @@ Have you tried CpExtra's [Smart States](../../features/smart-states)? They're re
 
 | (1) Number/Number Range/Slide Label/Slide label range |
 | ----------------------------------------------------- |
-| The slide or slides you wish to mark complete         |
+| The slide or slides you wish to mark as completed.         |
 
 ### Description
 
-This variable marks a slide complete. A completed slide will appear with a tick mark next to it in the table of contents. The slide will also be considered complete for the sake of SCORM completion evaluation.
+This variable marks a slide as having been visited and therefore *completed*.  This command variable can be very useful in achieving *artificial* slide completions because Captivate offers no way to complete a slide other than by forcing users to visit the actual slide/s.
 
-If you assign a number, such as 5...
+### Use cases
+A completed slide will appear with a tick mark next to it in the **Table of Contents** or **TOC**. Even though some slides are not required to be visited, you may still want them to appear marked off in the **TOC** (e.g. navigation HELP slides). If slides are grouped together, only one item representing the entire group may appear in the **TOC** and all slides in the group must be visited in order for the entire group to be marked as completed.  
+
+Slide completions are also often used as criteria for marking a SCORM module as having been completed for LMS reporting.  So, the **xcmndCompleteSlide** command variable can be used to artificially mark all slides as having been completed at a certain point, thereby avoiding module completion failures that often occur due to some slides not having been visited by the learner.
+
+Captivate developers will usually find this command variable essential when designing courses that use branching scenarios as it be used to ensure completion even though the learner did not visit every slide.  Simply configure **xcmndCompleteSlide** to mark all slides as complete when the learner successfully completes the scenario. This can avoid unexpected behaviours in the **TOC** and **SCORM LMS**.
+
+### Specifying slide numbers
+If you assign **xcmndCompleteSlide** with a slide number, such as 5...
 
 ```
 Assign | xcmndCompleteSlide with 5
 ```
 
-The fifth slide in the project will be marked complete.
+...then the fifth slide in the project will be marked as complete.
 
-To mark the fifth and tenth slide as complete you could set another parameter like so:
+To mark a number of non-contiguous (i.e. separated) slides as complete, use a comma-delimited list. For example, to mark the fifth *and* tenth slides complete, use the code shown below:
 
 ```
 Assign | xcmndCompleteSlide with 5, 10
 ```
 
-To mark all the slides between five and ten complete you could set a number range like so:
+To mark all slides in a contiguous (i.e. uninterrupted) range, specify the range by showing the starting and ending slide separated by a hyphen as shown below:
 
 ```
 Assign | xcmndCompleteSlide with 5 - 10
 ```
 
-As you add and remove slides from your course however, slide numbers can change. This means you might have to edit these numbers regularly. A much more stable way of working is by assigning slide labels.
+### Using slide labels instead of slide numbers
+If you add and remove slides from a course module during development, some slide numbers will change. This would then require you to revisit and edit slide numbers or slide ranges specified in parameters for **xcmndCompleteSlide**. A much more stable way of working is by assigning **slide labels** instead.
 
 For example, if you want to mark a slide called **MenuPage** complete you'd write the following:
 
@@ -279,18 +288,14 @@ For example, if you want to mark a slide called **MenuPage** complete you'd writ
 Assign | xcmndCompleteSlide with MenuPage
 ```
 
-You can also define the start and end of a range of slides using slide labels.
+You can also define the start and end slides for a range of contiguous slides using slide labels separated by a hyphen.
 
 ```
 Assign | xcmndCompleteSlide with MenuPage - Conclusion
 ```
 
-You will find this command variable most useful on courses using branching scenarios. You can ensure that even though the learner did not visit every slide, if they completed the scenario you are able to mark all slides as visited and therefore avoid unexpected behaviours in the TOC and SCORM LMS.
-
 ::: tip The 'all' keyword
-xcmndCompleteSlide recognizes a special keyword: **all**
-This keyword allows you to mark all the slides in the course as complete with just one assignment.
-You can use it like so:
+**xcmndCompleteSlide** recognizes a special keyword: **all** that allows you to mark all slides in a course module as complete with just one assignment as shown below:
 
 ```
 Assign | xcmndCompleteSlide with all
@@ -299,7 +304,7 @@ Assign | xcmndCompleteSlide with all
 :::
 
 ::: warning Warning: Slide labels including spaces
-You may run into an issue when trying to complete a slide whose name has a space in it. This is because spaces are automatically removed in assignments. To keep the space you will need to surround the slide name in []. [See this page for more information](./special-behaviour.html#for-string-values)
+You may run into an issue when trying to complete a slide whose name has a space in it. This is because spaces are automatically removed in assignment parameters of command variables. To preserve the spaces in slide names you will need to surround the slide name with square braces like these []. [See this page for more information](./special-behaviour.html#for-string-values)
 :::
 
 ## xcmndDisable
@@ -308,23 +313,23 @@ You may run into an issue when trying to complete a slide whose name has a space
 
 | (1) Interactive Object Name                                                |
 | -------------------------------------------------------------------------- |
-| The interactive object you want to disable (@syntax and #syntax available) |
+| The interactive object you want to disable. (**@syntax** and **#syntax** can also be used to specify the disabled object.) |
 
 ### Description
 
-Interactive objects are objects that have success/failure criteria. They include:
+An **interactive object** is a slide object that can execute actions. In Adobe Captivate **interactive objects** include:
 
--   Buttons
+-   Buttons (text, transparent, or image)
 -   Shape buttons (A smart shape marked as a button)
 -   Click boxes
 -   Text entry boxes
 
-Interactive objects can be disabled, which means that the ability to interact with them is disabled.
+Interactive objects can be enabled or disabled. A user is unable to interact with a disabled object.
 
--   Disabling a button, shape button or click box will cause them to ignore any clicks.
--   Text entry boxes will not allow the learner to enter text.
+-   A disabled **button**, **shape button** or **click box** will not respond to a click or tap (on a mobile device).
+-   A disabled **Text-entry Box** will not allow the learner to enter or submit text.
 
-Assign xcmndDisable a slide object name, a list of names, or an @syntax query to disable those objects.
+To disable one or more interactive objects, assign **xcmndDisable** with the object's name, a list of names, or an **@syntax** or **#syntax** query that would include the names. 
 
 ### See also
 
@@ -336,28 +341,29 @@ Assign xcmndDisable a slide object name, a list of names, or an @syntax query to
 
 | (1) Slide Object Name                                                                 |
 | ------------------------------------------------------------------------------------- |
-| The slide object you want to ignore mouse interaction (@syntax and #syntax available) |
+| The name of the interactive slide object you want to ignore mouse interaction. (**@syntax** and **#syntax** can also be used to specify objects.) |
 
 ### Description
 
-Assigning a slide object name to xcmndDisableMouseEvents will cause that slide object to ignore all mouse interaction.
+Assigning a slide object name to **xcmndDisableMouseEvents** will cause that slide object to ignore all mouse interactions, including rollover, click and double-click.
 
-Let's say you had two slide objects, one on top of the other:
+### Use cases
+Let's say you had two interactive slide objects, one on top of the other:
 
 -   Button_top
 -   Button_bottom
 
-Normally, if you click Button_top, it would hear the mouse click, respond to it, and block Button_bottom from responding to it (because visually Button_top appears on top).
+Normally, if you click **Button_top**, it would hear the mouse click, respond to it, and block Button_bottom underneath from responding (because visually **Button_top** is on a higher layer).
 
-However, if you disabled Button_top's mouse events with:
+However, if you disable **Button_top**'s mouse events as follows...
 
 ```
 Assign | xcmndDisableMouseEvents with Button_top
 ```
 
-The next time you click on Button_top it will completely ignore the mouse click. Button_bottom will then respond to the click because it wasn't blocked by Button_top.
+...then the next time you click **Button_top** it will ignore the mouse click and **button_bottom** will respond to the click instead because it is no longer blocked by **Button_top**.
 
-xcmndDisableMouseEvents is quite different to [xcmndDisable](#xcmnddisable). With xcmndDisable the slide objects will still hear mouse events (such as through xcmndAddEventListener), but they will not respond to them.
+**xcmndDisableMouseEvents** is quite different to [xcmndDisable](#xcmnddisable). With **xcmndDisable** the slide objects will still hear mouse events (such as through **xcmndAddEventListener**), but they will not respond to them.
 
 ::: warning Regarding xcmndAddEventListener
 
@@ -375,7 +381,7 @@ When a slide object's mouse events have been disabled, event listeners listening
 :::
 
 ::: danger Internet Explorer incompatibility
-xcmndDisableMouseEvents requires a CSS style which is part of the HTML5 standard. Internet Explorer does not implement this part of the HTML5 standard. Therefore, this command variable does not work with Internet Explorer.
+**xcmndDisableMouseEvents** requires a CSS style which is part of the HTML5 standard. **Internet Explorer** does not implement this part of the HTML5 standard. Therefore, this command variable does not work with **Internet Explorer** even when the IE version claims to be **HTML5-ready**.
 :::
 
 ### See Also
@@ -388,11 +394,11 @@ xcmndDisableMouseEvents requires a CSS style which is part of the HTML5 standard
 
 | (1) Interactive Object Name                                               |
 | ------------------------------------------------------------------------- |
-| The interactive object you want to enable (@syntax and #syntax available) |
+| The name of the interactive slide object you want to enable. (**@syntax** and **#syntax** can also be used to specify the name of the object.) |
 
 ### Description
 
-The opposite of [xcmndDisable](#xcmnddisable). It enables an interactive object after it has been disabled.
+This command variable is the opposite of [xcmndDisable](#xcmnddisable). It re-enables an interactive object *after* it has been disabled.
 
 ### See also
 
@@ -404,11 +410,11 @@ The opposite of [xcmndDisable](#xcmnddisable). It enables an interactive object 
 
 | (1) Slide Object Name                                                                     |
 | ----------------------------------------------------------------------------------------- |
-| The slide object you want to respond to mouse interaction (@syntax and #syntax available) |
+| The name of the interactive slide object you want to respond to mouse interaction. (**@syntax** and **#syntax** can also be used to specify object name/s.) |
 
 ### Description
 
-If an object's mouse events have been disabled with [xcmndDisableMouseEvents](#xcmnddisablemouseevents), then this variable can reactive their mouse events.
+If an object's mouse events have been disabled with [xcmndDisableMouseEvents](#xcmnddisablemouseevents), then this command variable can be used to re-enable mouse events for those objects.
 
 ## xcmndFloor
 
@@ -416,25 +422,25 @@ If an object's mouse events have been disabled with [xcmndDisableMouseEvents](#x
 
 | (1) Variable Name                                                           |
 | --------------------------------------------------------------------------- |
-| Name of the variable whose value should be rounded down (@syntax available) |
+| Name of the variable whose decimal number value should be rounded down to the nearest whole number. (**@syntax** can also be used to specify variable names.) |
 
 ### Description
 
-Assign the name of a variable. CpExtra will then read that variable's value, **round it down** to the nearest whole number, and then assign the rounded number back into the variable.
+This commmand variable takes the decimal number value of a specified variable and **rounds the number down** to the nearest whole number, before finally assigning the newly-rounded number back to the same variable.
 
 #### Examples
 
--   3.3 will be rounded to 3
--   6.6 will be rounded to 6
--   1.5 will be rounded to 1
+-   3.3 will be rounded down to 3
+-   6.6 will be rounded down to 6
+-   1.5 will be rounded down to 1
 
-To run xcmndCeil on multiple variables at once, you could assign a comma delimited list:
+To run **xcmndCeil** on multiple variables at once, assign a comma delimited list of variable names:
 
 ```
 Assign | xcmndFloor with MyVar1, MyVar2, MyVar
 ```
 
-You could also use assign an @syntax query and xcmndCeil will be run over all matching variables.
+You can also use an **@syntax** query to round up values for all variables that have names matching the query.  For example, to round up the values of all variables with names beginning with **MyVar** use the following code:
 
 ```
 Assign | xcmndFloor with MyVar@
@@ -456,17 +462,18 @@ Assign | xcmndFloor with MyVar@
 
 | (1) Variable Name                                                                                |
 | ------------------------------------------------------------------------------------------------ |
-| Name of the local/session storage variable whose records (special keywords: local, session, all) |
+| Name of the local/session storage variable whose records should be 'flushed', i.e. cleared. (Special keywords: local, session, all) |
 
 ### Description
 
-Assigning **xcmndFlushStorage** the name if a storage variable will clear that variable's value from the browser **and** prevent that variable's value from being saved to storage for the duration of the current project.
+Assigning **xcmndFlushStorage** the name if a storage variable will clear that variable's value from the browser *and* prevent that variable's value from being saved to storage for the duration of the current project.
 
 [Click here to learn more about storage variables.](../features/variable-prefixes.html#ls-for-local-storage)
 
-When building interactions using local storage variables you may at some times want to see what the project will look like to someone who has never viewed it before. It can be difficult to do that however, because your browser will record the variable's values from previous sessions. **xcmndFlushStorage** allows you to wipe a variable's records from storage. Therefore, the NEXT time you view the project, you will see what the learner sees on their first time through.
+### Use cases
+When building interactions using local storage variables you may at some times want to see what the project will look like to someone who has never viewed it before. However, it can be difficult to do that when your browser has recorded the variable's values from previous user sessions. **xcmndFlushStorage** allows you to wipe a variable's records from storage. This means the *next* time you view the project, you will see what a learner would see on their first time working through the content.
 
-To flush a single variable, assign its variable name:
+To flush a single variable, assign **xcmndFlushStorage** with the variable's name:
 
 ```
 Assign | xcmndFlushStorage with [ls_localStorageVariable]
@@ -475,16 +482,16 @@ Assign | xcmndFlushStorage with [ls_localStorageVariable]
 ::: warning Common issue with assigning a direct variable name
 [Please see this page](./special-behaviour.html#unexpected-behaviour-of-variable-names) for an explanation of an issue that happens when you assign a direct variable name to another variable.
 
-It is due to this issue that we make the above assignment using brackets.
+It is due to this issue that we made the above assignment using square brackets around the variable name.
 :::
 
-You can flush multiple variables with a comma delimited list:
+You can flush multiple variables with a comma-delimited list of variable names:
 
 ```
 Assign | xcmndFlushStorage with ls_localStorageVariable, ss_sessionStorageVariable
 ```
 
-xcmndFlushStorage also recognizes the keyword **Local**. Assigning this will \*\*clear all local storage variables (the ones starting with LS\_)
+**xcmndFlushStorage** also recognizes the keyword **Local**. Assigning this will \*\*clear all local storage variables (the ones starting with LS\_)
 
 ```
 Assign | xcmndFlushStorage with Local
@@ -512,15 +519,13 @@ Assign | xcmndFlushStorage with All
 
 | (1) Variable name                                                        | (2) Slide Object Name                      |
 | ------------------------------------------------------------------------ | ------------------------------------------ |
-| The variable that will store the slide object's height to be read later. | Slide Object whose height you want to know |
+| The variable that will store the slide object's height dimension for later use. | Name of the slide object whose height dimension you need to store. |
 
 ### Description
 
-Reads the height of the slide object specified by the second parameter and assigns that number to the variable defined in the first parameter.
+**xcmndHeight** gets the height dimension (in pixels) of the slide object named in the second parameter and assigns that number to the variable named in the first parameter.
 
-At this time there is no 'set mode' for xcmndHeight. It can only read height not change it.
-
-Height is read in pixels.
+At this time there is no 'set mode' for **xcmndHeight**. It can only get or read an object's height, not change it.
 
 ### See Also
 
@@ -532,22 +537,20 @@ Height is read in pixels.
 
 | (1) Slide Object Name                                            |
 | ---------------------------------------------------------------- |
-| The slide object you want to hide. @syntax and #syntax available |
+| The name of the slide object you want to hide. (**@syntax** and **#syntax** can also be used to specify objects.) |
 
 ### Description
 
-Assign the name of a slide object and that slide object will be hidden.
-
-The slide object does not have to be on the current slide.
+When assigned the name of a slide object as its parameter **xcmndHide** hides the object, even when the slide object is not on the current slide.
 
 ::: tip Hide multiple objects in one assignment
-This can be done with [@syntax](../special-behaviour.html#syntax-and-syntax)
+This can be done with [@syntax](../special-behaviour.html#syntax-and-syntax). For example, the following code will hide all objects where the name begins with **SmartShape_** (not recommended because it would likely hide a significant number of objects across all slides): 
 
 ```
 Assign | xcmndHide with SmartShape_@
 ```
 
-Or by assigning multiple parameters. You can do as many as you want!
+You can also assign object names as a comman-delimited list, as follows:
 
 ```
 Assign | xcmndHide with SmartShape_1, SmartShape_2, SmartShape_3
