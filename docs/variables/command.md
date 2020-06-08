@@ -10,7 +10,7 @@ Below is a list of all the **Command Variables** offered by CpExtra (in alphabet
 
 | (1) Slide Object Name                                       | (2) Event                                                                | (3) Interactive Object Name                              | (4) Criteria (default: success)  |
 | ----------------------------------------------------------- | ------------------------------------------------------------------------ | -------------------------------------------------------- | -------------------------------- |
-| Name of the slide object on which you want to listen for an event. | Name of the [event](../../features/events-list) that you want to listen for. | Name of an interactive slide object that has been set up to execute one or more actions (e.g. a button set up to execute one action for a **success** event and another action for a **failure** event). | Which of interactive object's events the event listener should trigger (e.g. success, last attempt). |
+| Name of the slide object on which you want to listen for an event. | Name of the [event](../../features/events-list) for which the **event listener** should listen. | Name of an interactive slide object that has been set up to execute one or more actions (e.g. a button set up to execute one action for a **success** event and another action for a **failure** event). | Which of the interactive object's run-time events the event listener should use to trigger an action (e.g. success, last attempt). |
 
 ### Description
 
@@ -704,19 +704,19 @@ In **set mode** this variable allows you to set how many pixels from the top of 
 Assign | xcmndPosY with SmartShape_1, 10
 ```
 
-**@syntax** also works. Say you had three objects on slide:
+**@syntax** can also be used to specify objects by name. Say you had three objects on slide:
 
 - SmartShape_1
 - SmartShape_2
 - SmartShape_3
 
-You could move all three with the following line of code:
+Since all objects have names beginning with the same pattern, you could move all three at the same time with the following line of code:
 
 ```
 Assign | xcmndPosY with SmartShape_@, 10
 ```
 ### Get mode use cases
-**Get mode** allows you to read the current vertical position into a variable. If you wanted to move **SmartShape_1** to the same vertical position as **SmartShape_2**, you could do so with the following code:
+**Get mode** allows you to read the current vertical Y position of an object and save it into a variable.  This then allows you to use that value to control the vertical position of another object. For example, if you wanted to move **SmartShape_1** to the same vertical position as **SmartShape_2**, you could do so with the following code:
 
 ```
 Assign | xcmndPosY with MyVar, SmartShape_2
@@ -732,34 +732,35 @@ Assign | xcmndPosY with SmartShape_2, MyVar
 
 | (1) Text Entry Box Name                                             |
 | ------------------------------------------------------------------- |
-| The text entry box you want to evaluate when pressing the 'tab' key |
+| The name of the **Text-entry Box** on which you want to trigger evaluation when the **Tab** key is pressed. |
 
 ### Description
 
-The TAB key is used in many software as an accessibility feature, allowing the user to navigate from one input field to another without using a mouse. This is true of the browser that displays the Captivate export. This feature can cause some unexpected behaviour.
+The **Tab** key is used in many software applications as an accessibility feature, allowing keyboard-driven users to navigate from one input field to another without using a mouse. This is true of the browser that displays Captivate's HTML5 published output. However, using the **Tab** key can cause some unexpected behaviour at run-time. **xcmndPreventTabOut** offers a way to work around the resulting usability issues.
 
-For example, let's say you're building a software simulation where you are trying to simulate the above mentioned behaviour. Namely, you want the learner to:
+Let's say you're using Adobe Captivate to build a software simulation that simulates the normal behaviour of an application where the user needs to:
 
-1. Select a text entry box
-2. Enter a string
-3. Press TAB to move to the next box
+1. Select a **Text-entry Box**.
+2. Enter a text string.
+3. Press the **Tab** key to move to the next field.
 
-On step 3 you may wish to evaluate the text entered in step 2 to ensure it is correct. To do so you may set up the text entry box's shortcut field to evaluate when pressing the Tab key.
+On step 3 you may wish to evaluate the text string entered in step 2 to ensure it is correct. To do so, you may specify **Tab** in the **TEB**'s shortcut field so that success/failure evaluation will trigger when the user presses the **Tab** key.
 
 <img :src="$withBase('/img/teb-tab.png')" alt="defining xcmndHide">
 
-However, in practice what will happen when you test this is the TAB key will move keyboard focus to the next input element (perhaps the browser search bar) rather than triggering the text entry box's evaluation. This is a timing issue. The keyboard focus leaves the text entry box before the keyboard event is registered on the text entry box.
+However, in practice what will happen when you test this is that the **Tab** key will move keyboard focus to the next input element (perhaps the browser search bar) rather than triggering the evaluation of the data entered into the **TEB** by the user. The underlying issue here is really a timing issue. The keyboard focus leaves the **TEB** *before* the keyboard event is registered on the object.
 
-**xcmndPreventTabOut** fixes this issue. Just assign it the name of the text entry box like so (assuming the name of your text entry box is **MyTextEntryBox**):
+### Use cases
+If the name of the **TEB** is **MyTextEntryBox**, simply assign **xcmndPreventTabOut** with the name of the object as follows:
 
 ```
 Assign | xcmndPreventTabOut with MyTextEntryBox
 ```
 
-This stops the TAB key shifting keyboard focus for this object. Therefore, the text entry box picks up that the tab key was pressed and evaluation happens as expected. Captivate will then trigger the text entry box's success or failure criteria.
+**xcmndPreventTabOut** fixes this timing issue by blocking any change of focus to a different field when the **Tab** key is pressed. When the **TEB** then detects that the **Tab** key was pressed evaluation then happens as expected and **TEB**'s relevant **success** or **last attempt** events will fire, executing whatever actions are assigned to them.
 
 ::: tip Note
-Only one text entry box at a time can be enabled with xcmndPreventTabOut's special behaviour.
+Only one **TEB** at a time can be enabled with **xcmndPreventTabOut**'s special behaviour.  This means that, if you are simulating a screen with multiple text-entry fields, you would need to use a different slide for each successive field. You can use the actions assigned to the **TEB**'s **success** or **last attempt** events to move from the current slide to the next one in the series.
 :::
 
 ### See Also
@@ -770,35 +771,35 @@ Only one text entry box at a time can be enabled with xcmndPreventTabOut's speci
 
 | (1) Variable Name                           | (2) Number (default: 1)        | (3) Number (default: 0)       |
 | ------------------------------------------- | ------------------------------ | ----------------------------- |
-| Name of variable to assign random number to | Highest number in random range | Lowest number in random range |
+| Name of a variable to which a random number will be assigned. | The highest possible number value in the random range. | The lowest possible number in the random range. |
 
 ### Description
 
-Generates a random number and assigns it to the variable specified by the first parameter.
+**xcmndRandom** generates a random number and assigns it to the variable named in the first parameter.
 
 ### When only the first parameter is provided
 
-A random **decimal number** between 0 and 1 will be generated.
+A random **decimal number** between 0 and 1 will be generated (e.g. 0.1. 0.2).
 
 ### When both first and second parameters are provided
 
-A random **whole number** between 0 and the number specified in the second parameter will be generated.
+A random **whole number** between 0 and the number specified in the second parameter will be generated (e.g. 1, 2, 3).
 
 ### When all three parameters are provided
 
-A random **whole number** between the third (lowest) and second (highest) number will be generated.
+A random **whole number** will be generated with a value somewhere between the number specified in the third parameter (i.e. the *lowest* possible number) and the number specified in the second parameter (i.e. the *highest* possible number).
 
 ## xcmndRemoveEventListener
 
 ### Parameters
 
-| (1) Slide Object Name                                       | (2) Event                                                                | (3) Interactive Object Name                              | (4) Criteria (default: success)  |
+| (1) Slide Object Name                                       | (2) Run-time Event                                                                | (3) Interactive Object Name                              | (4) Criteria (default: success)  |
 | ----------------------------------------------------------- | ------------------------------------------------------------------------ | -------------------------------------------------------- | -------------------------------- |
-| Name of slide object that you want to listen to an event on | Name of [event](../../features/events-list) that you want to listen for. | Name of slide object that holds a success/failure action | Which action you wish to trigger |
+| Name of the slide object on which an existing **event listener** is currently listening for an event. | Name of the [event](../../features/events-list) for which the **event listener** is currently listening. | Name of the interactive slide object whose actions the **event listener** will execute if it detects the run-time event named in the second parameter. | Name of the run-time event (of the interactive object specified in parameter 3) that the **event listener** will trigger if it detects the event specified in parameter 2. |
 
 ### Description
 
-Removes and event listener from a slide object.
+The **xcmndRemoveEventListener** command variable basically just does the opposite of its twin the **xcmndAddEventListener**. It removes a specific event listener from a specific slide object.
 
 -   [See this page to learn more about event listeners](../../features/event-listeners)
 -   [This page contains the list of available events](../../features/events-list)
@@ -817,9 +818,10 @@ Removes and event listener from a slide object.
 
 ### Description
 
-Resets variables to their initial value (As specified in the Project > Variables dialog).
+Resets variables to the initial default value specified in the **Project** > **Variables** dialog).
 
-Let's say you had a form interaction with many text entry boxes linked to the following variables:
+### Use cases
+Let's say you had a form interaction with many **Text-entry boxes** linked to the following **User Variables**:
 
 -   firstname_field_form
 -   lastname_field_form
@@ -827,15 +829,15 @@ Let's say you had a form interaction with many text entry boxes linked to the fo
 -   employer_field_form
 -   paymentmethod_field_form
 
-The learner will interact with the slide, entering information into each field. Later, they may want to return to the slide and perform the form interaction again. This means you'll need to reset it to its initial state.
+The learner interacts with the slide, entering the required information into each field. Later, they may want to return to the slide and work through the interaction again. This means you'll need to reset it to its initial state, and this will likely mean that most if not all of the variables involved will need to be reset to default values again.
 
-You could reset firstname_field_form to its original value by running:
+You could reset **firstname_field_form** to its original value by assigning **xcmndReset** with this code:
 
 ```
 Assign | xcmndReset with firstname_field_form
 ```
 
-To be more efficient, you could reset all the variables in the interaction with one @syntax assignment:
+However, to be more efficient, you could reset all the variables in the interaction with one **@syntax** assignment as follows:
 
 ```
 Assign | xcmndReset with @_field_form
@@ -847,11 +849,11 @@ Assign | xcmndReset with @_field_form
 
 | (1) Variable Name                                                                                  |
 | -------------------------------------------------------------------------------------------------- |
-| Name of the variable whose value should be rounded to the nearest whole number (@syntax available) |
+| Name of the variable whose value should be rounded to the nearest whole number. (**@syntax** can also be used to select names of variables.) |
 
 ### Description
 
-Assign the name of a variable. CpExtra will then read that variable's value, **round it to the nearest whole number**, and then assign the rounded number back into the variable.
+If you assign **xcmndRound** with the name of a variable, CpExtra will then read that variable's value, round it to the nearest **whole number**, and then re-assign the new rounded number back into the same variable.
 
 #### Examples
 
@@ -859,13 +861,13 @@ Assign the name of a variable. CpExtra will then read that variable's value, **r
 -   6.6 will be rounded to 7
 -   1.5 will be rounded to 2
 
-To run xcmndRound on multiple variables at once, you could assign a comma delimited list:
+To run **xcmndRound** on multiple variables at once, you can assign the names as a comma delimited list:
 
 ```
 Assign | xcmndRound with MyVar1, MyVar2, MyVar
 ```
 
-You could also use assign an @syntax query and xcmndCeil will be run over all matching variables.
+You could also use an **@syntax** query and **xcmndRound** will be run over all variables with names that match the query.  For example, assigning **xcmndRound** as shown below would round all variables with a name beginning with **MyVar**.
 
 ```
 Assign | xcmndRound with MyVar@
@@ -883,41 +885,42 @@ Assign | xcmndRound with MyVar@
 
 ## xcmndRoundTo
 
-| (1) Variable Name                                                      | (2) Number               | (3) String (default: nearest)                                    |
+| (1) Variable Name                                                      | (2) Number of places               | (3) String (default: nearest)                                    |
 | ---------------------------------------------------------------------- | ------------------------ | ---------------------------------------------------------------- |
-| Name of the variable whose value should be rounded (@syntax available) | Number of decimal points | Either **up** or **down** to indicate the direction of rounding. |
+| Name of the variable whose value should be rounded to a specific number of decimal points. (**@syntax** can also be used to select variables by name.) | Number of decimal points to which the variable value should be rounded. | OPTIONAL: This parameter will over-ride the default behaviour to round to the nearest decimal number. It indicates the direction of the rounding by using either **up** or **down** keywords. |
 
 ### Description
 
-Rounds to a set number of decimal places. The second parameter determines the number of decimal places.
+**xcmndRoundTo** takes a **decimal number** and rounds it to a set number of decimal places. The second parameter determines the number of decimal places.  The default behaviour is to simply round to the *nearest* value that still preserves the required number of decimal places specified in the second parameter.  The third parameter can be used to over-ride the default *nearest* number behaviour and force the rounding direction to be either **up** or **down**.
 
-For example, if you had a variable called **MyVar** with the value 6.6666666. Running the following...
+### Use cases
+If you had a variable called **MyVar** with the value **6.6666666**, assigning **xcmndRoundTo** with the following code will change the value of **MyVar** to: **6.67**.
 
 ```
 Assign | xcmndRoundTo with MyVar, 2
 ```
 
-...will change the value of **MyVar** to: \*_6.67_.
+...
 
-Whereas, if you had run...
+However, if you had instead used the following assignment...
 
 ```
 Assign | xcmndRoundTo with MyVar, 4
 ```
 
-...**MyVar** would then change to: **6.6667**
+...then the value of **MyVar** would change to: **6.6667**
 
-The optional **third parameter** allows you to designate whether xcmndRoundTo should always round up or down.
+The optional third parameter allows you to designate whether **xcmndRoundTo** should be forced to round the value **up** or **down** with the same number of decimals.
 
-So running this...
+So using this assignment...
 
 ```
 Assign | xcmndRoundTo with MyVar, 2, down
 ```
 
-..would change MyVar to: **6.66**
+..would change **MyVar** to: **6.66**
 
-By default if no third parameter is set, xcmndRoundTo will round to which ever number is closest.
+By default if no third parameter is set, **xcmndRoundTo** will round to which ever number is closest, while still maintaining the number of decimal points specified in the second parameter.
 
 ## xcmndScore
 
