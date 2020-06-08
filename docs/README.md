@@ -2,14 +2,14 @@
 home: true
 heroImage: img/cpextra-logo.png
 actionText: Get Started
-actionLink: /getting-started/
+actionLink: /getting-started/installation
 features:
 
-- title: Feature 1!
-  details: This is the description of feature 1
+- title: I need help with a variable!
+  details: Enter the variable name into the search bar. Otherwise, [click here](./variables/command) to view the variable help. On wide screens a list of variable's will appear on the left. On small screens you will need to tap the menu button to view the list.
 
-- title: Feature 2!
-  details: This is the description of feature 2
+- title: Where do I get CpExtra?
+  details: CpExtra is available to purchase from the Infosemantics website. [Click here](https://www.infosemantics.com.au/?q=adobe-captivate-widgets/cpextra) to view the product page.
 
 
 footer: All rights reserved Infosemantics | Copyright 2020-present Infosemantics
