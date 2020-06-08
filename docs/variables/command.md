@@ -1,6 +1,8 @@
 # Command Variables
 
-Below is a list of all the command variables offered by CpExtra in alphabetical order.
+**Command Variables** are so named because they represent a specific 'action' or 'command'. When you assign a value to these variables, CpExtra reads that value and acts upon it. CpExtra Command Variables are actually designed to work in the same way as Captivate's own **Command Variables**. But while Captivate's Command Variables are actually **System Variables**, not **User Variables**, CpExtra makes it possible for Captivate e-learning developers to add to Captivate's functionality by setting up new **User Variables** and giving them names that CpExtra will recognise and execute as a **Command Variable**.
+
+Below is a list of all the **Command Variables** offered by CpExtra (in alphabetical order) and what they do.
 
 ## xcmndAddEventListener
 
@@ -8,17 +10,19 @@ Below is a list of all the command variables offered by CpExtra in alphabetical 
 
 | (1) Slide Object Name                                       | (2) Event                                                                | (3) Interactive Object Name                              | (4) Criteria (default: success)  |
 | ----------------------------------------------------------- | ------------------------------------------------------------------------ | -------------------------------------------------------- | -------------------------------- |
-| Name of slide object that you want to listen to an event on | Name of [event](../../features/events-list) that you want to listen for. | Name of slide object that holds a success/failure action | Which action you wish to trigger |
+| Name of the slide object on which you want to listen for an event. | Name of the [event](../../features/events-list) that you want to listen for. | Name of an interactive slide object that has been set up to execute one or more actions (e.g. a button set up to execute one action for a **success** event and another action for a **failure** event). | Which of interactive object's events the event listener should trigger (e.g. success, last attempt). |
 
 ### Description
 
-Adds and event listener to a slide object.
+Adds and event listener to a slide object. The important thing to understand here is that the action that the event listener executes needs to be set up beforehand on another interactive object that exists somewhere in the same CPTX project file. In Captivate, a typical interactive object can usually execute more than one action. For example it might have one action executed on a **success** event, and a different action executed when its **on last attempt** event fires (essentially a **failure** event).  It is this other object's events and actions that basically get 'hijacked' and executed by the CpExtra event listener.  
+
+Captivate's interactive object are not limited to executing **simple actions** such as **show** or **hide** but can also execute very complex **Advanced Actions** and **Conditional Advanced Actions**. CpExtra event listeners now make it possible to create very sophisticated interactions that are triggered by events Captivate does not support by default.
 
 -   [See this page to learn more about event listeners](../../features/event-listeners)
 -   [This page contains the list of available events](../../features/events-list)
 
 ::: tip
-xcmndAddEventListener and #syntax are a very powerful combination which essentially allows you to create a new subset of slide object with its own special behaviour.
+**xcmndAddEventListener** and **#syntax** make for a very powerful combination which essentially allows Captivate developers to create a new subset of slide objects that each have its own special behaviour.
 :::
 
 ### See Also
@@ -31,15 +35,20 @@ xcmndAddEventListener and #syntax are a very powerful combination which essentia
 
 | (1) String                 | (2) String    | (3) Interactive Object Name                              | (4) Criteria (default: success)                                    |
 | -------------------------- | ------------- | -------------------------------------------------------- | ------------------------------------------------------------------ |
-| Content of alert's message | Alert's title | Name of slide object that holds a success/failure action | Which action you wish to trigger when the alert's Ok button is hit |
+| Content of the alert box message. | The alert box title. | Name of an interactive slide object that has been set up to execute one or more actions (e.g. a button set up to execute one action for a **success** event and another action for a **failure** event). | Which of these event-based actions you wish to trigger when the alert box **OK** button is clicked or tapped. |
 
 ### Description
 
-Causes an alert box to appear.
+Causes an alert dialog box to appear.  While an alert box is easy enough to achieve in Captivate by executing a simple JavaScript snippet such as **alert("My message.");** this alone does not provide an easy way to configure the appearance or functionality of the alert box.  
+
+CpExtra's **xcmndAlert** command variable allows the title text, message text and action executed by the OK button to be all configurable.  This makes it not only a very useful method of providing feedback to a user but also a way of debugging interactions that rely on user variables.  
+
+However, it is important to know a little about how the parameters need to be specified.  So, read on...
 
 <img :src="$withBase('/img/alert-hello-world.png')" alt="The default Captivate alert box">
 
-The **first parameter** defines the message that appears in the main section of the alert.
+## Message parameter
+The first parameter specified for **xcmndAlert** defines the string of text that appears as the message in the main section of the alert box.
 
 For example, the following code...
 
@@ -47,13 +56,13 @@ For example, the following code...
 Assign | xcmndAlert with This is my message
 ```
 
-...will generate this alert:
+...will cause this alert dialog to appear on screen:
 
 <img :src="$withBase('/img/alert-no-spaces.png')" alt="Alert displaying: thisismymessage">
 
-Notice how the spaces have been removed? This is because CpExtra removes all white space characters when assignments are made to command variables.
+Notice how the spaces have been removed from the text string? This is because CpExtra by default will remove all white space characters when assignments are made to command variables.
 
-To get around this you can [use square brackets to designate a string.](./special-behaviour.html#for-string-values)
+To get around this default behaviour and show the text as an easily readable string you simply need to [use square brackets to designate a string.](./special-behaviour.html#for-string-values)
 
 ```
 Assign | xcmndAlert with [This is my message]
@@ -61,7 +70,8 @@ Assign | xcmndAlert with [This is my message]
 
 <img :src="$withBase('/img/alert-with-spaces.png')" alt="Alert displaying: This is my message">
 
-If you don't want the title of the alert box to always be 'CpExtra Alert' you can change the title with the **second parameter**.
+## Title parameter
+If you don't want the title of the alert box to always be *CpExtra Alert* you can change the alert box **title text** by adding the second parameter when assigning the value for the **xcmndAlert** command variable.
 
 ```
 Assign | xcmndAlert with [This is my message], [This is my title]
@@ -69,9 +79,10 @@ Assign | xcmndAlert with [This is my message], [This is my title]
 
 <img :src="$withBase('/img/alert-with-title.png')" alt="Alert with custom title">
 
-Alert boxes are usually used for debugging Advanced Actions. Often you want to know what the value of a variable was during a certain point of the Advanced Action.
+## Including variable values in a parameter
+Alert boxes are very useful used for debugging **Advanced Actions** and especially for **Conditional Advanced Actions** which can get very complex. Often you want to know what the value of a certain variable was at a certain point of the **Advanced Action**.
 
-To assist with this both the first and second parameters allow you to include variable values as part of their parameters.
+To assist with this both the first and second parameters of **xcmndAlert** allow you to include variable values as part of the parameter.
 
 Let's say we have a variable called **MyVar**. We can use double dollar signs to trace out the value of MyVar.
 
@@ -83,11 +94,16 @@ From the result below we can see that **MyVar** currently equals **16**
 
 <img :src="$withBase('/img/alert-with-variable.png')" alt="Alert displaying: Value of MyVar: 16">
 
-It's possible that you want a special action to run after tapping the alert's Ok button. [As explained here](../../features/event-listeners.html#triggering-one-action-from-another) CpExtra can only call an action if it is associated with an interactive object's criteria.
+## Alert box OK button action parameter
+It's possible that you want a special action to run after tapping the alert's **Ok** button. [As explained here](../../features/event-listeners.html#triggering-one-action-from-another) CpExtra can only call an action if it is associated with an interactive object's criteria. So, the third parameter that can be assigned to the **xcmndAlert** command variable specifies the name of the interactive object (e.g. a button or text-entry-box) that has already been set up in the project with a specific action or advanced action you want executed when the alert box **Ok** button is clicked or tapped.
 
-The **third parameter** allows you to specify the name of the interactive object.
+## Event parameter
+The fourth and final parameter of **xcmndAlert** specifies which run-time event (of the interactive object specified in the third parameter) you wish to trigger. If no value is specified for this paraemeter it will default to **success** because all of Captivate's interactive objects have at least a **success** event.  However, other typical events you might use for certain objects include:
+-   last attempt
+-   fail
+-   focus lost (for Text-Entry-Boxes only)
 
-The **fourth parameter** allows you to specify which of the interactive object's criteria you wish to trigger. This will default to **success**. Essentially the third and fourth parameters are the same as [xcmndCallActionOn](#xcmndcallactionon).
+Essentially the third and fourth parameters for **xcmndAlert** are the same as those for [xcmndCallActionOn](#xcmndcallactionon) which is explained below.
 
 ## xcmndAllowTabOut
 
@@ -95,11 +111,11 @@ The **fourth parameter** allows you to specify which of the interactive object's
 
 | (1) Text Entry Box Name                                                              |
 | ------------------------------------------------------------------------------------ |
-| The text entry box you want to stop using xcmndPreventTabOut's special functionality |
+| The text entry box you want to *stop* using **xcmndPreventTabOut**'s special functionality |
 
 ### Description
 
-This command variable exists purely to turn of **xcmndPreventTabOut's** functionality. Please see that variable's help for more information.
+This command variable exists purely to turn of **xcmndPreventTabOut**'s functionality. Please click the link below to **xcmndPreventTabOut**'s help section for more information about what it does.
 
 ### See Also
 
@@ -115,38 +131,40 @@ This command variable exists purely to turn of **xcmndPreventTabOut's** function
 
 ### Description
 
-This command variable was created so that you could chain Advanced Actions, by calling one from another. [This page explains the reasons why Advanced Action chaining needs to be set up this way](../features/event-listeners.html#triggering-one-action-from-another)
+This command variable was created so that you could 'daisy chain' **Advanced Actions** by calling one action from another. [This page explains the reasons why Advanced Action chains need to be set up this way](../features/event-listeners.html#triggering-one-action-from-another)
 
-If you have a button named **Button_1** and you desire its **success** action to run, you can do so with the following code:
+Example: If you have a button named **Button_1** and you desire its **success** action to run, you can do so with the following code:
 
 ```
 Assign | xcmndCallActionOn with Button_1, success
 ```
 
-If we don't define the second parameter, xcmndCallAction on will assume we want to trigger the success action (which in practice is often the case).
+If the second parameter is not specified, **xcmndCallAction** on will by default trigger the object's **success** action (which in practice is usually what you would want to do anyway).
 
-So the code below is effectively the same as the code above.
+So the code below will effectively give the same result as the code above.
 
 ```
 Assign | xcmndCallActionOn with Button_1
 ```
 
-::: tip Criteria types
-Most interactive objects come with two criteria types:
+::: tip About run-time events
+Most interactive objects in Adobe Captivate come with at least two run-time events:
 
--   success
--   failures
+-   Success
+-   Last attempt (usually regarded as a failure event but given this name because multiple attempts may have been involved before final failure)
 
-However, text entry boxes come with a third criteria:
+These objects include **Text Buttons**, **Shape Buttons**, **Image Buttons**, **Smart Shape Buttons**, and **Click Boxes**.
 
--   onfocuslost
+However, **Text-Entry Boxes** (or **TEB**s for short) come with a third event:
 
-Although not common, you can still trigger a text entry box's onfocuslost criteria like so:
+-   Focus lost
+
+This can be useful if you encounter a situation where you need to set up three different event listeners to execute actions but you only want to use one interactive object.  To achieve this would normally require setting up actions on at least two buttons. But using a **TEB** gives you three usable events. Although it's not a commonly used event, you can specify a **TEB**'s **focus lost** event as a parameter using the code shown below:
 
 ```
 Assign | xcmndCallActionOn with Text_Entry_Box_1, onfocuslost
 ```
-
+Note that there can be no spaces in the name of the run-time event when you specify it as a parameter.  So, if using the **last attempt** event, it should be written as **lastattempt**.
 :::
 
 ## xcmndCeil
