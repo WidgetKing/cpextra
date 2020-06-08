@@ -930,62 +930,63 @@ By default if no third parameter is set, **xcmndRoundTo** will round to which ev
 
 | (1) Variable Name                                  | (2) Interactive Object                                 |
 | -------------------------------------------------- | ------------------------------------------------------ |
-| The variable you wish to record the object's score | The quiz reporting object who's score you want to read |
+| The name of the variable in which to record the score of the interactive object named in the second parameter. | The name of the quiz reporting object who's score you want to store in the variable named in the first parameter. |
 
 #### [Set Mode](./about.html#get-and-set-mode)
 
 | (1) Interactive Object                                   | (2) Number OR Variable Name                                                  |
 | -------------------------------------------------------- | -----------------------------------------------------                        |
-| The quiz reporting object who's score you want to change | The number that should become this object's new score (special keyword: max) |
+| The name of the quiz reporting object whose score will change to the value shown in the second parameter. | The number value that should become the new score for the reporting object named in the first parameter. (Special keyword: max) |
 
 ### Description
 
-This is a variable with a get and set mode. To learn more about interacting with these variables, [please see this part of the help.](./about.html#get-and-set-mode)
+**xcmndScore** is a variable with a get and set mode. To learn more about interacting with these types of variables, [please see this part of the help.](./about.html#get-and-set-mode)
 
-**Set mode** allows you to change the score than an object will report to the quiz. This enables conditional scoring, where an object might report a score in between 0 and it's maximum score.
+### Use cases
+**Set mode** allows you to change the score that an interactive object will report to the quiz. This enables conditional scoring, where an object might report a score somewhere between 0 and it's maximum possible score.
 
-For example, say you have a button set to report to the quiz. This button is called **SubmitButton**. When clicked it will add four points to the quiz score.
+For example, say you have a button called **SubmitButton** set to report a score of 4 points to the quiz when clicked (as shown in the screenshot below).
 
 <img :src="$withBase('/img/score-submit-button.png')" alt="A button's score set to 10">
 
-However, this button may be linked to an interaction such as the following:
+However, imagine this button is just a component in the interaction shown below:
 
 <img :src="$withBase('/img/score-interaction.png')" alt="A button's score set to 10">
 
-Let's say there was a correct answer for each text entry box. If the learner enters the correct first name, last name, email and password then SubmitButton can safely report four points to the quiz.
+Let's say there is a correct answer for each **Text-entry Box**. If the learner enters the correct **first name**, **last name**, **email** and **password** then the **SubmitButton** object can report four points to the quiz.
 
-However, what if they enter the email field incorrectly? Perhaps then you want SubmitButton to report 3 points instead of the maximum 4. Under those conditions you could change SubmitButton's score by using xcmndScore in set mode with the following code:
+But what if the user enters the **email** field incorrectly? Perhaps then you want **SubmitButton** to report 3 points to the quiz instead of the maximum 4. Under those conditions you could change **SubmitButton**'s score by using **xcmndScore** in **set mode** with the following code:
 
 ```
 Assign | xcmndScore with SubmitButton, 3
 ```
 
-In the real world, you will probably want to change SubmitButton's score based on the value of a variable.
+In the real world, you may also need to dynamically change **SubmitButton**'s score based on the value of a variable.
 
-For example, you may have a variable called **InteractionScore** who's starting value is 0. You use an Advanced Action to check the what is written in each text box. If it is correct you increment InteractionScore by 1. After checking each text box you can update SubmitButton's score to the value of the InteractionScore variable with the following code:
+For example, you could create a custom **User Variable** called **InteractionScore** with a default starting value of 0. You can then use an **Advanced Action** to check the values entered in each text field and, if correct, you increment **InteractionScore** by 1 for each field. After checking the value entered in each of the four **TEB**s you can then update **SubmitButton**'s score using the value now stored in the **InteractionScore** variable as follows:
 
 ```
 Assign | xcmndScore with SubmitButton, InteractionScore
 ```
 
 ::: warning Over and under reporting
-You can set an object's score to be any number. Even a number lower than zero or higher than what was set in Captivate. However, it is important to keep in mind the following points:
+You can set an object's score to be any number. Even a number lower than zero or higher than what was configured for the object in Captivate. However, it is important to keep in mind the following points:
 
-1. LMSs usually record course success in percentage. If a course reports a score of higher than 100% most LMSs do not know how to handle that situation and may react in unexpected ways. Increasing a button's score from 10 to 100 may cause the overall score of the course to peak over 100%.
-2. Similarly, LMSs do not generally know how to handle negative scores. 
+1. LMSs usually behave more reliably when course success is reported as a percentage rather than a point score. If a course reports a score that results in something higher than 100%, most LMSs do not know how to handle that situation and may react in unexpected ways. Any ability to artificially manipulate the score of interactive objects must therefore be used with care to avoid causing the overall score of the course to exceed 100%.
+2. Similarly, LMSs do not generally know how to handle negative scores, so these are best avoided as well. 
    
-So for both circumstances we recommend checking the percentage score of the course on the last slide, and if it is higher than 100% or lower than 0%, use xcmndScore to adjust a particular object's score to bring everything within the boundaries of 0% and 100%.
+So for both circumstances we recommend checking the percentage score of the course on the last slide, and if it is higher than 100% or lower than 0%, use **xcmndScore** to adjust a particular object's score to bring everything within the boundaries of 0% and 100%.
 :::
 
 ::: tip The max keyword
-To set an object to its maximum high score you can use the 'max' keyword like so:
+To set an object to its **maximum** highest possible score you can use the **max** keyword as shown below:
 
 ```
 Assign | xcmndScore with SubmitButton, max
 ```
 :::
 
-Using **get mode** you can also read an interactive object's score. If you wanted to record SubmitButton's score into a variable called MyVar you could do so with the following code:
+Using **get mode** you can also read an interactive object's score and then use this in other actions. For example, if you wanted to record **SubmitButton**'s score into a variable called **MyVar** you could do so with the following code:
 
 ```
 Assign | xcmndScore with MyVar, SubmitButton
