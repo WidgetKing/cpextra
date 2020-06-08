@@ -47,7 +47,7 @@ However, it is important to know a little about how the parameters need to be sp
 
 <img :src="$withBase('/img/alert-hello-world.png')" alt="The default Captivate alert box">
 
-## Message parameter
+### Message parameter
 The first parameter specified for **xcmndAlert** defines the string of text that appears as the message in the main section of the alert box.
 
 For example, the following code...
@@ -70,7 +70,7 @@ Assign | xcmndAlert with [This is my message]
 
 <img :src="$withBase('/img/alert-with-spaces.png')" alt="Alert displaying: This is my message">
 
-## Title parameter
+### Title parameter
 If you don't want the title of the alert box to always be *CpExtra Alert* you can change the alert box **title text** by adding the second parameter when assigning the value for the **xcmndAlert** command variable.
 
 ```
@@ -79,7 +79,7 @@ Assign | xcmndAlert with [This is my message], [This is my title]
 
 <img :src="$withBase('/img/alert-with-title.png')" alt="Alert with custom title">
 
-## Including variable values in a parameter
+### Including variable values in a parameter
 Alert boxes are very useful used for debugging **Advanced Actions** and especially for **Conditional Advanced Actions** which can get very complex. Often you want to know what the value of a certain variable was at a certain point of the **Advanced Action**.
 
 To assist with this both the first and second parameters of **xcmndAlert** allow you to include variable values as part of the parameter.
@@ -94,10 +94,10 @@ From the result below we can see that **MyVar** currently equals **16**
 
 <img :src="$withBase('/img/alert-with-variable.png')" alt="Alert displaying: Value of MyVar: 16">
 
-## Alert box OK button action parameter
+### Alert box OK button action parameter
 It's possible that you want a special action to run after tapping the alert's **Ok** button. [As explained here](../../features/event-listeners.html#triggering-one-action-from-another) CpExtra can only call an action if it is associated with an interactive object's criteria. So, the third parameter that can be assigned to the **xcmndAlert** command variable specifies the name of the interactive object (e.g. a button or text-entry-box) that has already been set up in the project with a specific action or advanced action you want executed when the alert box **Ok** button is clicked or tapped.
 
-## Event parameter
+### Event parameter
 The fourth and final parameter of **xcmndAlert** specifies which run-time event (of the interactive object specified in the third parameter) you wish to trigger. If no value is specified for this paraemeter it will default to **success** because all of Captivate's interactive objects have at least a **success** event.  However, other typical events you might use for certain objects include:
 -   last attempt
 -   fail
@@ -295,7 +295,7 @@ Assign | xcmndCompleteSlide with MenuPage - Conclusion
 ```
 
 ::: tip The 'all' keyword
-**xcmndCompleteSlide** recognizes a special keyword: **all** that allows you to mark all slides in a course module as complete with just one assignment as shown below:
+**xcmndCompleteSlide** recognizes a special keyword: **all** (not case-sensitive) that allows you to mark all slides in a course module as complete with just one assignment as shown below:
 
 ```
 Assign | xcmndCompleteSlide with all
@@ -491,19 +491,19 @@ You can flush multiple variables with a comma-delimited list of variable names:
 Assign | xcmndFlushStorage with ls_localStorageVariable, ss_sessionStorageVariable
 ```
 
-**xcmndFlushStorage** also recognizes the keyword **Local**. Assigning this will \*\*clear all local storage variables (the ones starting with LS\_)
+**xcmndFlushStorage** also recognizes the keyword **Local** (not case-sensitive). Assigning this will \*\*clear all local storage variables (the ones starting with LS\_)
 
 ```
 Assign | xcmndFlushStorage with Local
 ```
 
-In the same way, assigning the **Session** keyword will flush all session storage variables (the ones starting with SS\_)
+In the same way, assigning the **Session** keyword (not case-sensitive) will flush all session storage variables (the ones starting with SS\_)
 
 ```
 Assign | xcmndFlushStorage with Session
 ```
 
-If, on the other hand, you wanted to clear all storage variables irrespective of type, you can assign the **All** keyword.
+If, on the other hand, you wanted to clear all storage variables irrespective of type, you can assign the **All** keyword (not case-sensitive).
 
 ```
 Assign | xcmndFlushStorage with All
@@ -570,38 +570,40 @@ Assign | xcmndHide with SmartShape_1, SmartShape_2, SmartShape_3
 
 | (1) Variable Name                                      | (2) Interactive Object                                         |
 | ------------------------------------------------------ | -------------------------------------------------------------- |
-| The variable you wish to record the object's max score | The quiz reporting object who's maximum score you want to read |
+| The name of the variable in which to record the object's max score. | The name of the quiz object that has a maximum score to be recorded. |
 
 #### [Set Mode](./about.html#get-and-set-mode)
 
 | (1) Interactive Object                                           | (2) Number OR Variable Name                                   |
 | ---------------------------------------------------------------- | ------------------------------------------------------------- |
-| The quiz reporting object who's maximum score you want to change | The number that should become this object's new maximum score |
+| The name of the quiz object whose maximum score should be changed. | The numeric value that should become the quiz object's new maximum score. |
 
 ### Description
 
-This is a variable with a get and set mode. To learn more about interacting with these variables, [please see this part of the help.](./about.html#get-and-set-mode)
+The **xcmndMaxScore** command variable has both a **get** and **set** mode. To learn more about interacting with these types of variables, [please see this part of the help.](./about.html#get-and-set-mode)
 
-This variable is similar to **xcmndScore**. Except that instead of changing the interactive object's quiz score **xcmndMaxScore** changes what the quiz considers the interactive object's maximum score. In other words, how many points the interactive object must report before its considered 100% successful.
+**xcmndMaxScore** is similar to **xcmndScore** except that, instead of *changing* the interactive object's quiz score, **xcmndMaxScore** changes what was originally configured and set as the interactive object's *maximum score*, i.e. how many points the interactive object would report to the quiz if the learner achieved 100% success on that object.
 
-Within Captivate, the maximum score is set when you select the interactive object, open the properties panel, scroll under the Actions subsection and expand the Reporting menu.
+Within Captivate, the **maximum score** is set when you select the interactive object, open the **Properties** panel, scroll down on the **Actions** subsection, and expand the **Reporting** submenu.
 
 <img :src="$withBase('/img/max-score.png')" alt="A button's score set to 10">
 
-In the above screenshot, the interactive object is shown to have a max score of 10 points. If we wanted to change that to twenty points, we could do so with the following code (assuming this object's name is **InteractiveObject**)
+In the above screenshot, the interactive object is shown to have a maximum possible score of 10 points (on success). If we wanted to change this to 20 points, we could do this by assigning **xcmndMaxScore** similar to the following code (where the object's name is **InteractiveObject**).
 
 ```
 Assign | xcmndMaxScore with InteractiveObject, 20
 ```
 
-Why would you ever want to change the max score? Because LMSs do not accept scores of over 100%. If you had an interactive where the normal score is **ten**, but if the learner gives an exceptional answer you want to score **twenty**, then to give the higher score but ensure the total course does not report over 100% we would write the following:
+### Use cases
+Why would you ever want to change an object's max score? One possible use case is that LMSs do not accept scores of over 100%. If you had an interactive where the normal score is **ten**, but if the learner gives an exceptional answer you want to score **twenty**, then to give the higher score but ensure the total course does not report over 100% we would write the following:
 
 ```
 Assign | xcmndScore with InteractiveObject, 20
 Assign | xcmndMaxScore with InteractiveObject, 20
 ```
+If we were to simply alter the object's score and not change the max score as well, then it would become possible for the learner to achieve a score that was greater than 100%, which might cause some LMSs to malfunction or fail to record the learner's results properly. 
 
-Conversely, xcmndMaxScore's get mode could be used to detect what the Interactive Object's maximum score is considered to be. The following code reads the InteractiveObject's maximum score and then sets that object's score to its highest' possible score.
+Conversely, we could use **xcmndMaxScore**'s **get** mode to detect what the interactive object's maximum score is currently configured to be. The following code reads the InteractiveObject's maximum score and then sets that object's score to its highest possible score.
 
 ```
 Assign | xcmndMaxScore with MyVar, InteractiveObject
@@ -609,7 +611,7 @@ Assign | xcmndScore with InteractiveObject, MyVar
 ```
 
 ::: tip
-The above behaviour could also be achieved with xcmndScore's **max** keyword.
+The above result could also be achieved by using **xcmndScore**'s **max** keyword (not case-sensitive) as follows:
 
 ```
 Assign | xcmndScore with InteractiveObject, max
@@ -629,37 +631,39 @@ Assign | xcmndScore with InteractiveObject, max
 
 | (1) Variable Name                                                | (2) Slide Object                                            |
 | ---------------------------------------------------------------- | ----------------------------------------------------------- |
-| The variable you wish to record the object's horizontal position | The slide object who's horizontal position you want to read |
+| The name of the variable in which to record the object's horizontal position. | The name of the slide object whose horizontal X position should be stored. |
 
 #### [Set Mode](./about.html#get-and-set-mode)
 
 | (1) Slide Object                                                                  | (2) Number OR Variable Name                                         |
 | --------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
-| The slide object who's horizontal position you want to change (@syntax available) | The number that should become this object's new horizontal position |
+| The name of the slide object whose horizontal position you want to change (**@syntax** can also be used to select objects by name.) | The number value that should become this object's new horizontal X position. |
 
 ### Description
 
-This is a variable with a get and set mode. To learn more about interacting with these variables, [please see this part of the help.](./about.html#get-and-set-mode)
+This is a variable with both a **get** and **set** mode. To learn more about interacting with these types of variables, [please see this part of the help.](./about.html#get-and-set-mode)
 
-In **set mode** this variable allows you to set how many pixels from the left of the slide the object should appear. The following code would cause an object named SmartShape_1 to **immediately** move ten pixels from the left of the stage.
+### Use cases for set mode
+In **set mode** this variable allows you to set how many pixels from the left edge of the slide stage the object should appear. The following code would cause an object named **SmartShape_1** to *immediately* move ten pixels away from the left of the stage.
 
 ```
 Assign | xcmndPosX with SmartShape_1, 10
 ```
 
-@syntax also works. Say you had three objects on slide:
+**@syntax** can also be used to select screen objects. For example, let's say you have three objects on the slide:
 
 - SmartShape_1
 - SmartShape_2
 - SmartShape_3
 
-You could move all three with the following line of code:
+Since all three objects have names that begin with the same pattern, you could move all three at the same time with the following line of code:
 
 ```
 Assign | xcmndPosX with SmartShape_@, 10
 ```
 
-**Get mode** allows you to read the current horizontal position into a variable. If you wanted to move SmartShape_1 to the same horizontal position as SmartShape_2, you could do so with the following code:
+### Use cases for get mode
+**Get mode** allows you to read an object's current horizontal X position into a variable. If you wanted to move **SmartShape_1** to the same horizontal position as **SmartShape_2**, you could do so with the following code:
 
 ```
 Assign | xcmndPosX with MyVar, SmartShape_2
@@ -667,7 +671,7 @@ Assign | xcmndPosX with SmartShape_2, MyVar
 ```
 
 ::: warning Responsive Projects
-xcmndPosX and xcmndPosY still try to work in responsive projects, but due to the fluid stage it is a lot more difficult to make the variable work as expected. Therefore, we suggest avoiding the use of xcmndPosX and xcmndPosY in responsive projects if at all possible.
+**xcmndPosX** and **xcmndPosY** still try to work in responsive projects, but due to the fluid stage it is a lot more difficult to make the variable work as expected. Therefore, we suggest avoiding the use of **xcmndPosX** and **xcmndPosY** in responsive projects (if at all possible).
 :::
 
 ### See Also
@@ -681,25 +685,26 @@ xcmndPosX and xcmndPosY still try to work in responsive projects, but due to the
 
 | (1) Variable Name                                              | (2) Slide Object                                          |
 | -------------------------------------------------------------- | --------------------------------------------------------- |
-| The variable you wish to record the object's vertical position | The slide object who's vertical position you want to read |
+| The name of the variable in which to record the object's vertical Y position. | The name of the slide object whose vertical Y position you want to record. |
 
 #### [Set Mode](./about.html#get-and-set-mode)
 
 | (1) Slide Object                                                                | (2) Number OR Variable Name                                       |
 | ------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
-| The slide object who's vertical position you want to change (@syntax available) | The number that should become this object's new vertical position |
+| The name of the slide object whose vertical position you want to change. (**@syntax** can also be used to select objects by name.) | The number value that should become this object's new vertical Y position. |
 
 ### Description
 
-This is a variable with a get and set mode. To learn more about interacting with these variables, [please see this part of the help.](./about.html#get-and-set-mode)
+This is a variable with a **get** and **set** mode. To learn more about interacting with these variables, [please see this part of the help.](./about.html#get-and-set-mode)
 
-In **set mode** this variable allows you to set how many pixels from the top of the slide the object should appear. The following code would cause an object named SmartShape_1 to **immediately** move ten pixels from the top of the stage.
+### Set mode use cases
+In **set mode** this variable allows you to set how many pixels from the top of the slide the object should appear. The following code would cause an object named **SmartShape_1** to *immediately* move ten pixels down from the top of the slide stage.
 
 ```
 Assign | xcmndPosY with SmartShape_1, 10
 ```
 
-@syntax also works. Say you had three objects on slide:
+**@syntax** also works. Say you had three objects on slide:
 
 - SmartShape_1
 - SmartShape_2
@@ -710,15 +715,15 @@ You could move all three with the following line of code:
 ```
 Assign | xcmndPosY with SmartShape_@, 10
 ```
-
-**Get mode** allows you to read the current vertical position into a variable. If you wanted to move SmartShape_1 to the same vertical position as SmartShape_2, you could do so with the following code:
+### Get mode use cases
+**Get mode** allows you to read the current vertical position into a variable. If you wanted to move **SmartShape_1** to the same vertical position as **SmartShape_2**, you could do so with the following code:
 
 ```
 Assign | xcmndPosY with MyVar, SmartShape_2
 Assign | xcmndPosY with SmartShape_2, MyVar 
 ```
 ::: warning Responsive Projects
-xcmndPosX and xcmndPosY still try to work in responsive projects, but due to the fluid stage it is a lot more difficult to make the variable work as expected. Therefore, we suggest avoiding the use of xcmndPosX and xcmndPosY in responsive projects if at all possible.
+**xcmndPosX** and **xcmndPosY** still try to work in responsive projects, but due to the fluid stage it is a lot more difficult to make the variable work as expected. Therefore, we suggest avoiding the use of **xcmndPosX** and **xcmndPosY** in responsive projects (if at all possible).
 :::
 
 ## xcmndPreventTabOut
