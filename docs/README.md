@@ -6,10 +6,10 @@ actionLink: /getting-started/installation
 features:
 
 - title: I need help with a variable!
-  details: Enter the variable name into the search bar. Otherwise, [click here](./variables/command) to view the variable help. On wide screens a list of variable's will appear on the left. On small screens you will need to tap the menu button to view the list.
+  details: Enter the variable name into the search bar. Otherwise, <a href="/variables/command.html">click here</a> to view the variable help. On wide screens a list of variable's will appear on the left. On small screens you will need to tap the menu button to view the list.
 
 - title: Where do I get CpExtra?
-  details: CpExtra is available to purchase from the Infosemantics website. [Click here](https://www.infosemantics.com.au/?q=adobe-captivate-widgets/cpextra) to view the product page.
+  details: CpExtra is available to purchase from the Infosemantics website. <a href="https://www.infosemantics.com.au/?q=adobe-captivate-widgets/cpextra">Click here</a> to view the product page.
 
 
 footer: All rights reserved Infosemantics | Copyright 2020-present Infosemantics
