@@ -7,7 +7,10 @@ We discuss those features under the **Features** page.
 :::
 
 ## Variable types
-CpExtra breaks its variables into three catagories.
+All CpExtra variables belong to one of the following three types:
+- Command Variables
+- Preference Variables
+- Info Variables
 
 ### Command Variables
 These are the most frequently used variable type. Each variable represents an 'action' or 'command'. When you assign a value to these variables, CpExtra reads that value and acts upon it.
