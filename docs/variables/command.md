@@ -1002,32 +1002,34 @@ Assign | xcmndScore with MyVar, SubmitButton
 
 | (1) Slide Object Name                                                               | (2) CSS Mouse Cursor ID                                                                                                                    |
 | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| The slide object you want to display a custom cursor. @syntax and #syntax available | The ID of the cursor you want to display. [Click here to see a list of valid ids](https://developer.mozilla.org/en-US/docs/Web/CSS/cursor) |
+| The name of the slide object over which you want to display a custom cursor. (**@syntax** and **#syntax** can also be used to select objects by name.) | The ID of the cursor to display. [Click here to see a list of valid ids](https://developer.mozilla.org/en-US/docs/Web/CSS/cursor) |
 
-When you move your mouse cursor around the screen you will often find it changes shape. For example, if you roll over a button it will often turn into a hand cursor. If you roll over a text field it will turn into an I-beam. This gives you hints as to how you can interact with the user interface.
+### Description
+When you move your mouse cursor around the screen you will often find it changes to a different type of cursor depending on what type of object is beneath the cursor. For example, if you roll over a button the cursor may turn into a **hand**. If you roll over a text field it will usually turn into an **I-beam**. These different cursors provide feedback and give a hint as to how the user can interact with the interface at that point.
 
-xcmndSetCursor allows you to set what kind of cursor will appear when the learner rolls over a slide object. To set this correctly, you'll need to know the CSS id of the cursor you wish to display. [Click here to see a list of valid CSS cursorids.](https://developer.mozilla.org/en-US/docs/Web/CSS/cursor)
+**xcmndSetCursor** allows you to set what kind of cursor will appear when the learner rolls over a specific slide object. To set this correctly, you'll need to know the **CSS id** of the cursor you wish to display. [Click here to see a list of valid CSS cursorids.](https://developer.mozilla.org/en-US/docs/Web/CSS/cursor)
 
-Let's say you want a hand cursor to appear when you roll over an object named SmartShape_1. You could accomplish that with the following code:
+### Use cases
+Let's say you want a hand cursor to appear when you roll over an object named **SmartShape_1**. You could accomplish this assign **xcmndSetCursor** with the following code:
 
 ```
 Assign | xcmndSetCursor with SmartShape_1, pointer
 ```
 
-If you wanted the cursor to show a loading animation when you roll over SmartShape_1 you could do so with:
+To show a loading animation when you roll over **SmartShape_1** you could use this assignment code:
 
 ```
 Assign | xcmndSetCursor with SmartShape_1, wait
 ```
 
-If you wanted to make the cursor invisible when rolling over SmartShape_1 you could use:
+To make the cursor invisible when rolling over **SmartShape_1** you could use this assignment code:
 
 ```
 Assign | xcmndSetCursor with SmartShape_1, none
 ```
 
 ::: warning
-Currently browsers do not support this feature on mobile devices. The technology to change the shape of the learner's finger is still in development.
+Currently browsers do not support this feature on mobile devices. The technology to change the shape of the learner's finger is still in development.  (That's a joke y'all...)
 :::
 
 ## xcmndShow
@@ -1036,9 +1038,10 @@ Currently browsers do not support this feature on mobile devices. The technology
 
 | (1) Slide Object Name                                              |
 | ------------------------------------------------------------------ |
-| The slide object you want to show. (@syntax and #syntax available) |
+| The name of the slide object to show. (**@syntax** and **#syntax** can also be used to select objects by name.) |
 
-Assign the name of a slide object to show that object. The usage is exactly the same as xcmndHide.
+### Description
+Assign the name of a slide object to show that object. (The usage is exactly the same as **xcmndHide** which similarly accepts an assignment of the name of an object to be hidden.)
 
 ### See also
 
@@ -1050,15 +1053,13 @@ Assign the name of a slide object to show that object. The usage is exactly the 
 
 | (1) Variable name                                                       | (2) Slide Object Name                     |
 | ----------------------------------------------------------------------- | ----------------------------------------- |
-| The variable that will store the slide object's width to be read later. | Slide Object whose width you want to know |
+| The name of a variable that stores width (in pixels) of the slide object named in the second parameter. | The name of the slide object whose width is stored in the variable named in the first parameter. |
 
 ### Description
 
-Reads the width of the slide object specified by the second parameter and assigns that number to the variable defined in the first parameter.
+**xcmndWidth** gets the width of the slide object specified by the second parameter and assigns that number to the variable defined in the first parameter. (Width measurement is in pixels.)
 
-At this time there is no 'set mode' for xcmndWidth. It can only read height not change it.
-
-Width is read in pixels.
+At this time there is no **set mode** for **xcmndWidth**. It can only get the height of the slide object, not change it.  
 
 ### See Also
 
