@@ -82,6 +82,9 @@ Triggered when an object enters the Captivate timeline.
 
 <img :src="$withBase('/img/event-enter.png')" alt="when an object appears on the timeline the enter event is triggered">
 
+### Video
+<iframe width="560" height="315" src="https://www.youtube.com/embed/U8z4mSTkMX4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 ## exit
 Triggered when an object exits the Captivate timeline.
 

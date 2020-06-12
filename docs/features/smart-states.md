@@ -10,6 +10,10 @@ The following objects support states:
 - Images
 - SVGs
 
+This video will give you a quick introduction to smart states:
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/ZOveZ5YgM0o" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 ## Creating a New State
 1. Select the object that you want to have a smart state.
 2. In the **Properties** panel, there are two ways to initiate creation of a new state. One way is to click the plus button beside the default state name shown.  The other way is to click the **State View** button to open the **Object State** panel (usually located in the same area as the **FilmStrip** or **Master Slide** panels) and then click the plus button beside **New State**. Either method allows you to create a new object state.
@@ -38,7 +42,7 @@ Smart states can automatically appear in response to mouse events.
 Smart states can change based on on a variable's value.
 
 #### When a variable equals a certain value
-Name the state according to this formula: x_<variable>_<value>
+Name the state according to this formula: x_\<variable\>_\<value\>
 
 Let's say you have a variable named **color** which will sometimes equal **red**, or **green**, or **blue**. You can make a different state appear in response to these three values by naming the state:
 - x_color_red
@@ -60,17 +64,17 @@ Conversely, CpExtra will consider **0** to equal **false**.
 :::
 
 ### When a variable DOES NOT equal a certain value
-Name the state according to this formula: x_<variable>_not_<value>
+Name the state according to this formula: x\_\<variable\>\_not\_\<value\>
 
-Let's say you have a text entry box linked to the **Text_Entry_Box_1** variable. You want the learner to write **password123** into the text entry box. If they enter *anything other* than password123, you want to display a state showing a cross. You'd name that state:
-- x_Text_Entry_Box_not_password123
+Let's say you have a text entry box linked to the **Text\_Entry\_Box\_1** variable. You want the learner to write **password123** into the text entry box. If they enter *anything other* than password123, you want to display a state showing a cross. You'd name that state:
+- x\_Text\_Entry\_Box\_not\_password123
 
 ### When a variable is greater than or lesser than a number
 Name the state according to one of the following formulas:
-- x_<variable>_gt_<value> (For **greater than**) 
-- x_<variable>_lt_<value> (For **lesser than**)
-- x_<variable>_gte_<value> (For **greater than or equal to**)
-- x_<variable>_lte_<value> (For **lesser than or equal to**)
+- x\_\<variable\>\_gt\_\<value\> (For **greater than**) 
+- x_\<variable\>\_lt\_\<value\> (For **lesser than**)
+- x_\<variable\>\_gte\_\<value\> (For **greater than or equal to**)
+- x_\<variable\>\_lte\_\<value\> (For **lesser than or equal to**)
 
 Let's say at the end of the quiz, you want a caption to show a different message depending on how many questions the learner got right. The caption has two states which display the following messages:
 - Sorry! You didn't pass.
@@ -108,9 +112,14 @@ You can give the shape button the following states:
 - x_activated_rollover
 - x_activated_down
 
-When the **activated** variable is set to 0, the Normal, x_rollover, and x_down states will appear.
+When the **activated** variable is set to 0...
+- The **Normal** state will appear when the mouse is not over the shape.
+- The **x_rollover** state will appear when the mouse is over the shape. 
+- The **x_down** state will appear when the leaner presses down on the shape.
+
 
 When the **activated** variable is set to 1... 
 - The **x_activated** state will appear instead of the **Normal** state.
 - The **x_activated_rollover** state will appear instead of the **x_rollover** state.
 - The **x_activated_down** state will appear instead of the **x_down** state.
+

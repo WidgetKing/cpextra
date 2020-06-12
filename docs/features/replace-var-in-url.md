@@ -8,7 +8,7 @@ So if you...
 
 ...the url that would be opened is: **www.example.com/MyValue.html**
 
-IMAGE HERE
+<img :src="$withBase('/img/replace-var-in-url.png')" alt="A button's score set to 10">
 
 ### Why would you use this?
 Consider one example. Let's say you had four Captivate modules uploaded to these addresses:

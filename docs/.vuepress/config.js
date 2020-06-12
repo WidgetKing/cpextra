@@ -19,7 +19,7 @@ module.exports = {
       {
         text: "Buy",
         link:
-          "https://www.infosemantics.com.au/?q=adobe-captivate-widgets/cpextra"
+          "https://infosemantics.com.au/about-cpextra/"
       }
     ],
 

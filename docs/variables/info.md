@@ -28,6 +28,9 @@ However, suppose we wanted to hide the object that was just clicked. How would w
 ```
 Assign | xcmndHide with xinfoEventTarget
 ```
+### Video
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/BizZLF5-lQ0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ### See Also
 

@@ -14,7 +14,7 @@ Below is an alphabetical list of all preference variables offered by CpExtra.
 
 Whenever we use CpExtra there is always the potential for errors. For example, we might mis-spell the name of a slide object to hide, or enter a number where we were supposed to enter the name of a variable. When CpExtra detects one of these mistakes it triggers an alert message to appear.
 
-IMAGE HERE
+<img :src="$withBase('/img/debug-mode-alert.png')" alt="alert box with debug message">
 
 These messages can be very useful during development of course content and interactions. However, you likely do not want error messages appearing when the learner views the course after it's **Go-live** date when the published content is being viewed by potentially hundreds or thousands of users.  
 
@@ -111,7 +111,7 @@ When you roll over any answer option in a Captivate **Multiple-Choice**, **Multi
 ### Use cases
 Imagine you have a client or manager that is unhappy with the default quiz question background highlight colour.
 
-IMAGE HERE
+<img :src="$withBase('/img/highlight-normal.png')" alt="multiple answer question highlight with default grey colour">
 
 Assigning **xprefMultichoiceRolloverColor** with a hexadecimal colour value will change the colour of this highlight.
 
@@ -121,7 +121,7 @@ For example, to change the highlight's colour to green, you would assign **xpref
 #00FF00
 ```
 
-IMAGE HERE
+<img :src="$withBase('/img/highlight-green.png')" alt="multiple answer question highlight with green colour">
 
 
 ### See Also
@@ -154,11 +154,11 @@ To change the background colour from a solid colour to a transparent colour, ass
 ### Description
 All Captivate **Text-entry boxes** (or **TEB**s for short) have an **associated variable**, which can be found named in the **TEB**'s **Properties** tab at this location:
 
-IMAGE HERE
+<img :src="$withBase('/img/teb-variable.png')" alt="multiple answer question highlight with green colour">
 
 Any text characters the user types into a **TEB** are instantly written to its associated variable. However, **TEB**s also have **default text**, which is entered into **Properties** at this location:
 
-IMAGE HERE
+<img :src="$withBase('/img/teb-default-text.png')" alt="multiple answer question highlight with green colour">
 
 Captivate's default behaviour when returning to a slide with a **TEB** is to show its **default text** rather than the current value of its **associated variable**, which is not always what developers or learners expect to happen. **xprefPreventTEBOverwrite** allows Captivate developers to control this behaviour, but only across all **TEB** in the project.
 
@@ -187,7 +187,7 @@ This preference variable was originally created for earlier Adobe Captivate vers
 ### Description
 **Text entry boxes** (or **TEB**s for short) all have an associated **User Variable** which is created when the object is first added to the slide. By default this **User Variable** is normally created with exactly the same object name as its associated **TEB**.   
 
-IMAGE HERE
+<img :src="$withBase('/img/teb-variable.png')" alt="text entry box variable location">
 
 Any text the user enters into the **TEB** is immediately written to the variable to update its value. However, this does not work both ways. By default, if you change the value of the **associated variable** the text displayed in the **TEB**'s will not update to reflect that change.
 
@@ -224,7 +224,7 @@ Three valid values for **xprefUseDoubleDigitTotalTimeValues** are:
 ### Use cases
 The default value of **xprefUseDoubleDigitTotalTimeValues** is: **None**. Which looks like this:
 
-IMAGE HERE
+<img :src="$withBase('/img/time-value-single-digits.png')" alt="Elapsed time 0:9 Total time 1:18">
 
 To make double digits appear for both minutes and seconds values assign **xprefUseDoubleDigitTotalTimeValues** with the following: 
 
@@ -232,7 +232,7 @@ To make double digits appear for both minutes and seconds values assign **xprefU
 Assign |xprefUseDoubleDigitTotalTimeValues with Minutes, Seconds
 ```
 
-IMAGE HERE
+<img :src="$withBase('/img/time-value-double-digits.png')" alt="Elapsed time 00:09 Total time 01:18">
 
 ### See Also
 - [xprefUseDoubleDigitElapsedTimeValues](#xprefusedoubledigitelapsedtimevalues)
@@ -266,7 +266,7 @@ The three valid values are:
 ### Use cases
 The default value of **xprefUseDoubleDigitElapsedTimeValues** is: **None**. Which looks like this:
 
-IMAGE HERE
+<img :src="$withBase('/img/time-value-single-digits.png')" alt="Elapsed time 0:9 Total time 1:18">
 
 To make double digits appear for both minutes and seconds values assign **xprefUseDoubleDigitElapsedTimeValues** with the following: 
 
@@ -274,7 +274,7 @@ To make double digits appear for both minutes and seconds values assign **xprefU
 Assign |xprefUseDoubleDigitElapsedTimeValues with Minutes, Seconds
 ```
 
-IMAGE HERE
+<img :src="$withBase('/img/time-value-double-digits.png')" alt="Elapsed time 00:09 Total time 01:18">
 
 ### See Also
 - [xprefUseDoubleDigitTotalTimeValues](#xprefusedoubledigittotaltimevalues)
