@@ -28,7 +28,7 @@ footer: All rights reserved Infosemantics | Copyright 2020-present Infosemantics
 		<a href="https://infosemantics.com.au/about-cpextra-quick-start/" class="nav-link action-button">
 		Quick Start Course (1hr)
 		</a>
-		</hr>
+		<hr/>
 		<a href="https://infosemantics.com.au/about-up-and-running-with-cpextra/" class="nav-link action-button">
 		Up and Runing Course (4hrs)
 		</a>
