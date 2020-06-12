@@ -22,6 +22,16 @@ footer: All rights reserved Infosemantics | Copyright 2020-present Infosemantics
 		Buy Here
 		</a>
 	</div>
+	<div class="feature hero">
+		<h2>Video Training</h2>
+		<p style="text-align:left;">If you prefer watching to reading, then check out the official CpExtra video courses. Get taught by CpExtra's head developer.</p>
+		<a href="https://infosemantics.com.au/about-cpextra-quick-start/" class="nav-link action-button">
+		Quick Start Course (1hr)
+		</a>
+		<a href="https://infosemantics.com.au/about-up-and-running-with-cpextra/" class="nav-link action-button">
+		Up and Runing Course (4hrs)
+		</a>
+	</div>
 </div>
 
 - - -
