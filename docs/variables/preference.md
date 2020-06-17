@@ -193,6 +193,10 @@ Any text the user enters into the **TEB** is immediately written to the variable
 
 Assigning **xprefTEBUpdateFromVariable** to **true** will ensure all **TEB**s update as needed to accurately display the current value of their **associated variable** at all times.
 
+::: tip When I move back into the slide the Text Entry Box is empty!
+Try enabling xprefPreventTEBOverwrite. The two variables contribute to each other.
+:::
+
 ### See Also
 - [xprefPreventTEBOverwrite](#xprefpreventteboverwrite)
 
