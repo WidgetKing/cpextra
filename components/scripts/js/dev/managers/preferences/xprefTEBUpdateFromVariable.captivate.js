@@ -41,6 +41,7 @@ _extra.registerModule("xprefTEBUpdateToVariable",  ["slideObjectManager_global",
         unloadIfNeeded();
 
         var teb = _extra.slideObjects.getSlideObjectByName(slideObjectName);
+
         // Enable the TEBs now, if this preference is enabled.
         // If the preference becomes enabled later, then the enableTEBs functions will be executed.
         teb.updateToVariable = info.enabled;

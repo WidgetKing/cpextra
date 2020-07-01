@@ -209,6 +209,7 @@ _extra.registerModule("StateDataProxy", ["softwareInterfacesManager"], function 
             "enterMethodName": "drawComplete",
             "exitMethodName":  "reset",
 
+			"axisPositionedByPercentage": _extra.slideObjects.locationManager.getAxisPositionedByPercentage(nativeController),
             "isPositionedByPercentage": _extra.slideObjects.locationManager.
                                         isPositionedByPercentage(nativeController)
 
@@ -336,6 +337,8 @@ _extra.registerModule("StateDataProxy", ["softwareInterfacesManager"], function 
 
     StateDataProxy.prototype.writeToCaptivateCSSRecord = function (minifiedProperty, cssProperty, value, offsetProperty) {
 
+		// Possible values for minifiedProperty: lvV, l, t, lhV
+
         var responsiveCSS,
             valueForSlideObject,
             that = this,
@@ -343,19 +346,26 @@ _extra.registerModule("StateDataProxy", ["softwareInterfacesManager"], function 
 
         this.slideObjects.forEach(function (data) {
 
-            valueForSlideObject = value;
-            valueForSlideObject -= offset - data[offsetProperty];
+			// If we don't wrap the following in requestAnimationFrame then SVGs
+			// will not render correctly.
+		
+			valueForSlideObject = value;
+			valueForSlideObject -= offset - data[offsetProperty];
 
-            responsiveCSS = _extra.captivate.api.getResponsiveCSS(data.rawData.responsiveCSS);
+			responsiveCSS = _extra.captivate.api.getResponsiveCSS(data.rawData.responsiveCSS);
 
-            if (data.isPositionedByPercentage) {
+			// The third and unexpected value a property can have.
+			if (data.axisPositionedByPercentage[minifiedProperty] === "auto") return;
 
-                responsiveCSS[minifiedProperty] = that.convertPixelToPercentage(valueForSlideObject, cssProperty) + "%";
+			if (data.axisPositionedByPercentage[minifiedProperty]) {
 
-            } else {
-                //responsiveCSS[minifiedProperty] = value + "px";
-                responsiveCSS[minifiedProperty] = valueForSlideObject + "px";
-            }
+				responsiveCSS[minifiedProperty] = that.convertPixelToPercentage(valueForSlideObject, cssProperty) + "%";
+
+			} else {
+				
+				// This line sometimes causes SVGs you've clicked on to fail to render
+				responsiveCSS[minifiedProperty] = valueForSlideObject + "px";
+			}
 
         });
 

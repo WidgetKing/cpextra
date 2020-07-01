@@ -505,6 +505,7 @@ _extra.registerModule("BaseSlideObjectProxy", function () {
         if (this._internalInitializationHandler) {
             this._currentStateData.removeEventListener("internalinitialization", this._internalInitializationHandler);
         }
+
         _extra.slideObjects.states.changeCallback.removeCallback(this.name, this._onStateChange);
 
         if (this._data.hasAudio && this._audioTag) {

@@ -9,17 +9,39 @@ _extra.registerModule("locationManager", ["slideObjectManager_software"], functi
 
     "use strict";
 
+
+	function isPercentageValue(value) {
+	
+		if (value) {
+			return value.indexOf("%") > -1;
+		}
+
+		return false;
+	}
+
+	function getAxisKind(data, axis) {
+		var result = _extra.slideObjects.locationManager.getLocation(data, axis);
+		if (result === "auto") return "auto";
+		return isPercentageValue(result);
+	}
+
     _extra.slideObjects.locationManager = {
 
         "isPositionedByPercentage": function (data) {
 
-            var result = _extra.slideObjects.locationManager.getLocation(data, "l");
+			return getAxisKind(data, "l");
+            // var result = _extra.slideObjects.locationManager.getLocation(data, "l");
 
-            if (result) {
-                return result.indexOf("%") > -1;
-            }
+			// return isPercentageValue(result);
+        },
 
-            return false;
+        "getAxisPositionedByPercentage": function (data) {
+			return {
+				"lvV": getAxisKind(data, "lvV"),
+				"l": getAxisKind(data, "l"),
+				"t": getAxisKind(data, "t"),
+				"lhV": getAxisKind(data, "lhV"),
+			}
         },
 
         "getLocation": function (data, property) {
@@ -43,6 +65,7 @@ _extra.registerModule("locationManager", ["slideObjectManager_software"], functi
             return getOriginalLocation({
                 "nativeController":data,
                 "boundsProperty":"minX",
+				"minifiedProperty":"l",
                 "frameLength": _extra.captivate.getResponsiveProjectWidth,
                 "actualFrameLength": _extra.captivate.getProjectWidth,
                 "calculateReducedPercentageLocation": _extra.captivate.isResponsive,
@@ -57,6 +80,7 @@ _extra.registerModule("locationManager", ["slideObjectManager_software"], functi
             return getOriginalLocation({
                 "actualFrameLength": _extra.captivate.getProjectHeight,
                 "nativeController":data,
+				"minifiedProperty":"t",
                 "boundsProperty":"minY",
                 "calculateReducedPercentageLocation": _extra.captivate.isResponsive,
                 "location": function () {
@@ -71,15 +95,25 @@ _extra.registerModule("locationManager", ["slideObjectManager_software"], functi
     function getOriginalLocation (d) {
 
         // The following is if it IS responsive
-        if (d.calculateReducedPercentageLocation &&
-            _extra.slideObjects.locationManager.isPositionedByPercentage(d.nativeController)) {
+        //if (d.calculateReducedPercentageLocation &&
+        //    _extra.slideObjects.locationManager.isPositionedByPercentage(d.nativeController)) {
 
-            //if (d.frameLength() > d.actualFrameLength()) {
+        //    //if (d.frameLength() > d.actualFrameLength()) {
 
-            return d.location() * d.actualFrameLength();
+        //    return d.location() * d.actualFrameLength();
 
-        }
+        //}
 
+		if (d.calculateReducedPercentageLocation) {
+		
+			var axisKind = getAxisKind(d.nativeController, d.minifiedProperty);
+			
+			// We need to use this === true because "auto" is a possible value.
+			if (axisKind === true) {
+				return d.location() * d.actualFrameLength();
+			}
+			
+		}
 
 
         // Non-reponsive
