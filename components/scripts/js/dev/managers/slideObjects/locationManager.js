@@ -109,7 +109,10 @@ _extra.registerModule("locationManager", ["slideObjectManager_software"], functi
 			var axisKind = getAxisKind(d.nativeController, d.minifiedProperty);
 			
 			// We need to use this === true because "auto" is a possible value.
-			if (axisKind === true) {
+			// if (axisKind === true) {
+
+			// This iwll trigger for 'true' and for 'auto'.
+			if (axisKind) {
 				return d.location() * d.actualFrameLength();
 			}
 			

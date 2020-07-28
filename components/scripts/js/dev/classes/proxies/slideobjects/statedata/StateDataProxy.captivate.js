@@ -359,6 +359,8 @@ _extra.registerModule("StateDataProxy", ["softwareInterfacesManager"], function 
 
 			if (data.axisPositionedByPercentage[minifiedProperty]) {
 
+				var result = that.convertPixelToPercentage(valueForSlideObject, cssProperty) + "%";
+
 				responsiveCSS[minifiedProperty] = that.convertPixelToPercentage(valueForSlideObject, cssProperty) + "%";
 
 			} else {
@@ -485,15 +487,17 @@ _extra.registerModule("StateDataProxy", ["softwareInterfacesManager"], function 
 
         // If we've been writing to the responsive project data while using this state then now that we're unloading the state
         // we should apply the original data so that it doesn't mess up the originalX the next time we return.
-        if (_extra.captivate.isResponsive) {
 
-            this.writeToCaptivateCSSRecord("l", "left", this.originalX, "originalX");
-            this.writeToCaptivateCSSRecord("lhV", "left", this.originalX, "originalX");
+		// We have decided that it is too much work to maintain this for responsive projects.
+        // if (_extra.captivate.isResponsive) {
 
-            this.writeToCaptivateCSSRecord("t", "top", this.originalY, "originalY");
-            this.writeToCaptivateCSSRecord("lvV", "top", this.originalY, "originalY");
+        //     this.writeToCaptivateCSSRecord("l", "left", this.originalX, "originalX");
+        //     this.writeToCaptivateCSSRecord("lhV", "left", this.originalX, "originalX");
 
-        }
+        //     this.writeToCaptivateCSSRecord("t", "top", this.originalY, "originalY");
+        //     this.writeToCaptivateCSSRecord("lvV", "top", this.originalY, "originalY");
+
+        // }
     };
 
     _extra.registerClass("StateDataProxy", StateDataProxy);
