@@ -477,15 +477,17 @@ _extra.registerModule("StateDataProxy", ["softwareInterfacesManager"], function 
 
         // If we've been writing to the responsive project data while using this state then now that we're unloading the state
         // we should apply the original data so that it doesn't mess up the originalX the next time we return.
-        if (_extra.captivate.isResponsive) {
 
-            this.writeToCaptivateCSSRecord("l", "left", this.originalX, "originalX");
-            this.writeToCaptivateCSSRecord("lhV", "left", this.originalX, "originalX");
+		// Eh, forget originalX. This causes too much headache. Items bouncing around randomly when returning to slide and so forth.
+        // if (_extra.captivate.isResponsive) {
 
-            this.writeToCaptivateCSSRecord("t", "top", this.originalY, "originalY");
-            this.writeToCaptivateCSSRecord("lvV", "top", this.originalY, "originalY");
+        //     this.writeToCaptivateCSSRecord("l", "left", this.originalX, "originalX");
+        //     this.writeToCaptivateCSSRecord("lhV", "left", this.originalX, "originalX");
 
-        }
+        //     this.writeToCaptivateCSSRecord("t", "top", this.originalY, "originalY");
+        //     this.writeToCaptivateCSSRecord("lvV", "top", this.originalY, "originalY");
+
+        // }
     };
 
     _extra.registerClass("StateDataProxy", StateDataProxy);

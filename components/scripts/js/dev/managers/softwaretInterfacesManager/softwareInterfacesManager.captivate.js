@@ -36,6 +36,7 @@ _extra.registerModule("softwareInterfacesManager", function () {
     _extra.captivate = {
         "api":_extra.w.cp,
         "FPS": _extra.w.cp.movie.fps,
+		"gestureManager": _extra.w.cp.m_gestureHandler,
         "totalFrames": _extra.w.cp.D.project_main.to,
         "version":_extra.w.CaptivateVersion,
         "variables":_extra.w,
@@ -46,6 +47,9 @@ _extra.registerModule("softwareInterfacesManager", function () {
         "useWidget7": _extra.w.cp.model.data.project_main.useWidgetVersion7,
         "movie":_extra.w.cp.movie,
         "playbar": new _extra.classes.PlaybarProxy(),
+		"getPlaybarCreator": function () {
+			return _extra.w.cp.PB.rootObj;
+		},
         "playIcon":_extra.w.document.getElementById("playImage"),
         "variableManager": _extra.w.cp.variablesManager,
         "isResponsive": _extra.w.cp.responsive,
