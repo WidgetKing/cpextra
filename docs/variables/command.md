@@ -18,8 +18,8 @@ Adds and event listener to a slide object. The important thing to understand her
 
 Captivate's interactive object are not limited to executing **simple actions** such as **show** or **hide** but can also execute very complex **Advanced Actions** and **Conditional Advanced Actions**. CpExtra event listeners now make it possible to create very sophisticated interactions that are triggered by events Captivate does not support by default.
 
-- [See this page to learn more about event listeners](../../features/event-listeners)
-- [This page contains the list of available events](../../features/events-list)
+- [See this page to learn more about event listeners](../features/event-listeners)
+- [This page contains the list of available events](../features/events-list)
 
 ::: tip
 **xcmndAddEventListener** and **#syntax** make for a very powerful combination which essentially allows Captivate developers to create a new subset of slide objects that each have its own special behaviour.
