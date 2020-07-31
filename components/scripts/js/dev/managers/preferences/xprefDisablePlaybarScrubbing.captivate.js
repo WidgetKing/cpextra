@@ -12,6 +12,7 @@ _extra.registerModule("xprefDisablePlaybarScrubbing", ["preferenceManager", "css
     var info = {
 
         "enable": function () {
+			console.log("ENABLE!");
             _extra.captivate.playbar.scrubbing = false;
         },
 
