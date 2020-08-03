@@ -31,4 +31,10 @@ _extra.registerModule("WebObjectDataProxy", ["BaseSlideObjectDataProxy"], functi
     });
 
 
+    _extra.w.Object.defineProperty(WebObjectDataProxy.prototype, "isSVG", {
+        get: function() {
+            return this.url.indexOf(".svg") >= 0;
+        }
+    });
+
 }, _extra.CAPTIVATE);

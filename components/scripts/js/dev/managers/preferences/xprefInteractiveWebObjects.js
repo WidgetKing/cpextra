@@ -13,7 +13,7 @@ _extra.registerModule("xprefInteractiveWebObjects", ["slideObjectManager_global"
 
         var slideObject = _extra.slideObjects.getSlideObjectByName(slideObjectName);
 
-        if (slideObject) {
+        if (slideObject && !slideObject.data.isSVG) {
 
             slideObject.interactive = true;
 

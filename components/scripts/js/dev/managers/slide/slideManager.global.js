@@ -5,7 +5,7 @@
  * Time: 5:10 PM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("slideManager_global",["slideManager_software"],function() {
+_extra.registerModule("slideManager_global",["BaseSlideObjectProxy", "slideManager_software"],function() {
 
     "use strict";
 

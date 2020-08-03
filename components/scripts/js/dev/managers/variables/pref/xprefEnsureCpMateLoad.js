@@ -4,6 +4,7 @@ _extra.registerModule(
     "movie",
     "slideObjectManager_global",
     "utils",
+    "preferenceManager",
     "loadingScreenManager",
     "whiteSpaceManager"
   ],
@@ -24,17 +25,14 @@ _extra.registerModule(
     ////////////////////////////////////////
     ////// assist functions
     var unlessLastPauseReason = R.unless(
-      R.pipe(
-        function() {
-          // We place this inside a function rather than R.always
-          // because R.always() will not update to the latest
-          // reasonForPause
-          return _extra.movie.lastReasonForPause;
-        },
-        R.equals(
-          _extra.movie.reasonsForPause.REASON_THAT_PREVENTS_CPMATE_LOAD_PAUSING
-        )
-      )
+      R.pipe(function() {
+        // We place this inside a function rather than R.always
+        // because R.always() will not update to the latest
+        // reasonForPause
+        return _extra.movie.lastReasonForPause;
+      }, R.equals(
+        _extra.movie.reasonsForPause.REASON_THAT_PREVENTS_CPMATE_LOAD_PAUSING
+      ))
     );
 
     function listen() {
@@ -55,15 +53,9 @@ _extra.registerModule(
     ////////////////////////////////////////
     ////// Handle Loading Start/End
 
-    var handleLoadStart = R.pipe(
-      _extra.loadingScreenManager.on,
-      pause
-    );
+    var handleLoadStart = R.pipe(_extra.loadingScreenManager.on, pause);
 
-    var handleLoadEnd = R.pipe(
-      _extra.loadingScreenManager.off,
-      play
-    );
+    var handleLoadEnd = R.pipe(_extra.loadingScreenManager.off, play);
 
     /**
      * Takes a string which is...
@@ -140,10 +132,7 @@ _extra.registerModule(
         //
         R.when(
           // Condition: List empty
-          R.pipe(
-            R.length,
-            R.equals(0)
-          ),
+          R.pipe(R.length, R.equals(0)),
           // // Play the movie
           handleLoadEnd
         )
@@ -211,10 +200,7 @@ _extra.registerModule(
             R.when(
               // Don't react to the wrong notification
               R.equals("animationready"),
-              R.pipe(
-                R.always(slideObject.name),
-                removeFromWaitList
-              )
+              R.pipe(R.always(slideObject.name), removeFromWaitList)
             )
           ])
         ),
