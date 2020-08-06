@@ -18,8 +18,7 @@ module.exports = {
       { text: "Variables", link: "/variables/about/" },
       {
         text: "Buy",
-        link:
-          "https://infosemantics.com.au/about-cpextra/"
+        link: "https://infosemantics.com.au/about-cpextra/"
       }
     ],
 
@@ -28,6 +27,7 @@ module.exports = {
         "installation",
         "basic-concepts",
         "faq",
+        "known-issues",
         "changelog"
       ],
       "/variables/": [

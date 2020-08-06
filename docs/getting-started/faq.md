@@ -6,16 +6,7 @@ Below are some common questions regarding CpExtra.
 All versions of Captivate from version 9 onward should work. We always keep CpExtra up to date with the latest versions.
 
 ## Which web browsers are supported?
-All modern HTML5-compatible browsers are supported. The only HTML5 browser you are likely to run into issues with is **Internet Explorer**.
-
-The following features do not work in Internet Explorer because it does not implement the required web standards.
-
-- xcmndDisableMouseEvents
-- xprefDisablePlaybarScrubbing
-
-::: tip Yes we know IE is still common in the workplace
-A lot of businesses around the world still use Internet Explorer (usually IE 11) due to their need to support legacy software that won't run on modern browsers such as Edge or Chrome. We have spent many hours trying to find other ways to get xprefDisablePlaybarScrubbing working with Internet Explorer. Unfortunately, it is a nut we have still yet to crack.  But since IE is dying gradually and most businesses will sooner or later be forced to abandon it, we see no option except to move on and support the modern browsers that will replace it.
-:::
+All modern HTML5-compatible browsers are supported. The only HTML5 browser you are likely to run into issues with is **Internet Explorer**. See the [known issues page](./known-issues) for more information.
 
 ## Are all features supported on mobile device browsers?
 All the features that make sense are. Here are some that don't, and therefore, aren't.
@@ -33,7 +24,4 @@ With the exception of the iPad's magic keyboard cursor, there is really no way t
 
 ### Session Storage
 Session storage variables are cleared when a browser 'session' has ended. On desktop browsers the session is considered to have ended when the browser shuts down. However, on mobile browsers what is considered a 'session' is much less consistent. For this reason we recommend using local storage variables if your audience is primarily mobile-based.
-
-## Can't type the @ symbol when trying to set up @syntax
-You probably have a non-standard keyboard, such as a non-English keyboard or AZERTY keyboard. You may need to change the keyboard to 'English' inside your computer's settings, or find what key combination is linked to the @ symbol for your keyboard model.
 

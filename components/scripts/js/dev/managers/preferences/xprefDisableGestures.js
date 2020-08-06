@@ -4,6 +4,7 @@ _extra.registerModule(
   function() {
     "use strict";
 
+	console.log("CANT FIND");
     var enabled = true;
 
     var info = {
@@ -30,7 +31,9 @@ _extra.registerModule(
 
     if (exists) {
       _extra.slideManager.enterSlideCallback.addCallback("*", update);
-    }
+    } else {
+	
+	}
   },
   _extra.CAPTIVATE
 );
