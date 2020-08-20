@@ -1,4 +1,21 @@
 # Changelog
+## Version 1.5.0
+### Released August 2020
+- Compatibility with CpMate
+- Custom Effects
+	- gotoFrameLabel - Communicates with CpMate to cause Adobe Animate animation to jump to a particular frame label
+- Command Variables
+	- xcmndGotoSlide (Number or slide label) - Like cpCmndGotoSlide, but it works with slide labels as well.
+	- xcmndAddEventListener - New events for Web Objects
+		- loaded - Dispatches when the Web Object has loaded all its assets
+		- error - Executes if a Web Object fails to load
+- Preference Variables
+	- xprefStartSlide (Number or slide label) Assign a slide label (or slide number). When the movie is run, CpExtra will jump to that slide immediately. Can assign @syntax query. CpExtra will jump to the first slide matching that query. Runs after xprefInitAction.
+	- xprefInteractiveWebObjects (Boolean) - Allows Web Objects to hear click events. If you have another object overlapping the iFrame's space, that area of the Web Object will not be able to hear click events. Enabled by default.
+	- xprefWakeLock (Boolean) - Prevents mobile screens from dimming and turning off.
+	- xprefDisableGestures (Boolean) - Turns off Captivate's mobile gestures, such as swiping to move one slide forwards and backwards.
+	- xprefEnsureCpMateLoad (@syntax query) - All Web Objects with names matching the @syntax query will be assumed to include CpMate. When one such Web Object appears on stage, CpExtra will pause the slide until Adobe Animate is ready to play the animation.
+		 
 ## Version 1.4.3
 ### Released 32 October 2019
 - Bug fixes
@@ -27,9 +44,9 @@
     - xprefUseDoubleDigitElapsedTimeValues - Configures xinfoProjectElapsedSeconds, xinfoProjectElapsedMinutes and xinfoProjectElapsedHours
 - Command Variables
     - xcmndAlert - Opens up a message in an alert window (Use of $$variable$$ in the first and second parameters are replaced with those variable's values)
-    - ?xcmndRound - Rounds a decimal to its nearest whole number 
+    - xcmndRound - Rounds a decimal to its nearest whole number 
     - xcmndRoundTo - Rounds a decimal to a particular decimal point
-    - xcmndFloor - Rounds a decimal number DOWN?
+    - xcmndFloor - Rounds a decimal number DOWN
     - xcmndCeil - Rounds a decimal number UP
     - xcmndRandom - Generates a random number
     - xcmndPreventTabOut - Targets a text entry box, when that text box has keyboard focus, the TAB key will not move its focus away (Allows you to use the TAB key to trigger text entry box evaluation)

@@ -525,6 +525,17 @@ Assign | xcmndFlushStorage with All
 
 - [Local and Session storage help](../features/variable-prefixes.html#ls-for-local-storage)
 
+## xcmndGotoSlide
+
+| (1) Slide Label or Number                                          |
+| ------------------------------------------------------------------ |
+| Numble or label of slide you wish the movie to immediately jump to |
+
+### Description
+Assigning **xcmndGotoSlide** the label or number of the slide will cause Captivate to immediately jump to that slide.
+
+This is very similiar to Captivate's native cpCmndGotoSlide command variable. However, cpCmndGotoSlide does not work with slide labels.
+
 ## xcmndHeight
 
 ### Parameters

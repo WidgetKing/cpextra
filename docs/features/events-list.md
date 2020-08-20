@@ -105,4 +105,8 @@ Triggered when a sound attached to a slide object finishes playing.
 The audioended event only works for audio added to slide objects. It is currently not able to detect when slide audio finshes or when audio triggered by an action finishes.
 :::
 
+## loaded
+Triggered when a Web Object has finished loading.
 
+## error
+Triggered when a Web Object fails to load.
