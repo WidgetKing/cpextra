@@ -428,6 +428,10 @@ Mobile phones and tablets behave differently to computer screens in that they se
 
 Enabling this variable with a positive value (like true or 1) will prevent the learner's screen from dimming. Bare in mind that this will also cause the learner's battery to drain faster.
 
+::: warning
+Wake lock will not kick in as soon as xprefWakeLock variable is enabled. Due to the browser technology involved, the learner must **click or tap the screen after xprefWakeLock is enabled** before it takes effect.
+:::
+
 This functionality was implemented using [Rich Tibbett's No Sleep javascript library.](https://github.com/richtr/NoSleep.js/) Use of this library is extended under the MIT liscense seen below:
 
 ::: details NoSleep license

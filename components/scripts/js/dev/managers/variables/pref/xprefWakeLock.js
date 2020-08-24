@@ -7,7 +7,7 @@ _extra.registerModule(
     ////////////////////////////////////////
     ////////// NO SLEEP
     ////////////////////////////////////////
-    /*! NoSleep.min.js v0.9.0 - git.io/vfn01 - Rich Tibbett - MIT license */
+    /*! NoSleep.min.js v0.11.0 - git.io/vfn01 - Rich Tibbett - MIT license */
 
     function initNoSleep() {
       !(function(A, e) {
@@ -18,27 +18,63 @@ _extra.registerModule(
           : "object" == typeof exports
           ? (exports.NoSleep = e())
           : (A.NoSleep = e());
-      })("undefined" != typeof self ? self : this, function() {
+      })(window, function() {
         return (function(A) {
-          function e(B) {
-            if (o[B]) return o[B].exports;
-            var Q = (o[B] = { i: B, l: !1, exports: {} });
-            return A[B].call(Q.exports, Q, Q.exports, e), (Q.l = !0), Q.exports;
+          var e = {};
+
+          function o(n) {
+            if (e[n]) return e[n].exports;
+            var t = (e[n] = {
+              i: n,
+              l: !1,
+              exports: {}
+            });
+            return A[n].call(t.exports, t, t.exports, o), (t.l = !0), t.exports;
           }
-          var o = {};
           return (
-            (e.m = A),
-            (e.c = o),
-            (e.d = function(A, o, B) {
-              e.o(A, o) ||
-                Object.defineProperty(A, o, {
-                  configurable: !1,
+            (o.m = A),
+            (o.c = e),
+            (o.d = function(A, e, n) {
+              o.o(A, e) ||
+                Object.defineProperty(A, e, {
                   enumerable: !0,
-                  get: B
+                  get: n
                 });
             }),
-            (e.n = function(A) {
-              var o =
+            (o.r = function(A) {
+              "undefined" != typeof Symbol &&
+                Symbol.toStringTag &&
+                Object.defineProperty(A, Symbol.toStringTag, {
+                  value: "Module"
+                }),
+                Object.defineProperty(A, "__esModule", {
+                  value: !0
+                });
+            }),
+            (o.t = function(A, e) {
+              if ((1 & e && (A = o(A)), 8 & e)) return A;
+              if (4 & e && "object" == typeof A && A && A.__esModule) return A;
+              var n = Object.create(null);
+              if (
+                (o.r(n),
+                Object.defineProperty(n, "default", {
+                  enumerable: !0,
+                  value: A
+                }),
+                2 & e && "string" != typeof A)
+              )
+                for (var t in A)
+                  o.d(
+                    n,
+                    t,
+                    function(e) {
+                      return A[e];
+                    }.bind(null, t)
+                  );
+              return n;
+            }),
+            (o.n = function(A) {
+              var e =
                 A && A.__esModule
                   ? function() {
                       return A.default;
@@ -46,39 +82,35 @@ _extra.registerModule(
                   : function() {
                       return A;
                     };
-              return e.d(o, "a", o), o;
+              return o.d(e, "a", e), e;
             }),
-            (e.o = function(A, e) {
+            (o.o = function(A, e) {
               return Object.prototype.hasOwnProperty.call(A, e);
             }),
-            (e.p = ""),
-            e((e.s = 0))
+            (o.p = ""),
+            o((o.s = 0))
           );
         })([
           function(A, e, o) {
             "use strict";
-            function B(A, e) {
-              if (!(A instanceof e))
-                throw new TypeError("Cannot call a class as a function");
-            }
-            var Q = (function() {
-                function A(A, e) {
-                  for (var o = 0; o < e.length; o++) {
-                    var B = e[o];
-                    (B.enumerable = B.enumerable || !1),
-                      (B.configurable = !0),
-                      "value" in B && (B.writable = !0),
-                      Object.defineProperty(A, B.key, B);
-                  }
+            var n = (function() {
+              function A(A, e) {
+                for (var o = 0; o < e.length; o++) {
+                  var n = e[o];
+                  (n.enumerable = n.enumerable || !1),
+                    (n.configurable = !0),
+                    "value" in n && (n.writable = !0),
+                    Object.defineProperty(A, n.key, n);
                 }
-                return function(e, o, B) {
-                  return o && A(e.prototype, o), B && A(e, B), e;
-                };
-              })(),
-              t = o(1),
-              n = t.webm,
-              c = t.mp4,
-              E =
+              }
+              return function(e, o, n) {
+                return o && A(e.prototype, o), n && A(e, n), e;
+              };
+            })();
+            var t = o(1),
+              B = t.webm,
+              Q = t.mp4,
+              c =
                 "undefined" != typeof navigator &&
                 parseFloat(
                   (
@@ -91,19 +123,36 @@ _extra.registerModule(
                     .replace("_", ".")
                     .replace("_", "")
                 ) < 10 &&
-                !_extra.w.MSStream,
-              l = (function() {
+                !window.MSStream,
+              i = "wakeLock" in navigator,
+              a = (function() {
                 function A() {
                   var e = this;
-                  B(this, A),
-                    E
+                  if (
+                    ((function(A, e) {
+                      if (!(A instanceof e))
+                        throw new TypeError(
+                          "Cannot call a class as a function"
+                        );
+                    })(this, A),
+                    i)
+                  ) {
+                    this._wakeLock = null;
+                    var o = function() {
+                      null !== e._wakeLock &&
+                        "visible" === document.visibilityState &&
+                        e.enable();
+                    };
+                    document.addEventListener("visibilitychange", o),
+                      document.addEventListener("fullscreenchange", o);
+                  } else
+                    c
                       ? (this.noSleepTimer = null)
                       : ((this.noSleepVideo = document.createElement("video")),
-                        this.noSleepVideo.setAttribute("muted", ""),
                         this.noSleepVideo.setAttribute("title", "No Sleep"),
                         this.noSleepVideo.setAttribute("playsinline", ""),
-                        this._addSourceToVideo(this.noSleepVideo, "webm", n),
-                        this._addSourceToVideo(this.noSleepVideo, "mp4", c),
+                        this._addSourceToVideo(this.noSleepVideo, "webm", B),
+                        this._addSourceToVideo(this.noSleepVideo, "mp4", Q),
                         this.noSleepVideo.addEventListener(
                           "loadedmetadata",
                           function() {
@@ -120,44 +169,60 @@ _extra.registerModule(
                         ));
                 }
                 return (
-                  Q(A, [
+                  n(A, [
                     {
                       key: "_addSourceToVideo",
                       value: function(A, e, o) {
-                        var B = document.createElement("source");
-                        (B.src = o), (B.type = "video/" + e), A.appendChild(B);
+                        var n = document.createElement("source");
+                        (n.src = o), (n.type = "video/" + e), A.appendChild(n);
                       }
                     },
                     {
                       key: "enable",
                       value: function() {
-                        E
+                        var A = this;
+                        i
+                          ? navigator.wakeLock
+                              .request("screen")
+                              .then(function(e) {
+                                (A._wakeLock = e),
+                                  console.log("Wake Lock active."),
+                                  A._wakeLock.addEventListener(
+                                    "release",
+                                    function() {
+                                      console.log("Wake Lock released.");
+                                    }
+                                  );
+                              })
+                              .catch(function(A) {
+                                console.error(A.name + ", " + A.message);
+                              })
+                          : c
                           ? (this.disable(),
                             console.warn(
                               "\n        NoSleep enabled for older iOS devices. This can interrupt\n        active or long-running network requests from completing successfully.\n        See https://github.com/richtr/NoSleep.js/issues/15 for more details.\n      "
                             ),
-                            (this.noSleepTimer = _extra.w.setInterval(
-                              function() {
-                                document.hidden ||
-                                  ((_extra.w.location.href = _extra.w.location.href.split(
-                                    "#"
-                                  )[0]),
-                                  _extra.w.setTimeout(_extra.w.stop, 0));
-                              },
-                              15e3
-                            )))
+                            (this.noSleepTimer = window.setInterval(function() {
+                              document.hidden ||
+                                ((window.location.href = window.location.href.split(
+                                  "#"
+                                )[0]),
+                                window.setTimeout(window.stop, 0));
+                            }, 15e3)))
                           : this.noSleepVideo.play();
                       }
                     },
                     {
                       key: "disable",
                       value: function() {
-                        E
+                        i
+                          ? (this._wakeLock.release(), (this._wakeLock = null))
+                          : c
                           ? this.noSleepTimer &&
                             (console.warn(
                               "\n          NoSleep now disabled for older iOS devices.\n        "
                             ),
-                            _extra.w.clearInterval(this.noSleepTimer),
+                            window.clearInterval(this.noSleepTimer),
                             (this.noSleepTimer = null))
                           : this.noSleepVideo.pause();
                       }
@@ -166,7 +231,7 @@ _extra.registerModule(
                   A
                 );
               })();
-            A.exports = l;
+            A.exports = a;
           },
           function(A, e, o) {
             "use strict";
@@ -189,33 +254,34 @@ _extra.registerModule(
     ////// VARIABLES
     var R = _extra.utils;
     var noSleep;
+    var enabled = false;
 
     ////////////////////////////////////////
     ////// INIT
     function init() {
       initNoSleep();
-      noSleep = new _extra.w.NoSleep();
+      _extra.w.addEventListener("touchstart", touchClickHandler);
+      _extra.w.addEventListener("mousedown", touchClickHandler);
     }
 
-    ////////////////////////////////////////
-    ////// ENABLE
-    function enableNoSleep() {
-      _extra.w.removeEventListener("mousedown", enableNoSleep);
-      noSleep.enable();
+    function touchClickHandler() {
+      if (enabled) {
+        if (noSleep) noSleep.disable();
+        noSleep = new _extra.w.NoSleep();
+        noSleep.enable();
+      }
     }
 
     ////////////////////////////////////////
     ////// PREFERENCE DATA
     var preferenceData = {
       enable: function() {
-        _extra.w.addEventListener("mousedown", enableNoSleep);
-        _extra.w.addEventListener("touchstart", enableNoSleep);
+        enabled = true;
       },
 
       disable: function() {
-        _extra.w.removeEventListener("mousedown", enableNoSleep);
-        _extra.w.removeEventListener("touchstart", enableNoSleep);
-        noSleep.disable();
+        enabled = false;
+        if (noSleep) noSleep.disable();
       },
 
       default: false
