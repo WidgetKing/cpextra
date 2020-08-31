@@ -28,6 +28,11 @@ However, suppose we wanted to hide the object that was just clicked. How would w
 ```
 Assign | xcmndHide with xinfoEventTarget
 ```
+
+::: note
+xinfoEventTarget only updates to reflect what objects triggered xcmndAddEventListener actions. So, for example, if in Captivate's properties panel you configure a button's **success action** to run an Advanced Action, upon clicking that button xinfoEventTarget **will not** update. Instead, use xcmndAddEventListener to listen for a click event on that button.
+:::
+
 ### Video
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/BizZLF5-lQ0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>

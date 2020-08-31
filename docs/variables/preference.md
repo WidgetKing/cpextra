@@ -38,6 +38,8 @@ Assign | xprefDebugMode with false
 
 Captivate includes certain special gestures for navigating the course on mobile devices. Namely, the ability to swipe left and right to move forward or backward one slide. For branching projects this may be undesirable. To disable this behaviour, create the xprefDisableGestures variable and assign it a negative value (like: false or 0)
 
+This will also disable pinch and zoom gestures.
+
 If instead, you wish to to disable gestures on one slide only, go to that slide and add this to the slide enter action:
 
 ```
