@@ -11,6 +11,9 @@ _extra.registerModule("xprefInteractiveWebObjects", ["slideObjectManager_global"
 
     function onNewWebObject (slideObjectName) {
 
+		// If useWidget7 is turned off, then we have no need to enable this.
+		if (!_extra.captivate.useWidget7) return;
+
         var slideObject = _extra.slideObjects.getSlideObjectByName(slideObjectName);
 
         if (slideObject && !slideObject.data.isSVG) {

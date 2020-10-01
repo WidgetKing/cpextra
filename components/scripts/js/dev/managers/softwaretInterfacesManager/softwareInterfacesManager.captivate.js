@@ -48,7 +48,7 @@ _extra.registerModule("softwareInterfacesManager", function () {
         "movie":_extra.w.cp.movie,
         "playbar": new _extra.classes.PlaybarProxy(),
 		"getPlaybarCreator": function () {
-			return _extra.w.cp.PB.rootObj;
+			if (_extra.w.cp.PB) return _extra.w.cp.PB.rootObj;
 		},
         "playIcon":_extra.w.document.getElementById("playImage"),
         "variableManager": _extra.w.cp.variablesManager,

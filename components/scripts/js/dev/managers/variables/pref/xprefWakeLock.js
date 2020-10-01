@@ -9,6 +9,10 @@ _extra.registerModule(
     ////////////////////////////////////////
     /*! NoSleep.min.js v0.11.0 - git.io/vfn01 - Rich Tibbett - MIT license */
 
+    function localLog(message) {
+      //console.log(message);
+    }
+
     function initNoSleep() {
       !(function(A, e) {
         "object" == typeof exports && "object" == typeof module
@@ -186,11 +190,11 @@ _extra.registerModule(
                               .request("screen")
                               .then(function(e) {
                                 (A._wakeLock = e),
-                                  console.log("Wake Lock active."),
+                                  localLog("Wake Lock active."),
                                   A._wakeLock.addEventListener(
                                     "release",
                                     function() {
-                                      console.log("Wake Lock released.");
+                                      localLog("Wake Lock released.");
                                     }
                                   );
                               })

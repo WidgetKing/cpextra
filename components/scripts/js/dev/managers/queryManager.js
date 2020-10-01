@@ -87,7 +87,12 @@ _extra.registerModule("queryManager", function () {
     };
 
     _extra.isQuery = function (query) {
+
+		// Type checking
+		if (typeof query !== "string") return false;
+
         return _extra.isLocalQuery(query) || _extra.isGlobalQuery(query);
+
     };
 
     _extra.getQueryType = function (query) {

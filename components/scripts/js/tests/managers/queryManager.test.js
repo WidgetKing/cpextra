@@ -32,6 +32,8 @@ describe("A test suite for _extra.queryArray", function () {
         expect(_extra.GLOBAL_WILDCARD_CHARACTER).toBeDefined();
     });
 
+	
+
     it("should return a list with matching suffixes", function () {
 
         var list = ["my_test","simple_test","invalid_invalid"];
@@ -110,6 +112,23 @@ describe("A test suite for _extra.queryArray", function () {
 
     });
 
+	it("should evaluate a number as not being a query", function () {
+
+		// 1: SETUP
+		var query = 2;
+		var result;
+
+		// 2: TEST
+		expect(function () {
+
+			result = _extra.isQuery(2);
+
+		}).not.toThrow();
+
+		// 3: ASSERT
+		expect(result).toBe(false);
+
+	});
     it("should be able to tell us what query character can be found in a string", function () {
 
         expect(_extra.getQueryType("test_#")).toBe("#");

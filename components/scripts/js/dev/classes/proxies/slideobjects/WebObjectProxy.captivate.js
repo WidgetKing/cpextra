@@ -176,7 +176,7 @@ _extra.registerModule(
        * @param {function} errorFn - The callback on error
        */
 
-      var onIframeReady = function($i, successFn, errorFn) {
+      var onIframeReady = function($i, successFn, errorFn, postLoadErrorFn) {
         try {
           var iCon = $i.first()[0].contentWindow,
             bl = "about:blank",
@@ -204,7 +204,7 @@ _extra.registerModule(
                   callCallback();
                 }
               } catch (e) {
-                errorFn();
+                postLoadErrorFn();
               }
             });
           };
@@ -227,17 +227,26 @@ _extra.registerModule(
 
       // End StackOverflow code
 
-      onIframeReady(
-        _extra.w.$(this.iframe),
-        function() {
-          that._isLoaded = true;
+      function loadComplete() {
+        that._isLoaded = true;
 
-          that.dispatchEvent(_extra.eventManager.events.LOADED);
-        },
+        that.dispatchEvent(_extra.eventManager.events.LOADED);
+      }
+
+      // The Stack Overflow provided method
+      onIframeReady(
+        // The iFrame as a jQuery element
+        _extra.w.$(this.iframe),
+        // Success method
+        loadComplete,
+        // Error method
         function() {
           that.dispatchEvent(_extra.eventManager.events.ERROR);
           _extra.debugging.debug("iframe " + that.name + " failed to load");
-        }
+        },
+        // Method to call when load is complete but run into cross origin
+        // errors
+        loadComplete
       );
     };
 
