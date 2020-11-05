@@ -5,27 +5,38 @@
  * Time: 4:47 PM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("SlideObjectQuestionDataProxy", [], function () {
-
+_extra.registerModule(
+  "SlideObjectQuestionDataProxy",
+  [],
+  function() {
     "use strict";
 
     function SlideObjectQuestionDataProxy(data) {
-        this.data = data;
-        this.name = data.title;
+      this.data = data;
+      this.name = data.title;
     }
 
     SlideObjectQuestionDataProxy.prototype = {
-        get score() {
-            return this.data.getScore();
-        },
-        set score(value) {
-            this.data.setScore(value);
-        },
-        get maxScore() {
-            return this.data.weighting;
+      get score() {
+        return this.data.getScore();
+      },
+      set score(value) {
+        this.data.setScore(value);
+      },
+      get maxScore() {
+        if (this.data.hasOwnProperty("weighting")) {
+          return this.data.weighting;
+        } else {
+          return this.data.questionData.w;
         }
+      }
     };
 
-    _extra.registerClass("SlideObjectQuestionDataProxy", SlideObjectQuestionDataProxy, _extra.CAPTIVATE);
-
-}, _extra.CAPTIVATE);
+    _extra.registerClass(
+      "SlideObjectQuestionDataProxy",
+      SlideObjectQuestionDataProxy,
+      _extra.CAPTIVATE
+    );
+  },
+  _extra.CAPTIVATE
+);

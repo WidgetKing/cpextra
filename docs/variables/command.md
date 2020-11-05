@@ -589,46 +589,21 @@ Assign | xcmndHide with SmartShape_1, SmartShape_2, SmartShape_3
 
 ### Parameters
 
-#### [Get Mode](./about.html#get-and-set-mode)
+| (1) Variable name                                                               | (2) Quiz Object Name                                              |
+| ------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| The variable that will store the quiz object's maximum score for later use. | Name of the quiz object who's maximum score you need to read. |
 
-| (1) Variable Name                                                   | (2) Interactive Object                                               |
-| ------------------------------------------------------------------- | -------------------------------------------------------------------- |
-| The name of the variable in which to record the object's max score. | The name of the quiz object that has a maximum score to be recorded. |
-
-#### [Set Mode](./about.html#get-and-set-mode)
-
-| (1) Interactive Object                                             | (2) Number OR Variable Name                                               |
-| ------------------------------------------------------------------ | ------------------------------------------------------------------------- |
-| The name of the quiz object whose maximum score should be changed. | The numeric value that should become the quiz object's new maximum score. |
 
 ### Description
-
-The **xcmndMaxScore** command variable has both a **get** and **set** mode. To learn more about interacting with these types of variables, [please see this part of the help.](./about.html#get-and-set-mode)
-
-**xcmndMaxScore** is similar to **xcmndScore** except that, instead of _changing_ the interactive object's quiz score, **xcmndMaxScore** changes what was originally configured and set as the interactive object's _maximum score_, i.e. how many points the interactive object would report to the quiz if the learner achieved 100% success on that object.
+**xcmndMaxScore** is similar to **xcmndScore** except that, instead of changing or reading an interactive object's quiz score, **xcmndMaxScore** reads what it's maximum intended score is. i.e. how many points the interactive object would report to the quiz if the learner achieved 100% success on that object.
 
 Within Captivate, the **maximum score** is set when you select the interactive object, open the **Properties** panel, scroll down on the **Actions** subsection, and expand the **Reporting** submenu.
 
 <img :src="$withBase('/img/max-score.png')" alt="A button's score set to 10">
 
-In the above screenshot, the interactive object is shown to have a maximum possible score of 10 points (on success). If we wanted to change this to 20 points, we could do this by assigning **xcmndMaxScore** similar to the following code (where the object's name is **InteractiveObject**).
+Let's say that the object from the screenshot above has a name of **Interactive\_Object**. 
 
-```
-Assign | xcmndMaxScore with InteractiveObject, 20
-```
-
-### Use cases
-
-Why would you ever want to change an object's max score? One possible use case is that LMSs do not accept scores of over 100%. If you had an interactive where the normal score is **ten**, but if the learner gives an exceptional answer you want to score **twenty**, then to give the higher score but ensure the total course does not report over 100% we would write the following:
-
-```
-Assign | xcmndScore with InteractiveObject, 20
-Assign | xcmndMaxScore with InteractiveObject, 20
-```
-
-If we were to simply alter the object's score and not change the max score as well, then it would become possible for the learner to achieve a score that was greater than 100%, which might cause some LMSs to malfunction or fail to record the learner's results properly.
-
-Conversely, we could use **xcmndMaxScore**'s **get** mode to detect what the interactive object's maximum score is currently configured to be. The following code reads the InteractiveObject's maximum score and then sets that object's score to its highest possible score.
+We could use **xcmndMaxScore** to set InteractiveObject to it's maximum score.
 
 ```
 Assign | xcmndMaxScore with MyVar, InteractiveObject
@@ -643,6 +618,17 @@ Assign | xcmndScore with InteractiveObject, max
 ```
 
 :::
+
+Let's say we wanted to create an Advanced Action that would set this object to be half its maximum score. Here's how we can do that in conjunction with [xcmndScore](#xcmndscore) and [xcmndRound](#xcmndround) (To avoid unexpected decimal places).
+
+```
+Assign | xcmndMaxScore with MyVar, InteractiveObject
+Expression | MyVar = MyVar / 2
+Assign | xcmndRound with [MyVar]
+Assign | xcmndScore with InteractiveObject, MyVar
+```
+
+Just like that we have changed InteractiveObject's score to 5. This code will dynamically change the score of an object in response to its maxium score.
 
 ### See Also
 
