@@ -8,7 +8,7 @@
 	- xcmndGotoSlide (Number or slide label) - Like cpCmndGotoSlide, but it works with slide labels as well.
 	- xcmndAddEventListener - New events for Web Objects
 		- loaded - Dispatches when the Web Object has loaded all its assets
-		- error - Executes if a Web Object fails to load
+		- error - Dispatches when a Web Object fails to load
 - Preference Variables
 	- xprefStartSlide (Number or slide label) Assign a slide label (or slide number). When the movie is run, CpExtra will jump to that slide immediately. Can assign @syntax query. CpExtra will jump to the first slide matching that query. Runs after xprefInitAction.
 	- xprefInteractiveWebObjects (Boolean) - Allows Web Objects to hear click events. If you have another object overlapping the iFrame's space, that area of the Web Object will not be able to hear click events. Enabled by default.
