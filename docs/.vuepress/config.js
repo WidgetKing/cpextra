@@ -25,6 +25,7 @@ module.exports = {
     sidebar: {
       "/getting-started/": [
         "installation",
+        "updating",
         "basic-concepts",
         "faq",
         "known-issues",
