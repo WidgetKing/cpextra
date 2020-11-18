@@ -19,7 +19,8 @@ module.exports = {
       {
         text: "Buy",
         link: "https://infosemantics.com.au/about-cpextra/"
-      }
+      },
+      { text: "CpMate", link: "https://widgetking.github.io/cpmate/" }
     ],
 
     sidebar: {

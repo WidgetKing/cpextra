@@ -71,7 +71,7 @@
   function getCopywriteNotice() {
     return (
       "/**\n" +
-      " * Captivate Extra\n" +
+      " * CpExtra\n" +
       " * Version: " +
       versionNumber +
       "\n" +
