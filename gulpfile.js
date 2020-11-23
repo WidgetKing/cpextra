@@ -2,6 +2,7 @@ const { watch, series } = require("gulp"),
     compile = require("./workflow/compile"),
     version = require("./workflow/version"),
     sources = require("./workflow/sources"),
+    unitTests = require("./workflow/unit-tests.js"),
     updateTests = require("./workflow/update-tests"),
     testServer = require("./workflow/test-server"),
     karmaServer = require("./workflow/karma-server"),
@@ -133,6 +134,7 @@ function watchModulesCompileAndUpdateTests() {
     );
 }
 
-exports.test2 = testServer.start
-exports.watch = watchModulesCompileAndUpdateTests;
+exports.runTests = series(unitTests.run)
+// exports.test2 = testServer.start
+//exports.watch = watchModulesCompileAndUpdateTests;
 
