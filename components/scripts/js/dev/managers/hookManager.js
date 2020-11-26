@@ -15,7 +15,6 @@ _extra.registerModule("hookManager", ["slideManager_global"], function () {
     /////////////// PRIVATE FUNCTIONS
     ///////////////////////////////////////////////////////////////////////
 
-
     function createHook(location, methodName, hookMethod) {
 
         var data = {

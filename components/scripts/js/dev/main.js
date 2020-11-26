@@ -38,7 +38,6 @@ function initExtra(topWindow) {
     // abort later.
     // This next code should be able to detect if we're currently in the unit test scope.
     } else if (window.unitTests) {
-
         return;
     }*/
     if (window._extra && window.unitTests) {
@@ -61,7 +60,6 @@ function initExtra(topWindow) {
         /*var elemDiv = window.document.createElement('div');
         elemDiv.style.cssText = 'position:absolute;width:100%;height:100%;z-index:100;';
         window.setTimeout(function () {
-
         //window.document.body.appendChild(elemDiv);
         }, 100);
         console.log(elemDiv);*/
@@ -245,21 +243,17 @@ function initExtra(topWindow) {
             classConstructor.baseConstructor = SuperClass;
             classConstructor.superClass = SuperClass.prototype;
             /*if (SuperClass.constructor === Function) {
-
                 // Normal Inheritance
                 classConstructor.prototype = new SuperClass;
                 classConstructor.prototype.constructor = classConstructor;
                 classConstructor.prototype.parent = SuperClass.prototype;
-
             }
             else
             {
-
                 // Pure Virtual Inheritance
                 classConstructor.prototype = SuperClass;
                 classConstructor.prototype.constructor = classConstructor;
                 classConstructor.prototype.parent = SuperClass;
-
             }*/
         }
 

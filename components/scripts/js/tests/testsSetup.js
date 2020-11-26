@@ -211,6 +211,13 @@
         unitTests.classes[className] = unitTests.softwareClasses[className][software];
     };
 
+    function dummy() {
+        
+    }
     window._extra = window.unitTests;
+    window.alert = dummy;
+    window.addEventListener = dummy;
+    window.removeEventListener = dummy;
+    window.parent = window;
 
 }());
