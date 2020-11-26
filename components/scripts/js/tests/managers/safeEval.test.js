@@ -5,7 +5,7 @@
  * Time: 10:38 AM
  * To change this template use File | Settings | File Templates.
  */
-describe("A test suite for _extra.safeEval", function () {
+fdescribe("A test suite for _extra.safeEval", function () {
 
     "use strict";
 

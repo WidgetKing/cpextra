@@ -1,11 +1,6 @@
 // Karma configuration
 // Generated on Fri Sep 25 2015 20:30:23 GMT+0800 (W. Australia Standard Time)
 
-// const puppeteer = require('puppeteer');
-
-// process.env.CHROME_BIN = puppeteer.executablePath();
-process.env.CHROME_BIN = "/usr/bin/chromium-browser"
-
 module.exports = function(config) {
   config.set({
 
@@ -20,12 +15,12 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      '../components/scripts/js/tests/testsSetup.js',
-      '../components/scripts/js/dev/main.js',
-      '../components/scripts/js/dev/**/*.js',
-      '../components/scripts/js/tests/testsTeardown.js',
-      '../components/scripts/js/tests/**/*.js',
-      '../components/scripts/js/tests/main.test.js'
+      'components/scripts/js/tests/testsSetup.js',
+      'components/scripts/js/dev/main.js',
+      'components/scripts/js/dev/**/*.js',
+      'components/scripts/js/tests/testsTeardown.js',
+      'components/scripts/js/tests/**/*.js',
+      'components/scripts/js/tests/main.test.js'
     ],
 
 
@@ -36,20 +31,20 @@ module.exports = function(config) {
 
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
-    preprocessors: {
-        "components/scripts/js/dev/**/*.js":['coverage']
-    },
+    // preprocessors: {
+    //     "components/scripts/js/dev/**/*.js":['coverage']
+    // },
 
 
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['progress', 'coverage'],
+    reporters: ['progress'], //, 'coverage'],
 
-    coverageReporter: {
-        type:'html',
-        'dir': 'coverage/'
-    },
+    // coverageReporter: {
+    //     type:'html',
+    //     'dir': 'coverage/'
+    // },
 
     // web server port
     port: 9876,
@@ -72,8 +67,7 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    // browsers: ['Chrome'],
-    browsers: ['ChromeHeadless'],
+    browsers: ['Chrome'],
     //browsers: ['IE'],
 
 

@@ -1,10 +1,10 @@
-const { watch, series } = require("gulp"),
+const { parallel, watch, series } = require("gulp"),
     compile = require("./workflow/compile"),
     version = require("./workflow/version"),
     sources = require("./workflow/sources"),
+    server = require("./workflow/server"),
+    karma = require("./workflow/karma"),
     updateTests = require("./workflow/update-tests"),
-    testServer = require("./workflow/test-server"),
-    karmaServer = require("./workflow/karma-server"),
     generateCopyright = require("./workflow/copyright-notice.js").generate;
 
 /////////
@@ -133,6 +133,16 @@ function watchModulesCompileAndUpdateTests() {
     );
 }
 
-exports.test2 = testServer.start
-exports.watch = watchModulesCompileAndUpdateTests;
 
+exports.runUnitTests = karma.run(__dirname, true);
+exports.runUnitTestsContinually = karma.run(__dirname);
+
+exports.piMode = done => {
+	server.start(done);
+	watch(sources.cpExtraModulesForCaptivate, exports.compileJSOutput);
+	watch(sources.devOutputCompiledCpExtra, updateAllTests);
+
+	watch(sources.testDirectory).on("change", server.reload);
+}
+
+exports.default = parallel(exports.runUnitTestsContinually, exports.piMode);

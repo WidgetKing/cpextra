@@ -30,6 +30,8 @@ exports.updateGlob = (glob, newFile, done) => {
             // Extract directory from file path
             const fileDirectory = getFileDirectory(filePath);
 
+			console.log("Updating: " + fileDirectory);
+
             stream = gulp
                 .src(newFile)
                 .pipe(
