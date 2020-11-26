@@ -1,7 +1,7 @@
 {
     "name": "captivateextra",
     "version": "1.5.0",
-    "buildNumber": 10511,
+    "buildNumber": 10514,
     "description": "An extension for Adobe Captivate which adds extra features, streamlines day-to-day workflows and fixes certain bugs or unexpected behaviours inside of Captivate. ONLY WORKS FOR HTML EXPORT!",
     "main": "index.js",
     "scripts": {
@@ -15,9 +15,7 @@
     "author": "Tristan Ward",
     "license": "ISC",
     "devDependencies": {
-        "ansi-colors": "^4.1.1",
         "eslint": "^5.15.3",
-        "fancy-log": "^1.3.3",
         "glob": "^7.1.1",
         "gulp": "^4.0.2",
         "gulp-concat": "^2.6.1",
@@ -33,10 +31,9 @@
         "jasmine-core": "^2.3.4",
         "karma": "^5.2.3",
         "karma-chrome-launcher": "^3.1.0",
-        "karma-ie-launcher": "^0.2.0",
+        "karma-ie-launcher": "^1.0.0",
         "karma-jasmine": "^4.0.1",
         "lodash": "^4.17.15",
-        "puppeteer": "^3.1.0",
         "ramda": "^0.27.1",
         "vuepress": "^1.7.1"
     },

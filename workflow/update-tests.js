@@ -1,7 +1,6 @@
 const gglob = require("glob"),
     grename = require("gulp-rename"),
     gulp = require("gulp"),
-    log = require("fancy-log"),
     { forEach, pipe } = require("ramda");
 
 function getFileName(path) {
@@ -51,34 +50,3 @@ exports.updateGlob = (glob, newFile, done) => {
 
 };
 
-//function updateOnGlob(glob, devFile) {
-
-//  var stream, filePath, directoryPath, fileName;
-
-//  // Get list of files matching glob
-//  gglob(glob, {}, function(er, files) {
-//    // Loop through file list
-//    for (var i = 0; i < files.length; i += 1) {
-//      filePath = files[i];
-//      fileName = getFileName(filePath);
-//      directoryPath = getDirectoryPath(filePath);
-
-//      // DEBUGGING: Trace list of files
-//      //gutil.log(directoryPath);
-
-//      // Rename the javascript file to either the widget or the headless name
-//      stream = gulp
-//        .src(devFile)
-//        .pipe(
-//          grename({
-//            basename: fileName
-//          })
-//        )
-//        // Save the new version over the currently located CpExtra instance
-//        .pipe(gulp.dest(directoryPath))
-//        .pipe(gconnect.reload());
-//    }
-//  });
-
-//  return stream;
-//}

@@ -1,5 +1,4 @@
 const { inc } = require("ramda"),
-    log = require("fancy-log"),
     gjsoneditor = require("gulp-json-editor"),
     packageJSON = require("../package.json"),
     greplace = require("gulp-replace"),
@@ -22,7 +21,7 @@ exports.incrementBuildNumber = () => {
         )
         .pipe(gulp.dest("./"));
 
-    log(`New build: ${buildNumber}`);
+    console.log(`New build: ${buildNumber}`);
 
     return buildNumber;
 };
