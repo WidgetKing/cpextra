@@ -532,6 +532,7 @@ Assign | xcmndFlushStorage with All
 | Numble or label of slide you wish the movie to immediately jump to |
 
 ### Description
+
 Assigning **xcmndGotoSlide** the label or number of the slide will cause Captivate to immediately jump to that slide.
 
 This is very similiar to Captivate's native cpCmndGotoSlide command variable. However, cpCmndGotoSlide does not work with slide labels.
@@ -585,23 +586,35 @@ Assign | xcmndHide with SmartShape_1, SmartShape_2, SmartShape_3
 
 - [xcmndShow](#xcmndshow)
 
+## xcmndLoadJSFromAction
+
+### Parameters
+
+| (1) Interactive Object Name                                                                                                                |
+| ------------------------------------------------------------------------------------------------------------------------------------------ |
+| The name of the interactive object who's actions load javascript files. (**@syntax** and **#syntax** can also be used to specify objects.) |
+
+### Description
+
+Javascript is becoming an ever more important part of Captivate course development. This command variable allows you to load and run a javascript file in Captivate.
+
 ## xcmndMaxScore
 
 ### Parameters
 
-| (1) Variable name                                                               | (2) Quiz Object Name                                              |
-| ------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| (1) Variable name                                                           | (2) Quiz Object Name                                          |
+| --------------------------------------------------------------------------- | ------------------------------------------------------------- |
 | The variable that will store the quiz object's maximum score for later use. | Name of the quiz object who's maximum score you need to read. |
 
-
 ### Description
+
 **xcmndMaxScore** is similar to **xcmndScore** except that, instead of changing or reading an interactive object's quiz score, **xcmndMaxScore** reads what it's maximum intended score is. i.e. how many points the interactive object would report to the quiz if the learner achieved 100% success on that object.
 
 Within Captivate, the **maximum score** is set when you select the interactive object, open the **Properties** panel, scroll down on the **Actions** subsection, and expand the **Reporting** submenu.
 
 <img :src="$withBase('/img/max-score.png')" alt="A button's score set to 10">
 
-Let's say that the object from the screenshot above has a name of **Interactive\_Object**. 
+Let's say that the object from the screenshot above has a name of **Interactive_Object**.
 
 We could use **xcmndMaxScore** to set InteractiveObject to it's maximum score.
 

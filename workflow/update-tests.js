@@ -29,7 +29,8 @@ exports.updateGlob = (glob, newFile, done) => {
             // Extract directory from file path
             const fileDirectory = getFileDirectory(filePath);
 
-			console.log("Updating: " + fileDirectory);
+			// Uncomment if you want to see each update directory listed individually
+			// console.log("Updating: " + fileDirectory);
 
             stream = gulp
                 .src(newFile)

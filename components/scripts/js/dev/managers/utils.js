@@ -24,25 +24,23 @@ _extra.registerModule("utils", function() {
     }
 
     function getTrueParamsLength(params) {
-      return _extra.utils.reduce(
-        function(value, acc) {
-          if (value === _extra.utils.__) {
-            return acc;
-          } else {
-            return acc + 1;
-          }
-        },
-        0,
-        params
-      );
+      var acc = 0;
+
+      params.forEach(function(value) {
+        if (value !== _extra.utils.__) {
+          acc++;
+        }
+      });
+
+      return acc;
     }
 
     function innerCurry(params, args) {
       var argumentsArray = Array.prototype.slice.call(args);
-		// If we have a length of zero, then the method was invoked without
-		// sending in a parameter. But for the sake of expected behavior
-		// we'll add one in here
-		if (argumentsArray.length <= 0) argumentsArray.push(undefined)
+      // If we have a length of zero, then the method was invoked without
+      // sending in a parameter. But for the sake of expected behavior
+      // we'll add one in here
+      if (argumentsArray.length <= 0) argumentsArray.push(undefined);
       params = mergeParams(params, argumentsArray);
 
       if (getTrueParamsLength(params) >= numParams) {
@@ -122,19 +120,19 @@ _extra.registerModule("utils", function() {
       return val1 === val2;
     }),
 
-    gt: curry(2, function(var1, val2) {
+    gt: curry(2, function(val1, val2) {
       return val1 > val2;
     }),
 
-    lt: curry(2, function(var1, val2) {
+    lt: curry(2, function(val1, val2) {
       return val1 < val2;
     }),
 
-    gte: curry(2, function(var1, val2) {
+    gte: curry(2, function(val1, val2) {
       return val1 >= val2;
     }),
 
-    lte: curry(2, function(var1, val2) {
+    lte: curry(2, function(val1, val2) {
       return val1 <= val2;
     }),
 
@@ -173,10 +171,24 @@ _extra.registerModule("utils", function() {
           }
       }
     },
-    forEach: function(sequence, method) {
+
+    isEmpty: function(data) {
+      return _extra.utils.callByType(data, {
+        array: function(ar) {
+          return ar.length === 0;
+        },
+        object: function(obj) {
+          return Object.keys(obj).length === 0;
+        }
+      });
+    },
+
+    forEach: curry(2, function(sequence, method) {
       _extra.utils.callByType(sequence, {
         array: function(array) {
-          array.forEach(method);
+          array.forEach(function(p) {
+            method(p);
+          });
         },
         object: function(object) {
           for (var key in object) {
@@ -186,13 +198,27 @@ _extra.registerModule("utils", function() {
           }
         }
       });
-    },
-    reduce: function(method, initialValue, list) {
-      _extra.utils.forEach(list, function(value) {
-        initialValue = method(value, initialValue);
+    }),
+    reduce: curry(3, function(method, initialValue, list) {
+      _extra.utils.callByType(list, {
+        array: function(array) {
+          _extra.utils.forEach(array, function(value) {
+            initialValue = method(value, initialValue);
+          });
+        },
+
+        string: function(string) {
+          for (var i = 0; i < string.length; i++) {
+            initialValue = method(string[i], initialValue);
+          }
+        }
       });
+
       return initialValue;
-    },
+    }),
+    add: curry(2, function(n1, n2) {
+      return n1 + n2;
+    }),
     addIfDefined: function(itemToAdd, list) {
       if (itemToAdd !== null && itemToAdd !== undefined) {
         list.push(itemToAdd);
@@ -264,8 +290,14 @@ _extra.registerModule("utils", function() {
     F: function() {
       return false;
     },
+    nth: curry(2, function(num, list) {
+      return list[num];
+    }),
     and: curry(3, function(predicate1, predicate2, input) {
       return predicate1(input) && predicate2(input);
+    }),
+    typeIs: curry(2, function(intended, obj) {
+      return typeof obj === intended;
     }),
     forEachUntil: curry(3, function(predicate, loop, list) {
       return _extra.utils.callByType(list, {
@@ -372,6 +404,22 @@ _extra.registerModule("utils", function() {
       );
     }),
 
+    contains: curry(2, function(subString, string) {
+      return string.indexOf(subString) !== -1;
+    }),
+
+    filter: curry(2, function(predicate, array) {
+      var newArray = [];
+
+      array.forEach(function(item) {
+        if (predicate(item)) newArray.push(item);
+      });
+
+      return newArray;
+    }),
+    occurances: curry(2, function(char, string) {
+      return string.split(char).length - 1;
+    }),
     matchesQuery: curry(3, function(queryIcon, query, input) {
       var headStartsWith = _extra.utils.pipe(
         _extra.utils.last,
@@ -391,10 +439,7 @@ _extra.registerModule("utils", function() {
         // then we must have a query icon present
         _extra.utils.ifElse(
           // Checking the array length is what we expect
-          _extra.utils.pipe(
-            _extra.utils.length,
-            _extra.utils.equals(2)
-          ),
+          _extra.utils.pipe(_extra.utils.length, _extra.utils.equals(2)),
 
           // So from here on out we are left with
           // something like: ["f", "bar"]
@@ -414,10 +459,7 @@ _extra.registerModule("utils", function() {
               [_extra.utils.indexEquals(1, ""), lastEndsWith],
               [
                 // ["f","bar"]
-                _extra.utils.pipe(
-                  _extra.utils.length,
-                  _extra.utils.equals(2)
-                ),
+                _extra.utils.pipe(_extra.utils.length, _extra.utils.equals(2)),
                 _extra.utils.and(lastEndsWith, headStartsWith)
               ]
             ]),

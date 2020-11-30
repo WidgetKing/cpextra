@@ -5,7 +5,7 @@
  * Time: 8:14 AM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("commandVariables_global", ["processCommandVariableRegistration", "localStorageManager", "parameterParseSets"], function () {
+_extra.registerModule("commandVariables_global", ["jsLoadManager", "processCommandVariableRegistration", "localStorageManager", "parameterParseSets"], function () {
 
     "use strict";
 
@@ -384,6 +384,12 @@ _extra.registerModule("commandVariables_global", ["processCommandVariableRegistr
                 }
             }
         },
+
+
+        ///////////////////////////////////////////////////////////////////////
+        /////////////// Javascript Loaders
+        ///////////////////////////////////////////////////////////////////////
+        "LoadJSFromAction": commandDatas.createBasicSlideObjectData("loadJSFromAction", _extra.jsLoadManager.loadFromAction),
 
         ////////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////

@@ -1,6 +1,11 @@
 # Changelog
+## Version 1.5.1
+### Released 1 December 2020
+- Command Variables
+	- xcmndLoadJSFromAction - Assign an interactive object. If any of its criteria uses a Open URL or File action to load a .js file, CpExtra will run that Javascript file in Captivate.
+
 ## Version 1.5.0
-### Released August 2020
+### Released November 2020
 - Compatibility with CpMate
 - Custom Effects
 	- gotoFrameLabel - Communicates with CpMate to cause Adobe Animate animation to jump to a particular frame label

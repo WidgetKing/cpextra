@@ -86,6 +86,21 @@ describe("A test suite for _extra.utils", function() {
 
       expect(result).not.toBe(data);
     });
+
+    it("should curry", function() {
+      // 1: SETUP
+      var inc = value => value + 1;
+
+      var data = [1, 2, 3];
+
+      // 2: TEST
+      // Make curry function
+      var modify123 = _extra.utils.map(_extra.utils.__, data);
+      var result = modify123(inc);
+
+      // 3: ASSERT
+      expect(result).toEqual([2, 3, 4]);
+    });
   });
 
   describe("_extra.utils.any()", function() {
@@ -227,6 +242,21 @@ describe("A test suite for _extra.utils", function() {
 
       // 3: ASSERT
       expect(result).toEqual(false);
+    });
+  });
+
+  describe("_extra.utils.forEach()", function() {
+    it("should curry correctly", function() {
+      // 1: SETUP
+      var spy = jasmine.createSpy();
+
+      // 2: TEST
+      var sendFooAndBar = _extra.utils.forEach(_extra.utils.__, spy);
+      sendFooAndBar(["foo", "bar"]);
+
+      // 3: ASSERT
+      expect(spy).toHaveBeenCalledWith("foo");
+      expect(spy).toHaveBeenCalledWith("bar");
     });
   });
 
@@ -474,6 +504,114 @@ describe("A test suite for _extra.utils", function() {
 
       // 3: ASSERT
       expect(result).toBe(false);
+    });
+  });
+
+  describe("_extra.utils.isEmpty()", function() {
+    it("should return true for []", function() {
+      // 1: SETUP
+      var a = [];
+      var b = [0];
+
+      // 2: TEST
+      var resultA = _extra.utils.isEmpty(a);
+      var resultB = _extra.utils.isEmpty(b);
+
+      // 3: ASSERT
+      expect(resultA).toBe(true);
+      expect(resultB).toBe(false);
+    });
+
+    it("should return true for {}", function() {
+      // 1: SETUP
+      var a = {};
+      var b = {a:false}
+
+      // 2: TEST
+      var resultA = _extra.utils.isEmpty(a);
+      var resultB = _extra.utils.isEmpty(b);
+
+      // 3: ASSERT
+      expect(resultA).toBe(true);
+      expect(resultB).toBe(false);
+    });
+  });
+  describe("_extra.utils.reduce()", function() {
+    it("should work on arrays", function() {
+      // 1: SETUP
+      var a = [1, 1, 1];
+
+      // 2: TEST
+      var result = _extra.utils.reduce(_extra.utils.add, 0, a);
+
+      // 3: ASSERT
+      expect(result).toBe(3);
+    });
+
+    it("should work on strings", function() {
+      // 1: SETUP
+      var s = "a1b2c3";
+      var isNotNumber = function(char, acc) {
+        if (!isNaN(parseInt(char))) acc += char;
+
+        return acc;
+      };
+
+      // 2: TEST
+      var result = _extra.utils.reduce(isNotNumber, "", s);
+
+      // 3: ASSERT
+      expect(result).toBe("123");
+    });
+  });
+
+  describe("_extra.utils.occurances()", function() {
+    it("should tell us how many times a character appears in a stringj", function() {
+      // 1: SETUP
+      var string = "Mississippi";
+
+      // 2: TEST
+      var result = _extra.utils.occurances("s")(string);
+
+      // 3: ASSERT
+      expect(result).toBe(4);
+    });
+    it("should return 0 if no occurances", function() {
+      // 1: SETUP
+      var string = "abc";
+
+      // 2: TEST
+      var result = _extra.utils.occurances("z")(string);
+
+      // 3: ASSERT
+      expect(result).toBe(0);
+    });
+  });
+  describe("_extra.utils.filter()", function() {
+    it("should return array where all indexe match predicate", function() {
+      // 1: SETUP
+      var predicate = _extra.utils.equals(true);
+      var data = [false, false, true, true, false];
+
+      // 2: TEST
+      var result = _extra.utils.filter(predicate)(data);
+
+      // 3: ASSERT
+      expect(result).toEqual([true, true]);
+    });
+  });
+
+  describe("_extra.utils.contains()", function() {
+    it("should return true if string contains substring", function() {
+      // 1: SETUP
+      var fullString = "abcde";
+      var subString = "cd";
+
+      // 2: TEST
+      var result = _extra.utils.contains(subString, fullString);
+
+      // 3: ASSERT
+      expect(result).toBe(true);
     });
   });
 });
