@@ -14,7 +14,7 @@ module.exports = {
         text: "Getting Started",
         link: "/getting-started/installation/"
       },
-      { text: "Features", link: "/features/" },
+      { text: "Features", link: "/features/feature-list/" },
       { text: "Variables", link: "/variables/about/" },
       {
         text: "Buy",
@@ -40,7 +40,8 @@ module.exports = {
         "info"
       ],
       "/features/": [
-        "about",
+        "feature-list",
+        "javascript",
         "smart-states",
         "variable-prefixes",
         "replace-var-in-url",

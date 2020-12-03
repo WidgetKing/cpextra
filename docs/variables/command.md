@@ -590,13 +590,45 @@ Assign | xcmndHide with SmartShape_1, SmartShape_2, SmartShape_3
 
 ### Parameters
 
-| (1) Interactive Object Name                                                                                                                |
-| ------------------------------------------------------------------------------------------------------------------------------------------ |
-| The name of the interactive object who's actions load javascript files. (**@syntax** and **#syntax** can also be used to specify objects.) |
+| (1) Interactive Object Name                                                                                                                                             |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| The name of an interactive object who's success/failure/on focus lost actions load JavaScript files. (**@syntax** and **#syntax** can also be used to specify objects.) |
 
 ### Description
 
-Javascript is becoming an ever more important part of Captivate course development. This command variable allows you to load and run a javascript file in Captivate.
+When assigned the name of an interactive object, it will check if that object's success, failure or on focus lost action contains an **Open URL or file** action. If that action points to a .js file, CpExtra will then load and run that JavaScript file.
+
+We use this method rather than pointing directly to a JavaScript file, because the **Open URL or file** action will copy the JavaScript file and include it in the Captivate export files. Therefore, when we update the code in the JavaScript file, the code in Captivate will be updated the next time we publish.
+
+If multiple actions contain an **Open URL or file** action, then CpExtra will load **all** those files. It will attempt to do so in the following order:
+
+1. Success action
+2. Failure action (or last attempt action)
+3. On focus lost action
+
+While CpExtra attempts to load the files in this order, they will actually run when they are downloaded. If the first file is 200kb but the second file is 2kb, it's possible the second file will be downloaded and run before the first file.
+
+You can use a list of objects to load multiple files:
+
+```
+Assign | xcmndLoadJSFromAction with interactive_object1, interactive_object2
+```
+
+You can use @syntax to load multiple JavaScript files from objects on the current slide, or #syntax to load from objects across the whole project.
+
+```
+Assign | xcmndLoadJSFromAction with interactive_object#
+```
+
+- [See this page for extended instructions](../features/javascript)
+
+::: warning
+The **Open URL or file** action can be used to point to a JavaScript file on a remote server. Under those circumstances, the JavaScript file will NOT be included in the Captivate export files. When the movie runs, **xcmndLoadJSFromAction** will still load that file from the remote server. If you have a client who is concerned about security, you may want to avoid this, because they may see requests being made to sites outside their network and believe it is a security leak.
+:::
+
+::: tip Why didn't you call this xcmndLoadJS?
+We would expect a variable called **xcmndLoadJS** accept file paths to Javascript files, rather than the name of an interactive object. At the time of writing, this would not be a viable variable. However, it may be at some point in the future. So we choose **xcmndLoadJSFromAction** as a more descriptive name for this variable, and keep **xcmndLoadJS** in reserve for a possible future command variable.
+:::
 
 ## xcmndMaxScore
 
