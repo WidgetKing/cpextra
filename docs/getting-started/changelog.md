@@ -7,8 +7,6 @@
 ## Version 1.5.0
 ### Released November 2020
 - Compatibility with CpMate
-- Custom Effects
-	- gotoFrameLabel - Communicates with CpMate to cause Adobe Animate animation to jump to a particular frame label
 - Command Variables
 	- xcmndGotoSlide (Number or slide label) - Like cpCmndGotoSlide, but it works with slide labels as well.
 	- xcmndAddEventListener - New events for Web Objects
