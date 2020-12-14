@@ -13,6 +13,8 @@ Therefore, CpExtra includes the **[xcmndLoadJSFromAction](../variables/command.h
 
 Here's how.
 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/Iny7FiuAwO4?start=280" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 ### Loading Local JavaScript Files
 Firstly, we must ensure Captivate includes our JavaScript file in the project export. For this, we can make use of the **Open URL or File** action.
 
@@ -26,7 +28,7 @@ Firstly, we must ensure Captivate includes our JavaScript file in the project ex
 5. Work out when you want to run this JavaScript file. Is this a file that you want to run from the start of the movie? [Then go to the xprefInitAction action](#loading-javascript-when-the-captivate-movie-begins). What if you wanted the JavaScript file to run every time you entered the current slide? Then go to the slide enter action.
 6. Add an assign action as below, replacing **interactive_object** with the name you gave the object in **step 2**.
 
-<img :src="$withBase('/img/load-js-from-enter-slide.png')" alt="load file in slide enter action">
+<img :src="$withBase('/img/load-js-from-enter-slide.png')" alt="assign xcmndLoadJSFromAction with interactive_object">
 
 7. When you publish and view the export, CpExtra will load and run the JavaScript file in Captivate.
 
@@ -55,7 +57,7 @@ However, your JavaScript file **will not** be included in the export if the inte
 
 <img :src="$withBase('/img/publish-next-5-slides.png')" alt="Publish next 5 slides option">
 
-Therefore, instead of using Preview Next 5 Slides, we recommend always previewing the whole project, and then using **[xprefStartSlide](../variables/preference.html#xprefstartslide)** to immediately jump to the slide you wish to test.
+Therefore, instead of using **Preview Next 5 Slides**, we recommend always previewing **the whole project**, and then using **[xprefStartSlide](../variables/preference.html#xprefstartslide)** to immediately jump to the slide you wish to test.
 
 ### Loading Remote JavaScript Files
 JavaScript developers often reference third-party JavaScript libraries (which are also JavaScript files) from a remote server. This allows them to ensure they are always using the latest version of a particular library. For example, the popular [Sweet Alert 2](https://sweetalert2.github.io/) library is available from this link:
@@ -75,7 +77,7 @@ If you have a client who is concerned about security you may need to gain permis
 :::
 
 ### Loading JavaScript When the Captivate Movie Begins
-Often, we want our JavaScript to be loaded as soon as the Captivate export start playing, so our code is available to all slides. 
+Often, we want our JavaScript to be loaded as soon as the Captivate export starts playing, so our JavaScript libraries and utilities are available on all slides. 
 
 Loading JavaScript files when the Captivate movie begins is not as simple as running **xcmndLoadJSFromAction** on the first slide of the course. This is because Self-Paced Learning and SCORM compliant LMSs may cause the course to begin from any slide. Also, if the learner were to revisit the first slide of the course, CpExtra would then load and run all the JavaScript for a likely unintended second time.
 
@@ -87,7 +89,7 @@ If we point **xprefInitAction** to an advanced action, then we can add a line wh
 Assign | xcmndLoadJSFromAction with javascript_loader_object_1, javascript_loader_object_2
 ```
 
-Of course, we could simplify the above line by using #syntax to load JavaScript files from across the project.
+Of course, we could simplify the above line by using [#syntax](../variables/special-behaviour.html#syntax-and-syntax) to load JavaScript files from across the project.
 
 ```
 Assign | xcmndLoadJSFromAction with javascript_loader_object_#
