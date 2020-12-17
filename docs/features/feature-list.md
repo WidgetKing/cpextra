@@ -9,7 +9,7 @@ However, to make it easier to navigate the documentation, here are a list of all
 - [Mark slide complete in TOC](../variables/command.html#xcmndcompleteslide)
 - [Running an Advanced Action from another Advanced Action](../variables/command.html#xcmndcallactionon)
 - [Run Advanced Action when project begins](../variables/preference.html#xprefinitaction)
-- [Load and run javascript file](../variables/command.html#xcmndloadjsfromaction)
+- [Load and run JavaScript file](../variables/command.html#xcmndloadjsfromaction)
 - [Enable/disable playbar scrubbing](../variables/preference.html#xprefdisableplaybarscrubbing)
 - [Prevent mobile device screen dimming](../variables/preference.html#xprefwakelock)
 
