@@ -5,7 +5,7 @@
  * Time: 8:14 AM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("commandVariables_global", ["jsLoadManager", "processCommandVariableRegistration", "localStorageManager", "parameterParseSets"], function () {
+_extra.registerModule("commandVariables_global", ["projectBackgroundManager", "jsLoadManager", "processCommandVariableRegistration", "localStorageManager", "parameterParseSets"], function () {
 
     "use strict";
 

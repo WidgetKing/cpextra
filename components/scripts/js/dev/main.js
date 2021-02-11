@@ -169,7 +169,7 @@ function initExtra(topWindow) {
     ////////// End of trial
      // var today = new Date();
     // today.setHours(0,0,0,0);
-     // var trialEnd = new Date("12-25-2020");
+     // var trialEnd = new Date("2-26-2021");
      // if (trialEnd <= today) {
      //     abort("trialPeriodEnded");
      //     return;

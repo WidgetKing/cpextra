@@ -420,6 +420,26 @@ _extra.registerModule("utils", function() {
     occurances: curry(2, function(char, string) {
       return string.split(char).length - 1;
     }),
+    mergeRight: curry(2, function(left, right) {
+      if (_extra.utils.isNil(right)) return left;
+
+      var result = _extra.utils.clone(right);
+
+      for (var key in left) {
+        if (left.hasOwnProperty(key) && !right.hasOwnProperty(key)) {
+          result[key] = left[key];
+        }
+      }
+
+      return result;
+    }),
+    clone: function(obj) {
+      if (window.$) return $.extend({}, obj);
+      return JSON.parse(JSON.stringify(obj));
+    },
+    isTrue: function(value) {
+      return value === true;
+    },
     matchesQuery: curry(3, function(queryIcon, query, input) {
       var headStartsWith = _extra.utils.pipe(
         _extra.utils.last,

@@ -525,7 +525,7 @@ describe("A test suite for _extra.utils", function() {
     it("should return true for {}", function() {
       // 1: SETUP
       var a = {};
-      var b = {a:false}
+      var b = { a: false };
 
       // 2: TEST
       var resultA = _extra.utils.isEmpty(a);
@@ -612,6 +612,41 @@ describe("A test suite for _extra.utils", function() {
 
       // 3: ASSERT
       expect(result).toBe(true);
+    });
+  });
+
+  describe("_extra.utils.mergeRight", function() {
+    it("should change [1] to [1, 2]", function() {
+      // 1: SETUP
+      var defaults = _extra.utils.mergeRight([1, 2]);
+
+      // 2: TEST
+      var results = defaults([10]);
+
+      // 3: ASSERT
+      expect(results).toEqual([10, 2]);
+    });
+
+    it("should change null to [1, 2]", function() {
+      // 1: SETUP
+      var defaults = _extra.utils.mergeRight([1, 2]);
+
+      // 2: TEST
+      var results = defaults(null);
+
+      // 3: ASSERT
+      expect(results).toEqual([1, 2]);
+    });
+
+    it("should include properties that were only on the right", function() {
+      // 1: SETUP
+      var defaults = _extra.utils.mergeRight({ a: true });
+
+      // 2: TEST
+      var results = defaults({ b: false });
+
+      // 3: ASSERT
+      expect(results).toEqual({ a: true, b: false });
     });
   });
 });

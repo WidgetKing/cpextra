@@ -46,7 +46,6 @@ _extra.registerModule("multichoiceRolloverPreferences", ["preferenceManager", "h
     opacityInfo = {
 
         "enable": function() {
-
         },
         "disable": function() {
             opacityInfo.update(0);
@@ -73,10 +72,19 @@ _extra.registerModule("multichoiceRolloverPreferences", ["preferenceManager", "h
         // Register xprefMultichoiceRolloverOpacity
         hasOpacityVariable = _extra.preferenceManager.registerPreferenceModule("MultichoiceRolloverOpacity", opacityInfo);
 
+	function fixZeroOpacityIssue () {
+
+		if (hasOpacityVariable && _extra.variableManager.getVariableValue("xprefMultichoiceRolloverOpacity") === 0) {
+			opacityInfo.update(0);
+		}
+
+	}
+	
 
     // If any of these variables have been defined, we shall set up.
     if (_extra.captivate.api.MCQInput && hasColorVariable || hasOpacityVariable) {
 
+		fixZeroOpacityIssue();
         ///////////////////////////////////////////////////////////////////////
         /////////////// UNLOADING
         ///////////////////////////////////////////////////////////////////////

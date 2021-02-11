@@ -5,6 +5,7 @@ const gconnect = require("gulp-connect"),
 exports.start = () => {
     return gconnect.server({
         root: sources.testDirectory,
+		port: 25030,
         livereload: true
     });
 };
