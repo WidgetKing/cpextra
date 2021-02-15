@@ -8,7 +8,7 @@
 _extra.registerModule(
   "commandVariables_global",
   [
-    "projectBackgroundManager",
+    "xprefDocumentBackgroundColor",
     "jsLoadManager",
     "processCommandVariableRegistration",
     "localStorageManager",
