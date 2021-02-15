@@ -39,12 +39,15 @@ _extra.registerModule(
 
     function addStylesAndDivs() {
       // Create overlay style
-      $(
-        "<style type='text/css'> .overlay{ position:fixed; z-index:999999; top: 0; left: 0; width: 100%; height:100%; background: #fff; display:none; }</style>"
-      ).appendTo("head");
+      _extra
+        .$(
+          "<style type='text/css'> .overlay{ position:fixed; z-index:999999; top: 0; left: 0; width: 100%; height:100%; background: #fff; display:none; }</style>"
+        )
+        .appendTo("head");
 
       // Create overlay div
-      return $("<div/>")
+      return _extra
+        .$("<div/>")
         .addClass("overlay")
         .appendTo("body");
     }
@@ -80,40 +83,36 @@ _extra.registerModule(
     }
 
     function replace__adjustWindow($overlay) {
-
       var listener = createAdjustWindowListener({
         original: cp.__adjustWindow,
         predicate: function(event) {
-          return !event || event.type !== "orientationchange"; 
+          return !event || event.type !== "orientationchange";
         },
         startTimer: function() {
           $overlay
             .css("background-color", settings.color)
-            .css("display", "inline")
+            .css("display", "inline");
 
-			setTimeout(function () {
+          setTimeout(function() {
+            $overlay.fadeOut(settings.time);
 
-              $overlay.fadeOut(settings.time);
+            try {
+              listener.callAllWaitingArgs();
+            } catch (e) {
+              // Maximum call stack exceeded
+              // Common problem with breakpoint Captivate
+            }
+          }, 100);
+          // .fadeIn(settings.time, function() {
+          //   $overlay.fadeOut(settings.time);
 
-              try {
-                listener.callAllWaitingArgs();
-              } catch (e) {
-                // Maximum call stack exceeded
-                // Common problem with breakpoint Captivate
-              }
-				
-
-			}, 100)
-            // .fadeIn(settings.time, function() {
-            //   $overlay.fadeOut(settings.time);
-
-            //   try {
-            //     listener.callAllWaitingArgs();
-            //   } catch (e) {
-            //     // Maximum call stack exceeded
-            //     // Common problem with breakpoint Captivate
-            //   }
-            // });
+          //   try {
+          //     listener.callAllWaitingArgs();
+          //   } catch (e) {
+          //     // Maximum call stack exceeded
+          //     // Common problem with breakpoint Captivate
+          //   }
+          // });
         }
       });
 
