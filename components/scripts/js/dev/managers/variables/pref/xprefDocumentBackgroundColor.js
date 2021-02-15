@@ -2,9 +2,9 @@ _extra.registerModule(
   "xprefDocumentBackgroundColor",
   ["preferenceManager"],
   function() {
-  
-	  _extra.preferenceManager.registerPreferenceModule("DocumentBackgroundColor", {
-	  
+    _extra.preferenceManager.registerPreferenceModule(
+      "DocumentBackgroundColor",
+      {
         enable: function() {
           // Required by registerPreferenceModule
         },
@@ -14,10 +14,11 @@ _extra.registerModule(
         },
 
         update: function(value) {
-			if (typeof value !== "string" || value === "") return;
-			if (value[0] !== "#") value = "#" + value;
-			$(".cpMainContainer").css("background-color", value);
-		}
-	  });
+          if (typeof value !== "string" || value === "") return;
+          if (value[0] !== "#") value = "#" + value;
+          $(".cpMainContainer").css("background-color", value);
+        }
+      }
+    );
   }
 );

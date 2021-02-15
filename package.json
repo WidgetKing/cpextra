@@ -1,7 +1,7 @@
 {
     "name": "captivateextra",
     "version": "1.5.2",
-    "buildNumber": 10711,
+    "buildNumber": 10729,
     "description": "An extension for Adobe Captivate which adds extra features, streamlines day-to-day workflows and fixes certain bugs or unexpected behaviours inside of Captivate. ONLY WORKS FOR HTML EXPORT!",
     "main": "index.js",
     "scripts": {
@@ -36,6 +36,5 @@
         "lodash": "^4.17.15",
         "ramda": "^0.27.1",
         "vuepress": "^1.7.1"
-    },
-    "dependencies": {}
+    }
 }

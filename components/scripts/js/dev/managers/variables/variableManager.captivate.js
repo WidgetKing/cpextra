@@ -6,53 +6,66 @@
  * Time: 9:02 AM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("variableManager_software", ["softwareInterfacesManager", "Callback", "CustomEvent", "queryManager"], function () {
+_extra.registerModule(
+  "variableManager_software",
+  ["softwareInterfacesManager", "Callback", "CustomEvent", "queryManager"],
+  function() {
     "use strict";
     //////////////////////////
     ////// Variable Manager Object Setup
     //////////////////////////
     _extra.variableManager = {
-        //"prefixCallback":new _extra.classes.Callback(),
-        "getVariableValue": function (variableName) {
-
-            // If we're trying to access system variables, some system variables return inaccurate values through
-            // variableManager.getVariableValue(). Instead access them through the window object.
-            if (_extra.variableManager.isSystemVariable(variableName)) {
-                return _extra.captivate.variables[variableName];
-            } else {
-                return _extra.captivate.variableManager.getVariableValue(variableName);
-            }
-
-        },
-        "setVariableValue": function (variableName, value) {
-            if (_extra.variableManager.hasVariable(variableName)) {
-                _extra.captivate.variables[variableName] = value;
-            }
-            // No longer use the method below, as we found it did not trigger a variable changed event.
-            // Go figure.
-            //_extra.captivate.variableManager.setVariableValue(variableName, value);
-        },
-        "hasVariable": function (variableName) {
-            if (_extra.variableManager.variableData) {
-                return _extra.variableManager.variableData.hasOwnProperty(variableName);
-            } else {
-                return _extra.captivate.variables.hasOwnProperty(variableName);
-            }
-        },
-        /*"isSystemVariable": function (variableName) {
+      //"prefixCallback":new _extra.classes.Callback(),
+      getVariableValue: function(variableName) {
+        // If we're trying to access system variables, some system variables return inaccurate values through
+        // variableManager.getVariableValue(). Instead access them through the window object.
+        if (_extra.variableManager.isSystemVariable(variableName)) {
+          return _extra.captivate.variables[variableName];
+        } else {
+          return _extra.captivate.variableManager.getVariableValue(
+            variableName
+          );
+        }
+      },
+      setVariableValue: function(variableName, value) {
+        if (_extra.variableManager.hasVariable(variableName)) {
+          _extra.captivate.variables[variableName] = value;
+        }
+        // No longer use the method below, as we found it did not trigger a variable changed event.
+        // Go figure.
+        //_extra.captivate.variableManager.setVariableValue(variableName, value);
+      },
+      hasVariable: function(variableName) {
+        if (_extra.variableManager.variableData) {
+          return _extra.variableManager.variableData.hasOwnProperty(
+            variableName
+          );
+        } else {
+          return _extra.captivate.variables.hasOwnProperty(variableName);
+        }
+      },
+      /*"isSystemVariable": function (variableName) {
             if (_extra.variableManager.variableData && _extra.variableManager.variableData[variableName] !== undefined) {
                 return _extra.variableManager.variableData[variableName].isSystemVariable;
             } else {
                 return false;
             }
         },*/
-        "internalListenForVariableChange": function (variableName, callback) {
-            _extra.captivate.eventDispatcher.addEventListener("CPAPI_VARIABLEVALUECHANGED",callback,variableName);
-        },
-        "internalStopListeningForVariableChange": function(variableName, callback) {
-            _extra.captivate.eventDispatcher.removeEventListener("CPAPI_VARIABLEVALUECHANGED",callback,variableName);
-        },
-        /*"enactFunctionOnVariables": function (query, method) {
+      internalListenForVariableChange: function(variableName, callback) {
+        _extra.captivate.eventDispatcher.addEventListener(
+          "CPAPI_VARIABLEVALUECHANGED",
+          callback,
+          variableName
+        );
+      },
+      internalStopListeningForVariableChange: function(variableName, callback) {
+        _extra.captivate.eventDispatcher.removeEventListener(
+          "CPAPI_VARIABLEVALUECHANGED",
+          callback,
+          variableName
+        );
+      },
+      /*"enactFunctionOnVariables": function (query, method) {
             if (_extra.isQuery(query)) {
 
                 var list = _extra.queryList(query, _extra.variableManager.variableData);
@@ -85,27 +98,23 @@ _extra.registerModule("variableManager_software", ["softwareInterfacesManager", 
                 });
             }
         },*/
-        "forEachVariable":function(method) {
-            var varData,
-                variableInfo = _extra.captivate.api.variablesManager.varInfos;
+      forEachVariable: function(method) {
+        var varData,
+          variableInfo = _extra.captivate.api.variablesManager.varInfos;
 
-            for (var i = 0; i < variableInfo.length; i+=1) {
-
-                varData = variableInfo[i];
-                method({
-                    "name":varData.name,
-                    "isSystemVariable": varData.systemDefined
-                });
-
-            }
-
-        }/*,
+        for (var i = 0; i < variableInfo.length; i += 1) {
+          varData = variableInfo[i];
+          method({
+            name: varData.name,
+            isSystemVariable: varData.systemDefined
+          });
+        }
+      } /*,
         // This can't be a private variable, because it must be shared with the onload callback,
         // and seeing as we are using eval to run all this code, the onload callback is unlinked.
         "variableData":null,
         "hasParsedVariables":false*/
     };
-
 
     /*return function () {
 
@@ -152,5 +161,7 @@ _extra.registerModule("variableManager_software", ["softwareInterfacesManager", 
         // Dispatch event to let the rest of the modules know the variables have been initialized.
         _extra.eventManager.eventDispatcher.dispatchEvent(_extra.createEvent("variablesInitialized"));
     };*/
+  },
+  _extra.CAPTIVATE
+);
 
-}, _extra.CAPTIVATE);
