@@ -56,6 +56,7 @@ describe("A test suite for xprefOrientationChangeTransition", function() {
       return $$;
     };
     window.$.extend = Object.assign;
+    _extra.$ = window.$;
   });
 
   afterEach(function() {

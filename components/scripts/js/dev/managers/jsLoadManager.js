@@ -5,33 +5,8 @@ _extra.registerModule(
     var u = _extra.utils;
     var unlessNil = u.unless(u.isNil);
     var filterNils = u.filter(u.complement(u.isNil));
-    var moreQuotations = u.pipe(u.occurances("'"), u.gt(0));
-    var isQuotationMark = u.equals("'");
-    var containsJavascriptExtension = u.contains(".js");
 
-    var getJsFileFromString = u.pipe(
-      u.reduce(function(char, acc) {
-        // If already inside array, then we know this is complete
-        if (u.typeIs("object", acc)) return acc;
-
-        if (isQuotationMark(char)) {
-          if (containsJavascriptExtension(acc)) {
-            // File path is now complete
-            return [acc];
-          } else {
-            // Restart building file path
-            return "";
-          }
-
-          // If not a quotation mark then we need to keep adding the string.
-        } else {
-          return acc + char;
-        }
-      }, ""),
-      // If it's an object we know we have the correct string stored in an array
-      // Otherwise, we have nothing.
-      u.ifElse(u.typeIs("object"), u.nth(0), u.always(null))
-    );
+    var getJsFileFromString = u.getFilePath(".js");
 
     _extra.jsLoadManager = {};
 

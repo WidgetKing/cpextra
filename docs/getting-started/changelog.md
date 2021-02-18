@@ -1,6 +1,8 @@
 # Changelog
 ## Version 1.5.2
 ### Released 11 February 2021
+- Command Variables
+    - xcmndEmbedFontFromAction - Embeds a font file. Similiar to xcmndLoadJSFromAction.
 - Preference Variables
 	- xprefOrientationChangeTransition - When a screen orientation occurs, smoothly transition from one state to the other
 	- xprefDocumentBackgroundColor - Change the color of the HTML document background

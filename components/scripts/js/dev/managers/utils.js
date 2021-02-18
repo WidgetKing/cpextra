@@ -434,12 +434,60 @@ _extra.registerModule("utils", function() {
       return result;
     }),
     clone: function(obj) {
-      if (window.$) return $.extend({}, obj);
+      if (_extra.$) return _extra.$.extend({}, obj);
       return JSON.parse(JSON.stringify(obj));
     },
     isTrue: function(value) {
       return value === true;
     },
+    propEq: curry(3, function(property, value, obj) {
+      if (!obj || typeof obj[property] === "undefined") return false;
+      return obj[property] === value;
+    }),
+    getCriteriaAction: curry(2, function(criteria, objectData) {
+      if (!criteria || !objectData) return;
+      switch (criteria.toLowerCase()) {
+        case "success":
+          return objectData.successAction;
+
+        case "failure":
+        case "fail":
+          return objectData.failureAction;
+
+        case "focuslostaction":
+          return objectData.focusLostAction;
+      }
+    }),
+    getFilePath: curry(2, function(fileExtension, fullString) {
+      // Add code here
+      var u = _extra.utils;
+      var isQuotationMark = u.equals("'");
+      var containsExtension = u.contains(fileExtension);
+
+      return u.pipe(
+        u.reduce(function(char, acc) {
+          // If already inside array, then we know this is complete
+          if (u.typeIs("object", acc)) return acc;
+
+          if (isQuotationMark(char)) {
+            if (containsExtension(acc)) {
+              // File path is now complete
+              return [acc];
+            } else {
+              // Restart building file path
+              return "";
+            }
+
+            // If not a quotation mark then we need to keep adding the string.
+          } else {
+            return acc + char;
+          }
+        }, ""),
+        // If it's an object we know we have the correct string stored in an array
+        // Otherwise, we have nothing.
+        u.ifElse(u.typeIs("object"), u.nth(0), u.always(null))
+      )(fullString);
+    }),
     matchesQuery: curry(3, function(queryIcon, query, input) {
       var headStartsWith = _extra.utils.pipe(
         _extra.utils.last,

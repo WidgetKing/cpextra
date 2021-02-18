@@ -10,6 +10,7 @@ _extra.registerModule(
   [
     "xprefDocumentBackgroundColor",
     "jsLoadManager",
+    "fontEmbedManager",
     "processCommandVariableRegistration",
     "localStorageManager",
     "parameterParseSets"
@@ -418,20 +419,45 @@ _extra.registerModule(
         }
       },
 
-      ///////////////////////////////////////////////////////////////////////
-      /////////////// Javascript Loaders
-      ///////////////////////////////////////////////////////////////////////
-      LoadJSFromAction: commandDatas.createBasicSlideObjectData(
-        "loadJSFromAction",
-        _extra.jsLoadManager.loadFromAction
-      ),
-
       ////////////////////////////////////////////////////////////////////////////////
       ////////////////////////////////////////////////////////////////////////////////
       //////////////////// ADVANCED COMMAND VARIABLES (over one parameter)
       ////////////////////////////////////////////////////////////////////////////////
       ////////////////////////////////////////////////////////////////////////////////
 
+      ///////////////////////////////////////////////////////////////////////
+      /////////////// File Loaders
+      ///////////////////////////////////////////////////////////////////////
+      LoadJSFromAction: commandDatas.createBasicSlideObjectData(
+        "loadJSFromAction",
+        _extra.jsLoadManager.loadFromAction
+      ),
+
+      EmbedFontFromAction: {
+        commandName: "embedFontFromAction",
+        parseSet: parseSets.MP.STR_INT_CRI,
+        parameterHandler: handlers.sendParametersAsParameters,
+        updateData: function(data, string, interactiveObject, criteria) {
+          data.string = string;
+          data.interactiveObject = interactiveObject;
+          data.criteria = criteria;
+        },
+        parseSetData: {
+          string: undefined, // Changed in the updateData method
+          interactiveObject: undefined, // Changed in the updateData method
+          criteria: undefined, // Changed in the updateData method
+          STR: {
+            default: null
+          },
+          INT: {
+            default: null
+          },
+          CRI: {
+            default: SUCCESS_CRITERIA
+          },
+          output: _extra.fontEmbedManager.embedFromAction
+        }
+      },
       ///////////////////////////////////////////////////////////////////////
       /////////////// Event Listeners
       ///////////////////////////////////////////////////////////////////////

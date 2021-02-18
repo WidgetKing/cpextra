@@ -649,4 +649,62 @@ describe("A test suite for _extra.utils", function() {
       expect(results).toEqual({ a: true, b: false });
     });
   });
+
+  describe("_extra.utils.getFilePath", function() {
+    const tffPath =
+      "cp.openURL('fonts/OpenSansCondensed-Bold.ttf','_self');cp.actionChoiceContinueMovie();";
+    const jsPath =
+      "cp.openURL('myCode.js','_self');cp.actionChoiceContinueMovie();";
+
+    it("should find the file path inside a string", function() {
+      var result = _extra.utils.getFilePath(".js", jsPath);
+
+      expect(result).toBe("myCode.js");
+    });
+
+    it("should allow us to customise the file type", function() {
+      var result = _extra.utils.getFilePath(".ttf", tffPath);
+
+      expect(result).toBe("fonts/OpenSansCondensed-Bold.ttf");
+    });
+  });
+
+  describe("_extra.utils.propEq()", () => {
+    it("should check whether a property equals a value", function() {
+      var obj = { a: "A" };
+
+      expect(_extra.utils.propEq("a", "A", obj)).toBeTrue();
+    });
+
+    it("should return false if property does not exist", function() {
+      var obj = { a: "A" };
+
+      expect(_extra.utils.propEq("b", false, obj)).toBeFalse();
+    });
+  });
+  describe("_extra.utils.getCriteriaAction", function() {
+    const SUCCESS_ACTION = "sa";
+    const FAILURE_ACTION = "fa";
+    const FOCUS_LOST_ACTION = "fla";
+    const interactiveObject = {
+      successAction: SUCCESS_ACTION,
+      failureAction: FAILURE_ACTION,
+      focusLostAction: FOCUS_LOST_ACTION
+    };
+
+    function runTest(criteria, pass) {
+      it("should extract " + criteria + " actions", function() {
+        const result = _extra.utils.getCriteriaAction(
+          criteria,
+          interactiveObject
+        );
+        expect(result).toBe(pass);
+      });
+    }
+
+    runTest("success", SUCCESS_ACTION);
+    runTest("fail", FAILURE_ACTION);
+    runTest("failure", FAILURE_ACTION);
+    runTest("focusLostAction", FOCUS_LOST_ACTION);
+  });
 });

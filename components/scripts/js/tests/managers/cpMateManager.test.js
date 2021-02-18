@@ -5,7 +5,7 @@
  * Time: 2:13 PM
  * To change this template use File | Settings | File Templates.
  */
-fdescribe("A test suite for _extra.cpMate", function() {
+describe("A test suite for _extra.cpMate", function() {
   "use strict";
 
   var module = unitTests.getModule("cpMateManager");
