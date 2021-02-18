@@ -16,7 +16,7 @@ _extra.registerModule(
         update: function(value) {
           if (typeof value !== "string" || value === "") return;
           if (value[0] !== "#") value = "#" + value;
-          $(".cpMainContainer").css("background-color", value);
+          _extra.$(".cpMainContainer").css("background-color", value);
         }
       }
     );
