@@ -1,11 +1,12 @@
 # Changelog
 ## Version 1.5.2
-### Released 11 February 2021
+### Released 06 April 2021
 - Command Variables
     - xcmndEmbedFontFromAction - Embeds a font file. Similiar to xcmndLoadJSFromAction.
 - Preference Variables
 	- xprefOrientationChangeTransition - When a screen orientation occurs, smoothly transition from one state to the other
 	- xprefDocumentBackgroundColor - Change the color of the HTML document background
+    - xprefInitLoadJSFromAction - Acts like a call to xcmndLoadJSFromAction, but it happens BEFORE the Captivate movie begins. Therefore, getting around issues where JavaScript libraries are not loaded in time for the first enter slide event.
 	
 ## Version 1.5.1
 ### Released 1 December 2020

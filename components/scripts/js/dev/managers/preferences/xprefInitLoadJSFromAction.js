@@ -1,29 +1,24 @@
 _extra.registerModule(
   "xprefInitLoadJSFromAction",
-  ["jsLoadManager", "commandVariableManager", "preferenceManager"],
-  function() {
+  ["jsLoadManager", "commandVariableManager", "variableManager_software"],
+  function () {
     "use strict";
 
-    var info = {
-      enable: function() {},
+    return function () {
 
-      disable: function() {}
-    };
+      function loadFilesNow(value) {
+        var params = _extra.variableManager.prepareParameters(value);
+        if (params) params.forEach(_extra.jsLoadManager.loadFromAction);
+      };
 
-    window.TEST_HANDLE = function(value) {
-      var params = _extra.variableManager.prepareParameters(value);
-      if (params) params.forEach(_extra.jsLoadManager.loadFromAction);
-    };
+      var VARIABLE_NAME = "xprefInitLoadJSFromAction";
 
-    var exists = _extra.preferenceManager.regiseterPreferenceModule(
-      "InitLoadJSFromAction",
-      info
-    );
+      if (_extra.variableManager.hasVariable(VARIABLE_NAME)) {
+        loadFilesNow(
+          _extra.variableManager.getVariableValue(VARIABLE_NAME)
+        );
+      }
 
-    if (exists) {
-      window.TEST_HANDLE(
-        _extra.variableManager.getVariableValue("xprefInitLoadJSFromAction")
-      );
     }
   }
 );
