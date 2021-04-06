@@ -30,9 +30,7 @@ _extra.registerModule(
 
     if (exists) {
       _extra.slideManager.enterSlideCallback.addCallback("*", update);
-    } else {
-
-	}
+    }
   },
   _extra.CAPTIVATE
 );
