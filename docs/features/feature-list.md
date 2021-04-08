@@ -9,7 +9,8 @@ However, to make it easier to navigate the documentation, here are a list of all
 - [Mark slide complete in TOC](../variables/command.html#xcmndcompleteslide)
 - [Running an Advanced Action from another Advanced Action](../variables/command.html#xcmndcallactionon)
 - [Run Advanced Action when project begins](../variables/preference.html#xprefinitaction)
-- [Load and run JavaScript file](../variables/command.html#xcmndloadjsfromaction)
+- [Load and run JavaScript files](../variables/command.html#xcmndloadjsfromaction)
+- [Load and run JavaScript files from the very start of the movie](../variables/preference.html#xprefinitloadjsfromaction)
 - [Enable/disable playbar scrubbing](../variables/preference.html#xprefdisableplaybarscrubbing)
 - [Prevent mobile device screen dimming](../variables/preference.html#xprefwakelock)
 
@@ -43,6 +44,11 @@ However, to make it easier to navigate the documentation, here are a list of all
 - [Run action when video ends](./events-list.html#videoended)
 - [Set delay between detecting click and double-click events](../variables/preference.html#xprefdoubleclickdelay)
 
+## Graphic Design
+- [Embed fonts](../variables/command.html#xcmndembedfontfromaction)
+- [Change background color of web page](../variables/preference.html#xprefdocumentbackgroundcolor)
+- [When device orientation changes, fade transition into new orientation](../variables/preference.html#xpreforientationchangetransition)
+
 ## User Variable Related
 - [Reset variable to original value](../variables/command.html#xcmndreset)
 - [Ensure Text Entry Box value not reset when entering slide](../variables/preference.html#xprefpreventteboverwrite)
@@ -55,7 +61,7 @@ However, to make it easier to navigate the documentation, here are a list of all
 - [Round down](../variables/command.html#xcmndfloor)
 - [Generate random number](../variables/command.html#xcmndrandom)
 
-## Data persistance
+## Data persistence
 - [Local storage](./variable-prefixes.html#ls-for-local-storage)
 - [Session storage](./variable-prefixes.html#ss-for-session-storage)
 - [Get variables](./variable-prefixes.html#get-for-get-variables)

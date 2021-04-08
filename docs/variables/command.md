@@ -399,6 +399,69 @@ When a slide object's mouse events have been disabled, event listeners listening
 
 - [xcmndEnableMouseEvents](#xcmndenablemouseevents)
 
+## xcmndEmbedFontFromAction
+
+### Parameters
+
+| (1) String                                                                                                                                  | (2) Interactive Object Name                                                       | (3) Criteria (default: success)                                                                              |
+| ------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| Full name of the font you wish to embed. (must include spaces, [therefore use square brackets](./special-behaviour.html#for-string-values)) | The interactive object that is loading a font file with a Open URL or File action | Which of the interactive object's actions contains the Open URL or File action (e.g. success, last attempt). |
+
+### Description
+
+Our computers are loaded out with a great variety of fonts. When writing documents, we often do not need to be careful about which fonts we pick. We just assume what we see on our computer is what everyone else will see on their devices. However, when it comes to mobile devices, the number of fonts loaded by default is extremely limited and definitely not consistent between manufacturers. Therefore, there is a certain list of [web safe fonts](https://www.w3schools.com/cssref/css_websafe_fonts.asp). These are fonts you can reliably use, because they are loaded on practically every device. However, sometimes these fonts are not enough. Perhaps you are designing a course in Chinese, Japanese or Korean and need to use a font that supports that language? Or what if the design of your course requires you to use a fancy non-web safe font?
+
+If you're working with a regular Captivate project, this may not be an issue for you. When you export a regular Captivate project the text is converted to vector graphics. Therefore, you can use any font you want. The exceptions to this are when the text is 'dynamic', meaning it might change. Examples of this are Text Entry Boxes or Captions which display User Variables. These need to be rendered as live text using font files. If dynamic text is set to use a font which is not loaded on the learner's system, then it will default back to a web safe font. However, this means your learner's experience might change from device to device.
+
+This issue is further compounded with responsive projects. Because of the variable screen size, text needs to be kept live so that it can wrap if the screen size gets too small.
+
+The solution to all of these above issues is **font embedding**. This is where you include the font file (.ttf, .woff, .woff2) as part of your webpage. The learner will download the font file along with the web page and the device will use that font file to render the text. CpExtra allows you to do this using **xcmndEmbedFontFromAction** using a very similar technique to [**xcmndLoadJSFromAction**](#xcmndloadjsfromaction)
+
+### Set Up
+1. Include some text in your course using a non-web safe font. Make a note of that font's name. (For this example we'll use **Courier Prime**)
+2. Add an Interactive Object anywhere in your project.
+3. Give that Interactive Object a memorable name. (for this example we'll call it **font_embedder**)
+4. Set the Interactive Object's **success/failure/on focus lost** action to **Open URL or File**.
+5. Click the folder icon. In the browser window that appears, navigate to your font file and select it. (Please note, currently only .ttf, .woff and .woff2 files are supported) This slide object is now fully configured.
+
+<img :src="$withBase('/img/open-url-or-file-browse.png')" alt="the open url or file action">
+
+6. **xcmndEmbedFontFromAction** needs to be run from somewhere. Presumably this would be your project's [xprefInitAction](./preference.html#xprefinitaction) so that the font is ready to be used from the very start of your project. Where-ever you're planning to run **xcmndEmbedFontFromAction**, go there.
+7. Assign **xcmndEmbedFontFromAction** with: 
+    1. The **name** of the font.
+    2. The **name of the Interactive Object** created in step 2.
+    3. The **criteria** of the Interactive Object which runs the Open URL or File action (If not defined, this will default to success)
+
+```
+Assign | xcmndEmbedFontFromAction with [Courier Prime], font_embedder
+```
+
+::: warning What's with the []?
+In the example above, the name of our font is **Courier Prime**. Note the space character between **Courier** and **Prime**. That space character is central to the name. Without it, we would not be able to correctly identify what objects are using the Courier Prime font.
+
+However, [as discussed here](./special-behaviour.html#for-string-values), when you make an assignment to a CpExtra command variable, CpExtra automatically removes all whitespace characters (spaces and tabs). Therefore, an assignment like this...
+
+```
+Assign | xcmndEmbedFontFromAction with Courier Prime, font_embedder
+```
+
+...would target any objects using the **CourierPrime** font. Which we're guessing is none.
+
+The work around to preserve the space character is to **declare the parameter as an explicit string**. This is acheived using the [ square bracket ] characters.
+
+:::
+
+::: tip Testing font embedding
+Font embedding can be difficult to test, because you are obviously going to use a font that is already loaded on your system. With responsive projects, to ensure ***xcmndEmbedFontFromAction** is working as expected, try using **Preview > Live Preview on Devices**. This allows you to view the Captivate export on a mobile device connected to your local network. Likely, this mobile device does not have the font you wish to use. Therefore, if you see that font displaying correctly, you know xcmndEmbedFontFromAction has been set up correctly.
+
+<img :src="$withBase('/img/live-preview-on-devices.png')" alt="Preview > Live Preview on Devices">
+
+:::
+
+### See also
+- [xcmndLoadJSFromAction](#xcmndLoadJSFromAction)
+- You will probably want to use this with [xprefInitAction](./preference.html#xprefinitaction) so that fonts are loaded from the very start of the course.
+
 ## xcmndEnable
 
 ### Parameters
@@ -629,6 +692,13 @@ The **Open URL or file** action can be used to point to a JavaScript file on a r
 ::: tip Why didn't you call this xcmndLoadJS?
 We would expect a variable called **xcmndLoadJS** accept file paths to Javascript files, rather than the name of an interactive object. At the time of writing, this would not be a viable variable. However, it may be at some point in the future. So we choose **xcmndLoadJSFromAction** as a more descriptive name for this variable, and keep **xcmndLoadJS** in reserve for a possible future command variable.
 :::
+
+::: danger First On Enter Slide Action
+Even if **xcmndLoadJSFromAction** is triggered from [xprefInitAction](./preference.html#xprefinitaction) due to the time needed to download the file, any JavaScript libraries you load likely **won't** be available from the On Enter action of the first slide. This can be troublesome in LMS or self paced learning projects as there is no way to know ahead of time which slide will be the first. To get around this, we have created [xprefInitLoadJSFromAction](./preference.html#xprefinitloadjsfromaction). Think of this preference variable like a call to xcmndLoadJSFromAction that runs **as soon as possible**. By as soon as possible, this means *even before the learner clicks the opening play button.* Any JavaScript code loaded from xprefInitLoadJSFromAction should be ready on the first slide of the Captivate Movie. There are however, some limitation with this. Please see the page for [xprefInitLoadJSFromAction](./preference.html#xprefinitloadjsfromaction) for more details.
+:::
+
+### See Also
+- [xprefInitLoadJSFromAction](./preference.html#xprefinitloadjsfromaction)
 
 ## xcmndMaxScore
 

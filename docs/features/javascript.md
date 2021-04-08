@@ -81,19 +81,11 @@ Often, we want our JavaScript to be loaded as soon as the Captivate export start
 
 Loading JavaScript files when the Captivate movie begins is not as simple as running **xcmndLoadJSFromAction** on the first slide of the course. This is because Self-Paced Learning and SCORM compliant LMSs may cause the course to begin from any slide. Also, if the learner were to revisit the first slide of the course, CpExtra would then load and run all the JavaScript for a likely unintended second time.
 
-Therefore, it is best to use CpExtra's **[xprefInitAction](../variables/preference.html#xprefinitaction)** feature. **xprefInitAction** allows us to run an action from the beginning of the movie, regardless of where self-paced learning or the LMS causes the movie to start.
+To fill this need, CpExtra defines the preference variable [xprefInitLoadJSFromAction](../variables/preference.html#xprefinitloadjsfromaction). **xprefInitLoadJSFromAction** is like a one-shot assignment to xcmndLoadJSFromAction that happens **as soon as possible**. By as soon as possible, we mean even before the learner taps the play button that kicks off the first slide. Due to this, it's possible certain Captivate api's are not yet loaded. Therefore, any .js files loaded in this way should just define functions and objects that are used by Execute JavaScript actions latter on in the Captivate course.
 
-If we point **xprefInitAction** to an advanced action, then we can add a line where we assign **xcmndLoadJSFromAction** the names of all relevant interactive objects.
+To use **xprefInitLoadJSFromAction**, we just define that variable within Project > Variables. We then set its default value to the name of the Interactive Object loading a JavaScript file via Open URL or File. You can point to multiple Interactive Objects by creating a comma delimited list. For example, in the picture below we load both: **javascript_loader_1** and **javascript_loader_2**.
 
-```
-Assign | xcmndLoadJSFromAction with javascript_loader_object_1, javascript_loader_object_2
-```
-
-Of course, we could simplify the above line by using [#syntax](../variables/special-behaviour.html#syntax-and-syntax) to load JavaScript files from across the project.
-
-```
-Assign | xcmndLoadJSFromAction with javascript_loader_object_#
-```
+<img :src="$withBase('/img/xprefInitLoadJSFromAction-javascript-page.png')" alt="loading initial JavaScript files with xprefInitLoadJSFromAction">
 
 Note that [none of these methods can 100% ensure in what order the JavaScript files will run.](https://stackoverflow.com/questions/8996852/load-and-execute-order-of-scripts) That is dependant on how long it takes the browser to download the JavaScript files. Therefore, if your JavaScript code is dependant on another JavaScript file being loaded first, we suggest you write your code in such a way that it first checks whether its required libraries have already loaded.
 

@@ -171,7 +171,7 @@ _extra.registerModule("errors", ["debuggingManager"], function() {
 
     CV005: function(number) {
       return (
-        "Tried to pass use the value <b>" +
+        "Tried to use the value <b>" +
         number +
         "</b> for a property that requires a number." +
         "<br/>Please check the spelling of <b>" +

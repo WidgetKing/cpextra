@@ -173,6 +173,8 @@ _extra.registerModule("utils", function() {
     },
 
     isEmpty: function(data) {
+      if (_extra.utils.isNil(data)) return true;
+
       return _extra.utils.callByType(data, {
         array: function(ar) {
           return ar.length === 0;

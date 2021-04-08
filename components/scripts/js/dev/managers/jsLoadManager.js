@@ -66,6 +66,9 @@ _extra.registerModule(
 
     _extra.jsLoadManager.getJsFilesFromData = u.pipe(function(data) {
       // If this is not interactive then return empty array.
+      if (u.isNil(data)) {
+        return []
+      }
       if (!data.isInteractiveObject) {
         _extra.error("CV007", data.name);
         return [];

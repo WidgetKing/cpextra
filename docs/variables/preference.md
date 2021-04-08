@@ -75,6 +75,29 @@ Playbar scrubbing is disabled by default on mobile devices. This is standard Cap
 ::: danger Feature not available in Internet Explorer
 Internet Explorer does not support the **mouse-events: none** CSS style on which this feature depends. We do not currently have a work-around to resolve this limitation of Internet Explorer.
 :::
+## xprefDocumentBackgroundColor
+
+### Parameters
+
+| (1) Hexadecimal color                                                                          |
+| ---------------------------------------------------------------------------------------------- |
+| The hexadecimal code (e.g. #00FF00) of the color you wish to appear as the web page background |
+
+### Description
+
+Captivate allows you to specify the background color of slides, but what about the area outside the slide? xprefDocumentBackgroundColor allows you to change the color of what appears **outside** of the Captivate export.
+
+### Use cases
+Suppose you have a Captivate project where the design color palette is primarily dark. In that case, the default white background that surrounds the Captivate player may be distracting. 
+
+If we wanted to change it to a dark grey color such as #2f3542, we could do this by assigning xpreDocumentBackgroundColor in the following way:
+```
+Assign | xprefDocumentBackgroundColor with #2f3542
+```
+
+The result would look something like this: 
+
+<img :src="$withBase('/img/xprefDocumentBackgroundColor.png')" alt="multiple answer question highlight with default grey color">
 
 ## xprefDoubleClickDelay
 
@@ -143,6 +166,46 @@ Simply put, if **xprefInitAction** cannot find the named slide object (e.g. **Bu
 
 - [xcmndCallActionOn](./command.html#xcmndcallactionon)
 
+## xprefInitLoadJSFromAction
+
+### Parameters
+
+| (1) Interactive Object Name                                                                          |
+| ---------------------------------------------------------------------------------------------------- |
+| The name of an interactive object who's success/failure/on focus lost actions load JavaScript files. |
+
+### Description
+[xcmndLoadJSFromAction](./command.html#xcmndloadjsfromaction) is a very useful command variable which allows you to load JavaScript from external .js files. However, it comes with the downside where the .js files may not load in time for the On Enter action of the first slide. Therefore, we created xprefInitLoadJSFromAction. Think of this variable as a one time assignment to [xcmndLoadJSFromAction](./command.html#xcmndloadjsfromaction) which happens **as early as possible**. By as early as possible, we mean **even before the learner clicks the starting play button.**
+
+**The up side** of this is that any .js files should be run before the On Enter action of the first slide.
+
+**The down side** is that when the .js files run, Captivate is not yet completely set up. Therefore, documented Captivate JavaScript interfaces may not yet be ready to run. However, if all your .js file does is define some functions and objects in the global scope which will be called by **Execute JavaScript** actions later on in the course, then you'll be fine.
+
+### Use cases
+When assigned the name of an interactive object, it will check if that object's success, failure or on focus lost action contains an **Open URL or file** action. If that action points to a .js file, CpExtra will then load and run that JavaScript file.
+
+We use this method rather than pointing directly to a JavaScript file, because the **Open URL or file** action will copy the JavaScript file and include it in the Captivate export files. Therefore, when we update the code in the JavaScript file, the code in Captivate will be updated the next time we publish.
+
+If multiple actions contain an **Open URL or file** action, then CpExtra will load **all** those files. It will attempt to do so in the following order:
+
+1. Success action
+2. Failure action (or last attempt action)
+3. On focus lost action
+
+While CpExtra attempts to load the files in this order, they will actually run when they are downloaded. If the first file is 200kb but the second file is 2kb, it's possible the second file will be downloaded and run before the first file.
+
+You can use a list of objects to load multiple files:
+
+```
+Assign | xprefInitLoadJSFromAction with interactive_object1, interactive_object2
+```
+
+- [See this page for extended instructions](../features/javascript)
+
+### See Also
+
+- [xcmndLoadJSFromAction](./command.html#xcmndloadjsfromaction)
+
 ## xprefInteractiveWebObjects
 
 ### Parameters
@@ -171,29 +234,29 @@ Feel free to send me a message to let me know you are a true believer.
 
 ### Parameters
 
-| (1) Hexadecimal colour                                                                                                                                    |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| The hexadecimal code (e.g. #00FF00) of the colour you wish to appear when rolling over an answer option in a multiple-choice or multiple-answer question. |
+| (1) Hexadecimal color                                                                                                                                    |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| The hexadecimal code (e.g. #00FF00) of the color you wish to appear when rolling over an answer option in a multiple-choice or multiple-answer question. |
 
 ### Description
 
-When you roll over any answer option in a Captivate **Multiple-Choice**, **Multiple-Answer** or **True / False** question slide, you will see the answer's background change to a different colour. However, the default rollover colour is a rather dull medium grey, and there is currently no default option in Captivate's quiz settings to configure this for a different colour. **xprefMultichoiceRolloverColor** and it's twin brother **xprefMultichoiceRolloverOpacity** allow Captivate developers to take back creative control of this area.
+When you roll over any answer option in a Captivate **Multiple-Choice**, **Multiple-Answer** or **True / False** question slide, you will see the answer's background change to a different color. However, the default rollover color is a rather dull medium grey, and there is currently no default option in Captivate's quiz settings to configure this for a different color. **xprefMultichoiceRolloverColor** and it's twin brother **xprefMultichoiceRolloverOpacity** allow Captivate developers to take back creative control of this area.
 
 ### Use cases
 
-Imagine you have a client or manager that is unhappy with the default quiz question background highlight colour.
+Imagine you have a client or manager that is unhappy with the default quiz question background highlight color.
 
-<img :src="$withBase('/img/highlight-normal.png')" alt="multiple answer question highlight with default grey colour">
+<img :src="$withBase('/img/highlight-normal.png')" alt="multiple answer question highlight with default grey color">
 
-Assigning **xprefMultichoiceRolloverColor** with a hexadecimal colour value will change the colour of this highlight.
+Assigning **xprefMultichoiceRolloverColor** with a hexadecimal color value will change the color of this highlight.
 
-For example, to change the highlight's colour to green, you would assign **xprefMultichoiceRolloverColor** with the following code (the colour code must start with a **#** character):
+For example, to change the highlight's color to green, you would assign **xprefMultichoiceRolloverColor** with the following code (the color code must start with a **#** character):
 
 ```
 #00FF00
 ```
 
-<img :src="$withBase('/img/highlight-green.png')" alt="multiple answer question highlight with green colour">
+<img :src="$withBase('/img/highlight-green.png')" alt="multiple answer question highlight with green color">
 
 ### See Also
 
@@ -203,19 +266,50 @@ For example, to change the highlight's colour to green, you would assign **xpref
 
 ### Parameters
 
-| (1) Number                                                                                                                                |
-| ----------------------------------------------------------------------------------------------------------------------------------------- |
-| The opacity percentage (e.g. 50 for 50%) of the background colour displayed when rolling over a multiple-choice question's answer option. |
+| (1) Number                                                                                                                               |
+| ---------------------------------------------------------------------------------------------------------------------------------------- |
+| The opacity percentage (e.g. 50 for 50%) of the background color displayed when rolling over a multiple-choice question's answer option. |
 
 ### Description
 
-When you roll over any answer in a **Multiple Choice** or **True / False** question type, you will see the answer's background highlight colour appear. By default this will be a rather unattractive solid medium gray colour.
+When you roll over any answer in a **Multiple Choice** or **True / False** question type, you will see the answer's background highlight color appear. By default this will be a rather unattractive solid medium gray color.
 
-To change the background colour from a solid colour to a transparent colour, assign **xprefMultichoiceRolloverOpacity** with a number value between **0** (completely transparent) and **100** (completely opaque). (The **xprefMultichoiceRolloverColor** preference variable gives control of the background colour, but does not alter the opacity of the colour.)
+To change the background color from a solid color to a transparent color, assign **xprefMultichoiceRolloverOpacity** with a number value between **0** (completely transparent) and **100** (completely opaque). (The **xprefMultichoiceRolloverColor** preference variable gives control of the background color, but does not alter the opacity of the color.)
 
 ### See Also
 
 - [xprefMultichoiceRolloverColor](#xprefmultichoicerollovercolor)
+
+## xprefOrientationChangeTransition
+
+### Parameters
+
+| (1) Number (default: 0.5)               | (2) Color (default: #FFFFFF)                                                                   |
+| --------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| Seconds duration of fade out animation. | When screen orientation changes, the whole page will turn a certain color. Set that color here |
+
+### Description
+
+When it comes to responsive projects, changing the mobile device orientation (from portrait to landscape / landscape to portrait) can look quite jumpy and therefore unprofessional. When this preference variable is defined, when the mobile device orientation changes, CpExtra will put up a full color 'shield' which temporarily blocks the learner's view of the stage as it rearranges. That shield will then gradually fade out, revealing the neatly reorganized slide.
+
+### Use case
+Unlike most CpExtra preference variables, **just defining the variable enables the functionality**
+
+<img :src="$withBase('/img/xprefOrientationChangeTransition-definition.png')" alt="Defining xprefOrientationChangeTransition without any parameters">
+
+Although in the above picture we have not given xprefOrientationChangeTransition any parameters, you will still see an animation play in the Captivate export.
+
+By default the fade-out animation will be half a second. If you think this is too slow/fast, the first parameter sets the fade out time. For example, to change the fade out time to five and a half seconds, you can write:
+
+```
+Assign | xprefOrientationChangeTransition with 5.5
+```
+
+Also, the default color of the 'shield' is white. If this does not look right in your project, you can change it to another color with the second parameter. For example, to change the shield's color to black, you can assign the hex value of black (#000000) to the second parameter.
+
+```
+Assign | xprefOrientationChangeTransition with 5.5, #000000
+```
 
 ## xprefPreventTEBOverwrite
 
@@ -229,11 +323,11 @@ To change the background colour from a solid colour to a transparent colour, ass
 
 All Captivate **Text-entry boxes** (or **TEB**s for short) have an **associated variable**, which can be found named in the **TEB**'s **Properties** tab at this location:
 
-<img :src="$withBase('/img/teb-variable.png')" alt="multiple answer question highlight with green colour">
+<img :src="$withBase('/img/teb-variable.png')" alt="multiple answer question highlight with green color">
 
 Any text characters the user types into a **TEB** are instantly written to its associated variable. However, **TEB**s also have **default text**, which is entered into **Properties** at this location:
 
-<img :src="$withBase('/img/teb-default-text.png')" alt="multiple answer question highlight with green colour">
+<img :src="$withBase('/img/teb-default-text.png')" alt="multiple answer question highlight with green color">
 
 Captivate's default behaviour when returning to a slide with a **TEB** is to show its **default text** rather than the current value of its **associated variable**, which is not always what developers or learners expect to happen. **xprefPreventTEBOverwrite** allows Captivate developers to control this behaviour, but only across all **TEB** in the project.
 
@@ -257,8 +351,8 @@ This preference variable was originally created for earlier Adobe Captivate vers
 
 ### Parameters
 
-| (1) Slide label, number or @syntax query                                                                                              |
-| ------------------------------------------------------------------------------------------------------------------------- |
+| (1) Slide label, number or @syntax query      |
+| --------------------------------------------- |
 | Determines what slide the movie will start on |
 
 ### Description
@@ -357,7 +451,7 @@ The default value of **xprefUseDoubleDigitTotalTimeValues** is: **None**. Which 
 To make double digits appear for both minutes and seconds values assign **xprefUseDoubleDigitTotalTimeValues** with the following:
 
 ```
-Assign |xprefUseDoubleDigitTotalTimeValues with Minutes, Seconds
+Assign | xprefUseDoubleDigitTotalTimeValues with Minutes, Seconds
 ```
 
 <img :src="$withBase('/img/time-value-double-digits.png')" alt="Elapsed time 00:09 Total time 01:18">
