@@ -239,12 +239,12 @@ Secondly, **xcmndChangeState** allows you to use other variables to dynamically 
 :::
 
 ::: tip Pssst!
-Have you tried CpExtra's [Smart States](../../features/smart-states)? They're really good time savers for developers.
+Have you tried CpExtra's [Smart States](../features/smart-states)? They're really good time savers for developers.
 :::
 
 ### See also
 
-- [Smart States](../../features/smart-states)
+- [Smart States](../features/smart-states)
 
 ## xcmndCompleteSlide
 
