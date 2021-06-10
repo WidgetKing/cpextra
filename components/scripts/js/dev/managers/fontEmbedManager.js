@@ -10,7 +10,10 @@ _extra.registerModule(
     function getFontPath(path) {
       var result = getExtension(".ttf", path);
       if (!result) result = getExtension(".woff", path);
+      if (!result) result = getExtension(".oft", path);
       if (!result) result = getExtension(".woff2", path);
+      if (!result) result = getExtension(".ttc", path);
+      if (!result) result = getExtension(".fon", path);
 
       return result;
     }

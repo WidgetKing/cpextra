@@ -87,6 +87,8 @@ Internet Explorer does not support the **mouse-events: none** CSS style on which
 
 Captivate allows you to specify the background color of slides, but what about the area outside the slide? xprefDocumentBackgroundColor allows you to change the color of what appears **outside** of the Captivate export.
 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/NzpudATRCP4?start=199" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 ### Use cases
 Suppose you have a Captivate project where the design color palette is primarily dark. In that case, the default white background that surrounds the Captivate player may be distracting. 
 
@@ -172,7 +174,7 @@ Simply put, if **xprefInitAction** cannot find the named slide object (e.g. **Bu
 
 | (1) Interactive Object Name                                                                          |
 | ---------------------------------------------------------------------------------------------------- |
-| The name of an interactive object who's success/failure/on focus lost actions load JavaScript files. |
+| The name of an interactive object who's success/failure/on focus lost actions load JavaScript files. May also use #syntax query |
 
 ### Description
 [xcmndLoadJSFromAction](./command.html#xcmndloadjsfromaction) is a very useful command variable which allows you to load JavaScript from external .js files. However, it comes with the downside where the .js files may not load in time for the On Enter action of the first slide. Therefore, we created xprefInitLoadJSFromAction. Think of this variable as a one time assignment to [xcmndLoadJSFromAction](./command.html#xcmndloadjsfromaction) which happens **as early as possible**. By as early as possible, we mean **even before the learner clicks the starting play button.**
@@ -180,6 +182,8 @@ Simply put, if **xprefInitAction** cannot find the named slide object (e.g. **Bu
 **The up side** of this is that any .js files should be run before the On Enter action of the first slide.
 
 **The down side** is that when the .js files run, Captivate is not yet completely set up. Therefore, documented Captivate JavaScript interfaces may not yet be ready to run. However, if all your .js file does is define some functions and objects in the global scope which will be called by **Execute JavaScript** actions later on in the course, then you'll be fine.
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/NzpudATRCP4?start=1464" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ### Use cases
 When assigned the name of an interactive object, it will check if that object's success, failure or on focus lost action contains an **Open URL or file** action. If that action points to a .js file, CpExtra will then load and run that JavaScript file.
@@ -198,6 +202,12 @@ You can use a list of objects to load multiple files:
 
 ```
 Assign | xprefInitLoadJSFromAction with interactive_object1, interactive_object2
+```
+
+You can also load multiple files using a #syntax query. @syntax will not work.
+
+```
+Assign | xprefInitLoadJSFromAction with interactive_object#
 ```
 
 - [See this page for extended instructions](../features/javascript)
@@ -291,6 +301,8 @@ To change the background color from a solid color to a transparent color, assign
 ### Description
 
 When it comes to responsive projects, changing the mobile device orientation (from portrait to landscape / landscape to portrait) can look quite jumpy and therefore unprofessional. When this preference variable is defined, when the mobile device orientation changes, CpExtra will put up a full color 'shield' which temporarily blocks the learner's view of the stage as it rearranges. That shield will then gradually fade out, revealing the neatly reorganized slide.
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/NzpudATRCP4?start=398" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ### Use case
 Unlike most CpExtra preference variables, **just defining the variable enables the functionality**

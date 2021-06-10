@@ -462,6 +462,15 @@ _extra.registerModule("errors", ["debuggingManager"], function() {
         slideName +
         "</b>"
       );
+    },
+    CV081: function(slideName) {
+      return (
+        "Tried to load javascript files from <b>" +
+        slideName +
+        "</b> with xprefInitLoadJSFromAction." +
+        "<br/>However, this is an @syntax query which can't work until the Captivate export starts playing." +
+        "To fix this, please change your query to use the # symbol instead of the @ symbol."
+      );
     }
   };
 });

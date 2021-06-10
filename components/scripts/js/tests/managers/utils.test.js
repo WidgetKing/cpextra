@@ -27,6 +27,22 @@ describe("A test suite for _extra.utils", function() {
     expect(_extra.utils).toBeDefined();
   });
 
+  fdescribe("_extra.utils.flatMap()", function () {
+
+    it('should map through array, but if the map function returns another array it would put its indexes in the original array', function () {
+    
+      var array = [1, 2, 3];
+      function duplicate(val) {
+        return [val, val];
+      }
+
+      var result = _extra.utils.flatMap(duplicate, array);
+
+      expect(result).toEqual([1,1,2,2,3,3]);
+    });
+
+  });
+
   describe("_extra.utils.addIfDefined", function() {
     it("should only add elements to an array if they exist", function() {
       var array = [];

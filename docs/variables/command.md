@@ -417,6 +417,8 @@ This issue is further compounded with responsive projects. Because of the variab
 
 The solution to all of these above issues is **font embedding**. This is where you include the font file (.ttf, .woff, .woff2) as part of your webpage. The learner will download the font file along with the web page and the device will use that font file to render the text. CpExtra allows you to do this using **xcmndEmbedFontFromAction** using a very similar technique to [**xcmndLoadJSFromAction**](#xcmndloadjsfromaction)
 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/NzpudATRCP4?start=613" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 ### Set Up
 1. Include some text in your course using a non-web safe font. Make a note of that font's name. (For this example we'll use **Courier Prime**)
 2. Add an Interactive Object anywhere in your project.
