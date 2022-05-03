@@ -5,7 +5,7 @@
  * Time: 4:24 PM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("registerStateMetaData",["slideObjectManager_global", "SlideObjectStateManager", "slideManager_global","stateManager_software"], function () {
+_extra.registerModule("registerStateMetaData", ["slideObjectManager_global", "SlideObjectStateManager", "slideManager_global", "stateManager_software"], function () {
 
     "use strict";
 
@@ -17,7 +17,7 @@ _extra.registerModule("registerStateMetaData",["slideObjectManager_global", "Sli
     ///////////////////////////////////////////////////////////////////////
     /////////////// UTIL MEHTODS
     ///////////////////////////////////////////////////////////////////////
-    _extra.slideObjects.states.doesSlideObjectHaveDownState = function(name) {
+    _extra.slideObjects.states.doesSlideObjectHaveDownState = function (name) {
 
         var slideObjects = stateManagers[_extra.slideManager.currentSlideID],
             slideObject;
@@ -149,7 +149,7 @@ _extra.registerModule("registerStateMetaData",["slideObjectManager_global", "Sli
             result;
 
 
-        function detectIfMouseEvent(event){
+        function detectIfMouseEvent(event) {
             switch (event.toLowerCase()) {
                 case "down":
                 case "mousedown":
@@ -167,7 +167,7 @@ _extra.registerModule("registerStateMetaData",["slideObjectManager_global", "Sli
                     return NORMAL;
 
                 // Not a mouse event
-                default :
+                default:
                     return null;
             }
         }
@@ -246,32 +246,32 @@ _extra.registerModule("registerStateMetaData",["slideObjectManager_global", "Sli
 
                     switch (value.toLowerCase()) {
                         case "not":
-                            value =  {
-                                "modifier":"!"
+                            value = {
+                                "modifier": "!"
                             };
                             break;
 
                         case "gt":
-                            value =  {
-                                "modifier":">"
+                            value = {
+                                "modifier": ">"
                             };
                             break;
 
                         case "lt":
-                            value =  {
-                                "modifier":"<"
+                            value = {
+                                "modifier": "<"
                             };
                             break;
 
                         case "gte":
-                            value =  {
-                                "modifier":">="
+                            value = {
+                                "modifier": ">="
                             };
                             break;
 
                         case "lte":
-                            value =  {
-                                "modifier":"<="
+                            value = {
+                                "modifier": "<="
                             };
                             break;
 
@@ -308,20 +308,20 @@ _extra.registerModule("registerStateMetaData",["slideObjectManager_global", "Sli
 
                     //if(_extra.w.isNaN(segment)) {
 
-                        // x_var1_var2
-                        if (_extra.variableManager.hasVariable(segment)) {
+                    // x_var1_var2
+                    if (_extra.variableManager.hasVariable(segment)) {
 
-                            registerVariable(segment);
+                        registerVariable(segment);
 
-                            previousIndexVariable = segment;
+                        previousIndexVariable = segment;
 
                         // x_var1_value OR
                         // x_var_1 OR
                         // x_var_KEYWORD (NOT, GT, LT, GTE, LTE)
-                        } else {
-                            variableData[previousIndexVariable] = validateVariableValue(segment);
-                            previousIndexVariable = null;
-                        }
+                    } else {
+                        variableData[previousIndexVariable] = validateVariableValue(segment);
+                        previousIndexVariable = null;
+                    }
 
                     // x_var_1
                     /*} else {
@@ -345,16 +345,16 @@ _extra.registerModule("registerStateMetaData",["slideObjectManager_global", "Sli
                         // If the previous index was a value, then this index MUST be a variable.
                         previousIndexVariable = segment;
 
-                    // x_invalidVar OR x_var_name
+                        // x_invalidVar OR x_var_name
                     } else {
 
                         // x_invalidVar
                         if (i >= splitName.length - 1) {
-                            _extra.error("AS001",slideObjectName, fullName, segment);
+                            _extra.error("AS001", slideObjectName, fullName, segment);
                             /*_extra.error("Unable to find a variable named: '" + segment +
                                          "' while analysing the state named: '" + fullName + "' on the slide object named: '" + slideObjectName +
                                          "'.<br/>To correct this issue, ensure the variable and state names match.");*/
-                        // x_var_name
+                            // x_var_name
                         } else {
                             // We have yet to reach the end of the array, so there's still potential this is an invalid
                             // name, but for the moment we'll assume we're working with a variable name with
@@ -394,7 +394,7 @@ _extra.registerModule("registerStateMetaData",["slideObjectManager_global", "Sli
 
             stateName = data.states[i];
 
-            if (stateName.substr(0,2).toLowerCase() === "x_") {
+            if (stateName.substr(0, 2).toLowerCase() === "x_") {
 
                 // The following comments assume that the state name is: x_myvariable_down
                 splitStateName = stateName.split("_");

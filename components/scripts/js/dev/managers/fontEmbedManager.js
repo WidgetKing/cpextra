@@ -1,12 +1,13 @@
 _extra.registerModule(
   "fontEmbedManager",
   ["utils", "generalDataManager"],
-  function() {
+  function () {
     var u = _extra.utils;
     function getExtension(extension, action) {
       if (u.contains(extension)) return u.getFilePath(extension, action);
     }
 
+    console.log("I AM HERE")
     function getFontPath(path) {
       var result = getExtension(".ttf", path);
       if (!result) result = getExtension(".woff", path);
@@ -28,7 +29,8 @@ _extra.registerModule(
        * @param {string} Font family name that will be associated with the file
        * @param {string} Url to file
        */
-      embed: function(fontName, url) {
+      embed: function (fontName, url) {
+        console.log("EMBED: " + fontName)
         var style =
           "<style>@font-face { font-family: '" +
           fontName +
@@ -49,7 +51,7 @@ _extra.registerModule(
        * @param {string} Font family name that will be associated with the file.
        * @param {string} Interactive Object Criterai that holds a Load URL or File action.
        */
-      embedFromAction: function(fontName, interactiveObject, criteria) {
+      embedFromAction: function (fontName, interactiveObject, criteria) {
         function sendError(data) {
           _extra.error("CV007", data.name);
         }
@@ -60,7 +62,7 @@ _extra.registerModule(
             u.pipe(
               u.getCriteriaAction(criteria),
               getFontPath,
-              u.unless(u.isNil, function(path) {
+              u.unless(u.isNil, function (path) {
                 _extra.fontEmbedManager.embed(fontName, path);
               })
             ),

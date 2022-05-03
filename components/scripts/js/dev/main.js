@@ -66,7 +66,7 @@ function initExtra(topWindow) {
      * Sends a message to the debug console of the browser, assuming the console is available.
      * @param message
      */
-    _extra.log = function(message) {
+    _extra.log = function (message) {
       // DELETE ME
       //elemDiv.innerHTML += "<br/> " + message;
 
@@ -82,7 +82,7 @@ function initExtra(topWindow) {
      * Send an error to the debug console of the browser, assuming the console is available.
      * @param message
      */
-    _extra.error = function(message) {
+    _extra.error = function (message) {
       if (_extra.debugging) {
         _extra.debugging.error.apply(this, arguments);
       } else if (_extra.console) {
@@ -95,7 +95,7 @@ function initExtra(topWindow) {
   function abort(property) {
     _extra.aborted = true;
 
-    _extra.registerModule = function() {
+    _extra.registerModule = function () {
       // Purposefully left blank as we don't want to do anything with the registered modules.
     };
 
@@ -105,17 +105,17 @@ function initExtra(topWindow) {
         // Okay, if it's an object then it must be CpExtra. User Variables can't be objects.
         _extra.log(
           "Aborted initializing Extra for a second time, as we have detected the window." +
-            property +
-            " property has already been defined."
+          property +
+          " property has already been defined."
         );
       } else {
         // If it's not an object, it's a good bet its a user variable.
         _extra.error(
           "CpExtra could not start because it encountered a User Variable named <b>" +
-            property +
-            "</b> in the project. CpExtra has reserved this User Variable name. <br/>Please delete the <b>" +
-            property +
-            "</b> User Variable."
+          property +
+          "</b> in the project. CpExtra has reserved this User Variable name. <br/>Please delete the <b>" +
+          property +
+          "</b> User Variable."
         );
       }
     }
@@ -150,11 +150,11 @@ function initExtra(topWindow) {
   ////////////////////////////////
   ////////// End of trial
   // var today = new Date();
-  // today.setHours(0,0,0,0);
-  // var trialEnd = new Date("2-26-2021");
+  // today.setHours(0, 0, 0, 0);
+  // var trialEnd = new Date("6-03-2022");
   // if (trialEnd <= today) {
-  //     abort("trialPeriodEnded");
-  //     return;
+  //   abort("trialPeriodEnded");
+  //   return;
   // }
 
   //////////////
@@ -187,8 +187,8 @@ function initExtra(topWindow) {
   // Who would want extra classes?
   _extra.classes = {};
 
-  _extra.registerClass = function(className, classConstructor, SuperClass) {
-    var Inheritence = function() {};
+  _extra.registerClass = function (className, classConstructor, SuperClass) {
+    var Inheritence = function () { };
 
     if (SuperClass === _extra.STORYLINE || SuperClass === _extra.CAPTIVATE) {
       // In this case, this is the class registering that it is an impementation for a certain software.
@@ -203,8 +203,8 @@ function initExtra(topWindow) {
         } else {
           throw new Error(
             "Could not find a class by the name of '" +
-              SuperClass +
-              "' to be used as a super class."
+            SuperClass +
+            "' to be used as a super class."
           );
         }
       }
@@ -241,7 +241,7 @@ function initExtra(topWindow) {
     // because Captivate is still in the process of setting up.
     moduleInitializationQueue = [];
 
-  _extra.registerModule = function(
+  _extra.registerModule = function (
     moduleName,
     moduleDependencies,
     moduleConstructor
@@ -452,9 +452,9 @@ function initExtra(topWindow) {
           } catch (e) {
             _extra.error(
               "Encountered error at module: " +
-                moduleName +
-                "<br/>Details: <br/>" +
-                e
+              moduleName +
+              "<br/>Details: <br/>" +
+              e
             );
           }
         }
@@ -468,7 +468,7 @@ function initExtra(topWindow) {
   //////////////
   ///// Listen for Storyline Initialization
 
-  var onStorylineLoaded = function() {
+  var onStorylineLoaded = function () {
     window.removeEventListener("load", onStorylineLoaded);
 
     // It's possible this will be called in some unit tests. Generally we don't want
@@ -485,7 +485,7 @@ function initExtra(topWindow) {
   //////////////
   ///// Listen for Captivate Initialization
 
-  window.CaptivateExtraWidgetInit = function() {
+  window.CaptivateExtraWidgetInit = function () {
     // Double check that we are actually in Captivate.
     if (_extra.w.cp) {
       // Stop listening for Storyline initialization.
@@ -498,7 +498,7 @@ function initExtra(topWindow) {
   ////////// Listen for Headless init
   if (!isReadyToInitializeModules()) {
     var internalComplete = _extra.w.cp.complete;
-    _extra.w.cp.complete = function() {
+    _extra.w.cp.complete = function () {
       if (isReadyToInitializeModules()) {
         window.removeEventListener("load", onStorylineLoaded);
         initializeModulesInQueue();

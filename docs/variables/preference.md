@@ -36,7 +36,7 @@ Assign | xprefDebugMode with false
 
 ### Description
 
-Captivate includes certain special gestures for navigating the course on mobile devices. Namely, the ability to swipe left and right to move forward or backward one slide. For branching projects this may be undesirable. To disable this behaviour, create the xprefDisableGestures variable and assign it a negative value (like: false or 0)
+Captivate includes certain special gestures for navigating the course on mobile devices. Namely, the ability to swipe left and right to move forward or backward one slide. For branching projects this may be undesirable. To disable this behaviour, create the xprefDisableGestures variable and assign it a positive value (like: true or 1)
 
 This will also disable pinch and zoom gestures.
 
@@ -172,8 +172,8 @@ Simply put, if **xprefInitAction** cannot find the named slide object (e.g. **Bu
 
 ### Parameters
 
-| (1) Interactive Object Name                                                                          |
-| ---------------------------------------------------------------------------------------------------- |
+| (1) Interactive Object Name                                                                                                     |
+| ------------------------------------------------------------------------------------------------------------------------------- |
 | The name of an interactive object who's success/failure/on focus lost actions load JavaScript files. May also use #syntax query |
 
 ### Description

@@ -5,12 +5,12 @@
  * Time: 3:34 PM
  * To change this template use File | Settings | File Templates.
  */
-_extra.registerModule("xinfoCurrentEvent", ["infoVariableManager", "eventManager", "hookManager"], function () {
+_extra.registerModule("xinfoEventTarget", ["infoVariableManager", "eventManager", "hookManager"], function () {
 
     "use strict";
 
     var info = {
-        "suffix":"EventTarget"
+        "suffix": "EventTarget"
     };
 
 

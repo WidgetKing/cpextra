@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <widgetUpdate>
 
-	<latestVersion versionNumber="1.5.1">
+	<latestVersion versionNumber="1.5.2">
 		<description>A minor update is available</description>
-        <feature type="major">xprefLoadJSFromAction - Runs JavaScript files in Captivate.</feature>
+        <feature type="major">xcmndEmbedFontFromAction - Embed custom fonts into Captivate export.</feature>
+        <feature type="major">xprefInitLoadJSFromAction - Runs JavaScript files in Captivate as soon as the web page loads.</feature>
+        <feature type="major">xprefOrientationChangeTransition - Make changes in orientation appear smoother in responsive breakpoint view.</feature>
+        <feature type="major">xprefDocumentBackgroundColor - Change the colour of the webpage background.</feature>
         <!--<feature type="major">#syntax - @sytnax for the whole project</feature>
         <feature type="major">xinfoEventTarget - Tells you which slide object dispatched an event</feature>
         <feature type="major">ENTER and EXIT events - Call actions when a slide object enters/exits the timeline</feature>

@@ -51,7 +51,7 @@ _extra.registerModule("EventMediator", function () {
                     if (data.interactiveObject === interactiveObject && data.criteria === criteria) {
                         // We have found an event with the exact same information.
                         return {
-                            "index":i,
+                            "index": i,
                             "data": data
                         };
                     }
@@ -61,7 +61,7 @@ _extra.registerModule("EventMediator", function () {
                     if (data.callback === interactiveObject) {
 
                         return {
-                            "index":i,
+                            "index": i,
                             "data": data
                         };
 
@@ -85,10 +85,11 @@ _extra.registerModule("EventMediator", function () {
                     primaryHandler;
                 events[eventName] = eventHandlersArray;
 
+
                 // Create the single function that will be added as an event listener.
                 // This function will call all the others.
                 // It is handled in this manner to allow the double click manager to delay certain mouse events.
-                primaryHandler = function(eventObject) {
+                primaryHandler = function (eventObject) {
 
                     // It's possible as we call these callbacks, they may cause event listeners to be removed.
                     // Therefore we'll go through this backward.
@@ -154,16 +155,16 @@ _extra.registerModule("EventMediator", function () {
 
                     data = {
                         "isInteractiveObjectCallback": false,
-                        "callback":interactiveObject
+                        "callback": interactiveObject
                     };
 
-                // This listener is to call an interactive object action.
+                    // This listener is to call an interactive object action.
                 } else {
                     data = {
-                        "isInteractiveObjectCallback":true,
-                        "interactiveObject":interactiveObject,
-                        "criteria":criteria,
-                        "callback":function() {
+                        "isInteractiveObjectCallback": true,
+                        "interactiveObject": interactiveObject,
+                        "criteria": criteria,
+                        "callback": function () {
                             _extra.actionManager.callActionOn(interactiveObject, criteria);
                         }
                     };
@@ -189,7 +190,7 @@ _extra.registerModule("EventMediator", function () {
             if (data) {
 
                 var eventCallbacksArray = events[event];
-                eventCallbacksArray.splice(data.index,1);
+                eventCallbacksArray.splice(data.index, 1);
 
                 // If there are no more listeners for this event, then we'll delete this array.
                 if (eventCallbacksArray.length <= 0) {
@@ -229,7 +230,7 @@ _extra.registerModule("EventMediator", function () {
             }
         }
 
-        function changeListeners(args,removePrevious) {
+        function changeListeners(args, removePrevious) {
             var eventHandler,
                 newListeners = Array.prototype.slice.call(args);
 
@@ -263,22 +264,22 @@ _extra.registerModule("EventMediator", function () {
             }
         }
 
-        function correctEventNameErrors (event) {
+        function correctEventNameErrors(event) {
 
             switch (event) {
-                case "doubleclick" :
+                case "doubleclick":
                     return _extra.eventManager.events.DOUBLE_CLICK;
 
-                case "rollover" :
+                case "rollover":
                     return _extra.eventManager.events.MOUSE_OVER;
 
                 case "rollout":
                     return _extra.eventManager.events.MOUSE_OUT;
 
-				// case "click":
-				// 	return "touchcancel";
+                // case "click":
+                // 	return "touchcancel";
 
-                default :
+                default:
                     return event;
             }
 
@@ -322,7 +323,7 @@ _extra.registerModule("EventMediator", function () {
 
                 eventObject = _extra.createEvent(event);
 
-            // If we have been passed an event
+                // If we have been passed an event
             } else if (event.type !== undefined) {
 
                 eventObject = event;
@@ -342,7 +343,7 @@ _extra.registerModule("EventMediator", function () {
          * Exchanges the listener object for this mediator with another set of listner objects.
          * @param newListeners
          */
-        this.swap = function() {
+        this.swap = function () {
 
             changeListeners(arguments, true);
 
@@ -352,7 +353,7 @@ _extra.registerModule("EventMediator", function () {
          * Adds new listner objects for the events handled by this mediator.
          * @param newListeners
          */
-        this.add = function() {
+        this.add = function () {
 
             changeListeners(arguments, false);
 
@@ -365,7 +366,7 @@ _extra.registerModule("EventMediator", function () {
     }
 
     EventMediator.prototype = {
-        get id(){
+        get id() {
             return this._id;
         }
     };
