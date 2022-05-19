@@ -13,15 +13,15 @@ _extra.registerModule("animationParser", ["animationManager", "generalDataManage
     // Sure, it doesn't look great, but you work with what you've got when all you can store is numbers.
     var END_SIGNAL = 999999;
 
-    function init () {
+    function init() {
 
         _extra.animationManager.END_SIGNAL = END_SIGNAL;
 
-        _extra.animationManager.getValidEffect =  function (animationName) {
+        _extra.animationManager.getValidEffect = function (animationName) {
 
             var data;
 
-            function init () {
+            function init() {
 
                 data = _extra.dataManager.getSlideObjectDataByName(animationName);
 
@@ -41,7 +41,9 @@ _extra.registerModule("animationParser", ["animationManager", "generalDataManage
 
             }
 
-            function isValidEffect (effect) {
+            function isValidEffect(effect) {
+
+                if (!effect) return false;
 
                 if (effect.animationProperty !== _extra.dataTypes.effects.ALPHA) {
                     return false;
@@ -76,81 +78,81 @@ _extra.registerModule("animationParser", ["animationManager", "generalDataManage
                 index = parseEffectFrom(name, index);
             }
         };
-/*
-        _extra.animationManager.cpMate = {
-
-            "END_SIGNAL": END_SIGNAL,
-
-            "getCpMateEffect": function (animationName) {
-
-                var data;
-
-                function init () {
-
-                    data = _extra.dataManager.getSlideObjectDataByName(animationName);
-
-                    if (!data.effects || data.effects.length === 0) {
-                        return null;
-                    }
-
-                    for (var i = 0; i < data.effects.length; i += 1) {
-
-                        if (isValidEffect(data.effects[i])) {
-                            return data.effects[i];
+        /*
+                _extra.animationManager.cpMate = {
+        
+                    "END_SIGNAL": END_SIGNAL,
+        
+                    "getCpMateEffect": function (animationName) {
+        
+                        var data;
+        
+                        function init () {
+        
+                            data = _extra.dataManager.getSlideObjectDataByName(animationName);
+        
+                            if (!data.effects || data.effects.length === 0) {
+                                return null;
+                            }
+        
+                            for (var i = 0; i < data.effects.length; i += 1) {
+        
+                                if (isValidEffect(data.effects[i])) {
+                                    return data.effects[i];
+                                }
+        
+                            }
+        
+                            return null;
+        
                         }
-
-                    }
-
-                    return null;
-
-                }
-
-                function isValidEffect (effect) {
-
-                    if (effect.animationProperty !== _extra.dataTypes.effects.ALPHA) {
-                        return false;
-                    }
-
-                    for (var i = 0; i < effect.frames.length; i += 1) {
-
-                        if (effect.frames[i].value > 100) {
-                            return true;
+        
+                        function isValidEffect (effect) {
+        
+                            if (effect.animationProperty !== _extra.dataTypes.effects.ALPHA) {
+                                return false;
+                            }
+        
+                            for (var i = 0; i < effect.frames.length; i += 1) {
+        
+                                if (effect.frames[i].value > 100) {
+                                    return true;
+                                }
+        
+                            }
+        
+                            return null;
+        
                         }
-
+        
+        
+                        return init();
+        
+                    },
+        
+        
+        
+                    "parseAnimation": function (name) {
+        
+                        var index = 0;
+        
+                        while (index !== null) {
+                            // parseEffectFrom will either return nothing
+                            // OR it will return the last index
+                            index = parseEffectFrom(name, index);
+                        }
                     }
-
-                    return null;
-
-                }
-
-
-                return init();
-
-            },
-
-
-
-            "parseAnimation": function (name) {
-
-                var index = 0;
-
-                while (index !== null) {
-                    // parseEffectFrom will either return nothing
-                    // OR it will return the last index
-                    index = parseEffectFrom(name, index);
-                }
-            }
-
-        };*/
+        
+                };*/
 
     }
 
-    function parseEffectFrom (name, startIndex) {
+    function parseEffectFrom(name, startIndex) {
 
         var effect,
             data;
 
-        function init () {
+        function init() {
 
             effect = _extra.animationManager.getValidEffect(name);
 
@@ -166,7 +168,7 @@ _extra.registerModule("animationParser", ["animationManager", "generalDataManage
 
             parseParameters();
 
-            if (!data.parameters){
+            if (!data.parameters) {
                 return null;
             }
 
@@ -181,7 +183,7 @@ _extra.registerModule("animationParser", ["animationManager", "generalDataManage
 
 
 
-        function getEffectTypeData () {
+        function getEffectTypeData() {
 
             var currentFrame;
 
@@ -207,7 +209,7 @@ _extra.registerModule("animationParser", ["animationManager", "generalDataManage
 
 
 
-        function parseParameters () {
+        function parseParameters() {
 
             var dataTypeData = _extra.animationManager.effectTypes.getEffectType(data.type),
                 value,

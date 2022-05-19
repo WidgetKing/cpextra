@@ -7,7 +7,6 @@ _extra.registerModule(
       if (u.contains(extension)) return u.getFilePath(extension, action);
     }
 
-    console.log("I AM HERE")
     function getFontPath(path) {
       var result = getExtension(".ttf", path);
       if (!result) result = getExtension(".woff", path);
