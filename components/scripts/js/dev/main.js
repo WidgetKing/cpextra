@@ -149,13 +149,13 @@ function initExtra(topWindow) {
 
   ////////////////////////////////
   ////////// End of trial
-  // var today = new Date();
-  // today.setHours(0, 0, 0, 0);
-  // var trialEnd = new Date("6-03-2022");
-  // if (trialEnd <= today) {
-  //   abort("trialPeriodEnded");
-  //   return;
-  // }
+  var today = new Date();
+  today.setHours(0, 0, 0, 0);
+  var trialEnd = new Date("08-15-2022");
+  if (trialEnd <= today) {
+    abort("trialPeriodEnded");
+    return;
+  }
 
   //////////////
   ///// Extra Pre-detection
