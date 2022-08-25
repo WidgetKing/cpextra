@@ -5,8 +5,12 @@ node_modules
 .idea/**
 .idea/workspace.xml
 .jshintrc
-tests/output
-tests/sources
+tests/output/storyline
+tests/output/js-test
+tests/output/_MAGNUS
+tests/output/_USER_ISSUES
+tests/sources/storyline
+tests/sources/USER_ISSUES
 components/library
 components/website
 components/_dump

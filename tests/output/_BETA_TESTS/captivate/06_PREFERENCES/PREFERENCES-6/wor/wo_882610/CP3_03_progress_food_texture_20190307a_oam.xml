@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<widget xmlns="http://openajax.org/metadata" spec="1.0" name="CP3_03_progress_food_texture_20190307a" version="1">
+
+<description type="text/html"><![CDATA[Widget Exported from Flash Professional]]></description>
+
+<category name="Flash Animation"/>
+<remarks>Compatible with: InDesign CC, Dreamweaver CC, Muse</remarks>
+<icon src="PosterImg_485.png" width="400" height="800"/>
+<require type="other" src="OS_project_animation_261118.html"/>
+<require type="javascript" src="libs/createjs-2015.11.26.min.js"/>
+<require type="javascript" src="libs/Infosemantics_CpMate.js"/>
+<require type="javascript" src="libs/yak.js"/>
+<require type="image" src="images/CachedTexturedBitmap_2847.png"/>
+<require type="image" src="images/OS_project_animation_261118_atlas_.png"/>
+<require type="image" src="images/OS_project_animation_261118_atlas_10.png"/>
+<require type="image" src="images/OS_project_animation_261118_atlas_11.png"/>
+<require type="image" src="images/OS_project_animation_261118_atlas_2.png"/>
+<require type="image" src="images/OS_project_animation_261118_atlas_3.png"/>
+<require type="image" src="images/OS_project_animation_261118_atlas_4.png"/>
+<require type="image" src="images/OS_project_animation_261118_atlas_5.png"/>
+<require type="image" src="images/OS_project_animation_261118_atlas_6.png"/>
+<require type="image" src="images/OS_project_animation_261118_atlas_7.png"/>
+<require type="image" src="images/OS_project_animation_261118_atlas_8.png"/>
+<require type="image" src="images/OS_project_animation_261118_atlas_9.png"/>
+<require type="folder" src="libs"/>
+<require type="folder" src="images"/>
+<content></content>
+
+<properties name="Properties">
+<property name="default-width" defaultValue="400" hidden="true"/>
+<property name="default-height" defaultValue="800" hidden="true"/>
+<property name="resizable" defaultValue="true" hidden="true"/>
+<property name="centering" defaultValue="both" hidden="true"/>
+<property name="scaling" defaultValue="both" hidden="true"/>
+<property name="html-page" defaultValue="OS_project_animation_261118.html" hidden="true"/>
+<property name="target-platform" defaultValue="htmlcanvas" hidden="true"/>
+<property name="created-in" defaultValue="Adobe Animate CC" hidden="true"/>
+</properties>
+
+</widget>
