@@ -14,7 +14,7 @@ While CpExtra *can* be loaded into Captivate as a widget, we do not consider it 
 So for these reasons, we prefer to consider CpExtra to be a **JavaScript library**. In programing terminology a 'library' refers to a collection of scripts which automate frequently performed tasks. We feel this is a more accurate description of what CpExtra does for Captivate.
 
 ## CpExtra is HTML5 ONLY
-While Captivate is capable of publishing to several different outputs CpExtra is only compatible with HTML5. There are no plans to make it work with SWF output as Adobe has publically stated that Flash/SWF will not be supported after 2020.  Many browser manufacturers have already stopped allowing SWF to run, and SWF cannot be used on mobile devices.
+While Captivate is capable of publishing to several different outputs CpExtra is only compatible with HTML5. There are no plans to make it work with SWF output as Adobe has publicly stated that Flash/SWF will not be supported after 2020.  Many browser manufacturers have already stopped allowing SWF to run, and SWF cannot be used on mobile devices.
 
 ::: tip
 Since [Flash Player end of life](https://www.adobe.com/products/flashplayer/end-of-life.html) happens soon, you would need to have a very good reason for developing any course for SWF output at this point in time.

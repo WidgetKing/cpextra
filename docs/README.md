@@ -6,6 +6,11 @@ actionLink: /getting-started/installation
 features:
 footer: All rights reserved Infosemantics | Copyright 2020-present Infosemantics
 ---
+CpExtra is compatible with Adobe Captivate versions from Captivate 9 - 11 (2019). **It is not compatible with versions 12 and above.** See the video below for more details.
+
+<div style="flex align-items:center"><iframe width="560" height="315" src="https://www.youtube.com/embed/csGCXwnkpTM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+
+----
 
 <div class="features">
 	<div class="feature hero">
@@ -30,13 +35,11 @@ footer: All rights reserved Infosemantics | Copyright 2020-present Infosemantics
 		</a>
 		<hr/>
 		<a href="https://infosemantics.com.au/about-up-and-running-with-cpextra/" class="nav-link action-button">
-		Up and Runing Course (4hrs)
+		Up and Running Course (4hrs)
 		</a>
 	</div>
 </div>
 
 - - -
 
-CpExtra is compatible with all Adobe Captivate versions from Captivate 9 onward.
-
-Please be aware that since CpExtra is actually a JavaScript library with a multitude of features it can therefore at times require a certain amount of technical expertise to use. Adobe Captivate users desiring to incorpoarte CpExtra into their projects should already be familiar with the basics of navigating the Captivate interface, and know how to use Variables and Advanced Actions.  This is because CpExtra features are usually set up and configured via Captivate's existing user interface and dialogs, especially the Advanced Actions dialog.
+Please be aware that since CpExtra is actually a JavaScript library with a multitude of features it can therefore at times require a certain amount of technical expertise to use. Adobe Captivate users desiring to incorporate CpExtra into their projects should already be familiar with the basics of navigating the Captivate interface, and know how to use Variables and Advanced Actions.  This is because CpExtra features are usually set up and configured via Captivate's existing user interface and dialogs, especially the Advanced Actions dialog.

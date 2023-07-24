@@ -126,8 +126,7 @@ function initExtra(topWindow) {
   if (isProjectWindow(topWindow)) {
     // If the window we get right at the start is the project window, then this is most likely a headless project.
     isHeadless = true;
-  } else {
-    // If we are here then we are in a widget and we want _extra to be defined on its window scope
+  } else { // If we are here then we are in a widget and we want _extra to be defined on its window scope
     // So that the modules can be added.
     topWindow._extra = _extra;
     topWindow = topWindow.parent;
@@ -149,13 +148,13 @@ function initExtra(topWindow) {
 
   ////////////////////////////////
   ////////// End of trial
-  var today = new Date();
+  /*var today = new Date();
   today.setHours(0, 0, 0, 0);
-  var trialEnd = new Date("08-15-2022");
+  var trialEnd = new Date("08-25-2023");
   if (trialEnd <= today) {
     abort("trialPeriodEnded");
     return;
-  }
+  }*/
 
   //////////////
   ///// Extra Pre-detection
